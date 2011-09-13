@@ -14,7 +14,7 @@ class ardubus(dbus.service.Object):
         self.bus_name = dbus.service.BusName('fi.hacklab.ardubus', bus=bus)
         dbus.service.Object.__init__(self, self.bus_name, self.object_path)
 
-    @dbus.service.method('fi.hacklab.ardubus.hello')
+    @dbus.service.method('fi.hacklab.ardubus')
     def hello(self):
         return "Hello,World! My name is " + self.object_name
 
