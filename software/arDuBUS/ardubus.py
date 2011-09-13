@@ -8,7 +8,8 @@ import dbus.mainloop.glib
 
 
 class ardubus(dbus.service.Object):
-    def __init__(self, bus, object_name):
+    def __init__(self, bus, object_name, config):
+        self.config = config
         self.object_name = object_name
         self.object_path = '/fi/hacklab/ardubus/' + object_name
         self.bus_name = dbus.service.BusName('fi.hacklab.ardubus', bus=bus)
@@ -37,7 +38,7 @@ if __name__ == '__main__':
 
     service_objects = {}
     for board_name in config.sections():
-        service_objects[board_name] = ardubus(bus, board_name)
+        service_objects[board_name] = ardubus(bus, board_name, config)
 
     loop = gobject.MainLoop()
     loop.run()
