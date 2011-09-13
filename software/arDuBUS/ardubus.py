@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import os
 import gobject
 import dbus
 import dbus.service
@@ -8,9 +9,14 @@ import dbus.mainloop.glib
 
 class ardubus(dbus.service.Object):
     def __init__(self, bus, object_name):
-        object_path = '/fi/hacklab/ardubus/' + object_name
-        dbus.service.Object.__init__(self, conn, object_path)
+        self.object_name = object_name
+        self.object_path = '/fi/hacklab/ardubus/' + object_name
+        self.bus_name = dbus.service.BusName('fi.hacklab.ardubus', bus=bus)
+        dbus.service.Object.__init__(self, self.bus_name, self.object_path)
 
+    @dbus.service.method('fi.hacklab.ardubus.hello')
+    def hello(self):
+        return "Hello,World! My name is " + self.object_name
 
 
 
