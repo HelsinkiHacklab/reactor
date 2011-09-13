@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+# The real deal, this will talk with an arduino and pass signals/method calls back and forth
+
 import os
 import gobject
 import dbus

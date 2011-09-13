@@ -1,3 +1,5 @@
+# A trivial example for listening signals on the bus
+
 import gobject
 import dbus
 import dbus.service

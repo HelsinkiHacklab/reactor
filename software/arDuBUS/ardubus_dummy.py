@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+# A class for testing, to generate board events without having the board
+
 import os, random
 import gobject
 import dbus

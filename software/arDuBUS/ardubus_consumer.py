@@ -1,6 +1,5 @@
-# consumeservice.py
-# consumes a method in a service on the dbus
- 
+# Trivial remote method call example (on two boards mainly to test the ardubus.py multi-board support)
+
 import dbus
  
 bus = dbus.SessionBus()
