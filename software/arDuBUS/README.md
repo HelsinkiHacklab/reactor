@@ -1,0 +1,2 @@
+Here will be arduino sketches and simple communication program for the PC end to to reading/writing the ports via DBUS method calls.
+Also if there is a pin change there will be a signal emitted to the bus.
