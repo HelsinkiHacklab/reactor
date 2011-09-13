@@ -14,10 +14,19 @@ class ardubus(dbus.service.Object):
         self.object_path = '/fi/hacklab/ardubus/' + object_name
         self.bus_name = dbus.service.BusName('fi.hacklab.ardubus', bus=bus)
         dbus.service.Object.__init__(self, self.bus_name, self.object_path)
+        self.initialize_serial()
 
     @dbus.service.method('fi.hacklab.ardubus')
     def hello(self):
         return "Hello,World! My name is " + self.object_name
+
+    @dbus.service.signal('fi.hacklab.ardubus')
+    def dio_change(self, pin, state, sender):
+        pass
+
+    def initialize_serial(self):
+        # TODO: initialize serial connection listener to a separate thread
+        pass
 
 
 

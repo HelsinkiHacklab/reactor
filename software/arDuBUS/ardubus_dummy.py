@@ -18,7 +18,7 @@ class ardubus(ardubus_real.ardubus):
 
     def random_event(self):
         # TODO: Fire a random signal
-        self.dio_change(random.randint(2,8), random.randint(0,1))
+        self.dio_change(random.randint(2,8), random.randint(0,1), self.object_name)
 
         # We must return true to keep this interval running
         return True
