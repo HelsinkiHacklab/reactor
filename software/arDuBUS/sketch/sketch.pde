@@ -1,4 +1,5 @@
 #include <Bounce.h>
+#include <MsTimer2.h>
 
 /**
  * Notes about ports on Seeduino Mega
@@ -22,10 +23,14 @@ const byte inputpins[] = { 2, 24, 32, 50, PJ6, 44 };
 // Initialize the array of debouncers
 Bounce bouncers[sizeof(inputpins)] = Bounce(inputpins[0],DEBOUNCE_TIME); // We must initialize these or things break
 
-void setup()
+boolean update_bouncers_flag;
+void flag_update_bouncer()
 {
-    Serial.begin(115200);
-    
+    update_bouncers_flag = true;
+}
+
+inline void setup_bouncer()
+{
     // Setup the debouncers
     for (byte i=0; i < sizeof(inputpins); i++)
     {
@@ -33,11 +38,9 @@ void setup()
         digitalWrite(inputpins[i], HIGH); // enable internal pull-up
         bouncers[i] = Bounce(inputpins[i], DEBOUNCE_TIME);
     }
-
-    Serial.println("Booted");
 }
 
-void loop()
+inline void update_bouncers()
 {
     // Update debouncer states
     for (byte i=0; i < sizeof(inputpins); i++)
@@ -50,5 +53,26 @@ void loop()
             Serial.print(" CHANGED to ");
             Serial.println(bouncers[i].read(), DEC);
         }
+    }
+    update_bouncers_flag = false;
+}
+
+void setup()
+{
+    Serial.begin(115200);
+    
+    setup_bouncer();
+    // Setup timer for flagging bouncer updates
+    MsTimer2::set(5, flag_update_bouncer);
+    MsTimer2::start();
+
+    Serial.println("Booted");
+}
+
+void loop()
+{
+    if (update_bouncers_flag)
+    {
+        update_bouncers();
     }
 }
