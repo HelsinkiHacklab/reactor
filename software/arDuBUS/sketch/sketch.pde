@@ -21,6 +21,9 @@ const byte inputpins[] = { 2, 24, 32, 50, PJ6, 44 };
 #define DEBOUNCE_TIME 20 // milliseconds, see Bounce library
 #define REPORT_INTERVAL 5000 // Milliseconds
 
+
+
+
 // Initialize the array of debouncers
 Bounce bouncers[sizeof(inputpins)] = Bounce(inputpins[0],DEBOUNCE_TIME); // We must initialize these or things break
 
@@ -49,10 +52,15 @@ inline void update_bouncers()
         if (bouncers[i].update())
         {
             // State changed
+            /*
             Serial.print("Pin ");
             Serial.print(inputpins[i], DEC);
             Serial.print(" CHANGED to ");
             Serial.println(bouncers[i].read(), DEC);
+            */
+            Serial.print("CD"); // CD<pin_byte><state_byte>
+            Serial.print(inputpins[i]);
+            Serial.println(bouncers[i].read());
         }
     }
     update_bouncers_flag = false;
@@ -75,6 +83,7 @@ void report()
 {
     for (byte i=0; i < sizeof(inputpins); i++)
     {
+        /*
         Serial.print("Pin ");
         Serial.print(inputpins[i], DEC);
         Serial.print(" state has been ");
@@ -82,6 +91,11 @@ void report()
         Serial.print(" for ");
         Serial.print(bouncers[i].duration(), DEC);
         Serial.println("ms");
+        */
+        Serial.print("RD"); // RD<pin_byte><state_byte><time_long_as_hex>
+        Serial.print(inputpins[i]);
+        Serial.print(bouncers[i].read());
+        Serial.println(bouncers[i].duration(), HEX);
     }
     last_report_time = millis();
 }
@@ -93,6 +107,81 @@ inline void check_report()
         report();
     }
 }
+
+#define COMMAND_STRING_SIZE 10 //Remember to allocate for the null termination
+char incoming_command[COMMAND_STRING_SIZE+2]; //Reserve space for CRLF too.
+byte incoming_position;
+inline void read_command_bytes()
+{
+    for (byte d = Serial.available(); d > 0; d--)
+    {
+        incoming_command[incoming_position] = Serial.read();
+        // Check for line end and in such case do special things
+        if (   incoming_command[incoming_position] == 0xA // LF
+            || incoming_command[incoming_position] == 0xD) // CR
+        {
+            incoming_command[incoming_position] = 0x0;
+            if (   incoming_position > 0
+                && (   incoming_command[incoming_position-1] == 0xD // CR
+                    || incoming_command[incoming_position-1] == 0xA) // LF
+               )
+            {
+                incoming_command[incoming_position-1] = 0x0;
+            }
+            process_command();
+            incoming_position = 0;
+            return;
+        }
+        incoming_position++;
+
+        // Sanity check buffer sizes
+        if (incoming_position > COMMAND_STRING_SIZE+2)
+        {
+            Serial.println(0x15); // NACK
+            Serial.print("PANIC: No end-of-line seen and incoming_position=");
+            Serial.print(incoming_position, DEC);
+            Serial.println(" clearing buffers");
+            
+            memset(&incoming_command, 0, COMMAND_STRING_SIZE+2);
+            incoming_position = 0;
+        }
+    }
+}
+
+
+/**
+ * Helper to combine two bytes as int
+ */
+inline int bytes2int(byte i1, byte i2)
+{
+    int tmp = i1;
+    tmp <<= 8;
+    tmp += i2;
+    return tmp;
+}
+
+void process_command()
+{
+    switch(incoming_command[0])
+    {
+        case 0x0:
+            Serial.println(0x15); // NACK
+            return;
+            break;
+        case 0x44: // ASCII "D" (D<pinbyte><statebyte>)
+            if (incoming_command[2])
+            {
+                digitalWrite(incoming_command[1], HIGH);
+            }
+            else
+            {
+                digitalWrite(incoming_command[1], LOW);
+            }
+            Serial.println(0x6); // ACK
+            break;
+    }
+}
+
 
 void loop()
 {
