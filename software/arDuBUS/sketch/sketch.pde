@@ -37,15 +37,8 @@ void setup()
     Serial.println("Booted");
 }
 
-unsigned int iter;
 void loop()
 {
-    iter++;
-    Serial.print("Iteration #");
-    Serial.println(iter, DEC);
-    unsigned long startms = millis();
-    unsigned long startus = micros();
-
     // Update debouncer states
     for (byte i=0; i < sizeof(inputpins); i++)
     {
@@ -58,31 +51,4 @@ void loop()
             Serial.println(bouncers[i].read(), DEC);
         }
     }
-
-    unsigned long endms = millis();
-    unsigned long endus = micros();
-
-    Serial.print("updates&reads took ");
-    Serial.print(endms-startms, DEC);
-    Serial.println("ms");
-    Serial.print(startms, DEC);
-    Serial.print(" ");
-    Serial.println(endms, DEC);
-    Serial.print("updates took ");
-    Serial.print(endus-startus, DEC);
-    Serial.println("us");
-    Serial.print(startus, DEC);
-    Serial.print(" ");
-    Serial.println(endus, DEC);
-
-    Serial.println("Pin states:");
-    for (byte i=0; i < sizeof(inputpins); i++)
-    {
-        Serial.print("Pin ");
-        Serial.print(inputpins[i], DEC);
-        Serial.print(" state is ");
-        Serial.println(bouncers[i].read(), DEC);
-    }
-
-    delay(1000);
 }
