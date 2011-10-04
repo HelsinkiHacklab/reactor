@@ -1,3 +1,5 @@
+#include <Bounce.h>
+
 #include <Wire.h>
 
 /**
@@ -14,7 +16,9 @@
  * PORTK Analog mega 8-15
  * PORTL Pins 42-49
  */
+ 
 
+Bounce bouncers[70] = Bounce(2, 20); // We must initialize these or things break
 
 void setup()
 {
@@ -22,78 +26,101 @@ void setup()
     for (byte i=2; i<=13; i++)
     {
         pinMode(i, INPUT);
+        digitalWrite(i, HIGH); // enable internal pull-up
+        bouncers[i] = Bounce(i, 20);
     }
     for (byte i=22; i<=29; i++)
     {
         pinMode(i, INPUT);
+        digitalWrite(i, HIGH); // enable internal pull-up
+        bouncers[i] = Bounce(i, 20);
     }
     for (byte i=30; i<=37; i++)
     {
         pinMode(i, INPUT);
+        digitalWrite(i, HIGH); // enable internal pull-up
+        bouncers[i] = Bounce(i, 20);
     }
     for (byte i=42; i<=49; i++)
     {
         pinMode(i, INPUT);
+        digitalWrite(i, HIGH); // enable internal pull-up
+        bouncers[i] = Bounce(i, 20);
     }
-    Serial.println('Analog pins');
-    Serial.println(A0, DEC);
-    Serial.println(A7, DEC);
-    Serial.println(A8, DEC);
-    Serial.println(A15, DEC);
+    /*
+    // Analog inputs are already inputs
+    for (byte i=54; i<=69; i++)
+    {
+        pinMode(i, INPUT);
+        digitalWrite(i, HIGH); // enable internal pull-up
+        bouncers[i] = Bounce(i, 20);
+    }
+    */
     Serial.println("Booted");
 }
 
 byte pinstates[70];
 
+unsigned int iter;
 void loop()
 {
+    iter++;
+    Serial.print("Iteration #");
+    Serial.println(iter, DEC);
     unsigned long startms = millis();
     unsigned long startus = micros();
-    byte foo;
+    // Update states
     for (byte i=2; i<=13; i++)
     {
-        pinstates[i] = digitalRead(i);
+        bouncers[i].update();
+        pinstates[i] = bouncers[i].read();
     }
     for (byte i=22; i<=29; i++)
     {
-        pinstates[i] = digitalRead(i);
+        bouncers[i].update();
+        pinstates[i] = bouncers[i].read();
     }
     for (byte i=30; i<=37; i++)
     {
-        pinstates[i] = digitalRead(i);
+        bouncers[i].update();
+        pinstates[i] = bouncers[i].read();
     }
     for (byte i=42; i<=49; i++)
     {
-        pinstates[i] = digitalRead(i);
+        bouncers[i].update();
+        pinstates[i] = bouncers[i].read();
     }
-    // Analog pins
+    /*
+    // Analog inputs are already inputs
     for (byte i=54; i<=69; i++)
     {
-        pinstates[i] = digitalRead(i);
+        bouncers[i].update();
+        pinstates[i] = bouncers[i].read();
     }
+    */
     unsigned long endms = millis();
     unsigned long endus = micros();
 
-    Serial.print("Reads took ");
+    Serial.print("updates&reads took ");
     Serial.print(endms-startms, DEC);
     Serial.println("ms");
     Serial.print(startms, DEC);
     Serial.print(" ");
     Serial.println(endms, DEC);
-    Serial.print("Reads took ");
+    Serial.print("updates took ");
     Serial.print(endus-startus, DEC);
     Serial.println("us");
     Serial.print(startus, DEC);
     Serial.print(" ");
     Serial.println(endus, DEC);
+
     Serial.println("Pin states:");
-    for (byte i=2; i<=70; i++)
+    for (byte i=2; i<=49; i++)
     {
         Serial.print(i, DEC);
         Serial.print("=");
         Serial.println(pinstates[i], DEC);
     }
-    
-    
-    delay(100);
+
+    delay(1000);
 }
