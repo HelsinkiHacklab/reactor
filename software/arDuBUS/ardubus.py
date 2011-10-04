@@ -7,7 +7,7 @@ import gobject
 import dbus
 import dbus.service
 import dbus.mainloop.glib
-
+import threading, serial
 
 class ardubus(dbus.service.Object):
     def __init__(self, bus, object_name, config):
@@ -28,7 +28,34 @@ class ardubus(dbus.service.Object):
 
     def initialize_serial(self):
         # TODO: initialize serial connection listener to a separate thread
+        self.input_buffer = []
+        self.serial_port = serial.Serial(self.config.get(self.board_name, 'device'), 115200, xonxoff=False, timeout=0.00001)
+        self.receiver_thread = threading.Thread(target=self.serial_reader)
+        self.receiver_thread.setDaemon(1)
+        self.receiver_thread.start()
+
+    def message_received(self):
         pass
+
+    def serial_reader(self):
+        alive = True
+        try:
+            while alive:
+                data = self.serial_port.read(1)
+                # TODO: hex-encode unprintable characters
+                if data not in ["\r", "\n"]:
+                    sys.stdout.write(repr(data))
+                else:
+                    sys.stdout.write(data)
+                input_buffer.append(data)
+                if (    len(self.input_buffer) > 1
+                    and self.input_buffer[-2:] == "\r\n"):
+                    # Got a message, parse it and empty the buffer
+                    self.message_received()
+                    self.input_buffer = []
+
+        except serial.SerialException, e:
+            self.alive = False
 
 
 
