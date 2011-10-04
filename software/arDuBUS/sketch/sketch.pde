@@ -19,6 +19,7 @@
 // Define the input pins we wish to use
 const byte inputpins[] = { 2, 24, 32, 50, PJ6, 44 };
 #define DEBOUNCE_TIME 20 // milliseconds, see Bounce library
+#define REPORT_INTERVAL 5000 // Milliseconds
 
 // Initialize the array of debouncers
 Bounce bouncers[sizeof(inputpins)] = Bounce(inputpins[0],DEBOUNCE_TIME); // We must initialize these or things break
@@ -69,10 +70,35 @@ void setup()
     Serial.println("Booted");
 }
 
+unsigned long last_report_time;
+void report()
+{
+    for (byte i=0; i < sizeof(inputpins); i++)
+    {
+        Serial.print("Pin ");
+        Serial.print(inputpins[i], DEC);
+        Serial.print(" state has been ");
+        Serial.print(bouncers[i].read(), DEC);
+        Serial.print(" for ");
+        Serial.print(bouncers[i].duration(), DEC);
+        Serial.println("ms");
+    }
+    last_report_time = millis();
+}
+
+inline void check_report()
+{
+    if ((millis() - last_report_time) > REPORT_INTERVAL)
+    {
+        report();
+    }
+}
+
 void loop()
 {
     if (update_bouncers_flag)
     {
         update_bouncers();
     }
+    check_report();
 }
