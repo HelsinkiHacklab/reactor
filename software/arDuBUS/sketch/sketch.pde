@@ -1,6 +1,6 @@
 #include <Bounce.h>
 #include <MsTimer2.h>
-
+#define PIN_OFFSET 32 // We need to offset the pin numbers to CR and LF which are control characters to us
 /**
  * Notes about ports on Seeduino Mega
  *
@@ -14,10 +14,16 @@
  * PORTH RX2-TX2,PH2,6-9,PH7
  * PORTK Analog mega 8-15
  * PORTL Pins 42-49
+ *
+ * See timers http://softsolder.com/2010/09/05/arduino-mega-1280-pwm-to-timer-assignment/
  */
 
 // Define the input pins we wish to use
-const byte inputpins[] = { 2, 24, 32, 50, PJ6, 44 };
+const byte d_input_pins[] = { 2, 24, 32, 50, PJ6, 44 }; // Digital inputs, debounced
+/* const byte a_input_pins[] = {  }; // Analog inputs, unfiltered */
+const byte d_output_pins[] = { 13 }; // Digital outputs, including HW PMW (you are responsible for only calling the HW PWM for pins that actually support it)
+// PONDER: Add software PWM support ?
+
 #define DEBOUNCE_TIME 20 // milliseconds, see Bounce library
 #define REPORT_INTERVAL 5000 // Milliseconds
 
@@ -25,7 +31,7 @@ const byte inputpins[] = { 2, 24, 32, 50, PJ6, 44 };
 
 
 // Initialize the array of debouncers
-Bounce bouncers[sizeof(inputpins)] = Bounce(inputpins[0],DEBOUNCE_TIME); // We must initialize these or things break
+Bounce bouncers[sizeof(d_input_pins)] = Bounce(d_input_pins[0],DEBOUNCE_TIME); // We must initialize these here or things break, will overwrite with new instances in setup()
 
 volatile boolean update_bouncers_flag;
 void flag_update_bouncer()
@@ -33,36 +39,45 @@ void flag_update_bouncer()
     update_bouncers_flag = true;
 }
 
+inline void setup_d_outputs()
+{
+    for (byte i=0; i < sizeof(d_output_pins); i++)
+    {
+        pinMode(d_output_pins[i], OUTPUT);
+        digitalWrite(d_output_pins[i], LOW);
+    }
+}
+
 inline void setup_bouncer()
 {
     // Setup the debouncers
-    for (byte i=0; i < sizeof(inputpins); i++)
+    for (byte i=0; i < sizeof(d_input_pins); i++)
     {
-        pinMode(inputpins[i], INPUT);
-        if (inputpins[i] != 13)
+        pinMode(d_input_pins[i], INPUT);
+        if (d_input_pins[i] != 13)
         {
-            digitalWrite(inputpins[i], HIGH); // enable internal pull-up (except for #13 which has the led and external resistor, which will cause issues)
+            digitalWrite(d_input_pins[i], HIGH); // enable internal pull-up (except for #13 which has the led and external resistor, which will cause issues, see http://www.arduino.cc/en/Tutorial/DigitalPins)
         }
-        bouncers[i] = Bounce(inputpins[i], DEBOUNCE_TIME);
+        bouncers[i] = Bounce(d_input_pins[i], DEBOUNCE_TIME);
     }
 }
 
 inline void update_bouncers()
 {
     // Update debouncer states
-    for (byte i=0; i < sizeof(inputpins); i++)
+    for (byte i=0; i < sizeof(d_input_pins); i++)
     {
         if (bouncers[i].update())
         {
             // State changed
             /*
             Serial.print("Pin ");
-            Serial.print(inputpins[i], DEC);
+            Serial.print(d_input_pins[i], DEC);
             Serial.print(" CHANGED to ");
             Serial.println(bouncers[i].read(), DEC);
             */
             Serial.print("CD"); // CD<pin_byte><state_byte>
-            Serial.print(inputpins[i]);
+            Serial.print(d_input_pins[i]);
             Serial.println(bouncers[i].read());
         }
     }
@@ -73,22 +88,25 @@ void setup()
 {
     Serial.begin(115200);
     
+    setup_d_outputs();
     setup_bouncer();
     // Setup timer for flagging bouncer updates
     MsTimer2::set(5, flag_update_bouncer);
     MsTimer2::start();
-
+    /**
+     * NOTE if we want to stop the MsTimer2 we must reset the hw timer or PWM outputs suffer, see http://www.arduino.cc/cgi-bin/yabb2/YaBB.pl?num=1254144703
+     */
     Serial.println("Booted");
 }
 
 unsigned long last_report_time;
 void report()
 {
-    for (byte i=0; i < sizeof(inputpins); i++)
+    for (byte i=0; i < sizeof(d_input_pins); i++)
     {
         /*
         Serial.print("Pin ");
-        Serial.print(inputpins[i], DEC);
+        Serial.print(d_input_pins[i], DEC);
         Serial.print(" state has been ");
         Serial.print(bouncers[i].read(), DEC);
         Serial.print(" for ");
@@ -96,7 +114,7 @@ void report()
         Serial.println("ms");
         */
         Serial.print("RD"); // RD<pin_byte><state_byte><time_long_as_hex>
-        Serial.print(inputpins[i]);
+        Serial.print(d_input_pins[i]);
         Serial.print(bouncers[i].read());
         Serial.println(bouncers[i].duration(), HEX);
     }
@@ -167,20 +185,30 @@ void process_command()
 {
     switch(incoming_command[0])
     {
-        case 0x0:
-            Serial.println(0x15); // NACK
-            return;
-            break;
-        case 0x44: // ASCII "D" (D<pinbyte><statebyte>)
-            if (incoming_command[2])
+        case 0x44: // ASCII "D" (D<pinbyte><statebyte>) //The pin must have been declared in d_output_pins or unexpected things will happen
+            if (incoming_command[2] == 0x31) // ASCII "1"
             {
-                digitalWrite(incoming_command[1], HIGH);
+                digitalWrite(incoming_command[1]-PIN_OFFSET, HIGH);
             }
             else
             {
-                digitalWrite(incoming_command[1], LOW);
+                digitalWrite(incoming_command[1]-PIN_OFFSET, LOW);
             }
+            Serial.print("D");
+            Serial.print(incoming_command[1]);
+            Serial.print(incoming_command[2]);
             Serial.println(0x6); // ACK
+            break;
+        case 0x50: // ASCII "P" (P<pinbyte><cyclebyte>) //The pin must have been declared in d_output_pins or unexpected things will happen (and must support HW PWM)
+            analogWrite(incoming_command[1]-PIN_OFFSET, incoming_command[2]);
+            Serial.print("P");
+            Serial.print(incoming_command[1]);
+            Serial.print(incoming_command[2]);
+            Serial.println(0x6); // ACK
+            break;
+        default:
+            Serial.println(0x15); // NACK
+            return;
             break;
     }
 }
@@ -193,4 +221,5 @@ void loop()
         update_bouncers();
     }
     check_report();
+    read_command_bytes();
 }

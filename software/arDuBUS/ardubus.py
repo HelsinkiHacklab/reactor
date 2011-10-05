@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-
 # The real deal, this will talk with an arduino and pass signals/method calls back and forth
+PIN_OFFSET=32 # We need to offset the pin numbers to CR and LF which are control characters to us (NOTE: this *must* be same in sketch)
 
 import os,sys
 import threading, serial
@@ -22,9 +22,33 @@ class ardubus(dbus.service.Object):
         dbus.service.Object.__init__(self, self.bus_name, self.object_path)
         self.initialize_serial()
 
+    def send_serial_command(self, command):
+        command = command + "\n"
+        for c in command:
+            self.serial_port.write(c)
+        self.serial_port.flush()
+        # TODO Check for the ACK from board somehow (not exactly trivial when another thread is constantly reading the port for reports [though now the sketch acknowledges the command it parses in full so we could look into the history])
+        print 'DEBUG: sent command %s' % repr(command)
+        return True
+        
+    def p2b(self, pin):
+        """Convert pin number integer to a byte to be sent to the sketch"""
+        return chr(pin+PIN_OFFSET)
+
     @dbus.service.method('fi.hacklab.ardubus')
     def hello(self):
         return "Hello,World! My name is " + self.object_name
+
+    @dbus.service.method('fi.hacklab.ardubus', in_signature='yy') # "y" is the signature for a byte
+    def set_pwm(self, pin, cycle):
+        self.send_serial_command("P%s%s" % (self.p2b(pin), chr(cycle)))
+
+    @dbus.service.method('fi.hacklab.ardubus', in_signature='yb') # "y" is the signature for a byte
+    def set_dio(self, pin, state):
+        if state:
+            self.send_serial_command("D%s1" % self.p2b(pin))
+        else:
+            self.send_serial_command("D%s0" % self.p2b(pin))
 
     @dbus.service.signal('fi.hacklab.ardubus')
     def dio_change(self, pin, state, sender):
