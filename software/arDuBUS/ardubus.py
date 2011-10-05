@@ -29,23 +29,43 @@ class ardubus(dbus.service.Object):
 
     @dbus.service.signal('fi.hacklab.ardubus')
     def dio_change(self, pin, state, sender):
+        #print "SIGNALLING: Pin %d changed to %d on %s" % (pin, state, sender)
         pass
+
+    @dbus.service.signal('fi.hacklab.ardubus')
+    def dio_report(self, pin, state, time, sender):
+        #print "SIGNALLING: Pin %d has been %d for %dms on %s" % (pin, state, time, sender)
+        pass
+
 
     def initialize_serial(self):
         print "initialize_serial called"
-        self.input_buffer = []
+        self.input_buffer = ""
         self.serial_port = serial.Serial(self.config.get(self.object_name, 'device'), 115200, xonxoff=False, timeout=0.00001)
         self.receiver_thread = threading.Thread(target=self.serial_reader)
         self.receiver_thread.setDaemon(1)
         self.receiver_thread.start()
         print "thread started"
 
-    def message_received(self):
-        pass
+    def message_received(self, input_buffer):
+        #print "message_received called with buffer %s" % repr(input_buffer)
+        try:
+            if (self.input_buffer[:2] == 'CD'):
+                # State change
+                self.dio_change(ord(input_buffer[2]), bool(int(input_buffer[3])), self.object_name)
+                return
+            if (self.input_buffer[:2] == 'RD'):
+                # State report (FIXME: the integer parsing doesn't quite seem to work [probably need to fix the sketch as well])
+                self.dio_report(ord(input_buffer[2]), bool(int(input_buffer[3])), int(input_buffer[5:9], 16), self.object_name)
+                pass
+        except IndexError,e:
+            print "message_received: Got exception %s" % e
+            # Ignore indexerrors, they just mean we could not parse the command
+            pass
+
 
     def serial_reader(self):
         import string,binascii
-        print "Serial reader thread"
         alive = True
         try:
             while alive:
@@ -53,17 +73,23 @@ class ardubus(dbus.service.Object):
                 if len(data) == 0:
                     continue
                 # hex-encode unprintable characters
-                if data not in string.letters.join(string.digits).join(string.punctuation).join("\r\n"):
-                    sys.stdout.write("\\0x".join(binascii.hexlify(data)))
+#               if data not in string.letters.join(string.digits).join(string.punctuation).join("\r\n"):
+#                    sys.stdout.write("\\0x".join(binascii.hexlify(data)))
+                # OTOH repr was better afterall
+                if data not in "\r\n":
+                    sys.stdout.write(repr(data))
                 else:
                     sys.stdout.write(data)
                 # Put the data into inpit buffer and check for CRLF
-                self.input_buffer.append(data)
+                self.input_buffer += data
+                # Trim prefix NULLs and linebreaks
+                self.input_buffer = self.input_buffer.lstrip(chr(0x0) + "\r\n")
+                #print "input_buffer=%s" % repr(self.input_buffer)
                 if (    len(self.input_buffer) > 1
                     and self.input_buffer[-2:] == "\r\n"):
                     # Got a message, parse it and empty the buffer
-                    self.message_received()
-                    self.input_buffer = []
+                    self.message_received(self.input_buffer)
+                    self.input_buffer = ""
 
         except serial.SerialException, e:
             print "Got exception %s" % e
