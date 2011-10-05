@@ -27,7 +27,7 @@ const byte inputpins[] = { 2, 24, 32, 50, PJ6, 44 };
 // Initialize the array of debouncers
 Bounce bouncers[sizeof(inputpins)] = Bounce(inputpins[0],DEBOUNCE_TIME); // We must initialize these or things break
 
-boolean update_bouncers_flag;
+volatile boolean update_bouncers_flag;
 void flag_update_bouncer()
 {
     update_bouncers_flag = true;
