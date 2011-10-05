@@ -5,7 +5,7 @@
  * Notes about ports on Seeduino Mega
  *
  * PORTA Pins 22-29
- * PORTB 53,52-50(SPI),10-13
+ * PORTB 53,52-50(SPI),10-13 (NOTE: pin13 has the led and it has resistor, thus the internal pull-up can't be used with it)
  * PORTC Pins 30-37
  * <PORTD 3-4(I2C),RX1-RX2,PD4-PD6,38>
  * <PORTE can't be used, had RX0/TX0 which we need.>
@@ -39,7 +39,10 @@ inline void setup_bouncer()
     for (byte i=0; i < sizeof(inputpins); i++)
     {
         pinMode(inputpins[i], INPUT);
-        digitalWrite(inputpins[i], HIGH); // enable internal pull-up
+        if (inputpins[i] != 13)
+        {
+            digitalWrite(inputpins[i], HIGH); // enable internal pull-up (except for #13 which has the led and external resistor, which will cause issues)
+        }
         bouncers[i] = Bounce(inputpins[i], DEBOUNCE_TIME);
     }
 }
