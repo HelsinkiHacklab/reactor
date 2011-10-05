@@ -2,12 +2,17 @@
 
 # The real deal, this will talk with an arduino and pass signals/method calls back and forth
 
-import os
+import os,sys
+import threading, serial
 import gobject
+gobject.threads_init()
 import dbus
 import dbus.service
 import dbus.mainloop.glib
-import threading, serial
+from dbus.mainloop.glib import threads_init
+threads_init()
+
+
 
 class ardubus(dbus.service.Object):
     def __init__(self, bus, object_name, config):
@@ -27,27 +32,33 @@ class ardubus(dbus.service.Object):
         pass
 
     def initialize_serial(self):
-        # TODO: initialize serial connection listener to a separate thread
+        print "initialize_serial called"
         self.input_buffer = []
-        self.serial_port = serial.Serial(self.config.get(self.board_name, 'device'), 115200, xonxoff=False, timeout=0.00001)
+        self.serial_port = serial.Serial(self.config.get(self.object_name, 'device'), 115200, xonxoff=False, timeout=0.00001)
         self.receiver_thread = threading.Thread(target=self.serial_reader)
         self.receiver_thread.setDaemon(1)
         self.receiver_thread.start()
+        print "thread started"
 
     def message_received(self):
         pass
 
     def serial_reader(self):
+        import string,binascii
+        print "Serial reader thread"
         alive = True
         try:
             while alive:
                 data = self.serial_port.read(1)
-                # TODO: hex-encode unprintable characters
-                if data not in ["\r", "\n"]:
-                    sys.stdout.write(repr(data))
+                if len(data) == 0:
+                    continue
+                # hex-encode unprintable characters
+                if data not in string.letters.join(string.digits).join(string.punctuation).join("\r\n"):
+                    sys.stdout.write("\\0x".join(binascii.hexlify(data)))
                 else:
                     sys.stdout.write(data)
-                input_buffer.append(data)
+                # Put the data into inpit buffer and check for CRLF
+                self.input_buffer.append(data)
                 if (    len(self.input_buffer) > 1
                     and self.input_buffer[-2:] == "\r\n"):
                     # Got a message, parse it and empty the buffer
@@ -55,6 +66,7 @@ class ardubus(dbus.service.Object):
                     self.input_buffer = []
 
         except serial.SerialException, e:
+            print "Got exception %s" % e
             self.alive = False
 
 
