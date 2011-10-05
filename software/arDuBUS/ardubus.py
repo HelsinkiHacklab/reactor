@@ -9,8 +9,7 @@ gobject.threads_init()
 import dbus
 import dbus.service
 import dbus.mainloop.glib
-from dbus.mainloop.glib import threads_init
-threads_init()
+dbus.mainloop.glib.threads_init()
 
 
 
