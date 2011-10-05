@@ -55,7 +55,7 @@ class ardubus(dbus.service.Object):
                 return
             if (self.input_buffer[:2] == 'RD'):
                 # State report (FIXME: the integer parsing doesn't quite seem to work [probably need to fix the sketch as well])
-                self.dio_report(ord(input_buffer[2]), bool(int(input_buffer[3])), int(input_buffer[5:9], 16), self.object_name)
+                self.dio_report(ord(input_buffer[2]), bool(int(input_buffer[3])), int(input_buffer[5:], 16), self.object_name)
                 pass
         except IndexError,e:
             print "message_received: Got exception %s" % e
@@ -86,8 +86,8 @@ class ardubus(dbus.service.Object):
                 #print "input_buffer=%s" % repr(self.input_buffer)
                 if (    len(self.input_buffer) > 1
                     and self.input_buffer[-2:] == "\r\n"):
-                    # Got a message, parse it and empty the buffer
-                    self.message_received(self.input_buffer)
+                    # Got a message, parse it (sans the CRLF) and empty the buffer
+                    self.message_received(self.input_buffer[:-2])
                     self.input_buffer = ""
 
         except serial.SerialException, e:
