@@ -21,9 +21,10 @@
 
 // Define the input pins we wish to use
 const byte d_input_pins[] = { 2, 24, 32, 50, PJ6, 44 }; // Digital inputs, debounced
-/* const byte a_input_pins[] = {  }; // Analog inputs, unfiltered */
+const byte a_input_pins[] = { A1 }; // Analog inputs, unfiltered
+#define ANALOG_READ_INTERVAL 5 // Milliseconds
+// Define output pins we wish to use
 const byte d_output_pins[] = { 13 }; // Digital outputs, including HW PMW (you are responsible for only calling the HW PWM for pins that actually support it)
-// PONDER: Add software PWM support ?
 const byte s_output_pins[] = { 10 }; // Servo outputs
 
 #define DEBOUNCE_TIME 20 // milliseconds, see Bounce library
@@ -37,10 +38,13 @@ const byte s_output_pins[] = { 10 }; // Servo outputs
 Bounce bouncers[sizeof(d_input_pins)] = Bounce(d_input_pins[0],DEBOUNCE_TIME); // We must initialize these here or things break, will overwrite with new instances in setup()
 Servo servos[sizeof(s_output_pins)] = Servo();
 
-volatile boolean update_bouncers_flag;
-void flag_update_bouncer()
+inline void setup_a_inputs()
 {
-    update_bouncers_flag = true;
+    for (byte i=0; i < sizeof(a_input_pins); i++)
+    {
+        pinMode(a_input_pins[i], INPUT);
+        digitalWrite(a_input_pins[i], LOW); // Make sure the internal pull-up is disabled
+    }
 }
 
 // Initialize the servos
@@ -58,7 +62,6 @@ inline void setup_d_outputs()
 {
     for (byte i=0; i < sizeof(d_output_pins); i++)
     {
-        
         pinMode(d_output_pins[i], OUTPUT);
         digitalWrite(d_output_pins[i], LOW);
     }
@@ -79,22 +82,6 @@ inline void setup_bouncer()
     }
 }
 
-// Calls update method on all of the digital inputs and outputs message to Serial if state changed
-inline void update_bouncers()
-{
-    // Update debouncer states
-    for (byte i=0; i < sizeof(d_input_pins); i++)
-    {
-        if (bouncers[i].update())
-        {
-            // State changed
-            Serial.print("CD"); // CD<pin_byte><state_byte>
-            Serial.print(d_input_pins[i]);
-            Serial.println(bouncers[i].read());
-        }
-    }
-    update_bouncers_flag = false;
-}
 
 void setup()
 {
@@ -114,6 +101,7 @@ void report()
         Serial.print("RD"); // RD<pin_byte><state_byte><time_long_as_hex>
         Serial.print(d_input_pins[i]);
         Serial.print(bouncers[i].read());
+        // This might not be the best way to pass this info, maybe fixed-lenght encoding would be better ?
         Serial.println(bouncers[i].duration(), HEX);
     }
     last_report_time = millis();
@@ -137,6 +125,47 @@ inline void check_debounce()
         update_bouncers();
     }
 }
+
+// Calls update method on all of the digital inputs and outputs message to Serial if state changed
+inline void update_bouncers()
+{
+    // Update debouncer states
+    for (byte i=0; i < sizeof(d_input_pins); i++)
+    {
+        if (bouncers[i].update())
+        {
+            // State changed
+            Serial.print("CD"); // CD<pin_byte><state_byte>
+            Serial.print(d_input_pins[i]);
+            Serial.println(bouncers[i].read());
+        }
+    }
+    last_debounce_time = millis();
+}
+
+
+// Check if we should debounce (called in mainloop)
+unsigned long last_aread_time;
+inline void check_aread()
+{
+    if ((millis() - last_aread_time) > ANALOG_READ_INTERVAL)
+    {
+        update_analog_inputs();
+    }
+}
+
+inline void update_analog_inputs()
+{
+    for (byte i=0; i < sizeof(a_input_pins); i++)
+    {
+        Serial.print("CA"); // CA<pin_byte><value in hex>
+        Serial.print(a_input_pins[i]);
+        // This might not be the best way to pass this info, maybe fixed-lenght encoding would be better ?
+        Serial.println(analogRead(a_input_pins[i]), HEX);
+    }
+    last_aread_time = millis();
+}
+
 
 // Handle incoming Serial data, try to find a command in there
 #define COMMAND_STRING_SIZE 10 //Remember to allocate for the null termination
@@ -235,6 +264,7 @@ void process_command()
 void loop()
 {
     check_debounce();
+    check_aread();
     check_report();
     read_command_bytes();
 }

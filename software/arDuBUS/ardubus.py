@@ -66,6 +66,11 @@ class ardubus(dbus.service.Object):
         #print "SIGNALLING: Pin %d has been %d for %dms on %s" % (pin, state, time, sender)
         pass
 
+    @dbus.service.signal('fi.hacklab.ardubus')
+    def aio_change(self, pin, value, sender):
+        #print "SIGNALLING: Pin %d has been %d for %dms on %s" % (pin, state, time, sender)
+        pass
+
 
     def initialize_serial(self):
         import threading, serial
@@ -92,7 +97,11 @@ class ardubus(dbus.service.Object):
                 return
             if (self.input_buffer[:2] == 'RD'):
                 # State report (FIXME: the integer parsing doesn't quite seem to work [probably need to fix the sketch as well])
-                self.dio_report(ord(input_buffer[2]), bool(int(input_buffer[3])), int(input_buffer[5:], 16), self.object_name)
+                self.dio_report(ord(input_buffer[2]), bool(int(input_buffer[3])), int(input_buffer[4:], 16), self.object_name)
+                pass
+            if (self.input_buffer[:2] == 'CA'):
+                # State report (FIXME: the integer parsing doesn't quite seem to work [probably need to fix the sketch as well])
+                self.aio_change(ord(input_buffer[2]), int(input_buffer[3:], 16), self.object_name)
                 pass
         except IndexError,e:
             print "message_received: Got exception %s" % e
