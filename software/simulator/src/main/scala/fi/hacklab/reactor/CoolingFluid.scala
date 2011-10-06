@@ -1,4 +1,4 @@
-package fi.hacklab.reactorsimulator
+package fi.hacklab.reactor
 
 /**
  * Some amount of fluid (water) in a pipe or cistern or machine part.

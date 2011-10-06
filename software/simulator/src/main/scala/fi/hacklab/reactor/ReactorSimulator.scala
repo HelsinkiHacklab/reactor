@@ -1,4 +1,4 @@
-package fi.hacklab.reactorsimulator
+package fi.hacklab.reactor
 
 /**
  * 
