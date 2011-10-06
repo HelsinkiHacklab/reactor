@@ -1,0 +1,18 @@
+
+Draft for Adruino<->DBUS console communication
+consoles are inited with 
+python ardubridge.py console_config.cfg 
+
+console config will describe how to map signal to methods that active atual
+leds/gauges/etc by communicating simple serial commands to Arduino
+
+Arduino reads switches / other inputs and send simple commands that are 
+mapped to DBUS signals 
+
+types to map:
+TODO
+
+gauge -> set input for servo gauge 
+led -> just set led N
+...
+

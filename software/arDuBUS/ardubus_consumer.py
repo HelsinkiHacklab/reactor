@@ -1,12 +1,12 @@
-# Trivial remote method call example (on two boards mainly to test the ardubus.py multi-board support)
-
-import dbus
+#!/usr/bin/env python -i
+import dbus,time
  
 bus = dbus.SessionBus()
-helloservice = bus.get_object('fi.hacklab.ardubus', '/fi/hacklab/ardubus/arduino0')
-hello = helloservice.get_dbus_method('hello', 'fi.hacklab.ardubus')
-print hello()
+arduino0 = bus.get_object('fi.hacklab.ardubus', '/fi/hacklab/ardubus/arduino0')
+hello0 = arduino0.get_dbus_method('hello', 'fi.hacklab.ardubus')
+pwm0 = arduino0.get_dbus_method('set_pwm', 'fi.hacklab.ardubus')
+dio0 = arduino0.get_dbus_method('set_dio', 'fi.hacklab.ardubus')
+print hello0()
+pwm0(13,128)
 
-helloservice = bus.get_object('fi.hacklab.ardubus', '/fi/hacklab/ardubus/arduino1')
-hello = helloservice.get_dbus_method('hello', 'fi.hacklab.ardubus')
-print hello()
+
