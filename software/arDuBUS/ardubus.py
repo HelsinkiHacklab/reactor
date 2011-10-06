@@ -60,7 +60,13 @@ class ardubus(dbus.service.Object):
         import threading, serial
         print "initialize_serial called"
         self.input_buffer = ""
-        self.serial_port = serial.Serial(self.config.get(self.object_name, 'device'), 115200, xonxoff=False, timeout=0.00001)
+        serial_device = None
+        #consoles have different configuration file structure
+        if self.config.has_section('board'):
+            serial_device = self.config.get('board', 'device')
+        else:
+            serial_device = self.config.get(self.object_name, 'device')
+        self.serial_port = serial.Serial(serial_device, 115200, xonxoff=False, timeout=0.00001)
         self.receiver_thread = threading.Thread(target=self.serial_reader)
         self.receiver_thread.setDaemon(1)
         self.receiver_thread.start()
