@@ -12,10 +12,10 @@ import ardubus as ardubus_real
 class ardubus(ardubus_real.ardubus):
     def __init__(self, bus, object_name, config):
         ardubus_real.ardubus.__init__(self, bus, object_name, config)
-        gobject.timeout_add(1000, self.random_pwm)
+        gobject.timeout_add(5000, self.random_pwm)
 
     def random_pwm(self):
-        self.set_pwm(13, random.randint(5,255))
+        self.set_pwm(13, random.randint(5,250))
         # We must return true to keep this interval running
         return True
 
