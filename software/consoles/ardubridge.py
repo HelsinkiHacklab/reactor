@@ -13,21 +13,29 @@ class ardubus_console(dbus.service.Object):
     def __init__(self, bus, config):
         self.bus = bus
         
-        self.object_name = config.get('board','name')
+        self.object_name = config.get('board', 'name')
         self.object_path = '/fi/hacklab/ardubus/' + self.object_name
         self.bus_name = dbus.service.BusName('fi.hacklab.ardubus', bus=bus)
         dbus.service.Object.__init__(self, self.bus_name, self.object_path)
         
         self.commands = {}
         for input in config.items('inputs'):
-            print "setting", input[1], "for signal", input[0] 
-            self.bus.add_signal_receiver(self.__getattribute__(input[1]), 
-                                         dbus_interface = "fi.hacklab.ardubus", 
+            print "setting", input[1], "for signal", input[0]
+            input_act = input[1].split(', ')
+            receiver = None
+            if len(input_act) > 1:
+                receiver = self.call_with_offset(int(input_act[1]), 
+                                                 self.__getattribute__(input_act[0]))                
+            else:
+                receiver = self.__getattribute__(input_act[0])
+            
+            self.bus.add_signal_receiver(receiver, dbus_interface = "fi.hacklab.ardubus", 
                                          signal_name = input[0])
+
         for output in config.items('outputs'):
-            print "setting signal", ouput[0], "for command", output[1]
+            print "setting signal", output[0], "for command", output[1]
             self.__dict__[input[0]] = dbus.service.signal('fi.hacklab.ardubus',
-                                       self.__getattribute__(input[1])
+                                       self.__getattribute__(input[1]))
             
         self.input_buffer = ""
         self.serial_port = serial.Serial(config.get('board', 'device'), 
@@ -36,16 +44,27 @@ class ardubus_console(dbus.service.Object):
         self.receiver_thread.setDaemon(1)
         self.receiver_thread.start()
 
+    #NOTE: we have to keep always id / item number as first parameter 
+    def call_with_offset(self, offset, method):
+        def _m(num, *args):
+            method(num + offset, *args)
+        return _m
 
     #examples of signals and handlers 
     
 
     #examples of mappers called from signals 
-    def gauge_display(self, gnumber, value, sender):
-        self.serial_port.write("SG %d %d") % (gnumber, value)
+    def dbg_receive_signal(self, *args, **kwargs):
+        print "Got args: %s" % repr(args)
+        print "Got kwargs %s" % repr(kwargs)
 
-    def set_led(self, lnumber, state, sender):
-        self.serial_port.write("SL %d %d") % (lnumber, value)
+    def gauge_display(self, gnumber, value):
+        #command servo gauge to display value here 
+        self.serial_port.write("SG %d %d" % (gnumber, value))
+
+    def set_led(self, lnumber, state):
+        #command led to state on,off,flicker here 
+        self.serial_port.write("SL %d %d" % (lnumber, state))
 
     def serial_reader(self):
         alive = True
@@ -93,7 +112,7 @@ if __name__ == '__main__':
     gobject.threads_init()
 
     config = ConfigParser.SafeConfigParser()
-    config.read(sys.argv[0])
+    config.read(sys.argv[1])
 
     bus = dbus.SessionBus()
     console = ardubus_console(bus, config)
