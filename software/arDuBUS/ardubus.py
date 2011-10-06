@@ -3,13 +3,8 @@
 PIN_OFFSET=32 # We need to offset the pin numbers to CR and LF which are control characters to us (NOTE: this *must* be same in sketch)
 
 import os,sys
-import threading, serial
-import gobject
-gobject.threads_init()
 import dbus
 import dbus.service
-import dbus.mainloop.glib
-dbus.mainloop.glib.threads_init()
 
 
 
@@ -62,6 +57,7 @@ class ardubus(dbus.service.Object):
 
 
     def initialize_serial(self):
+        import threading, serial
         print "initialize_serial called"
         self.input_buffer = ""
         self.serial_port = serial.Serial(self.config.get(self.object_name, 'device'), 115200, xonxoff=False, timeout=0.00001)
@@ -124,6 +120,9 @@ class ardubus(dbus.service.Object):
 
 
 if __name__ == '__main__':
+    import dbus.mainloop.glib, gobject
+    gobject.threads_init()
+    dbus.mainloop.glib.threads_init()
     dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
 
     import ConfigParser
