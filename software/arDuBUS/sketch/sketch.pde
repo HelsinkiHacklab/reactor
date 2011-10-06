@@ -21,7 +21,7 @@
 
 // Define the input pins we wish to use
 const byte d_input_pins[] = { 2, 24, 32, 50, PJ6, 44 }; // Digital inputs, debounced
-const byte a_input_pins[] = { A1 }; // Analog inputs, unfiltered
+const byte a_input_pins[] = { }; // Analog inputs, unfiltered
 #define ANALOG_READ_INTERVAL 5 // Milliseconds
 // Define output pins we wish to use
 const byte d_output_pins[] = { 13 }; // Digital outputs, including HW PMW (you are responsible for only calling the HW PWM for pins that actually support it)

@@ -96,11 +96,9 @@ class ardubus(dbus.service.Object):
                 self.dio_change(ord(input_buffer[2]), bool(int(input_buffer[3])), self.object_name)
                 return
             if (self.input_buffer[:2] == 'RD'):
-                # State report (FIXME: the integer parsing doesn't quite seem to work [probably need to fix the sketch as well])
                 self.dio_report(ord(input_buffer[2]), bool(int(input_buffer[3])), int(input_buffer[4:], 16), self.object_name)
                 pass
             if (self.input_buffer[:2] == 'CA'):
-                # State report (FIXME: the integer parsing doesn't quite seem to work [probably need to fix the sketch as well])
                 self.aio_change(ord(input_buffer[2]), int(input_buffer[3:], 16), self.object_name)
                 pass
         except IndexError,e:
