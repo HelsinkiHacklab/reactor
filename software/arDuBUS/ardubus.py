@@ -43,6 +43,8 @@ class ardubus(dbus.service.Object):
     @dbus.service.method('fi.hacklab.ardubus', in_signature='yy') # "y" is the signature for a byte
     def set_servo(self, sindex, value):
         """Note that the first value is NOT a pin number but index of the servos array on the sketch (so first servo is 0 etc), however Arduino does not have dictionaries we can't sensibly do lookup via the pin number"""
+        if value > 180:
+            value = 180 # Servo library accepts values from 0 to 180 (degrees)
         if value in [ 13, 10]: #Offset values that map to CR or LF by one
             value += 1
         self.send_serial_command("S%s%s" % (self.p2b(sindex), chr(value)))
