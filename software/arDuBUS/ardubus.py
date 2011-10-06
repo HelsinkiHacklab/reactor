@@ -36,6 +36,8 @@ class ardubus(dbus.service.Object):
 
     @dbus.service.method('fi.hacklab.ardubus', in_signature='yy') # "y" is the signature for a byte
     def set_pwm(self, pin, cycle):
+        if cycle in [ 13, 10]: #Offset values that map to CR or LF by one
+            cycle += 1
         self.send_serial_command("P%s%s" % (self.p2b(pin), chr(cycle)))
 
     @dbus.service.method('fi.hacklab.ardubus', in_signature='yb') # "y" is the signature for a byte
