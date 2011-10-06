@@ -1,5 +1,6 @@
 #include <Bounce.h>
 #include <MsTimer2.h>
+#include <Servo.h>
 #define PIN_OFFSET 32 // We need to offset the pin numbers to CR and LF which are control characters to us
 /**
  * Notes about ports on Seeduino Mega
@@ -23,6 +24,7 @@ const byte d_input_pins[] = { 2, 24, 32, 50, PJ6, 44 }; // Digital inputs, debou
 /* const byte a_input_pins[] = {  }; // Analog inputs, unfiltered */
 const byte d_output_pins[] = { 13 }; // Digital outputs, including HW PMW (you are responsible for only calling the HW PWM for pins that actually support it)
 // PONDER: Add software PWM support ?
+const byte s_output_pins[] = { 10 }; // Servo outputs
 
 #define DEBOUNCE_TIME 20 // milliseconds, see Bounce library
 #define REPORT_INTERVAL 5000 // Milliseconds
@@ -32,6 +34,7 @@ const byte d_output_pins[] = { 13 }; // Digital outputs, including HW PMW (you a
 
 // Initialize the array of debouncers
 Bounce bouncers[sizeof(d_input_pins)] = Bounce(d_input_pins[0],DEBOUNCE_TIME); // We must initialize these here or things break, will overwrite with new instances in setup()
+Servo servos[sizeof(s_output_pins)] = Servo();
 
 volatile boolean update_bouncers_flag;
 void flag_update_bouncer()
@@ -43,6 +46,16 @@ inline void setup_d_outputs()
 {
     for (byte i=0; i < sizeof(d_output_pins); i++)
     {
+        servos[i].attach(s_output_pins[i]);
+        servos[i].write(90);
+    }
+}
+
+inline void setup_s_outputs()
+{
+    for (byte i=0; i < sizeof(s_output_pins); i++)
+    {
+        
         pinMode(d_output_pins[i], OUTPUT);
         digitalWrite(d_output_pins[i], LOW);
     }
@@ -90,12 +103,6 @@ void setup()
     
     setup_d_outputs();
     setup_bouncer();
-    // Setup timer for flagging bouncer updates
-    MsTimer2::set(5, flag_update_bouncer);
-    MsTimer2::start();
-    /**
-     * NOTE if we want to stop the MsTimer2 we must reset the hw timer or PWM outputs suffer, see http://www.arduino.cc/cgi-bin/yabb2/YaBB.pl?num=1254144703
-     */
     Serial.println("Booted");
 }
 
@@ -126,6 +133,15 @@ inline void check_report()
     if ((millis() - last_report_time) > REPORT_INTERVAL)
     {
         report();
+    }
+}
+
+unsigned long last_debounce_time;
+inline void check_debounce()
+{
+    if ((millis() - last_debounce_time) > 5)
+    {
+        update_bouncers();
     }
 }
 
@@ -206,6 +222,13 @@ void process_command()
             Serial.print(incoming_command[2]);
             Serial.println(0x6); // ACK
             break;
+        case 0x53: // ASCII "S" (P<indexbyte><value>) //The pin must have been declared in d_output_pins or unexpected things will happen (and must support HW PWM)
+            servos[incoming_command[1]].write(incoming_command[2]);
+            Serial.print("S");
+            Serial.print(incoming_command[1]);
+            Serial.print(incoming_command[2]);
+            Serial.println(0x6); // ACK
+            break;
         default:
             Serial.println(0x15); // NACK
             return;
@@ -216,10 +239,7 @@ void process_command()
 
 void loop()
 {
-    if (update_bouncers_flag)
-    {
-        update_bouncers();
-    }
+    check_debounce();
     check_report();
     read_command_bytes();
 }

@@ -40,6 +40,12 @@ class ardubus(dbus.service.Object):
             cycle += 1
         self.send_serial_command("P%s%s" % (self.p2b(pin), chr(cycle)))
 
+    @dbus.service.method('fi.hacklab.ardubus', in_signature='yy') # "y" is the signature for a byte
+    def set_servo(self, sindex, value):
+        if value in [ 13, 10]: #Offset values that map to CR or LF by one
+            value += 1
+        self.send_serial_command("S%s%s" % (self.p2b(sindex), chr(value)))
+
     @dbus.service.method('fi.hacklab.ardubus', in_signature='yb') # "y" is the signature for a byte
     def set_dio(self, pin, state):
         if state:
