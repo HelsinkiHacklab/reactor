@@ -1,5 +1,4 @@
 #include <Bounce.h>
-#include <MsTimer2.h>
 #include <Servo.h>
 #define PIN_OFFSET 32 // We need to offset the pin numbers to above CR and LF which are control characters to us
 /**
