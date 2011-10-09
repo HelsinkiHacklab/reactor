@@ -10,6 +10,9 @@ import dbus.mainloop.glib
 import ConfigParser
 
 import ardubus
+from collections import namedtuple
+
+OuputSignal = namedtuple('OutputSignal', 'signal index')
 
 #NOTE: this will be just signal wrapper generator layer between lower ardubus and 
 #game components
@@ -21,7 +24,8 @@ class ardubus_console(ardubus.ardubus):
 	ardubus.ardubus.__init__(self, bus, config.get('board', 'name'), config)
 
         self.bus = bus        
-        self.commands = {}
+        self.switches = {}
+   
         for input in config.items('inputs'):
             print "setting", input[1], "for signal", input[0]
             input_act = input[1].split(', ')
@@ -41,11 +45,22 @@ class ardubus_console(ardubus.ardubus):
 
         for output in config.items('outputs'):
             print "setting signal", output[0], "for command", output[1]
-            #TODO: mapping user inputs from arduino into signals
-            #self.__dict__[output[0]] = dbus.service.signal('fi.hacklab.ardubus')(self.tmp)            
-            #print "%s" % repr(self.__dict__[output[0]])
-            #self.__dict__[output[0]]()
+            #convert dummy method to signal, signal name is from methods name
+            @dbus.service.signal('fi.hacklab.ardubus')
+            def _m(self, index, value):
+               pass 
+            _m.__name__ = output[0]
+            output_act = output[1].split(', ')
+            #TODO: add other types of inputs
+            if output_act[0] !='R':
+                raise Exception('unknown input for output')
+                
+            first_pin = int(output_act[1])
+            last_pin = int(output_act[2])
+            for i in range(first_pin, last_pin):
+               self.switches[i] = OuputSignal(_m, first_pin)  
     
+    #methods to modify how basic methods are called
     def call_with_offset(self, offset, method):
         def _m(num, *args):
             method(num + offset, *args)
@@ -57,10 +72,11 @@ class ardubus_console(ardubus.ardubus):
             method(index, int( (value - vmin)*scale), *args)
         return _m
   
+    
     #override default signal generators with handlers  
     def dio_change(self, pin, state, sender):
-        #self.dios[pin](state) #call singal method for this pin change 
-        #print "SIGNALLING: Pin %d changed to %d on %s" % (pin, state, sender)
+        self.switches[pin].signal(self, pin - self.switches[pin].index, state) 
+	#print "SIGNALLING: Pin %d changed to %d on %s" % (pin, state, sender)
         pass
 
     def dio_report(self, pin, state, time, sender):
@@ -71,22 +87,11 @@ class ardubus_console(ardubus.ardubus):
         #print "SIGNALLING: Pin %d has been %d for %dms on %s" % (pin, state, time, sender)
          pass
 
-    #examples of mappers called from signals 
+    
     def dbg_receive_signal(self, *args, **kwargs):
         print "Got args: %s" % repr(args)
         print "Got kwargs %s" % repr(kwargs)
     
-    #these will be deprecated, methods that communicate with arduino sketch
-    #from base class will be used
-    def gauge_display(self, gnumber, value):
-        print "deprecated"
-        #command servo gauge to display value here 
-        #self.send_serial_command("SG%d:%d" % (gnumber, value))
-
-    def set_led(self, lnumber, state):
-        print "deprecated"
-        #command led to state on,off,flicker here 
-        #self.send_serial_command("SL%d:%d" % (lnumber, state))
 
 # these might be optional
 # simulator could always send all signal states 
