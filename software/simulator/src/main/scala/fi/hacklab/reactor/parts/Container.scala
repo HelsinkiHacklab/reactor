@@ -36,12 +36,3 @@ class Container extends Part {
   }
 
 }
-
-case class Port(host: Container, portType: PortType, gas: Boolean, liquid: Boolean) {
-  var flow_m3_per_s = 0.0
-}
-
-sealed trait PortType
-case object InPort extends PortType
-case object OutPort extends PortType
-case object InOutPort extends PortType

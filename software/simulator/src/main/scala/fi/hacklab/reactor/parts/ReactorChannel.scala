@@ -9,18 +9,24 @@ case class ReactorChannel() extends Part {
     var temperature = 0.0
     var neutronActivity = 0.0
     var neutronFluxOut = 0.0
+    var neutronFluxIn = 0.0
     var waterChannel: Container = new Container
   }
 
   var conditionsAtHeight: List[PosData] = Nil
 
   def update(time_s: Double) {
-    // Update activity based on natural activity and own and incoming flux, blocked by control rods and liquid water
+    // Calculate the incoming flux, based on outgoing flux by other channels, and control rod and water positions
 
-    // Calculate the outgoing flux
+    // Update activity based on incoming flux
 
     // Calculate the temperature based on activity and cooling flow
   }
 
 
+  override def postUpdate(time_s: Double) {
+
+    // Calculate the outgoing flux
+
+  }
 }
