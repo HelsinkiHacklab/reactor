@@ -1,18 +1,37 @@
 
-Draft for Adruino<->DBUS console communication
-consoles are inited with 
+Draft for game/simulator ardbus-console communication
+-----------------------------------------------------
+
+consoles are inited with: 
 python ardubridge.py console_config.cfg 
 
-console config will describe how to map signal to methods that active atual
-leds/gauges/etc by communicating simple serial commands to Arduino
+Ardbubridge is signal wrapper generator that uses
+console configuration file to map event signals from 
+simulator and game components into low level commands 
+that ardubus uses to communicate with actual arduino based 
+console panels. It also provides mapping of switches and other 
+user input from consoles into meaningfull signals to command 
+the simulator.
 
-Arduino reads switches / other inputs and send simple commands that are 
-mapped to DBUS signals 
+All signals from simulator are in format 
+singal_name(item_index, value, ...)
 
-types to map:
-TODO
+inputs section specifies how to map signals.
+format is:
+signal_name=action_method, group start index, real lowest value, real highest value 
+parameters are optional
 
-gauge -> set input for servo gauge 
-led -> just set led N
-...
+example:
+generator_speed=set_servo, 10, 0, 10000
+generator_temp=set_servo, 15, 25, 250
+
+simulator wants to display speed of generators 1, and 2
+it signals: 
+fi.hacklab.ardubus.generator_speed(0, 8000)
+fi.hacklab.ardubus.generator_speed(1, 2000)
+
+proper commands for servors at index 10 and 11
+will be called:
+ardubus.set_servo(10, 144)
+ardubus.set_servo(11, 36)
 

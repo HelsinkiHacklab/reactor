@@ -1,6 +1,6 @@
 #include <Bounce.h>
-#include <MsTimer2.h>
-#define PIN_OFFSET 32 // We need to offset the pin numbers to CR and LF which are control characters to us
+#include <Servo.h>
+#define PIN_OFFSET 32 // We need to offset the pin numbers to above CR and LF which are control characters to us
 /**
  * Notes about ports on Seeduino Mega
  *
@@ -20,25 +20,43 @@
 
 // Define the input pins we wish to use
 const byte d_input_pins[] = { 2, 24, 32, 50, PJ6, 44 }; // Digital inputs, debounced
-/* const byte a_input_pins[] = {  }; // Analog inputs, unfiltered */
+const byte a_input_pins[] = { }; // Analog inputs, unfiltered
+#define ANALOG_READ_INTERVAL 5 // Milliseconds
+// Define output pins we wish to use
 const byte d_output_pins[] = { 13 }; // Digital outputs, including HW PMW (you are responsible for only calling the HW PWM for pins that actually support it)
-// PONDER: Add software PWM support ?
+const byte s_output_pins[] = { 10 }; // Servo outputs
 
 #define DEBOUNCE_TIME 20 // milliseconds, see Bounce library
+#define DEBOUNCE_UPDATE_TIME 5 // Milliseconds, how often to call update() on the debouncers, see Bounce library
 #define REPORT_INTERVAL 5000 // Milliseconds
 
 
 
 
-// Initialize the array of debouncers
+// Initialize the array of debouncers and servos
 Bounce bouncers[sizeof(d_input_pins)] = Bounce(d_input_pins[0],DEBOUNCE_TIME); // We must initialize these here or things break, will overwrite with new instances in setup()
+Servo servos[sizeof(s_output_pins)] = Servo();
 
-volatile boolean update_bouncers_flag;
-void flag_update_bouncer()
+inline void setup_a_inputs()
 {
-    update_bouncers_flag = true;
+    for (byte i=0; i < sizeof(a_input_pins); i++)
+    {
+        pinMode(a_input_pins[i], INPUT);
+        digitalWrite(a_input_pins[i], LOW); // Make sure the internal pull-up is disabled
+    }
 }
 
+// Initialize the servos
+inline void setup_s_outputs()
+{
+    for (byte i=0; i < sizeof(s_output_pins); i++)
+    {
+        servos[i].attach(s_output_pins[i]);
+        servos[i].write(90);
+    }
+}
+
+// Initialize digital output pins
 inline void setup_d_outputs()
 {
     for (byte i=0; i < sizeof(d_output_pins); i++)
@@ -48,6 +66,7 @@ inline void setup_d_outputs()
     }
 }
 
+// Initialize the digital input pins and their debouncers
 inline void setup_bouncer()
 {
     // Setup the debouncers
@@ -62,27 +81,6 @@ inline void setup_bouncer()
     }
 }
 
-inline void update_bouncers()
-{
-    // Update debouncer states
-    for (byte i=0; i < sizeof(d_input_pins); i++)
-    {
-        if (bouncers[i].update())
-        {
-            // State changed
-            /*
-            Serial.print("Pin ");
-            Serial.print(d_input_pins[i], DEC);
-            Serial.print(" CHANGED to ");
-            Serial.println(bouncers[i].read(), DEC);
-            */
-            Serial.print("CD"); // CD<pin_byte><state_byte>
-            Serial.print(d_input_pins[i]);
-            Serial.println(bouncers[i].read());
-        }
-    }
-    update_bouncers_flag = false;
-}
 
 void setup()
 {
@@ -90,37 +88,25 @@ void setup()
     
     setup_d_outputs();
     setup_bouncer();
-    // Setup timer for flagging bouncer updates
-    MsTimer2::set(5, flag_update_bouncer);
-    MsTimer2::start();
-    /**
-     * NOTE if we want to stop the MsTimer2 we must reset the hw timer or PWM outputs suffer, see http://www.arduino.cc/cgi-bin/yabb2/YaBB.pl?num=1254144703
-     */
     Serial.println("Booted");
 }
 
+// Report input pin states via Serial
 unsigned long last_report_time;
 void report()
 {
     for (byte i=0; i < sizeof(d_input_pins); i++)
     {
-        /*
-        Serial.print("Pin ");
-        Serial.print(d_input_pins[i], DEC);
-        Serial.print(" state has been ");
-        Serial.print(bouncers[i].read(), DEC);
-        Serial.print(" for ");
-        Serial.print(bouncers[i].duration(), DEC);
-        Serial.println("ms");
-        */
         Serial.print("RD"); // RD<pin_byte><state_byte><time_long_as_hex>
         Serial.print(d_input_pins[i]);
         Serial.print(bouncers[i].read());
+        // This might not be the best way to pass this info, maybe fixed-lenght encoding would be better ?
         Serial.println(bouncers[i].duration(), HEX);
     }
     last_report_time = millis();
 }
 
+// Check if we should send the report (called in mainloop)
 inline void check_report()
 {
     if ((millis() - last_report_time) > REPORT_INTERVAL)
@@ -129,6 +115,58 @@ inline void check_report()
     }
 }
 
+// Check if we should debounce (called in mainloop)
+unsigned long last_debounce_time;
+inline void check_debounce()
+{
+    if ((millis() - last_debounce_time) > DEBOUNCE_UPDATE_TIME)
+    {
+        update_bouncers();
+    }
+}
+
+// Calls update method on all of the digital inputs and outputs message to Serial if state changed
+inline void update_bouncers()
+{
+    // Update debouncer states
+    for (byte i=0; i < sizeof(d_input_pins); i++)
+    {
+        if (bouncers[i].update())
+        {
+            // State changed
+            Serial.print("CD"); // CD<pin_byte><state_byte>
+            Serial.print(d_input_pins[i]);
+            Serial.println(bouncers[i].read());
+        }
+    }
+    last_debounce_time = millis();
+}
+
+
+// Check if we should debounce (called in mainloop)
+unsigned long last_aread_time;
+inline void check_aread()
+{
+    if ((millis() - last_aread_time) > ANALOG_READ_INTERVAL)
+    {
+        update_analog_inputs();
+    }
+}
+
+inline void update_analog_inputs()
+{
+    for (byte i=0; i < sizeof(a_input_pins); i++)
+    {
+        Serial.print("CA"); // CA<pin_byte><value in hex>
+        Serial.print(a_input_pins[i]);
+        // This might not be the best way to pass this info, maybe fixed-lenght encoding would be better ?
+        Serial.println(analogRead(a_input_pins[i]), HEX);
+    }
+    last_aread_time = millis();
+}
+
+
+// Handle incoming Serial data, try to find a command in there
 #define COMMAND_STRING_SIZE 10 //Remember to allocate for the null termination
 char incoming_command[COMMAND_STRING_SIZE+2]; //Reserve space for CRLF too.
 byte incoming_position;
@@ -181,6 +219,7 @@ inline int bytes2int(byte i1, byte i2)
     return tmp;
 }
 
+// Parse the command received
 void process_command()
 {
     switch(incoming_command[0])
@@ -206,6 +245,13 @@ void process_command()
             Serial.print(incoming_command[2]);
             Serial.println(0x6); // ACK
             break;
+        case 0x53: // ASCII "S" (P<indexbyte><value>) //Note that the indexbyte is index of the servos-array, not pin number
+            servos[incoming_command[1]].write(incoming_command[2]);
+            Serial.print("S");
+            Serial.print(incoming_command[1]);
+            Serial.print(incoming_command[2]);
+            Serial.println(0x6); // ACK
+            break;
         default:
             Serial.println(0x15); // NACK
             return;
@@ -216,10 +262,8 @@ void process_command()
 
 void loop()
 {
-    if (update_bouncers_flag)
-    {
-        update_bouncers();
-    }
+    check_debounce();
+    check_aread();
     check_report();
     read_command_bytes();
 }

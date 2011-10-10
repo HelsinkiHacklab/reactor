@@ -36,7 +36,18 @@ class ardubus(dbus.service.Object):
 
     @dbus.service.method('fi.hacklab.ardubus', in_signature='yy') # "y" is the signature for a byte
     def set_pwm(self, pin, cycle):
+        if cycle in [ 13, 10]: #Offset values that map to CR or LF by one
+            cycle += 1
         self.send_serial_command("P%s%s" % (self.p2b(pin), chr(cycle)))
+
+    @dbus.service.method('fi.hacklab.ardubus', in_signature='yy') # "y" is the signature for a byte
+    def set_servo(self, sindex, value):
+        """Note that the first value is NOT a pin number but index of the servos array on the sketch (so first servo is 0 etc), however Arduino does not have dictionaries we can't sensibly do lookup via the pin number"""
+        if value > 180:
+            value = 180 # Servo library accepts values from 0 to 180 (degrees)
+        if value in [ 13, 10]: #Offset values that map to CR or LF by one
+            value += 1
+        self.send_serial_command("S%s%s" % (self.p2b(sindex), chr(value)))
 
     @dbus.service.method('fi.hacklab.ardubus', in_signature='yb') # "y" is the signature for a byte
     def set_dio(self, pin, state):
@@ -55,12 +66,23 @@ class ardubus(dbus.service.Object):
         #print "SIGNALLING: Pin %d has been %d for %dms on %s" % (pin, state, time, sender)
         pass
 
+    @dbus.service.signal('fi.hacklab.ardubus')
+    def aio_change(self, pin, value, sender):
+        #print "SIGNALLING: Pin %d has been %d for %dms on %s" % (pin, state, time, sender)
+        pass
+
 
     def initialize_serial(self):
         import threading, serial
         print "initialize_serial called"
         self.input_buffer = ""
-        self.serial_port = serial.Serial(self.config.get(self.object_name, 'device'), 115200, xonxoff=False, timeout=0.00001)
+        serial_device = None
+        #consoles have different configuration file structure
+        if self.config.has_section('board'):
+            serial_device = self.config.get('board', 'device')
+        else:
+            serial_device = self.config.get(self.object_name, 'device')
+        self.serial_port = serial.Serial(serial_device, 115200, xonxoff=False, timeout=0.00001)
         self.receiver_thread = threading.Thread(target=self.serial_reader)
         self.receiver_thread.setDaemon(1)
         self.receiver_thread.start()
@@ -74,8 +96,10 @@ class ardubus(dbus.service.Object):
                 self.dio_change(ord(input_buffer[2]), bool(int(input_buffer[3])), self.object_name)
                 return
             if (self.input_buffer[:2] == 'RD'):
-                # State report (FIXME: the integer parsing doesn't quite seem to work [probably need to fix the sketch as well])
-                self.dio_report(ord(input_buffer[2]), bool(int(input_buffer[3])), int(input_buffer[5:], 16), self.object_name)
+                self.dio_report(ord(input_buffer[2]), bool(int(input_buffer[3])), int(input_buffer[4:], 16), self.object_name)
+                pass
+            if (self.input_buffer[:2] == 'CA'):
+                self.aio_change(ord(input_buffer[2]), int(input_buffer[3:], 16), self.object_name)
                 pass
         except IndexError,e:
             print "message_received: Got exception %s" % e

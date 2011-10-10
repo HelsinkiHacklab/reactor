@@ -5,11 +5,13 @@
  */
 
 #define OPIN 2
-# The P-channel needs to be driven this way or there will be a lot of heat
+#define PWMPIN 10
+#define MIN_ACTIVITITY 80
+// The P-channel needs to be driven this way or there will be a lot of heat
 #define DRIVE_HI LOW
 #define DRIVE_LO HIGH
 
-byte activity = 15;
+int activity;
 
 void setup()
 {
@@ -38,11 +40,17 @@ void loop()
         randomSeed(analogRead(0));
     }
     activity = analogRead(1);
+    if (activity < MIN_ACTIVITITY)
+    {
+        activity = MIN_ACTIVITITY;
+    }
+    analogWrite(PWMPIN, activity/4); // PWM outputs are adjusted on 0-255 scale.
     Serial.print("activity: ");
     Serial.println(activity, DEC);
-    if (random(0, 1024) < activity)
+    if (random(0, 2048) < activity) // even at 100% only pulse on 50% of cyles to get more random sound
     {
         pulse();
     }
-    delay(5);
+    // This adjusts the general pulse rate (ie how fast 100% activity is, everything else is related to that)
+    delay(30);
 }

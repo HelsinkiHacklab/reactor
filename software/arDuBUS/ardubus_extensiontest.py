@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# A class for testing, to generate board events without having the board
+# A class for testing extending the baseclass
 
 import os, random
 import gobject
@@ -12,23 +12,16 @@ import ardubus as ardubus_real
 class ardubus(ardubus_real.ardubus):
     def __init__(self, bus, object_name, config):
         ardubus_real.ardubus.__init__(self, bus, object_name, config)
-        gobject.timeout_add(1000, self.random_event)
+        gobject.timeout_add(5000, self.random_pwm)
 
-    def initialize_serial(self):
-        print "Dummy serial"
-        pass
-
-    def random_event(self):
-        # TODO: Fire a random signal
-        self.dio_change(random.randint(2,8), random.randint(0,1), self.object_name)
-
+    def random_pwm(self):
+        self.set_pwm(13, random.randint(5,250))
         # We must return true to keep this interval running
         return True
 
-    
-
 
 if __name__ == '__main__':
+    import dbus.mainloop.glib, gobject
     gobject.threads_init()
     dbus.mainloop.glib.threads_init()
     dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
