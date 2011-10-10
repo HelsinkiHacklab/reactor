@@ -5,7 +5,8 @@
  */
 
 #define OPIN 2
-# The P-channel needs to be driven this way or there will be a lot of heat
+#define PWMPIN 10
+// The P-channel needs to be driven this way or there will be a lot of heat
 #define DRIVE_HI LOW
 #define DRIVE_LO HIGH
 
@@ -38,11 +39,13 @@ void loop()
         randomSeed(analogRead(0));
     }
     activity = analogRead(1);
+    analogWrite(PWMPIN, activity/4); // PWM outputs are adjusted on 0-255 scale.
     Serial.print("activity: ");
     Serial.println(activity, DEC);
     if (random(0, 1024) < activity)
     {
         pulse();
     }
+    // This adjusts the max pulse rate
     delay(5);
 }
