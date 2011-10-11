@@ -24,7 +24,7 @@ inline void ardubus_servo_update()
 
 inline void ardubus_servo_report()
 {
-    for (byte i=0; i < sizeof(ardubus_servos); i++)
+    for (byte i=0; i < sizeof(ardubus_servo_output_pins); i++)
     {
         Serial.print("RS"); // RS<index_byte><value in hex>
         Serial.print(i);
