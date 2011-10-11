@@ -108,6 +108,7 @@ class ardubus(dbus.service.Object):
 
     def serial_reader(self):
         import string,binascii
+        import serial # We need the exceptions from here
         alive = True
         try:
             while alive:
