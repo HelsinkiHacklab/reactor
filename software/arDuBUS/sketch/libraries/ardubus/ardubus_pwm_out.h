@@ -19,7 +19,7 @@ inline void ardubus_pwm_out_update()
 
 inline void ardubus_pwm_out_report()
 {
-    // TODO: Implement
+    // PONDER: Do we need to report back the last value set and when it was set ??
 }
 
 inline void ardubus_pwm_out_process_command(char *incoming_command)
@@ -27,8 +27,8 @@ inline void ardubus_pwm_out_process_command(char *incoming_command)
     switch(incoming_command[0])
     {
         case 0x50: // ASCII "P" (P<pinbyte><cyclebyte>) //The pin must have been declared in d_output_pins or unexpected things will happen (and must support HW PWM)
-            // PONDER: Use index instead of pin-number ?
-            analogWrite(incoming_command[1]-ARDUBUS_INDEX_OFFSET, incoming_command[2]);
+            byte pin = ardubus_pwm_out_pins[incoming_command[1]-ARDUBUS_INDEX_OFFSET];
+            analogWrite(pin, incoming_command[2]);
             Serial.print("P");
             Serial.print(incoming_command[1]);
             Serial.print(incoming_command[2]);

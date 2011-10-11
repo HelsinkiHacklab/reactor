@@ -8,6 +8,9 @@
 
 const byte ardubus_analog_in_pins[] = ARDUBUS_ANALOG_INPUTS; // Analog inputs, unfiltered
 int ardubus_analog_in_lastvals[sizeof(ardubus_analog_in_pins)]; // Store last value so we have at least the most rudimentary form of filtering for changes
+unsigned long ardubus_analog_in_timestamps[sizeof(ardubus_analog_in_pins)]; // Store last change timestamp
+
+
 
 inline void ardubus_analog_in_setup()
 {
@@ -28,9 +31,9 @@ inline void ardubus_analog_in_read_inputs()
         if (tmp != ardubus_analog_in_lastvals[i])
         {
             ardubus_analog_in_lastvals[i] = tmp;
-            Serial.print("CA"); // CA<pin_byte><value in hex>
-            // PONDER: Use index instead of pin-number ?
-            Serial.print(ardubus_analog_in_pins[i]);
+            ardubus_analog_in_timestamps[i] = millis();
+            Serial.print("CA"); // CA<index_byte><value in hex>
+            Serial.print(i);
             // This might not be the best way to pass this info, maybe fixed-lenght encoding would be better ?
             Serial.println(ardubus_analog_in_lastvals[i], HEX);
         }
@@ -50,12 +53,14 @@ inline void ardubus_analog_in_report()
 {
     for (byte i=0; i < sizeof(ardubus_analog_in_pins); i++)
     {
-        Serial.print("RA"); // CA<pin_byte><value in hex>
-        // PONDER: Use index instead of pin-number ?
-        Serial.print(ardubus_analog_in_pins[i]);
+        Serial.print("RA"); // RA<index_byte><value in hex>
+        Serial.print(i);
         // This might not be the best way to pass this info, maybe fixed-lenght encoding would be better ?
         Serial.println(ardubus_analog_in_lastvals[i], HEX);
-        // TODO: Add duration info
+        /**
+         * This would output the duration but we will have issues with variable with encoding...
+        Serial.println(millis()-ardubus_analog_in_timestamps[i], HEX);
+        */
     }
 }
 

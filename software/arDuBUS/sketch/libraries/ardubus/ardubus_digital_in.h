@@ -41,9 +41,8 @@ inline void ardubus_digital_in_update_bouncers()
         if (ardubus_digital_in_bouncers[i].update())
         {
             // State changed
-            Serial.print("CD"); // CD<pin_byte><state_byte>
-            // PONDER: Use index instead of pin-number ?
-            Serial.print(ardubus_digital_in_pins[i]);
+            Serial.print("CD"); // CD<index_byte><state_byte>
+            Serial.print(i);
             Serial.println(ardubus_digital_in_bouncers[i].read());
         }
     }
@@ -62,9 +61,8 @@ inline void ardubus_digital_in_report()
 {
     for (byte i=0; i < sizeof(ardubus_digital_in_pins); i++)
     {
-        Serial.print("RD"); // RD<pin_byte><state_byte><time_long_as_hex>
-        // PONDER: Use index instead of pin-number ?
-        Serial.print(ardubus_digital_in_pins[i]);
+        Serial.print("RD"); // RD<index_byte><state_byte><time_long_as_hex>
+        Serial.print(i);
         Serial.print(ardubus_digital_in_bouncers[i].read());
         // This might not be the best way to pass this info, maybe fixed-lenght encoding would be better ?
         Serial.println(ardubus_digital_in_bouncers[i].duration(), HEX);

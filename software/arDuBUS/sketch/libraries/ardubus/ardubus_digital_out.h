@@ -3,7 +3,6 @@
 #include <WProgram.h> 
 const byte ardubus_digital_out_pins[] = ARDUBUS_DIGITAL_OUTPUTS; // Digital outputs
 
-
 inline void ardubus_digital_out_setup()
 {
     for (byte i=0; i < sizeof(ardubus_digital_out_pins); i++)
@@ -20,7 +19,7 @@ inline void ardubus_digital_out_update()
 
 inline void ardubus_digital_out_report()
 {
-    // TODO: Implement
+    // PONDER: Do we need to report back the last value set and when it was set ??
 }
 
 inline void ardubus_digital_out_process_command(char *incoming_command)
@@ -28,14 +27,14 @@ inline void ardubus_digital_out_process_command(char *incoming_command)
     switch(incoming_command[0])
     {
         case 0x44: // ASCII "D" (D<pinbyte><statebyte>) //The pin must have been declared in ardubus_digital_out_pins or unexpected things will happen
-            // PONDER: Use index instead of pin-number ?
+            byte pin = ardubus_digital_out_pins[incoming_command[1]-ARDUBUS_INDEX_OFFSET];
             if (incoming_command[2] == 0x31) // ASCII "1"
             {
-                digitalWrite(incoming_command[1]-ARDUBUS_INDEX_OFFSET, HIGH);
+                digitalWrite(pin, HIGH);
             }
             else
             {
-                digitalWrite(incoming_command[1]-ARDUBUS_INDEX_OFFSET, LOW);
+                digitalWrite(pin, LOW);
             }
             Serial.print("D");
             Serial.print(incoming_command[1]);
