@@ -4,7 +4,7 @@
 #include <Servo.h>
 
 // Enumerate the servo pins from the preprocessor
-const byte ardubus_servo_output_pins = ARDUBUS_SERVO_OUTPUTS;
+const byte ardubus_servo_output_pins[] = ARDUBUS_SERVO_OUTPUTS;
 // Declare a Servo object for each
 Servo ardubus_servos[sizeof(ardubus_servo_output_pins)] = Servo();
 
@@ -26,19 +26,20 @@ inline void ardubus_servo_report()
 {
     for (byte i=0; i < sizeof(ardubus_servos); i++)
     {
-        Serial.print("RS"); // CA<pin_byte><value in hex>
-        Serial.print(a_input_pins[i]);
+        Serial.print("RS"); // RS<index_byte><value in hex>
+        Serial.print(i);
         // This might not be the best way to pass this info, maybe fixed-lenght encoding would be better ?
         Serial.println(ardubus_servos[i].read(), HEX);
+        // TODO: Keep track of duration ??
     }
 }
 
-inline void ardubus_servo_process_command()
+inline void ardubus_servo_process_command(char *incoming_command)
 {
     switch(incoming_command[0])
     {
         case 0x53: // ASCII "S" (P<indexbyte><value>) //Note that the indexbyte is index of the servos-array, not pin number
-            servos[incoming_command[1]].write(incoming_command[2]);
+            ardubus_servos[incoming_command[1]-ARDUBUS_INDEX_OFFSET].write(incoming_command[2]);
             Serial.print("S");
             Serial.print(incoming_command[1]);
             Serial.print(incoming_command[2]);

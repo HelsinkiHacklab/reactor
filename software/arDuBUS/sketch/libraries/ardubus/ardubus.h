@@ -5,9 +5,9 @@
 #define ARDUBUS_REPORT_INTERVAL 5000 // Milliseconds
 #endif
 #ifndef ARDUBUS_COMMAND_STRING_SIZE
-#define ARDUBUS_COMMAND_STRING_SIZE 10 //Remember to allocate for the null termination
+#define ARDUBUS_COMMAND_STRING_SIZE 8 //Remember to allocate for the null termination
 #endif
-#ifndefARDUBUS_INDEX_OFFSET
+#ifndef ARDUBUS_INDEX_OFFSET
 #define ARDUBUS_INDEX_OFFSET 32 // We need to offset the pin/index numbers to above CR and LF which are control characters to us
 #endif
 
@@ -83,9 +83,30 @@ inline void ardubus_check_report()
     }
 }
 
-// Handle incoming Serial data, try to find a command in there
+
+// We need to declare this early
 char ardubus_incoming_command[ARDUBUS_COMMAND_STRING_SIZE+2]; //Reserve space for CRLF too.
 byte ardubus_incoming_position;
+void ardubus_process_command()
+{
+#ifdef ARDUBUS_DIGITAL_INPUTS
+    ardubus_digital_in_process_command(ardubus_incoming_command);
+#endif
+#ifdef ARDUBUS_DIGITAL_OUTPUTS
+    ardubus_digital_out_process_command(ardubus_incoming_command);
+#endif
+#ifdef ARDUBUS_ANALOG_INPUTS
+    ardubus_analog_in_process_command(ardubus_incoming_command);
+#endif
+#ifdef ARDUBUS_PWM_OUTPUTS
+    ardubus_pwm_out_process_command(ardubus_incoming_command);
+#endif
+#ifdef ARDUBUS_SERVO_OUTPUTS
+    ardubus_servo_process_command(ardubus_incoming_command);
+#endif
+}
+
+// Handle incoming Serial data, try to find a command in there
 inline void ardubus_read_command_bytes()
 {
     for (byte d = Serial.available(); d > 0; d--)
@@ -105,43 +126,24 @@ inline void ardubus_read_command_bytes()
             }
             ardubus_process_command();
             // Clear the buffer and reset position to 0
-            memset(&ardubus_incoming_command, 0, COMMAND_STRING_SIZE+2);
+            memset(&ardubus_incoming_command, 0, ARDUBUS_COMMAND_STRING_SIZE+2);
             ardubus_incoming_position = 0;
             return;
         }
         ardubus_incoming_position++;
 
         // Sanity check buffer sizes
-        if (ardubus_incoming_position > COMMAND_STRING_SIZE+2)
+        if (ardubus_incoming_position > ARDUBUS_COMMAND_STRING_SIZE+2)
         {
             Serial.println(0x15); // NACK
             Serial.print("PANIC: No end-of-line seen and ardubus_incoming_position=");
             Serial.print(ardubus_incoming_position, DEC);
             Serial.println(" clearing buffers");
             
-            memset(&ardubus_incoming_command, 0, COMMAND_STRING_SIZE+2);
+            memset(&ardubus_incoming_command, 0, ARDUBUS_COMMAND_STRING_SIZE+2);
             ardubus_incoming_position = 0;
         }
     }
-}
-
-void ardubus_process_command()
-{
-#ifdef ARDUBUS_DIGITAL_INPUTS
-    ardubus_digital_in_process_command();
-#endif
-#ifdef ARDUBUS_DIGITAL_OUTPUTS
-    ardubus_digital_out_process_command();
-#endif
-#ifdef ARDUBUS_ANALOG_INPUTS
-    ardubus_analog_in_process_command();
-#endif
-#ifdef ARDUBUS_PWM_OUTPUTS
-    ardubus_pwm_out_process_command();
-#endif
-#ifdef ARDUBUS_SERVO_OUTPUTS
-    ardubus_servo_process_command();
-#endif
 }
 
 /**
