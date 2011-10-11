@@ -35,40 +35,39 @@ class ardubus(dbus.service.Object):
         return "Hello,World! My name is " + self.object_name
 
     @dbus.service.method('fi.hacklab.ardubus', in_signature='yy') # "y" is the signature for a byte
-    def set_pwm(self, pin, cycle):
+    def set_pwm(self, pwm_index, cycle):
         if cycle in [ 13, 10]: #Offset values that map to CR or LF by one
             cycle += 1
-        self.send_serial_command("P%s%s" % (self.p2b(pin), chr(cycle)))
+        self.send_serial_command("P%s%s" % (self.p2b(pwm_index), chr(cycle)))
 
     @dbus.service.method('fi.hacklab.ardubus', in_signature='yy') # "y" is the signature for a byte
-    def set_servo(self, sindex, value):
-        """Note that the first value is NOT a pin number but index of the servos array on the sketch (so first servo is 0 etc), however Arduino does not have dictionaries we can't sensibly do lookup via the pin number"""
+    def set_servo(self, servo_index, value):
         if value > 180:
             value = 180 # Servo library accepts values from 0 to 180 (degrees)
         if value in [ 13, 10]: #Offset values that map to CR or LF by one
             value += 1
-        self.send_serial_command("S%s%s" % (self.p2b(sindex), chr(value)))
+        self.send_serial_command("S%s%s" % (self.p2b(servo_index), chr(value)))
 
     @dbus.service.method('fi.hacklab.ardubus', in_signature='yb') # "y" is the signature for a byte
-    def set_dio(self, pin, state):
+    def set_dio(self, digital_index, state):
         if state:
-            self.send_serial_command("D%s1" % self.p2b(pin))
+            self.send_serial_command("D%s1" % self.p2b(digital_index))
         else:
-            self.send_serial_command("D%s0" % self.p2b(pin))
+            self.send_serial_command("D%s0" % self.p2b(digital_index))
 
     @dbus.service.signal('fi.hacklab.ardubus')
-    def dio_change(self, pin, state, sender):
-        #print "SIGNALLING: Pin %d changed to %d on %s" % (pin, state, sender)
+    def dio_change(self, p_index, state, sender):
+        #print "SIGNALLING: Pin(index) %d changed to %d on %s" % (pin, state, sender)
         pass
 
     @dbus.service.signal('fi.hacklab.ardubus')
-    def dio_report(self, pin, state, time, sender):
-        #print "SIGNALLING: Pin %d has been %d for %dms on %s" % (pin, state, time, sender)
+    def dio_report(self, p_index, state, time, sender):
+        #print "SIGNALLING: Pin(index) %d has been %d for %dms on %s" % (pin, state, time, sender)
         pass
 
     @dbus.service.signal('fi.hacklab.ardubus')
-    def aio_change(self, pin, value, sender):
-        #print "SIGNALLING: Pin %d has been %d for %dms on %s" % (pin, state, time, sender)
+    def aio_change(self, p_index, value, sender):
+        #print "SIGNALLING: Pin(index) %d has been %d for %dms on %s" % (pin, state, time, sender)
         pass
 
 
@@ -109,6 +108,7 @@ class ardubus(dbus.service.Object):
 
     def serial_reader(self):
         import string,binascii
+        import serial # We need the exceptions from here
         alive = True
         try:
             while alive:

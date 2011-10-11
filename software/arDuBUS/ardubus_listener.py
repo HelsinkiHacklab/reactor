@@ -20,13 +20,13 @@ class ardubus_listener():
         print "Got kwargs: %s" % repr(kwargs)
 
     def switch_changed(self, pin, state, sender):
-        print "Pin %d changed to %d on %s" % (pin, state, sender)
+        print "Pin %d changed(index) to %d on %s" % (pin, state, sender)
 
     def analog_changed(self, pin, value, sender):
-        print "Analog pin %d changed to %d on %s" % (pin, value, sender)
+        print "Analog pin(index) %d changed to %d on %s" % (pin, value, sender)
 
     def switch_report(self, pin, state, time, sender):
-        print "Pin %d has been %d for %dms on %s" % (pin, state, time, sender)
+        print "Pin(index) %d has been %d for %dms on %s" % (pin, state, time, sender)
 
 
 if __name__ == '__main__':
