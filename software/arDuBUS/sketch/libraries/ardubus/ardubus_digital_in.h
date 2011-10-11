@@ -73,23 +73,7 @@ inline void ardubus_digital_in_report()
 
 inline void ardubus_digital_in_process_command(char *incoming_command)
 {
-    switch(incoming_command[0])
-    {
-        case 0x44: // ASCII "D" (D<pinbyte><statebyte>) //The pin must have been declared in d_output_pins or unexpected things will happen
-            if (incoming_command[2] == 0x31) // ASCII "1"
-            {
-                digitalWrite(incoming_command[1]-ARDUBUS_INDEX_OFFSET, HIGH);
-            }
-            else
-            {
-                digitalWrite(incoming_command[1]-ARDUBUS_INDEX_OFFSET, LOW);
-            }
-            Serial.print("D");
-            Serial.print(incoming_command[1]);
-            Serial.print(incoming_command[2]);
-            Serial.println(0x6); // ACK
-            break;
-    }
+    // This is a no-op (but defined so that all submodules have same API)
 }
 
 

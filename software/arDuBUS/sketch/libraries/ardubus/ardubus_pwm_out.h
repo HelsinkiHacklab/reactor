@@ -1,10 +1,15 @@
 #ifndef ardubus_pwm_out_h
 #define ardubus_pwm_out_h
 #include <WProgram.h> 
+const byte ardubus_pwm_out_pins[] = ARDUBUS_PWM_OUTPUTS; // Digital outputs
 
 inline void ardubus_pwm_out_setup()
 {
-    // TODO: Implement
+    for (byte i=0; i < sizeof(ardubus_pwm_out_pins); i++)
+    {
+        pinMode(ardubus_pwm_out_pins[i], OUTPUT);
+        digitalWrite(ardubus_pwm_out_pins[i], LOW);
+    }
 }
 
 inline void ardubus_pwm_out_update()
@@ -19,9 +24,16 @@ inline void ardubus_pwm_out_report()
 
 inline void ardubus_pwm_out_process_command(char *incoming_command)
 {
-    // TODO: Implement
     switch(incoming_command[0])
     {
+        case 0x50: // ASCII "P" (P<pinbyte><cyclebyte>) //The pin must have been declared in d_output_pins or unexpected things will happen (and must support HW PWM)
+            // PONDER: Use index instead of pin-number ?
+            analogWrite(incoming_command[1]-ARDUBUS_INDEX_OFFSET, incoming_command[2]);
+            Serial.print("P");
+            Serial.print(incoming_command[1]);
+            Serial.print(incoming_command[2]);
+            Serial.println(0x6); // ACK
+            break;
     }
 }
 
