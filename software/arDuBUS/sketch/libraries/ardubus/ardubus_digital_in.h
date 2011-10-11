@@ -23,10 +23,12 @@ inline void ardubus_digital_in_setup()
     for (byte i=0; i < sizeof(ardubus_digital_in_pins); i++)
     {
         pinMode(ardubus_digital_in_pins[i], INPUT);
+#ifndef ARDUBUS_DIGITAL_IN_NO_PULLUP      
         if (ardubus_digital_in_pins[i] != 13)
         {
             digitalWrite(ardubus_digital_in_pins[i], HIGH); // enable internal pull-up (except for #13 which has the led and external resistor, which will cause issues, see http://www.arduino.cc/en/Tutorial/DigitalPins)
         }
+#endif
         ardubus_digital_in_bouncers[i] = Bounce(ardubus_digital_in_pins[i], ARDUBUS_DIGITAL_IN_DEBOUNCE_TIME);
     }
 }
