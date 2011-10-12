@@ -67,6 +67,7 @@ inline void ardubus_digital_in_report()
         Serial.print(i);
         Serial.print(ardubus_digital_in_bouncers[i].read());
         ardubus_print_ulong_as_8hex(ardubus_digital_in_bouncers[i].duration());
+        Serial.println("");
     }
 }
 
