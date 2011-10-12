@@ -10,4 +10,8 @@ class Config {
   var activityLevel = 1.0
   var activityLevelVariation = 0.3
 
+  var controlRodGraphiteTipPortion = 0.2
+  var controlRodNeutronAbsorbation = 1
+  var controlRodTipNeutronSlowdown = 1
+
 }
