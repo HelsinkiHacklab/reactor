@@ -20,10 +20,11 @@ class i2c_device
         boolean read_many(byte address, byte num, byte *target);
         // Helper to write a single byte value (calls write_many internally)
         boolean write(byte address, byte value);
-        // Write N values from a target (usually an array)
+        // Write N values from a source (usually an array)
         boolean write_many(byte address, byte num, byte *source);
+        // Do a masked read/modify/write operation to an address
         boolean read_modify_write(byte address, byte mask, byte value);
-
+        // Helper to debug state, dumps given register values
         void dump_registers(byte addr_start, byte addr_end);
 
     protected:

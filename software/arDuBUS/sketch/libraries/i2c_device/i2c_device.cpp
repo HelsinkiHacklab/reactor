@@ -40,8 +40,15 @@ boolean i2c_device::read_many(byte address, byte req_num, byte *target)
     byte result = Wire.endTransmission();
     if (result > 0)
     {
-        Serial.print("DEBUG: Read failed, Wire.endTransmission returned: ");
+#ifdef I2C_DEVICE_DEBUG
+        Serial.print("DEBUG: Read from ");
+        Serial.print("dev 0x");
+        Serial.print(device_address, HEX);
+        Serial.print(" reg 0x");
+        Serial.print(address, HEX);
+        Serial.print(" failed, Wire.endTransmission returned: ");
         Serial.println(result, DEC);
+#endif
         return false;
     }
     Wire.requestFrom(device_address, req_num);
@@ -53,7 +60,14 @@ boolean i2c_device::read_many(byte address, byte req_num, byte *target)
         {
             Wire.receive();
         }
-        Serial.println("DEBUG: Read failed, unexpected amount of data");
+#ifdef I2C_DEVICE_DEBUG
+        Serial.print("DEBUG: Read from ");
+        Serial.print("dev 0x");
+        Serial.print(device_address, HEX);
+        Serial.print(" reg 0x");
+        Serial.print(address, HEX);
+        Serial.println(" failed, unexpected amount of data");
+#endif
         return false;
     }
     while(recv_num-- > 0)
@@ -78,8 +92,15 @@ boolean i2c_device::write_many(byte address, byte num, byte *source)
     byte result = Wire.endTransmission();
     if (result > 0)
     {
-        Serial.print("DEBUG: Write failed, Wire.endTransmission returned: ");
+#ifdef I2C_DEVICE_DEBUG
+        Serial.print("DEBUG: Write to ");
+        Serial.print("dev 0x");
+        Serial.print(device_address, HEX);
+        Serial.print(" (start)reg 0x");
+        Serial.print(address, HEX);
+        Serial.print(" failed, Wire.endTransmission returned: ");
         Serial.println(result, DEC);
+#endif
         return false;
     }
     return true;
