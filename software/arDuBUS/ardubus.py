@@ -57,17 +57,22 @@ class ardubus(dbus.service.Object):
 
     @dbus.service.signal('fi.hacklab.ardubus')
     def dio_change(self, p_index, state, sender):
-        #print "SIGNALLING: Pin(index) %d changed to %d on %s" % (pin, state, sender)
+        #print "SIGNALLING: Pin(index) %d changed to %d on %s" % (p_index, state, sender)
         pass
 
     @dbus.service.signal('fi.hacklab.ardubus')
     def dio_report(self, p_index, state, time, sender):
-        #print "SIGNALLING: Pin(index) %d has been %d for %dms on %s" % (pin, state, time, sender)
+        #print "SIGNALLING: Pin(index) %d has been %d for %dms on %s" % (p_index, state, time, sender)
         pass
 
     @dbus.service.signal('fi.hacklab.ardubus')
     def aio_change(self, p_index, value, sender):
-        #print "SIGNALLING: Pin(index) %d has been %d for %dms on %s" % (pin, state, time, sender)
+        #print "SIGNALLING: Analog-pin(index) %d changed to %d on %s" % (p_index, value, sender)
+        pass
+
+    @dbus.service.signal('fi.hacklab.ardubus')
+    def aio_report(self, p_index, value, time, sender):
+        #print "SIGNALLING: Analog-pin(index) %d has been %d for %dms on %s" % (p_index, value, time, sender)
         pass
 
 
@@ -95,10 +100,13 @@ class ardubus(dbus.service.Object):
                 self.dio_change(ord(input_buffer[2]), bool(int(input_buffer[3])), self.object_name)
                 return
             if (self.input_buffer[:2] == 'RD'):
-                self.dio_report(ord(input_buffer[2]), bool(int(input_buffer[3])), int(input_buffer[4:], 16), self.object_name)
+                self.dio_report(ord(input_buffer[2]), bool(int(input_buffer[3])), int(input_buffer[4:12], 16), self.object_name)
                 pass
             if (self.input_buffer[:2] == 'CA'):
-                self.aio_change(ord(input_buffer[2]), int(input_buffer[3:], 16), self.object_name)
+                self.aio_change(ord(input_buffer[2]), int(input_buffer[3:7], 16), self.object_name)
+                pass
+            if (self.input_buffer[:2] == 'RA'):
+                self.aio_report(ord(input_buffer[2]), int(input_buffer[3:7], 16), int(input_buffer[6:15], 16), self.object_name)
                 pass
         except IndexError,e:
             print "message_received: Got exception %s" % e
