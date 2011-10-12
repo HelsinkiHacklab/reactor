@@ -105,6 +105,8 @@ boolean i2c_device::write_many(byte address, byte num, byte *source)
 }
 
 /**
+ * Performs a masked read-write-modify -cycle, remember that your mask should have 1 on the bits not to modify and 0 on the bits to modify
+ * 
  * Operands:
  * 0=OR
  * 1=AND

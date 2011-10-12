@@ -72,12 +72,12 @@ boolean pca9635::set_led_mode(byte ledno, byte mode)
 
 boolean pca9635::set_driver_mode(byte mode)
 {
-    return this->read_modify_write(0x01, _BV(2), mode << 2);
+    return this->read_modify_write(0x01, (byte)~_BV(2), mode << 2);
 }
 
 boolean pca9635::set_sleep(byte sleep)
 {
-    return this->read_modify_write(0x00, B00010000, sleep << 4 | ~_BV(4));
+    return this->read_modify_write(0x00, (byte)~_BV(4), sleep << 4);
 }
 
 
@@ -90,4 +90,32 @@ boolean pca9635::set_led_pwm(byte ledno, byte cycle)
 {
     byte reg = 0x02 + ledno;
     return this->write_many(reg, 1, &cycle);
+}
+
+
+/**
+ * Do the software-reset song-and-dance, this should reset all drivers on the bus
+ */
+boolean pca9635::reset()
+{
+#ifdef I2C_DEVICE_DEBUG
+    Serial.println("pca9635::reset() called");
+#endif
+    Wire.beginTransmission(0x6); // B0000011
+    Wire.send(0xa5);
+    Wire.send(0x5a);
+    byte result = Wire.endTransmission();
+    if (result > 0)
+    {
+#ifdef I2C_DEVICE_DEBUG
+        Serial.print("DEBUG: Write to ");
+        Serial.print("dev 0x6");
+        Serial.print(" reg 0xa5 value 0x5a");
+        Serial.print(" failed, Wire.endTransmission returned: ");
+        Serial.println(result, DEC);
+#endif
+        return false;
+    }
+    delayMicroseconds(5); // Wait for the reset to complete
+    return true;
 }
