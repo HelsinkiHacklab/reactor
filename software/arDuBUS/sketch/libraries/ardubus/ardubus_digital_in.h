@@ -66,8 +66,7 @@ inline void ardubus_digital_in_report()
         Serial.print("RD"); // RD<index_byte><state_byte><time_long_as_hex>
         Serial.print(i);
         Serial.print(ardubus_digital_in_bouncers[i].read());
-        // This might not be the best way to pass this info, maybe fixed-lenght encoding would be better ?
-        Serial.println(ardubus_digital_in_bouncers[i].duration(), HEX);
+        ardubus_print_ulong_as_8hex(ardubus_digital_in_bouncers[i].duration());
     }
 }
 

@@ -12,6 +12,30 @@
 #endif
 
 
+// Utility functions for outputting fixed lenght nex encoded numbers
+inline void ardubus_print_byte_as_2hex(byte input)
+{
+    if (input < 0x10)
+    {
+        Serial.print("0");
+    }
+    Serial.print(input, HEX);
+}
+
+inline void ardubus_print_ulong_as_8hex(unsigned long input)
+{
+    ardubus_print_byte_as_2hex((byte)(input >> 24));
+    ardubus_print_byte_as_2hex((byte)((input >> 16) & 0xff));
+    ardubus_print_byte_as_2hex((byte)((input >> 8) & 0xff));
+    ardubus_print_byte_as_2hex((byte)(input & 0xff));
+}
+
+inline void ardubus_print_int_as_4hex(int input)
+{
+    ardubus_print_byte_as_2hex((byte)(input >> 8));
+    ardubus_print_byte_as_2hex((byte)(input & 0xff));
+}
+
 // Include enabled submodules
 #ifdef ARDUBUS_DIGITAL_INPUTS
 #include "ardubus_digital_in.h"
@@ -28,6 +52,7 @@
 #ifdef ARDUBUS_SERVO_OUTPUTS
 #include "ardubus_servo.h"
 #endif
+
 
 /**
  * Setups up all enabled submodules
