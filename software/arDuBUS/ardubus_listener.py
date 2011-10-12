@@ -14,6 +14,7 @@ class ardubus_listener():
         self.bus.add_signal_receiver(self.analog_changed, dbus_interface = "fi.hacklab.ardubus", signal_name = "aio_change")
         #self.bus.add_signal_receiver(self.switch_changed, dbus_interface = "fi.hacklab.ardubus", signal_name = "dio_change", path='/fi/hacklab/ardubus/arduino0')
         self.bus.add_signal_receiver(self.switch_report, dbus_interface = "fi.hacklab.ardubus", signal_name = "dio_report")
+        self.bus.add_signal_receiver(self.analog_report, dbus_interface = "fi.hacklab.ardubus", signal_name = "aio_report")
 
     def signal_received(self, *args, **kwargs):
         print "Got args: %s" % repr(args)
@@ -27,6 +28,10 @@ class ardubus_listener():
 
     def switch_report(self, pin, state, time, sender):
         print "Pin(index) %d has been %d for %dms on %s" % (pin, state, time, sender)
+
+    def analog_report(self, p_index, value, time, sender):
+        print "Analog pin(index) %d has been %d for %dms on %s" % (p_index, value, time, sender)
+        pass
 
 
 if __name__ == '__main__':
