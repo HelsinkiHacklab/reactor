@@ -14,7 +14,7 @@ void pca9635RGB::begin(byte board_num, boolean wire_begin)
 {
     if (wire_begin)
     {
-        Wire.begin();
+        I2c.begin();
     }
     R.reset(); // This will reset all drivers on the bus
     // Initialize the pca9635 instances

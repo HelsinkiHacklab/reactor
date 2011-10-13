@@ -10,6 +10,13 @@ pca9635::~pca9635()
 {
 }
 
+void pca9635::begin(byte dev_addr, boolean wire_begin)
+{
+    i2c_device::begin(dev_addr, wire_begin);
+    // Enable auto-increment on all registers
+    this->set_auto_increment(B100);
+}
+
 /**
  * Control the led channel mode, modes: 
  * 0=fully off
@@ -92,7 +99,13 @@ boolean pca9635::set_led_mode(byte mode)
     return this->write_many(0x14, 4, values);
 }
 
-
+/**
+ * 3-bit bitmask, will get shifted to correct position
+ */
+boolean pca9635::set_auto_increment(byte bits)
+{
+    return this->read_modify_write(0x00, B00011111, bits << 5);
+}
 
 boolean pca9635::set_driver_mode(byte mode)
 {
@@ -125,17 +138,17 @@ boolean pca9635::reset()
 #ifdef I2C_DEVICE_DEBUG
     Serial.println("pca9635::reset() called");
 #endif
-    Wire.beginTransmission(0x6); // B0000011
-    Wire.send(0xa5);
-    Wire.send(0x5a);
-    byte result = Wire.endTransmission();
+    I2c.beginTransmission(0x6); // B0000011
+    I2c.send(0xa5);
+    I2c.send(0x5a);
+    byte result = I2c.endTransmission();
     if (result > 0)
     {
 #ifdef I2C_DEVICE_DEBUG
         Serial.print("DEBUG: Write to ");
         Serial.print("dev 0x6");
         Serial.print(" reg 0xa5 value 0x5a");
-        Serial.print(" failed, Wire.endTransmission returned: ");
+        Serial.print(" failed, I2c.endTransmission returned: ");
         Serial.println(result, DEC);
 #endif
         return false;

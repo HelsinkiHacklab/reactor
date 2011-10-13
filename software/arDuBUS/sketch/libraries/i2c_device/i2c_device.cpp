@@ -15,7 +15,7 @@ void i2c_device::begin(byte dev_addr, boolean wire_begin)
     device_address = dev_addr;
     if (wire_begin)
     {
-        Wire.begin();
+        I2c.begin();
     }
 }
 
@@ -34,9 +34,9 @@ byte i2c_device::read(byte address)
 
 boolean i2c_device::read_many(byte address, byte req_num, byte *target)
 {
-    Wire.beginTransmission(device_address);
-    Wire.send(address);
-    byte result = Wire.endTransmission();
+    I2c.beginTransmission(device_address);
+    I2c.send(address);
+    byte result = I2c.endTransmission();
     if (result > 0)
     {
 #ifdef I2C_DEVICE_DEBUG
@@ -45,19 +45,19 @@ boolean i2c_device::read_many(byte address, byte req_num, byte *target)
         Serial.print(device_address, HEX);
         Serial.print(" reg 0x");
         Serial.print(address, HEX);
-        Serial.print(" failed, Wire.endTransmission returned: ");
+        Serial.print(" failed, I2c.endTransmission returned: ");
         Serial.println(result, DEC);
 #endif
         return false;
     }
-    Wire.requestFrom(device_address, req_num);
-    byte recv_num =  Wire.available();
+    I2c.requestFrom(device_address, req_num);
+    byte recv_num =  I2c.available();
     if (recv_num != req_num)
     {
         // Unexpected amount of data to be received, clear the buffers and return failure
         while (recv_num-- > 0)
         {
-            Wire.receive();
+            I2c.receive();
         }
 #ifdef I2C_DEVICE_DEBUG
         Serial.print("DEBUG: Read from ");
@@ -71,8 +71,8 @@ boolean i2c_device::read_many(byte address, byte req_num, byte *target)
     }
     while(recv_num-- > 0)
     {
-        // First assign the return of Wire.receive to where the pointer points to, then incement the pointer (so in next iteration we write to correct place)
-        *(target++) = Wire.receive();
+        // First assign the return of I2c.receive to where the pointer points to, then incement the pointer (so in next iteration we write to correct place)
+        *(target++) = I2c.receive();
     }
     return true;
 }
@@ -85,10 +85,15 @@ boolean i2c_device::write(byte address, byte value)
 
 boolean i2c_device::write_many(byte address, byte num, byte *source)
 {
-    Wire.beginTransmission(device_address);
-    Wire.send(address);
-    Wire.send(source, num);
-    byte result = Wire.endTransmission();
+    /**
+     * Wire style
+    I2c.beginTransmission(device_address);
+    I2c.send(address);
+    I2c.send(source, num);
+    */
+    I2c.beginTransmission(device_address);
+    I2c.write(device_address, address, source, num);
+    byte result = I2c.endTransmission();
     if (result > 0)
     {
 #ifdef I2C_DEVICE_DEBUG
@@ -97,7 +102,7 @@ boolean i2c_device::write_many(byte address, byte num, byte *source)
         Serial.print(device_address, HEX);
         Serial.print(" (start)reg 0x");
         Serial.print(address, HEX);
-        Serial.print(" failed, Wire.endTransmission returned: ");
+        Serial.print(" failed, I2c.endTransmission returned: ");
         Serial.println(result, DEC);
 #endif
         return false;

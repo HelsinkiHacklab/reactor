@@ -1,4 +1,5 @@
-#include <Wire.h> // For some weird reason including this in the relevant .h file does not work
+// Get this from http://dsscircuits.com/articles/arduino-i2c-master-library.html
+#include <I2C.h> // For some weird reason including this in the relevant .h file does not work
 #include <i2c_device.h> // For some weird reason including this in the relevant .h file does not work
 #include <pca9635.h>
 

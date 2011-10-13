@@ -1,7 +1,9 @@
+
 /**
  * Remember your I2C pull-up resistors
  */
-#include <Wire.h> // For some weird reason including this in the relevant .h file does not work
+// Get this from http://dsscircuits.com/articles/arduino-i2c-master-library.html
+#include <I2C.h> // For some weird reason including this in the relevant .h file does not work
 // For the weirdest reason this does not get to the scope of the libraries
 #define I2C_DEVICE_DEBUG
 #include <i2c_device.h> // For some weird reason including this in the relevant .h file does not work

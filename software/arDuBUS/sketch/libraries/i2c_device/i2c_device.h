@@ -4,7 +4,11 @@
 #include <WProgram.h> 
 // Defined here for now due to a problem with scope
 #define I2C_DEVICE_DEBUG
+/**
+ * Superceded byt the I2C master library
 #include <Wire.h>
+ */
+#include <I2C.h> // Get it from http://dsscircuits.com/articles/arduino-i2c-master-library.html
 
 class i2c_device
 {

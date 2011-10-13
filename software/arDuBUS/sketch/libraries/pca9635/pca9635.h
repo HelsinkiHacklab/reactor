@@ -13,12 +13,14 @@ class pca9635 : public i2c_device
         pca9635();
         ~pca9635();
         
+        void begin(byte dev_addr, boolean wire_begin);
         boolean set_led_mode(byte ledno, byte mode);
         boolean set_led_mode(byte mode); // Variant to set all leds to same mode
         boolean set_led_pwm(byte ledno, byte cycle);
         boolean set_driver_mode(byte mode);
         boolean set_sleep(byte sleep);
         boolean reset(); // NOTE: This resets all PCA9635 devices on the bus
+        boolean set_auto_increment(byte bits);
 };
 
 #endif
