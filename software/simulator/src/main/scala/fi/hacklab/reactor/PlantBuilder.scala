@@ -1,6 +1,6 @@
 package fi.hacklab.reactor
 
-import parts.{Reactor, ReactorChannelSegment, ReactorChannel, Plant}
+import parts._
 
 /**
  * Builds the plant
@@ -23,6 +23,11 @@ object PlantBuilder {
     plant.addPart(reactor)
 
     // Steam separators
+    val steamSeparator1 = new SteamCondenser()
+    val steamSeparator2 = new SteamCondenser()
+
+    reactor.hotWaterOut1 connect steamSeparator1.hotWaterIn
+    reactor.hotWaterOut2 connect steamSeparator2.hotWaterIn
 
     // Turbines
 

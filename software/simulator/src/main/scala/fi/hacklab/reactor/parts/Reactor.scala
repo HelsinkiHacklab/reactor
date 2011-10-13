@@ -7,6 +7,12 @@ package fi.hacklab.reactor.parts
 
 class Reactor(sizeX: Int, sizeY: Int, sizeZ: Int, edgeCutoutSize: Int) extends CompositePart {
 
+  val coolingWaterIntake1 = makePort()
+  val coolingWaterIntake2 = makePort()
+  val hotWaterOut1 = makePort()
+  val hotWaterOut2 = makePort()
+
+
   private var channels: List[ReactorChannel] = Nil
   var segmentLookup = Map[(Int,Int,Int), ReactorChannelSegment]()
 
