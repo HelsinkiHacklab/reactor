@@ -34,8 +34,8 @@ inline void ardubus_analog_in_read_inputs()
             ardubus_analog_in_timestamps[i] = millis();
             Serial.print("CA"); // CA<index_byte><value in hex>
             Serial.print(i);
-            // This might not be the best way to pass this info, maybe fixed-lenght encoding would be better ?
-            Serial.println(ardubus_analog_in_lastvals[i], HEX);
+            ardubus_print_int_as_4hex(ardubus_analog_in_lastvals[i]);
+            Serial.println("");
         }
     }
     ardubus_digital_in_last_read_time = millis();
@@ -55,12 +55,9 @@ inline void ardubus_analog_in_report()
     {
         Serial.print("RA"); // RA<index_byte><value in hex>
         Serial.print(i);
-        // This might not be the best way to pass this info, maybe fixed-lenght encoding would be better ?
-        Serial.println(ardubus_analog_in_lastvals[i], HEX);
-        /**
-         * This would output the duration but we will have issues with variable with encoding...
-        Serial.println(millis()-ardubus_analog_in_timestamps[i], HEX);
-        */
+        ardubus_print_int_as_4hex(ardubus_analog_in_lastvals[i]);
+        ardubus_print_ulong_as_8hex(millis()-ardubus_analog_in_timestamps[i]);
+        Serial.println("");
     }
 }
 

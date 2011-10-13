@@ -10,9 +10,9 @@ class pca9635RGB
         pca9635RGB();
         ~pca9635RGB();
         // Initialize the object and chip        
-        void begin(byte board_addr, boolean wire_begin);
+        void begin(byte board_num, boolean wire_begin);
         // A funky way to handle optional arguments
-        void begin(byte board_addr);
+        void begin(byte board_num);
         void begin();
         // Color channel instances, allow public access for debugging
         pca9635 R;

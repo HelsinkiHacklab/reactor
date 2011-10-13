@@ -28,8 +28,8 @@ inline void ardubus_servo_report()
     {
         Serial.print("RS"); // RS<index_byte><value in hex>
         Serial.print(i);
-        // This might not be the best way to pass this info, maybe fixed-lenght encoding would be better ?
-        Serial.println(ardubus_servos[i].read(), HEX);
+        ardubus_print_byte_as_2hex(ardubus_servos[i].read());
+        Serial.println("");
         // TODO: Keep track of duration ??
     }
 }

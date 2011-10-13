@@ -19,19 +19,18 @@ void i2c_device::begin(byte dev_addr, boolean wire_begin)
     }
 }
 
+// TODO: Add read and write methods that take pointer to an iterator function
 
 boolean i2c_device::read(byte address, byte *target)
 {
-    return i2c_device::read_many(address, 1, target);
+    return this->read_many(address, 1, target);
 }
 byte i2c_device::read(byte address)
 {
     byte target;
-    i2c_device::read_many(address, 1, &target);
+    this->read_many(address, 1, &target);
     return target;
 }
-
-
 
 boolean i2c_device::read_many(byte address, byte req_num, byte *target)
 {
@@ -40,8 +39,15 @@ boolean i2c_device::read_many(byte address, byte req_num, byte *target)
     byte result = Wire.endTransmission();
     if (result > 0)
     {
-        Serial.print("DEBUG: Read failed, Wire.endTransmission returned: ");
+#ifdef I2C_DEVICE_DEBUG
+        Serial.print("DEBUG: Read from ");
+        Serial.print("dev 0x");
+        Serial.print(device_address, HEX);
+        Serial.print(" reg 0x");
+        Serial.print(address, HEX);
+        Serial.print(" failed, Wire.endTransmission returned: ");
         Serial.println(result, DEC);
+#endif
         return false;
     }
     Wire.requestFrom(device_address, req_num);
@@ -53,7 +59,14 @@ boolean i2c_device::read_many(byte address, byte req_num, byte *target)
         {
             Wire.receive();
         }
-        Serial.println("DEBUG: Read failed, unexpected amount of data");
+#ifdef I2C_DEVICE_DEBUG
+        Serial.print("DEBUG: Read from ");
+        Serial.print("dev 0x");
+        Serial.print(device_address, HEX);
+        Serial.print(" reg 0x");
+        Serial.print(address, HEX);
+        Serial.println(" failed, unexpected amount of data");
+#endif
         return false;
     }
     while(recv_num-- > 0)
@@ -67,7 +80,7 @@ boolean i2c_device::read_many(byte address, byte req_num, byte *target)
 
 boolean i2c_device::write(byte address, byte value)
 {
-    return i2c_device::write_many(address, 1, &value);
+    return this->write_many(address, 1, &value);
 }
 
 boolean i2c_device::write_many(byte address, byte num, byte *source)
@@ -78,22 +91,40 @@ boolean i2c_device::write_many(byte address, byte num, byte *source)
     byte result = Wire.endTransmission();
     if (result > 0)
     {
-        Serial.print("DEBUG: Write failed, Wire.endTransmission returned: ");
+#ifdef I2C_DEVICE_DEBUG
+        Serial.print("DEBUG: Write to ");
+        Serial.print("dev 0x");
+        Serial.print(device_address, HEX);
+        Serial.print(" (start)reg 0x");
+        Serial.print(address, HEX);
+        Serial.print(" failed, Wire.endTransmission returned: ");
         Serial.println(result, DEC);
+#endif
         return false;
     }
     return true;
 }
 
-boolean i2c_device::read_modify_write(byte address, byte mask, byte value)
+/**
+ * Performs a masked read-write-modify -cycle, remember that your mask should have 1 on the bits not to modify and 0 on the bits to modify
+ * 
+ * Operands:
+ * 0=OR
+ * 1=AND
+ * 2=XOR
+ *
+ */
+boolean i2c_device::read_modify_write(byte address, byte mask, byte value, byte operand)
 {
     byte tmp;
-    if (!i2c_device::read_many(address, 1, &tmp))
+    if (!this->read_many(address, 1, &tmp))
     {
         return false;
     }
-    /*
-    Serial.print("BEFORE: reg 0x");
+#ifdef I2C_DEVICE_DEBUG
+    Serial.print("dev 0x");
+    Serial.print(device_address, HEX);
+    Serial.print(" BEFORE: reg 0x");
     Serial.print(address, HEX);
     Serial.print(" value: 0x");
     Serial.print(tmp, HEX);
@@ -103,17 +134,37 @@ boolean i2c_device::read_modify_write(byte address, byte mask, byte value)
     Serial.print(mask, BIN);
     Serial.print("\tVALUE: B");
     Serial.println(value, BIN);
-    */
-    tmp = (tmp & mask) | value;
-    /*
-    Serial.print("AFTER: reg 0x");
+#endif
+    // TODO: These need a re-think, basically: how to set the masked bits to the values in the value byte
+    switch (operand)
+    {
+        case 0:
+            tmp = (tmp & mask) | value;
+            break;
+        case 1:
+            tmp = (tmp & mask) & value;
+            break;
+        case 2:
+            tmp = (tmp & mask) ^ value;
+            break;
+
+    }
+#ifdef I2C_DEVICE_DEBUG
+    Serial.print("dev 0x");
+    Serial.print(device_address, HEX);
+    Serial.print(" AFTER: reg 0x");
     Serial.print(address, HEX);
     Serial.print(" value: 0x");
     Serial.print(tmp, HEX);
     Serial.print("\tB");
     Serial.println(tmp, BIN);
-    */
-    return i2c_device::write_many(address, 1, &tmp);
+#endif
+    return this->write_many(address, 1, &tmp);
+}
+
+boolean i2c_device::read_modify_write(byte address, byte mask, byte value)
+{
+    return this->read_modify_write(address, mask, value, 0);
 }
 
 
@@ -136,6 +187,7 @@ void i2c_device::dump_registers(byte addr_start, byte addr_end)
         Serial.println(tmp, BIN);
     }
 }
+
 
 
 
