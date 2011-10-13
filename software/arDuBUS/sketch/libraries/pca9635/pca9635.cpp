@@ -55,20 +55,44 @@ boolean pca9635::set_led_mode(byte ledno, byte mode)
     switch(ledno%4)
     {
         case 0:
-            mask = B00000011;
+            mask = (byte)~B00000011;
             break;
         case 1:
-            mask = B00001100;
+            mask = (byte)~B00001100;
             break;
         case 2:
-            mask = B00110000;
+            mask = (byte)~B00110000;
             break;
         case 3:
-            mask = B11000000;
+            mask = (byte)~B11000000;
             break;
     }
     return this->read_modify_write(reg, mask, value);
 }
+
+boolean pca9635::set_led_mode(byte mode)
+{
+    byte value;
+    switch (mode)
+    {
+        case 0:
+            value = B00000000;
+            break;
+        case 1:
+            value = B01010101;
+            break;
+        case 2:
+            value = B10101010;
+            break;
+        case 3:
+            value = B11111111;
+            break;
+    }
+    byte values[] = { value, value, value, value };
+    return this->write_many(0x14, 4, values);
+}
+
+
 
 boolean pca9635::set_driver_mode(byte mode)
 {

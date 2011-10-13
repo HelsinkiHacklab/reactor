@@ -19,6 +19,7 @@ void i2c_device::begin(byte dev_addr, boolean wire_begin)
     }
 }
 
+// TODO: Add read and write methods that take pointer to an iterator function
 
 boolean i2c_device::read(byte address, byte *target)
 {

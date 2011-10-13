@@ -14,32 +14,9 @@ pca9635RGB driverboard;
 void setup()
 {
     Serial.begin(115200);
-    // Set device address and call Wire.begin() (note: fake addesss)
-    driverboard.begin(8);
-    driverboard.R.dump_registers(0x0, 0x1);
-    driverboard.G.dump_registers(0x0, 0x1);
-    driverboard.B.dump_registers(0x0, 0x1);
-    delay(1);
-    driverboard.R.reset();
-    delay(1);
-    driverboard.R.dump_registers(0x0, 0x1);
-    driverboard.G.dump_registers(0x0, 0x1);
-    driverboard.B.dump_registers(0x0, 0x1);
-    delay(1);
-    driverboard.R.set_driver_mode(0);
-    driverboard.G.set_driver_mode(0);
-    driverboard.B.set_driver_mode(0);
-    delay(1);
-    driverboard.R.dump_registers(0x0, 0x1);
-    driverboard.G.dump_registers(0x0, 0x1);
-    driverboard.B.dump_registers(0x0, 0x1);
-    // Fully enable all led PWMs
-    for (byte reg=0x14; reg<=0x17; reg++)
-    {
-        driverboard.R.write(reg, 0xFF);
-        driverboard.G.write(reg, 0xFF);
-        driverboard.B.write(reg, 0xFF);
-    }
+
+    /*
+    // Testing the _BV macros
     for (byte i=0; i<9; i++)
     {
         Serial.print("_BV(");
@@ -51,6 +28,42 @@ void setup()
         Serial.print(")=B");
         Serial.println((byte)~_BV(i), BIN);
     }
+    */
+
+    // Set device address and call Wire.begin() (note: fake addesss)
+    driverboard.begin(8);
+    driverboard.R.dump_registers(0x0, 0x1);
+    driverboard.G.dump_registers(0x0, 0x1);
+    driverboard.B.dump_registers(0x0, 0x1);
+    driverboard.R.dump_registers(0x14, 0x17);
+    driverboard.G.dump_registers(0x14, 0x17);
+    driverboard.B.dump_registers(0x14, 0x17);
+    delay(1);
+    driverboard.R.reset();
+    delay(1);
+    driverboard.R.set_led_mode(3);
+    driverboard.G.set_led_mode(3);
+    driverboard.B.set_led_mode(3);
+    delay(1);
+    driverboard.R.set_driver_mode(0);
+    driverboard.G.set_driver_mode(0);
+    driverboard.B.set_driver_mode(0);
+    delay(1);
+    driverboard.R.dump_registers(0x0, 0x1);
+    driverboard.G.dump_registers(0x0, 0x1);
+    driverboard.B.dump_registers(0x0, 0x1);
+    driverboard.R.dump_registers(0x14, 0x17);
+    driverboard.G.dump_registers(0x14, 0x17);
+    driverboard.B.dump_registers(0x14, 0x17);
+    // Fully enable all led PWMs
+    /*
+    for (byte reg=0x14; reg<=0x17; reg++)
+    {
+        driverboard.R.write(reg, 0xFF);
+        driverboard.G.write(reg, 0xFF);
+        driverboard.B.write(reg, 0xFF);
+    }
+    */
     
     Serial.println("Booted");
 }
