@@ -1,6 +1,6 @@
 package fi.hacklab.reactor
 
-import parts.Plant
+import parts.{Reactor, ReactorChannelSegment, ReactorChannel, Plant}
 
 /**
  * Builds the plant
@@ -9,9 +9,18 @@ object PlantBuilder {
 
   def build(config: Config): Plant = {
 
+    val plant = new Plant()
+
     // TODO
 
     // Reactor rods and channels
+
+    val reactor = new Reactor(
+      config.reactorSegmentsX(),
+      config.reactorSegmentsY(),
+      config.reactorSegmentsZ(),
+      config.reactorSegmentsCutout())
+    plant.addPart(reactor)
 
     // Steam separators
 
@@ -39,6 +48,8 @@ object PlantBuilder {
 
     // Vent to bubbler pools
 
+
+    plant
   }
 
 }

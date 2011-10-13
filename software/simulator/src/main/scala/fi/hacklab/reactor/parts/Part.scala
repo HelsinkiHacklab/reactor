@@ -1,9 +1,11 @@
 package fi.hacklab.reactor.parts
 
+import org.scalaprops.Bean
+
 /**
  * Some part of the reactor.
  */
-trait Part {
+trait Part extends Bean {
 
   def preUpdate(time_s: Double) {}
 

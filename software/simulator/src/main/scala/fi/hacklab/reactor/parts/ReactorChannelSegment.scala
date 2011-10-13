@@ -3,7 +3,7 @@ package fi.hacklab.reactor.parts
 /**
  * A segment of a reactor channel.
  */
-class ReactorChannelSegment extends Part {
+class ReactorChannelSegment(x: Int, y: Int, z: Int, reactorChannel: ReactorChannel) extends Part {
 
   var temperature = 0.0
   var neutronActivity = 0.0
@@ -11,7 +11,6 @@ class ReactorChannelSegment extends Part {
   var neutronFluxIn = 0.0
   var waterChannel: Container = new Container
   var surroundingSegments: List[ReactorChannelSegment] = Nil
-  var reactorChannel: ReactorChannel = null
 
   override def preUpdate(time_s: Double) {
     waterChannel.preUpdate(time_s)
@@ -34,5 +33,6 @@ class ReactorChannelSegment extends Part {
     // Calculate the outgoing flux
 
   }
+
 
 }

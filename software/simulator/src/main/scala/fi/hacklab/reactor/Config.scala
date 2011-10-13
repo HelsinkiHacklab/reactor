@@ -1,17 +1,25 @@
 package fi.hacklab.reactor
 
+import org.scalaprops.Bean
+
 /**
  * 
  */
-class Config {
+class Config extends Bean {
 
-  var reactorHeight_m = 1.0
-  var waterChannelRadius_m = 0.025
-  var activityLevel = 1.0
-  var activityLevelVariation = 0.3
+  val reactorHeight_m = p('reactorHeight_m, 1.0)
 
-  var controlRodGraphiteTipPortion = 0.2
-  var controlRodNeutronAbsorbation = 1
-  var controlRodTipNeutronSlowdown = 1
+  val reactorSegmentsX = p('reactorSegmentsX, 7)
+  val reactorSegmentsY = p('reactorSegmentsY, 7)
+  val reactorSegmentsZ = p('reactorSegmentsZ, 7)
+  val reactorSegmentsCutout = p('reactorSegmentsCutout, 2)
+
+  val waterChannelRadius_m = p('waterChannelRadius_m, 0.025)
+  val activityLevel = p('activityLevel, 1.0)
+  val activityLevelVariation = p('activityLevelVariation, 0.3)
+
+  val controlRodGraphiteTipPortion = p('controlRodGraphiteTipPortion, 0.2)
+  val controlRodNeutronAbsorbation = p('controlRodNeutronAbsorbation, 1.0)
+  var controlRodTipNeutronSlowdown = p('controlRodTipNeutronSlowdown, 1.0)
 
 }

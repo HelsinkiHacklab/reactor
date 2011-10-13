@@ -18,7 +18,7 @@ class Container extends Part {
 
   var pressure = 0.0
 
-  def neutronAbsorbation: Double = water.amountKg // TODO
+  def neutronAbsorbation: Double = water.amount_kg // TODO
 
   def heatExchange(time_s: Double, outerTemperature_K: Double) {
     // Average own and outer temperature, based on surface area and heat transfer coefficient
@@ -30,7 +30,7 @@ class Container extends Part {
     // Convert steam to hydrogen and oxygen if it is too hot
   }
 
-  def postUpdate(time_s: Double) {
+  override def postUpdate(time_s: Double) {
     // Update flow of matter from and to openings, based on relative pressures, and on what materials can pass
     // through each port in which direction
   }
