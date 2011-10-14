@@ -97,9 +97,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.2726305"
-     inkscape:cx="303.05887"
-     inkscape:cy="926.47337"
+     inkscape:zoom="2.5452609"
+     inkscape:cx="199.5714"
+     inkscape:cy="873.41514"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -124,7 +124,8 @@
      inkscape:groupmode="layer"
      id="layer1">
     <g
-       id="g9034">
+       id="g9034"
+       transform="matrix(-1,0,0,1,346.5,0)">
       <g
          id="g6717">
         <g
