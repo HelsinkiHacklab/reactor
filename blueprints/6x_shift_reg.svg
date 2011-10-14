@@ -99,7 +99,7 @@
      inkscape:pageshadow="2"
      inkscape:zoom="2.5452609"
      inkscape:cx="199.5714"
-     inkscape:cy="873.41514"
+     inkscape:cy="857.69966"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -124,9 +124,9 @@
      inkscape:groupmode="layer"
      id="layer1">
     <g
-       id="g9034"
-       transform="matrix(-1,0,0,1,346.5,0)">
+       id="g12124">
       <g
+         transform="matrix(-1,0,0,1,346.5,0)"
          id="g6717">
         <g
            transform="matrix(1.25,0,0,-1.25,18.35,1196.8622)"
@@ -3907,7 +3907,7 @@
         </g>
       </g>
       <g
-         transform="translate(0,-81.000017)"
+         transform="matrix(1,0,0,-1,0,353.29938)"
          id="g7490">
         <g
            id="g7492"
