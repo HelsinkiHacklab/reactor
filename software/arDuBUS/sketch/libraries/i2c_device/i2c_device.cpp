@@ -192,7 +192,11 @@ boolean i2c_device::read_modify_write(byte address, byte mask, byte value)
     return this->read_modify_write(address, mask, value, 0);
 }
 
-
+/**
+ * This does the reg dumping the naive way just in case the
+ * usually supposed-to-be-present register autoincrement does not work as
+ * expected
+ */
 void i2c_device::dump_registers(byte addr_start, byte addr_end)
 {
     byte tmp;

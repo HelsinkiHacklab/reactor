@@ -19,9 +19,13 @@ class pca9635 : public i2c_device
         boolean set_led_pwm(byte ledno, byte cycle);
         boolean set_driver_mode(byte mode);
         boolean set_sleep(byte sleep);
+        boolean enable_subddr(byte addr);
         boolean reset(); // NOTE: This resets all PCA9635 devices on the bus
         byte autoincrement_bits;
 };
+
+extern pca9635 PCA9635;
+
 
 #endif
 // *********** END OF CODE **********

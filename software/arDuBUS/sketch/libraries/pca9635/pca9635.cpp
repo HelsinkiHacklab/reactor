@@ -3,6 +3,8 @@
 // Constructor
 pca9635::pca9635()
 {
+    device_address = 0xe0; // Default to the all-call address
+    autoincrement_bits = 0x80; // Autoincrement all
 }
 
 // Destructor
@@ -12,7 +14,6 @@ pca9635::~pca9635()
 
 void pca9635::begin(byte dev_addr, boolean wire_begin)
 {
-    this->autoincrement_bits = 0x80; // Autoincrement all
     i2c_device::begin(dev_addr, wire_begin);
 }
 
@@ -45,16 +46,16 @@ boolean pca9635::set_led_mode(byte ledno, byte mode)
     switch (mode)
     {
         case 0:
-            value = B00;
+            value = B00000000;
             break;
         case 1:
-            value = B01;
+            value = B01010101;
             break;
         case 2:
-            value = B10;
+            value = B10101010;
             break;
         case 3:
-            value = B11;
+            value = B11111111;
             break;
     }
     byte mask = B00000000;
@@ -76,6 +77,13 @@ boolean pca9635::set_led_mode(byte ledno, byte mode)
     return this->read_modify_write(reg | autoincrement_bits, mask, value);
 }
 
+/**
+ * Set mode for all leds 
+ * 0=fully off
+ * 1=fully on (no PWM)
+ * 2=individual PWM only
+ * 3=individual and group PWM
+ */
 boolean pca9635::set_led_mode(byte mode)
 {
     byte value;
@@ -97,6 +105,27 @@ boolean pca9635::set_led_mode(byte mode)
     byte values[] = { value, value, value, value };
     return this->write_many(0x14 | autoincrement_bits, 4, values);
 }
+
+/**
+ * Enable given SUBADDRess (1-3)
+ */
+boolean pca9635::enable_subddr(byte addr)
+{
+    byte value;
+    switch (addr)
+    {
+        case 1:
+            value = _BV(3);
+        case 2:
+            value = _BV(2);
+        case 3:
+            value = _BV(1);
+            break;
+    }
+    byte mask = ~value;
+    return this->read_modify_write(0x0 | autoincrement_bits, mask, value);
+}
+
 
 boolean pca9635::set_driver_mode(byte mode)
 {
@@ -126,21 +155,14 @@ boolean pca9635::set_led_pwm(byte ledno, byte cycle)
  */
 boolean pca9635::reset()
 {
-    return false;
 #ifdef I2C_DEVICE_DEBUG
     Serial.println("pca9635::reset() called");
 #endif
-    I2c.beginTransmission(0x6); // B0000011
-    I2c.send(0xa5);
-    I2c.send(0x5a);
-    byte result = I2c.endTransmission();
+    byte result = I2c.write(0x06, 0x5a, 0x5a);
     if (result > 0)
     {
 #ifdef I2C_DEVICE_DEBUG
-        Serial.print("DEBUG: Write to ");
-        Serial.print("dev 0x6");
-        Serial.print(" reg 0xa5 value 0x5a");
-        Serial.print(" failed, I2c.endTransmission returned: ");
+        Serial.print("FAILED: I2c.write(0x06, 0x5a, 0x5a); returned: ");
         Serial.println(result, DEC);
 #endif
         return false;
@@ -148,3 +170,8 @@ boolean pca9635::reset()
     delayMicroseconds(5); // Wait for the reset to complete
     return true;
 }
+
+
+
+// Instance for the all-call address
+pca9635 PCA9635 = pca9635();
