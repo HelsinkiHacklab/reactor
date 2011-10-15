@@ -3,7 +3,7 @@
 // Constructor
 pca9635::pca9635()
 {
-    device_address = 0xe0; // Default to the all-call address
+    device_address = 0x70; // Default to the all-call address
     autoincrement_bits = 0x80; // Autoincrement all
 }
 
@@ -158,7 +158,7 @@ boolean pca9635::reset()
 #ifdef I2C_DEVICE_DEBUG
     Serial.println("pca9635::reset() called");
 #endif
-    byte result = I2c.write(0x06, 0x5a, 0x5a);
+    byte result = I2c.write(0x03, 0x5a, 0x5a);
     if (result > 0)
     {
 #ifdef I2C_DEVICE_DEBUG

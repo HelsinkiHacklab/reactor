@@ -53,65 +53,37 @@ boolean i2c_device::read_many(byte address, byte req_num, byte *target)
         return false;
     }
     return true;
-    /*
-    I2c.beginTransmission(device_address);
-    I2c.send(address);
-    byte result = I2c.endTransmission();
+}
+
+
+/**
+ * Write a single byte and check the result
+ */
+boolean i2c_device::write(byte address, byte value)
+{
+    byte result = I2c.write(device_address, address, value);
     if (result > 0)
     {
 #ifdef I2C_DEVICE_DEBUG
-        Serial.print("DEBUG: Read from ");
-        Serial.print("dev 0x");
+        Serial.print("DEBUG: Writing value 0x ");
+        Serial.print(value, HEX);
+        Serial.print(" bytes to dev 0x");
         Serial.print(device_address, HEX);
         Serial.print(" reg 0x");
         Serial.print(address, HEX);
-        Serial.print(" failed, I2c.endTransmission returned: ");
+        Serial.print(" failed, I2c.read returned: ");
         Serial.println(result, DEC);
 #endif
         return false;
     }
-    I2c.requestFrom(device_address, req_num);
-    byte recv_num =  I2c.available();
-    if (recv_num != req_num)
-    {
-        // Unexpected amount of data to be received, clear the buffers and return failure
-        while (recv_num-- > 0)
-        {
-            I2c.receive();
-        }
-#ifdef I2C_DEVICE_DEBUG
-        Serial.print("DEBUG: Read from ");
-        Serial.print("dev 0x");
-        Serial.print(device_address, HEX);
-        Serial.print(" reg 0x");
-        Serial.print(address, HEX);
-        Serial.println(" failed, unexpected amount of data");
-#endif
-        return false;
-    }
-    while(recv_num-- > 0)
-    {
-        // First assign the return of I2c.receive to where the pointer points to, then incement the pointer (so in next iteration we write to correct place)
-        *(target++) = I2c.receive();
-    }
     return true;
-    */
 }
 
-
-boolean i2c_device::write(byte address, byte value)
-{
-    return this->write_many(address, 1, &value);
-}
-
+/**
+ * Write multiple bytes and check result
+ */
 boolean i2c_device::write_many(byte address, byte num, byte *source)
 {
-    /**
-     * Wire style
-    I2c.beginTransmission(device_address);
-    I2c.send(address);
-    I2c.send(source, num);
-    */
     byte result = I2c.write(device_address, address, source, num);
     if (result > 0)
     {
@@ -146,6 +118,7 @@ boolean i2c_device::read_modify_write(byte address, byte mask, byte value, byte 
     {
         return false;
     }
+/*
 #ifdef I2C_DEVICE_DEBUG
     Serial.print("dev 0x");
     Serial.print(device_address, HEX);
@@ -160,6 +133,7 @@ boolean i2c_device::read_modify_write(byte address, byte mask, byte value, byte 
     Serial.print("\tVALUE: B");
     Serial.println(value, BIN);
 #endif
+*/
     // TODO: These need a re-think, basically: how to set the masked bits to the values in the value byte
     switch (operand)
     {
@@ -174,6 +148,7 @@ boolean i2c_device::read_modify_write(byte address, byte mask, byte value, byte 
             break;
 
     }
+/*
 #ifdef I2C_DEVICE_DEBUG
     Serial.print("dev 0x");
     Serial.print(device_address, HEX);
@@ -184,6 +159,7 @@ boolean i2c_device::read_modify_write(byte address, byte mask, byte value, byte 
     Serial.print("\tB");
     Serial.println(tmp, BIN);
 #endif
+*/
     return this->write_many(address, 1, &tmp);
 }
 
