@@ -14,6 +14,7 @@ class pca9635 : public i2c_device
         ~pca9635();
         
         void begin(byte dev_addr, boolean wire_begin);
+        void begin(byte dev_addr, boolean wire_begin, boolean init); // Variant to allow skipiing init (needed by the RGB board)
         boolean set_led_mode(byte ledno, byte mode);
         boolean set_led_mode(byte mode); // Variant to set all leds to same mode
         boolean set_led_pwm(byte ledno, byte cycle);

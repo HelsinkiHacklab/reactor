@@ -12,9 +12,20 @@ pca9635::~pca9635()
 {
 }
 
-void pca9635::begin(byte dev_addr, boolean wire_begin)
+void pca9635::begin(byte dev_addr, boolean wire_begin, boolean init)
 {
     i2c_device::begin(dev_addr, wire_begin);
+    if (init)
+    {
+        this->set_sleep(0x0); // Wake up oscillators
+        delayMicroseconds(500); // Wait for the oscillators to stabilize
+        this->set_led_mode(3); // Default to full PWM mode for all drivers
+    }
+}
+
+void pca9635::begin(byte dev_addr, boolean wire_begin)
+{
+    pca9635::begin(dev_addr, wire_begin, false);
 }
 
 /**
@@ -115,11 +126,13 @@ boolean pca9635::enable_subddr(byte addr)
     switch (addr)
     {
         case 1:
-            value = _BV(3);
+            value = _BV(3); // 0x71
+            break;
         case 2:
-            value = _BV(2);
+            value = _BV(2); // 0x72
+            break;
         case 3:
-            value = _BV(1);
+            value = _BV(1); // 0x74
             break;
     }
     byte mask = ~value;
@@ -158,11 +171,11 @@ boolean pca9635::reset()
 #ifdef I2C_DEVICE_DEBUG
     Serial.println("pca9635::reset() called");
 #endif
-    byte result = I2c.write(0x03, 0x5a, 0x5a);
+    byte result = I2c.write(0x03, 0xa5, 0x5a);
     if (result > 0)
     {
 #ifdef I2C_DEVICE_DEBUG
-        Serial.print("FAILED: I2c.write(0x06, 0x5a, 0x5a); returned: ");
+        Serial.print("FAILED: I2c.write(0x03, 0x5a, 0xa5); returned: ");
         Serial.println(result, DEC);
 #endif
         return false;

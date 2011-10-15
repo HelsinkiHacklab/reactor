@@ -17,20 +17,17 @@ void pca9635RGB::begin(byte board_num, boolean wire_begin)
         I2c.begin();
     }
     PCA9635.reset(); // This should reset all drivers on the bus
-    // Initialize the pca9635 instances with correct addresses
-    R.begin(board_num | (0x1 << 5), false);
-    G.begin(board_num | (0x2 << 5), false);
-    B.begin(board_num | (0x3 << 5), false);
     PCA9635.set_sleep(0x0); // Wake up oscillators (via all-call)
-    PCA9635.set_led_mode(3); // Default to PWM mode for all drivers (via all-call)
-    PCA9635.set_driver_mode(0x0); // Default to open-drain mode for all drivers (via all-call)
-    /*
-    // Wake up the oscillators
-    R.set_sleep(0x0);
-    G.set_sleep(0x0);
-    B.set_sleep(0x0);
-    */
     delayMicroseconds(500); // Wait for the oscillators to stabilize
+    // Initialize the pca9635 instances with correct addresses
+    R.begin(board_num | (0x1 << 5), false, false);
+    G.begin(board_num | (0x2 << 5), false, false);
+    B.begin(board_num | (0x3 << 5), false, false);
+    R.enable_subddr(1);
+    G.enable_subddr(2);
+    B.enable_subddr(3);
+    PCA9635.set_driver_mode(0x0); // Default to open-drain mode for all drivers (via all-call)
+    PCA9635.set_led_mode(3); // Default to PWM mode for all drivers (via all-call)
 }
 
 // Funky way to handle default arguments

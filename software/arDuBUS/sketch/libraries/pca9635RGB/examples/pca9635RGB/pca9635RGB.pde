@@ -46,7 +46,7 @@ void loop()
         Serial.print("Turning on R led ");
         Serial.println(ledno, DEC);
         //driverboard.R.set_led_mode(ledno, 1);
-        //driverboard.R.set_led_pwm(ledno, 255);
+        driverboard.R.set_led_pwm(ledno, 255);
         delay(250);
         Serial.print("Turning off R led ");
         Serial.println(ledno, DEC);
