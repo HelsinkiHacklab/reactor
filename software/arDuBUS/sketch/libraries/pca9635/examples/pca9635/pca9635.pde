@@ -9,7 +9,9 @@ pca9635 driver;
 void setup()
 {
     Serial.begin(115200);
-    // Set device address and call Wire.begin() (note: fake addesss)
+    // Use the SW-Reset address to reset all pca9635 ICs on the bus
+    PCA9635.reset(); // Incidentally this global name is a pca9635 instance bound to the generla "all-call" address so it can be used to set global parameters
+    // Set device address and call I2c.begin() (note: your need to change the address to correspond to your device)
     driver.begin(0xfe, true);
     Serial.println("Booted");
 }
