@@ -2,8 +2,6 @@
 #ifndef pca9635_h
 #define pca9635_h
 #include <WProgram.h> 
-// Defined here for now due to a problem with scope
-#define I2C_DEVICE_DEBUG
 #include <i2c_device.h>
 
 // Stub extension for now
