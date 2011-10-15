@@ -20,7 +20,7 @@ class pca9635 : public i2c_device
         boolean set_driver_mode(byte mode);
         boolean set_sleep(byte sleep);
         boolean reset(); // NOTE: This resets all PCA9635 devices on the bus
-        boolean set_auto_increment(byte bits);
+        byte autoincrement_bits;
 };
 
 #endif

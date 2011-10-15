@@ -21,6 +21,9 @@ void i2c_device::begin(byte dev_addr, boolean wire_begin)
 
 // TODO: Add read and write methods that take pointer to an iterator function
 
+// TODO: Re-write the simplified methods to take advantage of the features of the I2C library
+// TODO: Re-write to check for status codes from the I2C library on each send.
+
 boolean i2c_device::read(byte address, byte *target)
 {
     return this->read_many(address, 1, target);
@@ -34,6 +37,23 @@ byte i2c_device::read(byte address)
 
 boolean i2c_device::read_many(byte address, byte req_num, byte *target)
 {
+    byte result = I2c.read(device_address, address, req_num, target);
+    if (result > 0)
+    {
+#ifdef I2C_DEVICE_DEBUG
+        Serial.print("DEBUG: Read ");
+        Serial.print(req_num, DEC);
+        Serial.print(" bytes from dev 0x");
+        Serial.print(device_address, HEX);
+        Serial.print(" reg 0x");
+        Serial.print(address, HEX);
+        Serial.print(" failed, I2c.read returned: ");
+        Serial.println(result, DEC);
+#endif
+        return false;
+    }
+    return true;
+    /*
     I2c.beginTransmission(device_address);
     I2c.send(address);
     byte result = I2c.endTransmission();
@@ -75,6 +95,7 @@ boolean i2c_device::read_many(byte address, byte req_num, byte *target)
         *(target++) = I2c.receive();
     }
     return true;
+    */
 }
 
 

@@ -16,6 +16,7 @@ pca9635RGB driverboard;
 void setup()
 {
     Serial.begin(115200);
+    I2c.timeOut(5000);
 
     /*
     // Testing the _BV macros

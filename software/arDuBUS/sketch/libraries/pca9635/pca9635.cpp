@@ -12,9 +12,8 @@ pca9635::~pca9635()
 
 void pca9635::begin(byte dev_addr, boolean wire_begin)
 {
+    this->autoincrement_bits = 0x80; // Autoincrement all
     i2c_device::begin(dev_addr, wire_begin);
-    // Enable auto-increment on all registers
-    this->set_auto_increment(B100);
 }
 
 /**
@@ -74,7 +73,7 @@ boolean pca9635::set_led_mode(byte ledno, byte mode)
             mask = (byte)~B11000000;
             break;
     }
-    return this->read_modify_write(reg, mask, value);
+    return this->read_modify_write(reg | autoincrement_bits, mask, value);
 }
 
 boolean pca9635::set_led_mode(byte mode)
@@ -96,25 +95,17 @@ boolean pca9635::set_led_mode(byte mode)
             break;
     }
     byte values[] = { value, value, value, value };
-    return this->write_many(0x14, 4, values);
-}
-
-/**
- * 3-bit bitmask, will get shifted to correct position
- */
-boolean pca9635::set_auto_increment(byte bits)
-{
-    return this->read_modify_write(0x00, B00011111, bits << 5);
+    return this->write_many(0x14 | autoincrement_bits, 4, values);
 }
 
 boolean pca9635::set_driver_mode(byte mode)
 {
-    return this->read_modify_write(0x01, (byte)~_BV(2), mode << 2);
+    return this->read_modify_write(0x01 | autoincrement_bits, (byte)~_BV(2), mode << 2);
 }
 
 boolean pca9635::set_sleep(byte sleep)
 {
-    return this->read_modify_write(0x00, (byte)~_BV(4), sleep << 4);
+    return this->read_modify_write(0x00 | autoincrement_bits, (byte)~_BV(4), sleep << 4);
 }
 
 
@@ -126,7 +117,7 @@ boolean pca9635::set_sleep(byte sleep)
 boolean pca9635::set_led_pwm(byte ledno, byte cycle)
 {
     byte reg = 0x02 + ledno;
-    return this->write_many(reg, 1, &cycle);
+    return this->write_many(reg | autoincrement_bits, 1, &cycle);
 }
 
 
@@ -135,6 +126,7 @@ boolean pca9635::set_led_pwm(byte ledno, byte cycle)
  */
 boolean pca9635::reset()
 {
+    return false;
 #ifdef I2C_DEVICE_DEBUG
     Serial.println("pca9635::reset() called");
 #endif
