@@ -10,9 +10,8 @@
 class pca9635 : public i2c_device
 {
     public:
-        pca9635();
-        ~pca9635();
-        
+        pca9635(); // We need this so we can set default address to the all-call one for the PCA9635 instance
+
         void begin(byte dev_addr, boolean wire_begin);
         void begin(byte dev_addr, boolean wire_begin, boolean init); // Variant to allow skipiing init (needed by the RGB board)
         boolean set_led_mode(byte ledno, byte mode);

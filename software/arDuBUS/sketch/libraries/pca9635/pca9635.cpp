@@ -7,11 +7,6 @@ pca9635::pca9635()
     autoincrement_bits = 0x80; // Autoincrement all
 }
 
-// Destructor
-pca9635::~pca9635()
-{
-}
-
 void pca9635::begin(byte dev_addr, boolean wire_begin, boolean init)
 {
     i2c_device::begin(dev_addr, wire_begin);

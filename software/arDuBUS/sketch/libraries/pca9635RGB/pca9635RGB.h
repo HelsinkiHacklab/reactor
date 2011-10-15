@@ -7,8 +7,6 @@
 class pca9635RGB
 {
     public:
-        pca9635RGB();
-        ~pca9635RGB();
         // Initialize the object and chip        
         void begin(byte board_num, boolean wire_begin);
         // A funky way to handle optional arguments

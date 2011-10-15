@@ -1,12 +1,5 @@
 #include "pca9635RGB.h"
 
-pca9635RGB::pca9635RGB()
-{
-}
-pca9635RGB::~pca9635RGB()
-{
-}
-
 /**
  * board_num is the number selected on the BCD rotary switch
  */

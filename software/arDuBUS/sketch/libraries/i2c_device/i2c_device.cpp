@@ -1,15 +1,5 @@
 #include "i2c_device.h"
 
-// Constructor
-i2c_device::i2c_device()
-{
-}
-
-// Destructor
-i2c_device::~i2c_device()
-{
-}
-
 void i2c_device::begin(byte dev_addr, boolean wire_begin)
 {
     device_address = dev_addr;

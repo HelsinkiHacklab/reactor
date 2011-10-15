@@ -13,8 +13,6 @@
 class i2c_device
 {
     public:
-        i2c_device();
-        ~i2c_device();
         void begin(byte dev_addr, boolean wire_begin);
 
         // A Very shorthand helper for reading single byte (NOTE: does not do error-checking!)
