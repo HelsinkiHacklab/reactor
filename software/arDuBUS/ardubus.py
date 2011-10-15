@@ -40,6 +40,12 @@ class ardubus(dbus.service.Object):
             cycle += 1
         self.send_serial_command("P%s%s" % (self.p2b(pwm_index), chr(cycle)))
 
+    @dbus.service.method('fi.hacklab.ardubus', in_signature='yyy') # "y" is the signature for a byte
+    def set_jbol_pwm(self, jbol_index, ledno, cycle):
+        if cycle in [ 13, 10]: #Offset values that map to CR or LF by one
+            cycle += 1
+        self.send_serial_command("J%s%s%s" % (self.p2b(jbol_index), self.p2b(ledno), chr(cycle)))
+
     @dbus.service.method('fi.hacklab.ardubus', in_signature='yy') # "y" is the signature for a byte
     def set_servo(self, servo_index, value):
         if value > 180:
