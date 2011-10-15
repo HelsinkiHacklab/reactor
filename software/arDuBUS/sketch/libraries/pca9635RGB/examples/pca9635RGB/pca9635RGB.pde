@@ -39,9 +39,10 @@ void setup()
     Serial.println("Booted");
 }
 
+const byte test_leds_max = 8;
 void loop()
 {
-    for (byte ledno = 0; ledno < 8; ledno++)
+    for (byte ledno = 0; ledno < test_leds_max; ledno++)
     {
         Serial.print("Turning on R led ");
         Serial.println(ledno, DEC);
@@ -70,6 +71,19 @@ void loop()
         Serial.println(ledno, DEC);
         driverboard.B.set_led_pwm(ledno, 0);
         //driverboard.B.set_led_mode(ledno, 0);
+    }
+    delay(500);
+    for (byte ledno = 0; ledno < test_leds_max; ledno++)
+    {
+        Serial.print("RGB Fading out led ");
+        Serial.println(ledno, DEC);
+        for (byte value=128; value > 0; value--)
+        {
+            driverboard.set_rgb(ledno, value, value, value);
+            delay(5);
+        }
+        driverboard.set_rgb(ledno, 0x0, 0x0, 0x0);
+        delay(250);
     }
     delay(500);
 }

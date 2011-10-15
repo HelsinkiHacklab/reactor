@@ -14,6 +14,7 @@ class pca9635RGB
         // A funky way to handle optional arguments
         void begin(byte board_num);
         void begin();
+        boolean set_rgb(byte ledno, byte rcycle, byte gcycle, byte bcycle);
         // Color channel instances, allow public access for debugging
         pca9635 R;
         pca9635 G;

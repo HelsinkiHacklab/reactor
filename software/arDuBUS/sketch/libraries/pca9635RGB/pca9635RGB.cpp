@@ -40,3 +40,18 @@ void pca9635RGB::begin()
 {
     pca9635RGB::begin(0x0, true);
 }
+
+boolean pca9635RGB::set_rgb(byte ledno, byte rcycle, byte gcycle, byte bcycle)
+{
+    // TODO: When I2C library allows lower level access write as single repeated-start sequence for atomicity
+    boolean rstat = R.set_led_pwm(ledno, rcycle);
+    boolean gstat = G.set_led_pwm(ledno, gcycle);
+    boolean bstat = B.set_led_pwm(ledno, bcycle);
+    return rstat && gstat && bstat;
+}
+
+/*
+pca9635::set_led_pwm(byte ledno, byte cycle)
+{
+
+*/
