@@ -52,6 +52,9 @@ inline void ardubus_print_int_as_4hex(int input)
 #ifdef ARDUBUS_SERVO_OUTPUTS
 #include "ardubus_servo.h"
 #endif
+#ifdef ARDUBUS_PCA9635RGBJBOL_BOARDS
+#include "ardubus_pca9635RGBJBOL.h"
+#endif
 
 
 /**
@@ -74,6 +77,9 @@ void ardubus_setup()
 #ifdef ARDUBUS_SERVO_OUTPUTS
     ardubus_servo_setup();
 #endif
+#ifdef ARDUBUS_PCA9635RGBJBOL_BOARDS
+    ardubus_pca9635RGBJBOL_setup();
+#endif
 }
 
 
@@ -95,6 +101,9 @@ void ardubus_report()
 #endif
 #ifdef ARDUBUS_SERVO_OUTPUTS
     ardubus_servo_report();
+#endif
+#ifdef ARDUBUS_PCA9635RGBJBOL_BOARDS
+    ardubus_pca9635RGBJBOL_report();
 #endif
     ardubus_last_report_time = millis();
 }
@@ -128,6 +137,9 @@ void ardubus_process_command()
 #endif
 #ifdef ARDUBUS_SERVO_OUTPUTS
     ardubus_servo_process_command(ardubus_incoming_command);
+#endif
+#ifdef ARDUBUS_PCA9635RGBJBOL_BOARDS
+    ardubus_pca9635RGBJBOL_process_command(ardubus_incoming_command);
 #endif
 }
 
@@ -191,6 +203,9 @@ void ardubus_update()
 #endif
 #ifdef ARDUBUS_SERVO_OUTPUTS
     ardubus_servo_update();
+#endif
+#ifdef ARDUBUS_PCA9635RGBJBOL_BOARDS
+    ardubus_pca9635RGBJBOL_update();
 #endif
     ardubus_check_report();
 }

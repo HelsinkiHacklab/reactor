@@ -16,7 +16,7 @@
  */
  
 #include <Bounce.h> // For some weird reason including this in the relevant .h file does not work
-#define ARDUBUS_DIGITAL_INPUTS { 2, 24, 32, 50, 44, PJ6, PJ7 }
+#define ARDUBUS_DIGITAL_INPUTS { 2, 3 }
 #define ARDUBUS_DIGITAL_OUTPUTS { 13 }
 #define ARDUBUS_ANALOG_INPUTS { A1 }
 #define ARDUBUS_PWM_OUTPUTS { 13 }
@@ -34,6 +34,10 @@
 void setup()
 {
     Serial.begin(115200);
+    // Set some I2C values that should not be set automagically by the library
+    I2c.timeOut(500); // 500ms timeout to avoid lockups
+    I2c.pullup(false); //Disable internal pull-ups
+    I2c.setSpeed(true); // Fast-mode support
     ardubus_setup();
     Serial.println("Booted");
 }
