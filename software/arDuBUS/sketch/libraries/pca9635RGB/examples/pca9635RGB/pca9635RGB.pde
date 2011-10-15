@@ -1,5 +1,8 @@
-
 /**
+ * RGB (3x PCA9625 drivers in a handy configuration) led driver board 
+ *
+ * @see https://github.com/HelsinkiHacklab/reactor/blob/master/blueprints/ledcontroller.brd
+ *
  * Remember your I2C pull-up resistors
  */
 // Get this from http://dsscircuits.com/articles/arduino-i2c-master-library.html

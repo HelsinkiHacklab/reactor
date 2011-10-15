@@ -22,6 +22,14 @@
 #define ARDUBUS_PWM_OUTPUTS { 13 }
 #include <Servo.h> // For some weird reason including this in the relevant .h file does not work
 #define ARDUBUS_SERVO_OUTPUTS { 10 }
+#include <I2C.h> // For some weird reason including this in the relevant .h file does not work
+#define I2C_DEVICE_DEBUG
+#include <i2c_device.h> // For some weird reason including this in the relevant .h file does not work
+#include <pca9635.h> // For some weird reason including this in the relevant .h file does not work
+#include <pca9635RGB.h> // For some weird reason including this in the relevant .h file does not work
+#include <pca9635RGBJBOL.h> // For some weird reason including this in the relevant .h file does not work
+#define ARDUBUS_PCA9635RGBJBOL_BOARDS { 8 }
+
 #include <ardubus.h>
 void setup()
 {
