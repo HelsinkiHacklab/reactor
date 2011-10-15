@@ -112,18 +112,17 @@ boolean i2c_device::write_many(byte address, byte num, byte *source)
     I2c.send(address);
     I2c.send(source, num);
     */
-    I2c.beginTransmission(device_address);
-    I2c.write(device_address, address, source, num);
-    byte result = I2c.endTransmission();
+    byte result = I2c.write(device_address, address, source, num);
     if (result > 0)
     {
 #ifdef I2C_DEVICE_DEBUG
-        Serial.print("DEBUG: Write to ");
-        Serial.print("dev 0x");
+        Serial.print("DEBUG: Write ");
+        Serial.print(num, DEC);
+        Serial.print(" bytes to dev 0x");
         Serial.print(device_address, HEX);
-        Serial.print(" (start)reg 0x");
+        Serial.print(" reg 0x");
         Serial.print(address, HEX);
-        Serial.print(" failed, I2c.endTransmission returned: ");
+        Serial.print(" failed, I2c.read returned: ");
         Serial.println(result, DEC);
 #endif
         return false;
