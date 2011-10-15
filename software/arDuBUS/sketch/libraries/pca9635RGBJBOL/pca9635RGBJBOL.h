@@ -1,6 +1,6 @@
 // safety againts double-include
-#ifndef pca9635RGB_h
-#define pca9635RGB_h
+#ifndef pca9635RGBJBOL_h
+#define pca9635RGBJBOL_h
 #include <WProgram.h> 
 #include <pca9635RGB.h>
 

@@ -1,18 +1,8 @@
-#include "pca9635RGB.h"
-
-pca9635RGBJBOL::pca9635RGBJBOL()
-{
-}
-pca9635RGBJBOL::~pca9635RGBJBOL()
-{
-}
-
+#include "pca9635RGBJBOL.h"
 
 // Proxies to all the individual drivers
 boolean pca9635RGBJBOL::set_led_pwm(byte ledno, byte cycle)
 {
-    Serial.print("ledno/3=");
-    Serial.println((byte)(ledno/3), DEC);
     switch (ledno%3)
     {
         case 0:
