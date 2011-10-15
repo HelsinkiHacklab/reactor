@@ -1,4 +1,6 @@
-package fi.hacklab.reactor.parts
+package fi.hacklab.reactor.primitives
+
+import fi.hacklab.reactor.primitives.Part
 
 /**
  * 
@@ -12,7 +14,8 @@ class Plant {
   }
 
   def update(time_s: Double) {
-    parts foreach {p => p.preUpdate(time_s)}
+    parts foreach {p => p.pressureUpdate(time_s)}
+    parts foreach {p => p.flowUpdate(time_s)}
     parts foreach {p => p.update(time_s)}
     parts foreach {p => p.postUpdate(time_s)}
   }

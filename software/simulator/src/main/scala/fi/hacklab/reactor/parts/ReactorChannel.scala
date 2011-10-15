@@ -1,5 +1,7 @@
 package fi.hacklab.reactor.parts
 
+import fi.hacklab.reactor.primitives.CompositePart
+
 /**
  * 
  */

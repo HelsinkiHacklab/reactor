@@ -1,23 +1,21 @@
 package fi.hacklab.reactor.parts
 
+import fi.hacklab.reactor.primitives.{CompositePart, Container, Part}
+
 /**
  * A segment of a reactor channel.
  */
-class ReactorChannelSegment(x: Int, y: Int, z: Int, reactorChannel: ReactorChannel) extends Part {
+class ReactorChannelSegment(x: Int, y: Int, z: Int, reactorChannel: ReactorChannel) extends CompositePart {
 
   var temperature = 0.0
   var neutronActivity = 0.0
   var neutronFluxOut = 0.0
   var neutronFluxIn = 0.0
-  var waterChannel: Container = new Container
-  var surroundingSegments: List[ReactorChannelSegment] = Nil
 
-  override def preUpdate(time_s: Double) {
-    waterChannel.preUpdate(time_s)
-  }
+  var waterChannel: Container = makePart(new Container)
 
-  def update(time_s: Double) {
-    waterChannel.update(time_s)
+
+  def onUpdate(time_s: Double) {
 
     // Calculate the incoming flux, based on outgoing flux by other channels, and control rod and water positions
 
@@ -27,9 +25,7 @@ class ReactorChannelSegment(x: Int, y: Int, z: Int, reactorChannel: ReactorChann
 
   }
 
-  override def postUpdate(time_s: Double) {
-    waterChannel.postUpdate(time_s)
-
+  def onPostUpdate(time_s: Double) {
     // Calculate the outgoing flux
 
   }

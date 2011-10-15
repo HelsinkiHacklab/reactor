@@ -1,4 +1,4 @@
-package fi.hacklab.reactor.parts
+package fi.hacklab.reactor.primitives
 
 /**
  * A fluid pipe or cistern, with connections to other ones.
