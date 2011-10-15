@@ -1,5 +1,7 @@
 package fi.hacklab.reactor.parts
 
+import fi.hacklab.reactor.primitives.CompositePart
+
 
 /**
  * 
@@ -47,7 +49,7 @@ class Reactor(sizeX: Int, sizeY: Int, sizeZ: Int, edgeCutoutSize: Int) extends C
 
       if (hasChannel(x, y)) {
         val channel = new ReactorChannel(x, y, sizeZ, this)
-        addPart(channel)
+        makePart(channel)
         channels ::= channel
       }
     }

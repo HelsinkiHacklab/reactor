@@ -1,6 +1,6 @@
 package fi.hacklab.reactor.parts
 
-import fi.hacklab.reactor.parts.Part._
+import fi.hacklab.reactor.primitives.{OutFlow, InFlow, Part}
 
 /**
  * 

@@ -1,10 +1,11 @@
-package fi.hacklab.reactor.parts
+package fi.hacklab.reactor.primitives
 
 import org.scalaprops.Bean
 
 /**
  * Some part of the reactor.
  */
+// TODO: Outputs, signals in / out, sound generated, lights, etc
 trait Part extends Bean {
 
   private var ports: List[Port] = Nil
@@ -19,16 +20,14 @@ trait Part extends Bean {
 
 
 
-  def preUpdate(time_s: Double) {}
+  def pressureUpdate(time_s: Double) {}
+
+  def flowUpdate(time_s: Double) {}
 
   def update(time_s: Double)
 
   def postUpdate(time_s: Double) {}
 
+
 }
 
-
-trait Direction
-case object InFlow extends Direction
-case object OutFlow extends Direction
-case object InOutFlow extends Direction
