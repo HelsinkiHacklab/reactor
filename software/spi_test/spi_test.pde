@@ -112,19 +112,15 @@ void loop()
               reg_values[2] = ~_BV((7-i%8));
               break;
         }
-        /*
         Serial.print("Turning on LED ");
         Serial.println(i, DEC);
-        */
         write_regs();
         //dump_regs();
         delay(250);
 
         reg_values[reg] = 0xff;
-        /*
         Serial.print("Turning off LED ");
         Serial.println(i, DEC);
-        */
         write_regs();
         delay(250);
     }
