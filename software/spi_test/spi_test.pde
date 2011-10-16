@@ -50,7 +50,7 @@ void setup()
 
     SPI.setDataMode(SPI_MODE1);
     SPI.setBitOrder(LSBFIRST);
-    SPI.setClockDivider(SPI_CLOCK_DIV32);
+    SPI.setClockDivider(SPI_CLOCK_DIV4);
 
     digitalWrite(latchpin, LOW);
     reset_regs();
