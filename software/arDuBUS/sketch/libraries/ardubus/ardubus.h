@@ -11,6 +11,17 @@
 #define ARDUBUS_INDEX_OFFSET 32 // We need to offset the pin/index numbers to above CR and LF which are control characters to us
 #endif
 
+/**
+ * Parses ASCII [0-9A-F] hexadecimal to byte value
+ */
+inline byte ardubus_hex2byte(byte hexchar)
+{
+    if (0x40 < hexchar < 0x47)
+    {
+        return hexchar - 0x36; // A-F
+    }
+    return hexchar-0x30;; // 0-9
+}
 
 // Utility functions for outputting fixed lenght nex encoded numbers
 inline void ardubus_print_byte_as_2hex(byte input)

@@ -74,6 +74,19 @@ inline void ardubus_spi74XX595_process_command(char *incoming_command)
             Serial.println(0x6); // ACK
             break;
         }
+        case 0x57: // ASCII "W" (B<indexbyte><valuehex>) //Note that the indexbyte is index of register, value is two hex chars
+        {
+            byte reg_index = incoming_command[1]-ARDUBUS_INDEX_OFFSET;
+            byte reg_value = (ardubus_hex2byte(incoming_command[2]) << 4) + ardubus_hex2byte(incoming_command[3]);
+            ardubus_spi74XX595_values[reg_index] = reg_value;
+            ardubus_spi74XX595_write();
+            Serial.print("W");
+            Serial.print(incoming_command[1]);
+            Serial.print(incoming_command[2]);
+            Serial.print(incoming_command[3]);
+            Serial.println(0x6); // ACK
+            break;
+        }
     }
 }
 
