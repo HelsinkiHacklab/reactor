@@ -63,7 +63,7 @@ inline void ardubus_spi74XX595_process_command(char *incoming_command)
                 bit_value = 0xff;
             }
             byte bit_index = incoming_command[1]-ARDUBUS_INDEX_OFFSET;
-            byte bit_pos = 7-(i%8);
+            byte bit_pos = 7-(bit_index%8);
             byte reg_index = bit_index/8;
             // Set only the given bit in the correct register
             ardubus_spi74XX595_values[reg_index] = (ardubus_spi74XX595_values[reg_index] & ~_BV(bit_pos)) | bit_value;

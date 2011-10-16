@@ -55,7 +55,9 @@ inline void ardubus_print_int_as_4hex(int input)
 #ifdef ARDUBUS_PCA9635RGBJBOL_BOARDS
 #include "ardubus_pca9635RGBJBOL.h"
 #endif
-
+#ifdef ARDUBUS_SPI74XX595_REGISTER_COUNT
+#include "ardubus_spi74XX595.h"
+#endif
 
 /**
  * Setups up all enabled submodules
@@ -79,6 +81,9 @@ void ardubus_setup()
 #endif
 #ifdef ARDUBUS_PCA9635RGBJBOL_BOARDS
     ardubus_pca9635RGBJBOL_setup();
+#endif
+#ifdef ARDUBUS_SPI74XX595_REGISTER_COUNT
+    ardubus_spi74XX595_setup();
 #endif
 }
 
@@ -104,6 +109,9 @@ void ardubus_report()
 #endif
 #ifdef ARDUBUS_PCA9635RGBJBOL_BOARDS
     ardubus_pca9635RGBJBOL_report();
+#endif
+#ifdef ARDUBUS_SPI74XX595_REGISTER_COUNT
+    ardubus_spi74XX595_report();
 #endif
     ardubus_last_report_time = millis();
 }
@@ -140,6 +148,9 @@ void ardubus_process_command()
 #endif
 #ifdef ARDUBUS_PCA9635RGBJBOL_BOARDS
     ardubus_pca9635RGBJBOL_process_command(ardubus_incoming_command);
+#endif
+#ifdef ARDUBUS_SPI74XX595_REGISTER_COUNT
+    ardubus_spi74XX595_process_command(ardubus_incoming_command);
 #endif
 }
 
@@ -206,6 +217,9 @@ void ardubus_update()
 #endif
 #ifdef ARDUBUS_PCA9635RGBJBOL_BOARDS
     ardubus_pca9635RGBJBOL_update();
+#endif
+#ifdef ARDUBUS_SPI74XX595_REGISTER_COUNT
+    ardubus_spi74XX595_update();
 #endif
     ardubus_check_report();
 }

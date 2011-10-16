@@ -20,7 +20,7 @@ void reset_regs()
 void latch_clock()
 {
     digitalWrite(latchpin, HIGH);
-    delayMicroseconds(5);
+    delayMicroseconds(1);
     digitalWrite(latchpin, LOW);
 }
 
@@ -56,6 +56,19 @@ void setup()
     digitalWrite(latchpin, HIGH);
     //clock_latch();
     analogWrite(oepin, 0xff-10);
+
+    for (byte i=0; i<8; i++)
+    {
+        Serial.print(" i=");
+        Serial.print(i, DEC);
+        byte bitmask = _BV(i);
+        Serial.print(" B");
+        Serial.print(bitmask, BIN);
+        byte reversed = ~_BV(i);
+        Serial.print(" B");
+        Serial.println(reversed, BIN);
+    }
+
     Serial.print("Booted");
 }
 
@@ -97,28 +110,33 @@ void loop()
     {
         // Calculate the bit in the correct register based on i, set it to 0 and others to 1
         byte reg = i/8;
+        Serial.print("reg=");
+        Serial.println(reg, DEC);
+        byte bitpos = 7-(i%8);
+        Serial.print("bitpos=");
+        Serial.println(bitpos, DEC);
         switch(reg) 
         {
             case 0:
-              reg_values[0] = ~_BV((7-i%8));
+              reg_values[0] = (byte)~_BV(bitpos);
               reg_values[1] = 0xff;
               reg_values[2] = 0xff;
               break;
             case 1:
               reg_values[0] = 0xff;
-              reg_values[1] = ~_BV((7-i%8));
+              reg_values[1] = (byte)~_BV(bitpos);
               reg_values[2] = 0xff;
               break;
             case 2:
               reg_values[1] = 0xff;
               reg_values[0] = 0xff;
-              reg_values[2] = ~_BV((7-i%8));
+              reg_values[2] = (byte)~_BV(bitpos);
               break;
         }
         Serial.print("Turning on LED ");
         Serial.println(i, DEC);
         write_regs();
-        //dump_regs();
+        dump_regs();
         delay(250);
 
         reg_values[reg] = 0xff;
