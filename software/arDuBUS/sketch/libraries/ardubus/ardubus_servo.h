@@ -43,7 +43,7 @@ inline void ardubus_servo_process_command(char *incoming_command)
             Serial.print("S");
             Serial.print(incoming_command[1]);
             Serial.print(incoming_command[2]);
-            Serial.println(0x6); // ACK
+            Serial.println(0x6, BYTE); // ACK
             break;
     }
 }

@@ -87,7 +87,7 @@ inline void ardubus_spi74XX595_process_command(char *incoming_command)
             Serial.print("B");
             Serial.print(incoming_command[1]);
             Serial.print(incoming_command[2]);
-            Serial.println(0x6); // ACK
+            Serial.println(0x6, BYTE); // ACK
             break;
         }
         case 0x57: // ASCII "W" (B<indexbyte><valuehex>) //Note that the indexbyte is index of register, value is two hex chars
@@ -99,7 +99,7 @@ inline void ardubus_spi74XX595_process_command(char *incoming_command)
             Serial.print(incoming_command[1]);
             Serial.print(incoming_command[2]);
             Serial.print(incoming_command[3]);
-            Serial.println(0x6); // ACK
+            Serial.println(0x6, BYTE); // ACK
             break;
         }
     }
