@@ -41,7 +41,7 @@ inline void ardubus_spi74XX595_write()
 inline void ardubus_spi74XX595_setup()
 {
     SPI.begin();
-    SPI.setDataMode(SPI_MODE1);
+    SPI.setDataMode(SPI_MODE0);
     SPI.setBitOrder(LSBFIRST);
     SPI.setClockDivider(SPI_CLOCK_DIV4); // This should still work with messy cables
     for (byte i=0; i<ARDUBUS_SPI74XX595_REGISTER_COUNT; i++)
