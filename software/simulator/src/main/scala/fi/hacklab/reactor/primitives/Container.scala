@@ -3,9 +3,8 @@ package fi.hacklab.reactor.primitives
 /**
  * A fluid pipe or cistern, with connections to other ones.
  */
-class Container extends Part {
+class Container(var volume: Double = 1.0) extends Part {
 
-  var volume = 1.0
   var surfaceArea = 1.0
   var heatTransferCoefficient = 0.8
 

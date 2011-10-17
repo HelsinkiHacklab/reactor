@@ -12,7 +12,10 @@ trait Part extends Bean {
 
 
   def makePort(direction: Direction = InOutFlow): Port = {
-    val port = new Port(this, direction)
+    addPort(new Port(this, direction))
+  }
+
+  def addPort(port: Port): Port = {
     ports ::= port
     port
   }
@@ -28,20 +31,20 @@ trait Part extends Bean {
   def postUpdate(time_s: Double) {}
 
 
+
+  // TODO: associate these with ports somehow? onMatterAdded, etc?
   /**
    * Pressure at the specified port.
    */
-  def getPressure(port: Port): Double
-
+  def getPressure(port: Port): Double = 0
   /**
    * Adds some matter from specified port
    */
-  def addMatter(port: Port, matter: Matter)
-
+  def addMatter(port: Port, matter: Matter) {}
   /**
    * Removes matter through specified port.
    */
-  def removeMatterVolume(port: Port, volume_m3: Double): Matter
+  def removeMatterVolume(port: Port, volume_m3: Double): Matter = null
 
 
 }

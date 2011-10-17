@@ -49,7 +49,7 @@ class Reactor(sizeX: Int, sizeY: Int, sizeZ: Int, edgeCutoutSize: Int) extends C
 
       if (hasChannel(x, y)) {
         val channel = new ReactorChannel(x, y, sizeZ, this)
-        makePart(channel)
+        addPart(channel)
         channels ::= channel
       }
     }

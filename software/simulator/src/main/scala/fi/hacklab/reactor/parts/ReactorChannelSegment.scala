@@ -12,7 +12,7 @@ class ReactorChannelSegment(x: Int, y: Int, z: Int, reactorChannel: ReactorChann
   var neutronFluxOut = 0.0
   var neutronFluxIn = 0.0
 
-  var waterChannel: Container = makePart(new Container)
+  var waterChannel: Container = addPart(new Container)
 
 
   def onUpdate(time_s: Double) {

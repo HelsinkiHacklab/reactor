@@ -7,7 +7,10 @@ trait CompositePart extends Part {
 
   var parts: List[Part] = Nil
 
-  def makePart(part: Part): Part = {
+  // TODO: exportPort method that stores info about exported ports from contained parts?
+
+
+  def addPart(part: Part): Part = {
     parts ::= part
     part
   }
