@@ -8,6 +8,7 @@ case class Port(host: Part,
                 frictionCoefficient: Double = 0.1 ) extends Part {
 
   var pressure_Pa = 1.0
+  var outFlow_m3_per_s = 0
 
   // Connected pipe, if any.
   var connection: Connection = null
@@ -61,18 +62,30 @@ case class Port(host: Part,
 
   override def flowUpdate(time_s: Double) {
     val otherPort = connectedPort
-    if (otherPort != null && direction.allowsOut) {
-      // Push to connected port, if applicable
+    if (otherPort != null && direction.allowsOut && otherPort.direction.allowsIn) {
       val pressureDifference = pressure_Pa - otherPort.pressure_Pa
       if (pressureDifference > 0) {
-        val flow = connection.flow_m3_per_s + pressureDifference * (1.0 - frictionCoefficient)
+        outFlow_m3_per_s = math.max(0, outFlow_m3_per_s + pressureDifference - pressureDifference * pressureDifference * frictionCoefficient)
       }
+      else outFlow_m3_per_s = 0
     }
+    else outFlow_m3_per_s = 0
   }
 
 
   def update(time_s: Double) {
-
+    // Push matter to connected port, if there is flow
+    if (outFlow_m3_per_s > 0) {
+      val volume = outFlow_m3_per_s * time_s
+      val matter = host.removeMatter(this, volume)
+      connectedPort.addMatter(matter)
+    }
   }
+
+
+  def addMatter(matter: Matter) =  {
+    host.addMatter(this, matter)
+  }
+
 }
 

@@ -19,7 +19,6 @@ trait Part extends Bean {
 
 
 
-
   def pressureUpdate(time_s: Double) {}
 
   def flowUpdate(time_s: Double) {}
@@ -27,6 +26,22 @@ trait Part extends Bean {
   def update(time_s: Double)
 
   def postUpdate(time_s: Double) {}
+
+
+  /**
+   * Pressure at the specified port.
+   */
+  def getPressure(port: Port): Double
+
+  /**
+   * Adds some matter from specified port
+   */
+  def addMatter(port: Port, matter: Matter)
+
+  /**
+   * Removes matter through specified port.
+   */
+  def removeMatterVolume(port: Port, volume_m3: Double): Matter
 
 
 }

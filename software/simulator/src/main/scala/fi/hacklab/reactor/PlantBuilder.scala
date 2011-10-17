@@ -1,6 +1,7 @@
 package fi.hacklab.reactor
 
 import parts._
+import primitives.Plant
 
 /**
  * Builds the plant
