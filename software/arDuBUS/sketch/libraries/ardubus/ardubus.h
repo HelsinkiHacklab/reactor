@@ -16,11 +16,23 @@
  */
 inline byte ardubus_hex2byte(byte hexchar)
 {
-    if (0x40 < hexchar < 0x47)
+    if (   0x40 < hexchar
+        && hexchar < 0x47) // A-F
     {
-        return hexchar - 0x36; // A-F
+        return (hexchar - 0x41) + 10; 
     }
-    return hexchar-0x30;; // 0-9
+    if (   0x2f < hexchar
+        && hexchar < 0x3a) // 0-9
+    {
+        return (hexchar - 0x30);
+    }
+    return 0x0; // Failure.
+    
+}
+
+inline byte ardubus_hex2byte(byte hexchar0, byte hexchar1)
+{
+    return (ardubus_hex2byte(hexchar0) << 4) | ardubus_hex2byte(hexchar1);
 }
 
 // Utility functions for outputting fixed lenght nex encoded numbers
