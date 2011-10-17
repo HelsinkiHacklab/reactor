@@ -3,9 +3,9 @@
 PIN_OFFSET=32 # We need to offset the pin numbers to CR and LF which are control characters to us (NOTE: this *must* be same in sketch)
 
 import os,sys
+import binascii
 import dbus
 import dbus.service
-
 
 
 class ardubus(dbus.service.Object):
@@ -53,6 +53,17 @@ class ardubus(dbus.service.Object):
         if value in [ 13, 10]: #Offset values that map to CR or LF by one
             value += 1
         self.send_serial_command("S%s%s" % (self.p2b(servo_index), chr(value)))
+
+    @dbus.service.method('fi.hacklab.ardubus', in_signature='yb') # "y" is the signature for a byte
+    def set_595bit(self, bit_index, state):
+        if state:
+            self.send_serial_command("B%s1" % self.p2b(bit_index))
+        else:
+            self.send_serial_command("B%s0" % self.p2b(bit_index))
+
+    @dbus.service.method('fi.hacklab.ardubus', in_signature='yy') # "y" is the signature for a byte
+    def set_595byte(self, reg_index, state):
+        self.send_serial_command("W%s%s" % (self.p2b(reg_index), binascii.hexlify(str(state)).upper()))
 
     @dbus.service.method('fi.hacklab.ardubus', in_signature='yb') # "y" is the signature for a byte
     def set_dio(self, digital_index, state):
