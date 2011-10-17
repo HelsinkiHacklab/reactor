@@ -9,11 +9,27 @@
  * Output-enable(active-low) is optional, tie it to ground if you don't want to use it (use ardubus_digital_out to control OE- if you wish)
  */
 #include <SPI.h> // For some weird reason including this in the relevant .h file does not work
+#define ARDUBUS_SPI74XX595_INITVALUE 0xff // Initial value to set to registers on setup 
 #define ARDUBUS_SPI74XX595_REGISTER_COUNT 3 // How many 595 registers do you have
+#define ARDUBUS_SPI74XX595_RESETPIN 9 // Use this pin for reset, optional but recommended
 #include <ardubus.h>
 void setup()
 {
     Serial.begin(115200);
+    /**
+     * Test ASCII-HEX to byte conversions
+    for (byte i=0x30; i<0x3a; i++)
+    {
+        Serial.println(ardubus_hex2byte(i), DEC);
+    }
+    for (byte i=0x41; i<0x47; i++)
+    {
+        Serial.println(ardubus_hex2byte(i), DEC);
+    }
+    Serial.println(ardubus_hex2byte(0x30, 0x30), DEC); // 00
+    Serial.println(ardubus_hex2byte(0x46, 0x46), DEC); // FF
+    Serial.println(ardubus_hex2byte(0x41, 0x35), DEC); // A5
+     */
     ardubus_setup();
     Serial.println("Booted");
 }
