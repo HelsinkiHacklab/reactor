@@ -3,89 +3,39 @@ package fi.hacklab.reactor.primitives
 /**
  * 
  */
-case class Port(host: Part,
-                direction: Direction,
-                frictionCoefficient: Double = 0.1 ) extends Part {
 
-  var pressure_Pa = 1.0
-  var outFlow_m3_per_s = 0
+trait Port {
 
-  // Connected pipe, if any.
-  var connection: Connection = null
+  def host: Part
 
-  def connectedPort : Port = {
-    if (connection == null) null
-    else if (connection.a == this) connection.b
-    else connection.a
-  }
+  private var _connectedPort: Port = null
+
+  def connectedPort[T <: Port]: T = _connectedPort.asInstanceOf[T]
+
+  def kind: Symbol = Symbol(getClass.getSimpleName)
+
+  def init(simulator: Simulator)
 
   def disconnect() {
-    disconnect(connection)
-  }
-
-  def disconnect(p: Connection) {
-    if (p == connection && p != null) {
-      connection = null;
-      p.disconnect()
-    }
-  }
-
-  def connect(connection: Connection) {
-    if (connection != connection) {
-      if (!connection.connectsToPort(this)) throw new IllegalArgumentException("Connection needs to connect to already connect to this port")
-
-      disconnect()
-      connection = connection
+    if (_connectedPort != null) {
+      val c = _connectedPort
+      _connectedPort = null
+      c.disconnect()
     }
   }
 
   def connect(otherPort: Port) {
-    if (connectedPort != otherPort) {
+    if (otherPort != _connectedPort) {
+      if (otherPort == null) throw new IllegalArgumentException("Can't connect to null")
+      if (otherPort == this) throw new IllegalArgumentException("Can't connect to self")
+      if (otherPort.kind != kind) throw new IllegalArgumentException("Can't connect a "+kind.name+" port to a " + otherPort.kind.name + " port")
+
       disconnect()
 
-      connection = new Connection(this, otherPort)
-      otherPort.connect(connection)
+      _connectedPort = otherPort
+      otherPort.connect(this)
     }
   }
 
-
-
-  // TODO: In update, check if we should move material out from this port (other connected ports will check if they should move material out of their ports and into ours)
-  // TODO: How to do update cycles sensibly for ports & connections?
-
-
-  override def pressureUpdate(time_s: Double) {
-    // Calculate pressure
-    pressure_Pa = host.getPressure(this)
-
-  }
-
-  override def flowUpdate(time_s: Double) {
-    val otherPort = connectedPort
-    if (otherPort != null && direction.allowsOut && otherPort.direction.allowsIn) {
-      val pressureDifference = pressure_Pa - otherPort.pressure_Pa
-      if (pressureDifference > 0) {
-        outFlow_m3_per_s = math.max(0, outFlow_m3_per_s + pressureDifference - pressureDifference * pressureDifference * frictionCoefficient)
-      }
-      else outFlow_m3_per_s = 0
-    }
-    else outFlow_m3_per_s = 0
-  }
-
-
-  def update(time_s: Double) {
-    // Push matter to connected port, if there is flow
-    if (outFlow_m3_per_s > 0) {
-      val volume = outFlow_m3_per_s * time_s
-      val matter = host.removeMatter(this, volume)
-      connectedPort.addMatter(matter)
-    }
-  }
-
-
-  def addMatter(matter: Matter) =  {
-    host.addMatter(this, matter)
-  }
 
 }
-

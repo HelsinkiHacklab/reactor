@@ -14,6 +14,8 @@ class ReactorChannelSegment(x: Int, y: Int, z: Int, reactorChannel: ReactorChann
 
   var waterChannel: Container = addPart(new Container)
 
+  val topPort = waterChannel.fluidPort()
+  val bottomPort = waterChannel.fluidPort()
 
   def onUpdate(time_s: Double) {
 

@@ -1,18 +1,17 @@
 package fi.hacklab.reactor.parts
 
-import fi.hacklab.reactor.primitives.{OutFlow, InFlow, Part}
+import fi.hacklab.reactor.primitives.{Container, OutFlow, InFlow, Part}
 
 /**
  * 
  */
 
-class SteamCondenser extends Part {
+class SteamCondenser extends Container {
 
-  val hotWaterIn = makePort(InFlow)
-  val coolWaterIn = makePort(InFlow)
-  val steamOut = makePort(OutFlow)
-  val waterOut = makePort(OutFlow)
+  val hotWaterIn = fluidPort(InFlow)
+  val coolWaterIn = fluidPort(InFlow)
+  val steamOut = fluidPort(OutFlow)
+  val waterOut = fluidPort(OutFlow)
 
 
-  def update(time_s: Double) {}
 }

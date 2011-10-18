@@ -1,6 +1,8 @@
 package fi.hacklab.reactor.primitives
 
 import org.scalaprops.Bean
+import java.util.HashSet
+import scala.collection.JavaConversions._
 
 /**
  * Some part of the reactor.
@@ -11,40 +13,43 @@ trait Part extends Bean {
   private var ports: List[Port] = Nil
 
 
-  def makePort(direction: Direction = InOutFlow): Port = {
-    addPort(new Port(this, direction))
+  /**
+   * Delegates to init methods in class.
+   */
+  def initialize(simulator: Simulator) {
+    ports foreach {p => p.init(simulator)}
+    init(simulator)
   }
 
-  def addPort(port: Port): Port = {
+  /**
+   * Called to allow part to set up any update functions.
+   */
+  protected def init(simulator: Simulator)
+
+
+
+  def addPort[T <: Port](port: T): T = {
     ports ::= port
     port
   }
 
 
+  final def collectConnectedParts(): HashSet[Part] = {
+    val set: HashSet[Part] = new HashSet[Part]()
+    collectConnectedParts(set)
+    set
+  }
 
-  def pressureUpdate(time_s: Double) {}
+  def collectConnectedParts(connectedParts: HashSet[Part]) {
+    if (!connectedParts.contains(this)) {
+      connectedParts add this
 
-  def flowUpdate(time_s: Double) {}
+      ports foreach {p =>
+        if (p.connectedPort != null) p.connectedPort.host.collectConnectedParts(connectedParts)
+      }
+    }
+  }
 
-  def update(time_s: Double)
-
-  def postUpdate(time_s: Double) {}
-
-
-
-  // TODO: associate these with ports somehow? onMatterAdded, etc?
-  /**
-   * Pressure at the specified port.
-   */
-  def getPressure(port: Port): Double = 0
-  /**
-   * Adds some matter from specified port
-   */
-  def addMatter(port: Port, matter: Matter) {}
-  /**
-   * Removes matter through specified port.
-   */
-  def removeMatterVolume(port: Port, volume_m3: Double): Matter = null
 
 
 }

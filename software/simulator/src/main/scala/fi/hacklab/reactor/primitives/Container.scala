@@ -10,9 +10,26 @@ class Container(var volume: Double = 1.0) extends Part {
 
   val matter = new Matter
 
-  var ports: List[Port] = Nil
+  var ports: List[FluidPort] = Nil
 
   var pressure = 0.0
+
+  def fluidPort(direction: Direction = InOutFlow,
+                frictionCoefficient: Double = 0.01): FluidPort = {
+    fluidPort(direction, () => pressure, frictionCoefficient)
+  }
+
+  def fluidPort(direction: Direction,
+                pressureFunc:  () => Double): FluidPort = {
+    fluidPort(direction, pressureFunc, 0.1)
+  }
+
+  def fluidPort(direction: Direction,
+                pressureFunc:  () => Double,
+                frictionCoefficient: Double): FluidPort = {
+    addPort(new FluidPort(this, direction, pressureFunc, addMatter, removeMatterVolume, frictionCoefficient))
+  }
+
 
   def density: Double = matter.mass_kg / volume
 
@@ -22,7 +39,7 @@ class Container(var volume: Double = 1.0) extends Part {
     // Average own and outer temperature, based on surface area and heat transfer coefficient
   }
 
-  def update(time_s: Double) {
+  private def update(time_s: Double) {
     pressure = 0  // TODO: Calculate from compressibility of matter + elasticity of walls.
 
     // Calculate pressure based on amount of matter and heat
@@ -32,19 +49,17 @@ class Container(var volume: Double = 1.0) extends Part {
     // Check for bursting
   }
 
-  override def postUpdate(time_s: Double) {
+  private def postUpdate(time_s: Double) {
     // Update flow of matter from and to openings, based on relative pressures, and on what materials can pass
     // through each port in which direction
   }
 
 
-  def getPressure(port: Port): Double = pressure
-
-  def addMatter(port: Port, matter: Matter) {
+  def addMatter(matter: Matter) {
     this.matter.add(matter)
   }
 
-  def removeMatterVolume(port: Port, volume_m3: Double): Matter = {
+  def removeMatterVolume(volume_m3: Double): Matter = {
     val mass = density * volume_m3
     matter.remove(mass)
   }
