@@ -67,7 +67,7 @@ inline void ardubus_spi74XX595_process_command(char *incoming_command)
     {
         case 0x42: // ASCII "B" (B<indexbyte><value>) //Note that the indexbyte is index of the bit
         {
-            boolean bit_value;
+            byte bit_value;
             // TODO: Can the compiler optimize all this or do I need to write oneliners ?
             byte bit_index = incoming_command[1]-ARDUBUS_INDEX_OFFSET;
             byte bit_pos = 7-(bit_index%8);
