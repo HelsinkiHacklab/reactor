@@ -21,12 +21,16 @@ trait CompositePart extends Part {
   }
 
 
+  protected def init(simulator: Simulator) {
+    
+  }
+
   def addPart[T <: Part](part: T): T = {
     parts ::= part
     part
   }
 
-  protected def collectConnectedParts(connectedParts: HashSet[Part]) {
+  override def collectConnectedParts(connectedParts: HashSet[Part]) {
     if (!connectedParts.contains(this)) {
       super.collectConnectedParts(connectedParts)
       parts foreach {p => p.collectConnectedParts(connectedParts)}

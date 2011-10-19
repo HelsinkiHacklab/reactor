@@ -1,14 +1,16 @@
 package fi.hacklab.reactor.parts
 
-import fi.hacklab.reactor.primitives.Part
+import fi.hacklab.reactor.primitives.{Simulator, Part}
 
 /**
  * Transmits electric power.
  */
 class PowerLine extends Part {
 
-  def update(time_s: Double) {
+
+  protected def init(simulator: Simulator) {
 
   }
+
 
 }

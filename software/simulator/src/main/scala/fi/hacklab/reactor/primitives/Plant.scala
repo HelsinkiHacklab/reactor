@@ -8,5 +8,4 @@ import fi.hacklab.reactor.primitives.Part
 class Plant extends CompositePart {
 
 
-
 }

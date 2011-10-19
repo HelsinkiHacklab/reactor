@@ -1,6 +1,6 @@
 package fi.hacklab.reactor.parts
 
-import fi.hacklab.reactor.primitives.{FluidPort, CompositePart}
+import fi.hacklab.reactor.primitives.{Simulator, FluidPort, CompositePart}
 
 /**
  * 
@@ -8,6 +8,9 @@ import fi.hacklab.reactor.primitives.{FluidPort, CompositePart}
 
 class Reactor(sizeX: Int, sizeY: Int, sizeZ: Int, edgeCutoutSize: Int) extends CompositePart {
 
+
+
+  
   var coolingWaterIntake1: FluidPort = null
   var coolingWaterIntake2: FluidPort = null
   var coolingWaterIntake3: FluidPort = null

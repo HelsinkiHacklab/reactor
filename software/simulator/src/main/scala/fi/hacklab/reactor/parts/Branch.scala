@@ -1,12 +1,13 @@
 package fi.hacklab.reactor.parts
 
-import fi.hacklab.reactor.primitives.Container
+import fi.hacklab.reactor.primitives.{Simulator, Container}
 
 /**
  * 
  */
 
 class Branch extends Container {
+
 
   val left    = fluidPort()
   val right   = fluidPort()

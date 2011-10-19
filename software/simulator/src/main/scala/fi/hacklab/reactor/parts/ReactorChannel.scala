@@ -1,11 +1,13 @@
 package fi.hacklab.reactor.parts
 
-import fi.hacklab.reactor.primitives.{FluidPort, CompositePart}
+import fi.hacklab.reactor.primitives.{Simulator, FluidPort, CompositePart}
 
 /**
  * 
  */
 case class ReactorChannel(posX: Int, posY: Int, sizeZ: Int, reactor: Reactor) extends CompositePart {
+
+
 
   initSegments()
 

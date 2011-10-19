@@ -18,7 +18,7 @@ class Pump extends Container {
   
 
 
-  def init(simulator: Simulator) {
+  protected override def init(simulator: Simulator) {
     simulator.addUpdate('update) { time: Double =>
 
       pumpPressure = maxPumpPressure * activityPercent

@@ -5,6 +5,12 @@ package fi.hacklab.reactor.primitives
  */
 class Container(var volume: Double = 1.0) extends Part {
 
+  protected def init(simulator: Simulator) {
+
+  }
+
+
+
   var surfaceArea = 1.0
   var heatTransferCoefficient = 0.8
 
