@@ -15,14 +15,17 @@ object PlantBuilder {
 
     // TODO
 
-    // Reactor rods and channels
+    plant.addRoom('reactorRoom)
 
+    // Reactor rods and channels
     val reactor = plant.addPart(new Reactor(
       config.reactorSegmentsX(),
       config.reactorSegmentsY(),
       config.reactorSegmentsZ(),
       config.reactorSegmentsCutout()))
     plant.addPart(reactor)
+
+    plant.addRoom('steamSeparatorRoom)
 
     // Steam separators
     val steamSeparator1 = plant.addPart(new SteamCondenser())
@@ -31,18 +34,32 @@ object PlantBuilder {
     reactor.hotWaterOut1 connect steamSeparator1.hotWaterIn
     reactor.hotWaterOut2 connect steamSeparator2.hotWaterIn
 
+    // Vent to bubbler pools
+
+    plant.addRoom('electricityRoom)
     // Turbines
 
     // Generators
 
-    // Heat exchanger
+    // Diesel generators
+
+    // Energy output
+
+    // External energy input
+
+    plant.addRoom('waterIntake)
 
     // River water intake, pumps, outlet
+
+    plant.addRoom('coolerRoom)
+
+    // Heat exchanger
 
     // Cooling water storage tanks
 
     // Cooling water pumps
 
+    plant.addRoom('reactorPumpRoom)
     // Main reactor circulation pumps
     val mainPump1 = plant.addPart(new Pump())
     val mainPump2 = plant.addPart(new Pump())
@@ -65,17 +82,7 @@ object PlantBuilder {
     mainPump3.out connect reactor.coolingWaterIntake3
     mainPump4.out connect reactor.coolingWaterIntake4
 
-    // TODO: resistor network style part, to weight pumps to different rod inputs
-
     // Emergency pump
-
-    // Diesel generators
-
-    // Energy output
-
-    // External energy input
-
-    // Vent to bubbler pools
 
 
     plant

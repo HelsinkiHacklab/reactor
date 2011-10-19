@@ -5,6 +5,9 @@ import fi.hacklab.reactor.primitives.{FluidPort, CompositePart}
 /**
  * 
  */
+
+// TODO: When overheated, signal overheat and bursting glow, heat can be pushed to neighbouring ones by stomping on the rod.
+// Stomping also somewhat increases cooling flow
 case class ReactorChannel(posX: Int, posY: Int, sizeZ: Int, reactor: Reactor) extends CompositePart {
 
   initSegments()
