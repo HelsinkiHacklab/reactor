@@ -60,15 +60,16 @@ class Reactor(sizeX: Int, sizeY: Int, sizeZ: Int, edgeCutoutSize: Int) extends C
          y <- 0 until sizeY) {
 
       if (hasChannel(x, y)) {
+        val topPipe: Branch = addPart(new Branch())
+        topPipeLookup += (x, y) -> topPipe
+
+        val bottomPipe: Branch = addPart(new Branch())
+        bottomPipeLookup += (x, y) -> bottomPipe
+
         val channel = addPart(new ReactorChannel(x, y, sizeZ, this))
         channelLookup += (x, y) -> channel
       }
 
-      val topPipe: Branch = addPart(new Branch())
-      topPipeLookup += (x, y) -> topPipe
-
-      val bottomPipe: Branch = addPart(new Branch())
-      bottomPipeLookup += (x, y) -> bottomPipe
     }
 
     // Build lattice of pipes above and under

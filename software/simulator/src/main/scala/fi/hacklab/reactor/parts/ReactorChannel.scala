@@ -10,15 +10,14 @@ import fi.hacklab.reactor.primitives.{Simulator, FluidPort, CompositePart}
 // Stomping also somewhat increases cooling flow
 case class ReactorChannel(posX: Int, posY: Int, sizeZ: Int, reactor: Reactor) extends CompositePart {
 
-
-
-  initSegments()
-
   var controlRodPosition = 0.0
   var controlRodFromTop = true
 
   var topPort:    FluidPort = null
   var bottomPort: FluidPort = null
+  
+
+  initSegments()
 
   private def initSegments() {
     // Make channel segments
@@ -38,6 +37,9 @@ case class ReactorChannel(posX: Int, posY: Int, sizeZ: Int, reactor: Reactor) ex
     // Get outside ports
     topPort = reactor.segment(posX, posY, sizeZ - 1).topPort
     bottomPort = reactor.segment(posX, posY, 0).bottomPort
+    
+    require(topPort != null)
+    require(bottomPort != null)
   }
 
 }
