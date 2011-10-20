@@ -27,6 +27,7 @@ trait CompositePart extends Part {
 
   def addPart[T <: Part](part: T): T = {
     parts ::= part
+    onPartAdded(part)
     part
   }
 
@@ -36,5 +37,7 @@ trait CompositePart extends Part {
       parts foreach {p => p.collectConnectedParts(connectedParts)}
     }
   }
+
+  def onPartAdded(part: Part) {}
 
 }

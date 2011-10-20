@@ -35,6 +35,12 @@ inline byte ardubus_hex2byte(byte hexchar0, byte hexchar1)
     return (ardubus_hex2byte(hexchar0) << 4) | ardubus_hex2byte(hexchar1);
 }
 
+inline int ardubus_hex2int(byte hexchar0, byte hexchar1, byte hexchar2, byte hexchar3)
+{
+    return ardubus_hex2byte(hexchar0, hexchar1) << 8 | ardubus_hex2byte(hexchar2, hexchar3);
+}
+
+
 // Utility functions for outputting fixed lenght nex encoded numbers
 inline void ardubus_print_byte_as_2hex(byte input)
 {

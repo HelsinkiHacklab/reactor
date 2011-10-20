@@ -45,6 +45,17 @@ inline void ardubus_servo_process_command(char *incoming_command)
             Serial.print(incoming_command[2]);
             Serial.println(0x6, BYTE); // ACK
             break;
+        case 0x73: // ASCII "s" (P<indexbyte><int_as_hex) //Note that the indexbyte is index of the servos-array, not pin number
+            int value = ardubus_hex2int(incoming_command[2], incoming_command[3], incoming_command[4], incoming_command[5]);
+            ardubus_servos[incoming_command[1]-ARDUBUS_INDEX_OFFSET].write(value);
+            Serial.print("S");
+            Serial.print(incoming_command[1]);
+            Serial.print(incoming_command[2]);
+            Serial.print(incoming_command[3]);
+            Serial.print(incoming_command[4]);
+            Serial.print(incoming_command[5]);
+            Serial.println(0x6, BYTE); // ACK
+            break;
     }
 }
 

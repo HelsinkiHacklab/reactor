@@ -54,6 +54,11 @@ class ardubus(dbus.service.Object):
             value += 1
         self.send_serial_command("S%s%s" % (self.p2b(servo_index), chr(value)))
 
+    @dbus.service.method('fi.hacklab.ardubus', in_signature='yn') # "y" is the signature for a byte, n is 16bit signed integer
+    def set_servo_us(self, servo_index, value):
+        self.send_serial_command("s%s%s" % (self.p2b(servo_index), "%04X" % int(value)))
+
+
     @dbus.service.method('fi.hacklab.ardubus', in_signature='yb') # "y" is the signature for a byte
     def set_595bit(self, bit_index, state):
         if state:
