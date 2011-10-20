@@ -24,6 +24,8 @@ inline void ardubus_servo_update()
 
 inline void ardubus_servo_report()
 {
+    /**
+     * Not used yet anywhere, also: convert to output 4 hex int
     for (byte i=0; i < sizeof(ardubus_servo_output_pins); i++)
     {
         Serial.print("RS"); // RS<index_byte><value in hex>
@@ -32,6 +34,7 @@ inline void ardubus_servo_report()
         Serial.println("");
         // TODO: Keep track of duration ??
     }
+     */
 }
 
 inline void ardubus_servo_process_command(char *incoming_command)

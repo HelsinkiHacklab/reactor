@@ -34,6 +34,24 @@ void setup()
     Serial.println("Booted");
 }
 
+void set_bit(byte bit_index, boolean bit_dir)
+{
+      byte but_value;
+      byte bit_pos = 7-(bit_index%8);
+      byte reg_index = bit_index/8;
+      byte mask = (byte)~_BV(bit_pos);
+      if (bit_dir) // ASCII "1"
+      {
+          bit_value = (byte)_BV(bit_pos); // Raise the correct bit
+      }
+      else
+      {
+          bit_value = 0x0; // Make all bits low
+      }
+      // Set only the given bit in the correct register
+      ardubus_spi74XX595_values[reg_index] = (ardubus_spi74XX595_values[reg_index] & mask) | bit_value;
+}
+
 void loop()
 {
     ardubus_update();
