@@ -27,8 +27,8 @@ class ardubus_listener():
         print "Analog pin(index) %d changed to %d on %s" % (pin, value, sender)
 
     def switch_report(self, pin, state, time, sender):
-        print "Pin(index) %d has been %d for %dms on %s" % (pin, state, time, sender)
-
+        #print "Pin(index) %d has been %d for %dms on %s" % (pin, state, time, sender)
+	pass
     def analog_report(self, p_index, value, time, sender):
         print "Analog pin(index) %d has been %d for %dms on %s" % (p_index, value, time, sender)
         pass

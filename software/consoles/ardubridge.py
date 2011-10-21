@@ -11,8 +11,8 @@ import ConfigParser
 
 import ardubus
 from collections import namedtuple
-
-OuputSignal = namedtuple('OutputSignal', 'signal index')
+import re
+OutputSignal = namedtuple('OutputSignal', 'signal index pin')
 
 #NOTE: this will be just signal wrapper generator layer between lower ardubus and 
 #game components
@@ -25,6 +25,7 @@ class ardubus_console(ardubus.ardubus):
 
         self.bus = bus        
         self.switches = {}
+        self.switch_states = {}
    
         for input in config.items('inputs'):
             print "setting", input[1], "for signal", input[0]
@@ -46,19 +47,30 @@ class ardubus_console(ardubus.ardubus):
         for output in config.items('outputs'):
             print "setting signal", output[0], "for command", output[1]
             #convert dummy method to signal, signal name is from methods name
-            @dbus.service.signal('fi.hacklab.ardubus')
+            foo = dbus.service.signal('fi.hacklab.ardubus')
             def _m(self, index, value):
-               pass 
-            _m.__name__ = output[0]
+               pass
+            print re.search("([a-z,A-Z,_]*)", output[0]).group(1) 
+            _m.__name__ = re.search("([a-z,A-Z,_]*)",output[0]).group(1)
+            btf = foo(_m)
             output_act = output[1].split(', ')
             #TODO: add other types of inputs
-            if output_act[0] !='R':
-                raise Exception('unknown input for output')
+            if output_act[0] =='R':
                 
-            first_pin = int(output_act[1])
-            last_pin = int(output_act[2])
-            for i in range(first_pin, last_pin):
-               self.switches[i] = OuputSignal(_m, first_pin)  
+                first_pin = int(output_act[1])
+                last_pin = int(output_act[2])
+                for i in range(first_pin, last_pin):
+                   self.switches[i] = OutputSignal(btf, first_pini, 0)
+            elif output_act[0] == 'S':
+                first_pin = int(output_act[1])
+                self.switches[first_pin] = OutputSignal(btf, first_pin, 0)
+            elif output_act[0] == 'W':
+                ard_pin = int(output_act[1])
+                swt_pin = int(output_act[2])
+                self.switches[ard_pin] = OutputSignal(btf, ard_pin, swt_pin)
+                print "adding", ard_pin, swt_pin
+	    else:
+                raise Exception("unknown input mode", output_act[0])  
     
     #methods to modify how basic methods are called
     def call_with_offset(self, offset, method):
@@ -75,11 +87,15 @@ class ardubus_console(ardubus.ardubus):
     
     #override default signal generators with handlers  
     def dio_change(self, pin, state, sender):
-        self.switches[pin].signal(self, pin - self.switches[pin].index, state) 
+        self.switch_states[pin] = ~state
+        self.switches[pin].signal(self, pin - self.switches[pin].index+self.switches[pin].pin, not state) 
 	#print "SIGNALLING: Pin %d changed to %d on %s" % (pin, state, sender)
         pass
 
     def dio_report(self, pin, state, time, sender):
+        if pin in self.switch_states and self.switch_states[pin] != ~state:
+		self.switches[pin].signal(self, pin - self.switches[pin].index+self.switches[pin].pin, not state)
+        self.switch_states[pin] = ~state
         #print "SIGNALLING: Pin %d has been %d for %dms on %s" % (pin, state, time, sender)
         pass
   
