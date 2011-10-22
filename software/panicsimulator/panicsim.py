@@ -45,9 +45,12 @@ recoverTemp = 500
 
 rodEffectOnTemp = 10
 
+tickTime = 0.01
+
 highestTemp = 0
 exploding = False
-roundCounter = 0
+timeCounter = 0
+
 
 
 class reactor(dbus.service.Object):
@@ -112,14 +115,14 @@ class reactor(dbus.service.Object):
         
     def simulator_loop(self):
         while True:
-            self.simulate_step(0.001)
-            sleep(0.01)  
+            self.simulate_step(tickTime)
+            sleep(tickTime)  
 
                            
     def simulate_step(self, time):
         global exploding
         global highestTemp
-        global roundCounter
+        global timeCounter
         highestTemp = 0
         for c in self.fuel_channels:
             #print type(c), c, c.temp
@@ -169,8 +172,8 @@ class reactor(dbus.service.Object):
                     currentRod.temp = currentRod.temp * (1.0 - tempSpreadFactor) + tempSpreadFactor * sum( [neigborRod.temp for neigborRod in neighbors] ) / len(neighbors)
                 
                 
-        roundCounter += 1
-        if (roundCounter > 1000):
+        timeCounter += tickTime
+        if (timeCounter > 1):
           roundCounter = 0
           for i, c in enumerate(self.fuel_channels):
               self.control_rod_pos(i, c.rodpos)
