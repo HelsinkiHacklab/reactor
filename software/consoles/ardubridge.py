@@ -94,7 +94,7 @@ class ardubus_console(ardubus.ardubus):
     def make_interpolate2(self, vmin, vmax, omin, omax, method):
 	scale = float(omax - omin) / float(vmax - vmin)
         def _m(index, value, *args):
-            method(index, int( (value - vmin)*scale), *args)
+            method(index, int( omin + (value - vmin)*scale), *args)
         return _m
     
     #override default signal generators with handlers  
