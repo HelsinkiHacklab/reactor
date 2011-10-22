@@ -1,0 +1,9 @@
+ACTION=="remove", GOTO="persistent_serial_end"
+SUBSYSTEM!="tty", GOTO="persistent_serial_end"
+KERNEL!="ttyUSB[0-9]*|ttyACM[0-9]*", GOTO="persistent_serial_end"
+
+IMPORT="/usr/local/bin/usb_topology %p"
+ENV{TOPOLOGY}=="?*", SYMLINK+="serial/by-topology/$env{TOPOLOGY}"
+
+LABEL="persistent_serial_end"
+
