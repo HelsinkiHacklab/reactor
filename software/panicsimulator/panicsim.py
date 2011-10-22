@@ -8,6 +8,8 @@ import gobject
 import dbus
 import dbus.service
 import dbus.mainloop.glib
+import random
+from time import sleep
 
 from collections import namedtuple
 import threading
@@ -32,7 +34,7 @@ rodEffectOnFlux = 0.01
 fluxHeatGeneration = 0.01
 coolingEffectOnTemp = 0.01
 normalCooling = 1.0
-rodMoveSpeed = 0.5
+rodMoveSpeed = 10
 coolingStompIncrease = 10
 fluxDissipation = 0.01
 coolDownSpeed = 1
@@ -40,6 +42,8 @@ grid_w = 7
 grid_h = 7
 explodeTemp = 1000
 recoverTemp = 500
+
+rodEffectOnTemp = 10
 
 highestTemp = 0
 exploding = False
@@ -71,7 +75,7 @@ class reactor(dbus.service.Object):
                             None,  None,  30,  31,   32, None, None]
         
         for i in range(0, 33):
-            self.fuel_channels.append(fuel_channel(200, 100, 50, 100, 100, 100, 100, False, False, False))
+            self.fuel_channels.append(fuel_channel(200, 100, 100, 100, 100, 100, 100, False, False, False))
         
         self.simulator_thread = threading.Thread(target=self.simulator_loop)
         self.simulator_thread.setDaemon(1)
@@ -109,6 +113,8 @@ class reactor(dbus.service.Object):
     def simulator_loop(self):
         while True:
             self.simulate_step(0.001)
+            sleep(0.01)  
+
                            
     def simulate_step(self, time):
         global exploding
@@ -133,13 +139,14 @@ class reactor(dbus.service.Object):
                 if c.rodpos < 0:
                     c.rodpos = 0
             
-            c.temp += (c.rodpos - 50) * time
+            c.temp += (c.rodpos - 50) * rodEffectOnTemp * time
+            c.temp += random.uniform(-0.1, 0.1)
             c.outtemp = c.temp
             
             if c.rodstepped:
                 #c.cooling += coolingStompIncrease
-                c.temp -= 100 * time
-                c.outtemp += 100 * time
+                c.temp -= 100
+                c.outtemp += 50
                 c.rodstepped = False
 
             #if (c.cooling > normalCooling):
@@ -166,16 +173,19 @@ class reactor(dbus.service.Object):
         if (roundCounter > 1000):
           roundCounter = 0
           for i, c in enumerate(self.fuel_channels):
-              self.control_rod_pos(i, 100 - c.rodpos)
+              self.control_rod_pos(i, c.rodpos)
 
         # TODO: For the four measurement rods, send out flux and temperature readings.       
         
         if ((highestTemp > explodeTemp) and not exploding):
             # TODO: Play explode sound
+            print "Exploded"
             exploding = True
         if ((highestTemp < recoverTemp) and exploding):
             exploding = False
-        print "Maxtemp ", highestTemp     
+            print "Explosion end"
+        print "Maxtemp ", highestTemp   
+        
 
 if __name__ == '__main__':
     gobject.threads_init()
