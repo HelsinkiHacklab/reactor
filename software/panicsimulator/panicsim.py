@@ -106,7 +106,7 @@ class reactor(dbus.service.Object):
         
     def simulator_loop(self):
         while True:
-            self.simulate_step(1)
+            self.simulate_step(0.001)
                            
     def simulate_step(self, time):
         global exploding
@@ -122,15 +122,15 @@ class reactor(dbus.service.Object):
             #c.flux *= (1.0 - fluxDissipation)
                         
             if c.rodup:
-                c.rodPos += rodMoveSpeed * time
-                if c.rodPos > 100:
-                    c.rodPos = 100
+                c.rodpos += rodMoveSpeed * time
+                if c.rodpos > 100:
+                    c.rodpos = 100
             if c.roddown:
-                c.rodPos -= rodMoveSpeed * time
-                if c.rodPos < 0:
-                    c.rodPos = 0
+                c.rodpos -= rodMoveSpeed * time
+                if c.rodpos < 0:
+                    c.rodpos = 0
             
-            c.temp += (c.rodPos - 50) * time
+            c.temp += (c.rodpos - 50) * time
             c.outtemp = c.temp
             
             if c.rodstepped:
@@ -154,8 +154,9 @@ class reactor(dbus.service.Object):
                 #print i, currentRod
                 currentRod = self.fuel_channels[currentRod]
                 neighbors = self.get_neighbours(i)
-                #currentRod.flux = sum( [neigborRod.flux for neigborRod in neighbors] ) * fluxSpreadFactor * time 
-                currentRod.temp = currentRod.temp * (1.0 - tempSpreadFactor) + tempSpreadFactor * sum( [neigborRod.temp for neigborRod in neighbors] )
+                if len(neighbors)  > 0:
+                    #currentRod.flux = sum( [neigborRod.flux for neigborRod in neighbors] ) * fluxSpreadFactor * time 
+                    currentRod.temp = currentRod.temp * (1.0 - tempSpreadFactor) + tempSpreadFactor * sum( [neigborRod.temp for neigborRod in neighbors] ) / len(neighbors)
                 
         for i, c in enumerate(self.fuel_channels):
             self.control_rod_pos(i, c.rodpos)
