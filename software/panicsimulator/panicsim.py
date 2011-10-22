@@ -43,6 +43,8 @@ recoverTemp = 500
 
 highestTemp = 0
 exploding = False
+roundCounter = 0
+
 
 class reactor(dbus.service.Object):
 
@@ -111,6 +113,7 @@ class reactor(dbus.service.Object):
     def simulate_step(self, time):
         global exploding
         global highestTemp
+        global roundCounter
         highestTemp = 0
         for c in self.fuel_channels:
             #print type(c), c, c.temp
@@ -158,8 +161,12 @@ class reactor(dbus.service.Object):
                     #currentRod.flux = sum( [neigborRod.flux for neigborRod in neighbors] ) * fluxSpreadFactor * time 
                     currentRod.temp = currentRod.temp * (1.0 - tempSpreadFactor) + tempSpreadFactor * sum( [neigborRod.temp for neigborRod in neighbors] ) / len(neighbors)
                 
-        for i, c in enumerate(self.fuel_channels):
-            self.control_rod_pos(i, c.rodpos)
+                
+        roundCounter += 1
+        if (roundCounter > 1000):
+          roundCounter = 0
+          for i, c in enumerate(self.fuel_channels):
+              self.control_rod_pos(i, 100 - c.rodpos)
 
         # TODO: For the four measurement rods, send out flux and temperature readings.       
         
