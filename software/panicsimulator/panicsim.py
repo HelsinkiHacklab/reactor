@@ -35,7 +35,7 @@ class ardubus(dbus.service.Object):
         # We can either listen all signals on the interface regardles of the board or specify we want to listen only to specific board
         self.bus.add_signal_receiver(self.controlRodUp, dbus_interface = "fi.hacklab.ardubus", signal_name = "control_rod_up")
         self.bus.add_signal_receiver(self.controlRodDown, dbus_interface = "fi.hacklab.ardubus", signal_name = "control_rod_down")
-         self.bus.add_signal_receiver(self.controlRodStepped, dbus_interface = "fi.hacklab.ardubus", signal_name = "control_rod_stepped")       
+        self.bus.add_signal_receiver(self.controlRodStepped, dbus_interface = "fi.hacklab.ardubus", signal_name = "control_rod_stepped")       
          
         self.fuel_channels = []
         self.ph_channels = [None, None,    0,   1,    2, None, None, 
