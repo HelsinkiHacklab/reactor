@@ -16,25 +16,16 @@
  */
  
 #include <Bounce.h> // For some weird reason including this in the relevant .h file does not work
-#define ARDUBUS_DIGITAL_INPUTS { 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15 }
-#define ARDUBUS_DIGITAL_OUTPUTS { 13 }
-#include <I2C.h> // For some weird reason including this in the relevant .h file does not work
-#define I2C_DEVICE_DEBUG
-#include <i2c_device.h> // For some weird reason including this in the relevant .h file does not work
-#include <pca9635.h> // For some weird reason including this in the relevant .h file does not work
-#include <pca9635RGB.h> // For some weird reason including this in the relevant .h file does not work
-#include <pca9635RGBJBOL.h> // For some weird reason including this in the relevant .h file does not work
-#define ARDUBUS_PCA9635RGBJBOL_BOARDS { 0 }
-
+// These don't seem to work: PE2, PE6, PE7, PG3, PG4, PD6, PD5, PD4, PJ7, PJ6, PJ5, PJ4, PJ3, PJ2, PH7, PH2 (the extra 16-pin header on seeeduino mega)
+#define ARDUBUS_DIGITAL_INPUTS { 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15 } 
 #include <ardubus.h>
+
 void setup()
 {
     Serial.begin(115200);
     // Set some I2C values that should not be set automagically by the library
-    I2c.timeOut(500); // 500ms timeout to avoid lockups
-    I2c.pullup(false); //Disable internal pull-ups
-    I2c.setSpeed(true); // Fast-mode support
     ardubus_setup();
+    Serial.println("IM: rod_control_switches");
     Serial.println("Booted");
 }
 

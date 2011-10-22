@@ -98,6 +98,13 @@ class Reactor(sizeX: Int, sizeY: Int, sizeZ: Int, edgeCutoutSize: Int) extends C
     // Get external connection points
     // TODO: Connect top at middle left right, bottom maybe at corners?
 
+    hotWaterOut1 = topPipeLookup((0, sizeY/2)).left
+    hotWaterOut2 = topPipeLookup((sizeX - 1, sizeY/2)).right
+
+    coolingWaterIntake1 = bottomPipeLookup((sizeX/2, sizeY - 1)).forward
+    coolingWaterIntake2 = bottomPipeLookup((sizeX - 1, sizeY/2)).right
+    coolingWaterIntake3 = bottomPipeLookup((sizeX/2, 0)).back
+    coolingWaterIntake4 = bottomPipeLookup((0, sizeY/2)).left
   }
 
 }

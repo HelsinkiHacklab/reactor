@@ -34,14 +34,27 @@ object PlantBuilder {
     reactor.hotWaterOut1 connect steamSeparator1.hotWaterIn
     reactor.hotWaterOut2 connect steamSeparator2.hotWaterIn
 
-    // Vent to bubbler pools
+    val steamPipe = plant.addPart(new Branch())
+
+    steamSeparator1.steamOut connect steamPipe.left
+    steamSeparator2.steamOut connect steamPipe.right
+
+    // Vent to bubbler pools / out
+    val emergencySteamVent = plant.addPart(new Valve())
+    
+    emergencySteamVent.a connect steamPipe.back
 
     plant.addRoom('electricityRoom)
     // Turbines
 
-    // Generators
+    val turbine1 = plant.addPart(new Turbine())
+    val turbine2 = plant.addPart(new Turbine())
+    steamPipe.up connect turbine1.steamIn
+    steamPipe.down connect turbine2.steamIn
 
-    // Diesel generators
+    // (Generators (simulate separately later))
+
+    // Diesel generator
 
     // Energy output
 
