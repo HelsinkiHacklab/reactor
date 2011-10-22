@@ -70,7 +70,7 @@ class reactor(dbus.service.Object):
         
         for i in range(0, 33):
             self.fuel_channels.append(fuel_channel(200, 100, 50, 100, 100, 100, 100, False, False, False))
-        
+        self.kakkatimer = 0 
         self.simulator_thread = threading.Thread(target=self.simulator_loop)
         self.simulator_thread.setDaemon(1)
         self.simulator_thread.start()
@@ -122,13 +122,13 @@ class reactor(dbus.service.Object):
             c.flux *= (1.0 - fluxDissipation)
             
             if c.rodup:
-                c.rodPos += rodMoveSpeed * time
-                if c.rodPos > 100:
-                    c.rodPos = 100
+                c.rodpos += rodMoveSpeed * time
+                if c.rodpos > 100:
+                    c.rodpos = 100
             if c.roddown:
-                c.rodPos -= rodMoveSpeed * time
-                if c.rodPos < 0:
-                    c.rodPos = 0
+                c.rodpos -= rodMoveSpeed * time
+                if c.rodpos < 0:
+                    c.rodpos = 0
             
             if c.rodstepped:
                 c.cooling += coolingStompIncrease
@@ -151,9 +151,11 @@ class reactor(dbus.service.Object):
                 neighbors = self.get_neighbours(i)
                 currentRod.flux = sum( [neigborRod.flux for neigborRod in neighbors] ) * fluxSpreadFactor * time 
                 currentRod.temp = sum( [neigborRod.temp for neigborRod in neighbors] ) * tempSpreadFactor * time
-                
-        for i, c in enumerate(self.fuel_channels):
-            self.control_rod_pos(i, c.rodpos)
+        self.kakkatimer += 1
+        if self.kakkatimer > 8000:        
+            for i, c in enumerate(self.fuel_channels):
+                self.control_rod_pos(i, c.rodpos)
+            self.kakkatimer = 0 
 
         # TODO: For the four measurement rods, send out flux and temperature readings.       
         

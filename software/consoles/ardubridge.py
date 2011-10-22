@@ -30,19 +30,26 @@ class ardubus_console(ardubus.ardubus):
         for input in config.items('inputs'):
             print "setting", input[1], "for signal", input[0]
             input_act = input[1].split(', ')
+            insignal = re.search("([a-z,A-Z,_]*)", input[0]).group(1)
             receiver = None
             if len(input_act) > 1:
                 receiver = self.call_with_offset(int(input_act[1]), 
                                                  self.__getattribute__(input_act[0]))                
-                if len(input_act) >=3:
+                if len(input_act) == 3:
                     receiver = self.make_interpolate(int(input_act[2]), 
                                                      int(input_act[3]), 
                                                      receiver)
+                elif len(input_act) == 5:
+                    receiver = self.make_interpolate2(int(input_act[2]),
+                                                      int(input_act[3]),
+                                                      int(input_act[4]),
+                                                      int(input_act[5]),
+                                                      receiver)
             else:
                 receiver = self.__getattribute__(input_act[0])
             
             self.bus.add_signal_receiver(receiver, dbus_interface = "fi.hacklab.ardubus", 
-                                         signal_name = input[0])
+                                         signal_name = insignal)
 
         for output in config.items('outputs'):
             print "setting signal", output[0], "for command", output[1]
@@ -50,7 +57,7 @@ class ardubus_console(ardubus.ardubus):
             foo = dbus.service.signal('fi.hacklab.ardubus')
             def _m(self, index, value):
                pass
-            print re.search("([a-z,A-Z,_]*)", output[0]).group(1) 
+            #print re.search("([a-z,A-Z,_]*)", output[0]).group(1) 
             _m.__name__ = re.search("([a-z,A-Z,_]*)",output[0]).group(1)
             btf = foo(_m)
             output_act = output[1].split(', ')
@@ -84,6 +91,11 @@ class ardubus_console(ardubus.ardubus):
             method(index, int( (value - vmin)*scale), *args)
         return _m
   
+    def make_interpolate2(self, vmin, vmax, omin, omax, method):
+	scale = float(omax - omin) / float(vmax - vmin)
+        def _m(index, value, *args):
+            method(index, int( (value - vmin)*scale), *args)
+        return _m
     
     #override default signal generators with handlers  
     def dio_change(self, pin, state, sender):
@@ -95,7 +107,9 @@ class ardubus_console(ardubus.ardubus):
     def dio_report(self, pin, state, time, sender):
         if pin in self.switch_states and self.switch_states[pin] != ~state:
 		self.switches[pin].signal(self, pin - self.switches[pin].index+self.switches[pin].pin, not state)
-        self.switch_states[pin] = ~state
+        elif pin not in self.switch_states:
+		self.switches[pin].signal(self, pin - self.switches[pin].index+self.switches[pin].pin, not state)
+	self.switch_states[pin] = ~state
         #print "SIGNALLING: Pin %d has been %d for %dms on %s" % (pin, state, time, sender)
         pass
   
