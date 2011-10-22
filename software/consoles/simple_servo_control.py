@@ -42,14 +42,20 @@ servomap = {
   36: '13-10',
   38: '12-10',
 }
-servo_values = dict(
-  (k, 900) for k,v in servomap.items()
+named_servo_values = dict(
+  (v, 900) for k,v in servomap.items()
 )
 servo_namemap = dict(
   (v,k) for k,v in servomap.items()
 )
 
-switch_sates = {}
+switch_states = {}
+
+switch_servo_map = {
+    42: ('13-13', 'down'),
+    60: ('13-13', 'up'),
+   
+}
 
 class ardubus_listener():
     def __init__(self, bus):
@@ -61,16 +67,31 @@ class ardubus_listener():
         self.bus.add_signal_receiver(self.switch_report, dbus_interface = "fi.hacklab.ardubus", signal_name = "dio_report")
         self.bus.add_signal_receiver(self.analog_report, dbus_interface = "fi.hacklab.ardubus", signal_name = "aio_report")
 	self.arduino0 = bus.get_object('fi.hacklab.ardubus', '/fi/hacklab/ardubus/arduino0')
-	self.servo_us0 = arduino0.get_dbus_method('set_servo_us', 'fi.hacklab.ardubus')
+	self.servo_us0 = self.arduino0.get_dbus_method('set_servo_us', 'fi.hacklab.ardubus')
+	gobject.timeout_add(100, self.update_servo_positions)
 
 
     def update_servo_positions(self):
 	# todo: check switch states and adjust the corresponding gauge value, then set it via dbus
+	for switch,state in switch_states.items():
+	    if state: # Switches are pulled up, low level means switched on
+		continue
+	    # TODO: map switch k to servo
+	    if switch_servo_map.has_key(switch):
+		servo_name = switch_servo_map[switch][0]
+		if switch_servo_map[switch][1] == 'down':
+		   named_servo_values[servo_name] -= 10;
+                else:
+		   named_servo_values[servo_name] += 10;
+                if named_servo_values[servo_name] < 600:
+                   named_servo_values[servo_name] = 600
+                if named_servo_values[servo_name] > 2400:
+                   named_servo_values[servo_name] = 2400
+                self.named_servo(servo_name, named_servo_values[servo_name])
+	return True
 
-	pass
 
-
-    def named_servo(name, ms):
+    def named_servo(self, name, ms):
 	servo = servo_namemap[name]
 	self.servo_us0(servo, ms)
 
