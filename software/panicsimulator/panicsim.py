@@ -75,7 +75,7 @@ class reactor(dbus.service.Object):
                             None,  None,  30,  31,   32, None, None]
         
         for i in range(0, 33):
-            self.fuel_channels.append(fuel_channel(200, 100, 100, 100, 100, 100, 100, False, False, False))
+            self.fuel_channels.append(fuel_channel(200, 100, 50, 100, 100, 100, 100, False, False, False))
         
         self.simulator_thread = threading.Thread(target=self.simulator_loop)
         self.simulator_thread.setDaemon(1)
