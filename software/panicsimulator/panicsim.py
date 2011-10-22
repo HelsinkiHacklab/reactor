@@ -115,12 +115,12 @@ class reactor(dbus.service.Object):
         for c in self.fuel_channels:
             #print type(c), c, c.temp
             highestTemp = max(highestTemp, c.temp)
-            c.temp = 6
-            c.temp += c.flux * fluxHeatGeneration * time
-            c.temp -= c.cooling * coolingEffectOnTemp * time 
-            c.flux += (c.rodpos - 50) * rodEffectOnFlux * time
-            c.flux *= (1.0 - fluxDissipation)
-            
+            #c.temp = 6
+            #c.temp += c.flux * fluxHeatGeneration * time
+            #c.temp -= c.cooling * coolingEffectOnTemp * time 
+            #c.flux += (c.rodpos - 50) * rodEffectOnFlux * time
+            #c.flux *= (1.0 - fluxDissipation)
+                        
             if c.rodup:
                 c.rodPos += rodMoveSpeed * time
                 if c.rodPos > 100:
@@ -130,14 +130,19 @@ class reactor(dbus.service.Object):
                 if c.rodPos < 0:
                     c.rodPos = 0
             
-            if c.rodstepped:
-                c.cooling += coolingStompIncrease
-                c.rodstepped = False
-            if (c.cooling > normalCooling):
-                c.cooling -= coolDownSpeed * time
-            
-            c.outflux = c.flux
+            c.temp += (c.rodPos - 50) * time
             c.outtemp = c.temp
+            
+            if c.rodstepped:
+                #c.cooling += coolingStompIncrease
+                c.temp -= 100 * time
+                c.outtemp += 100 * time
+                c.rodstepped = False
+
+            #if (c.cooling > normalCooling):
+            #    c.cooling -= coolDownSpeed * time
+            
+            #c.outflux = c.flux
             
             
             
@@ -149,8 +154,8 @@ class reactor(dbus.service.Object):
                 #print i, currentRod
                 currentRod = self.fuel_channels[currentRod]
                 neighbors = self.get_neighbours(i)
-                currentRod.flux = sum( [neigborRod.flux for neigborRod in neighbors] ) * fluxSpreadFactor * time 
-                currentRod.temp = sum( [neigborRod.temp for neigborRod in neighbors] ) * tempSpreadFactor * time
+                #currentRod.flux = sum( [neigborRod.flux for neigborRod in neighbors] ) * fluxSpreadFactor * time 
+                currentRod.temp = currentRod.temp * (1.0 - tempSpreadFactor) + tempSpreadFactor * sum( [neigborRod.temp for neigborRod in neighbors] )
                 
         for i, c in enumerate(self.fuel_channels):
             self.control_rod_pos(i, c.rodpos)
