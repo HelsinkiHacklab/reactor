@@ -1,3 +1,7 @@
+#
+# THIS NEEDS SERIOUS REFACTORING FROM THE SCRATH!!!!
+# this probably makes no any sense , no more...
+#
 import sys 
 import threading
 import serial
@@ -26,29 +30,33 @@ class ardubus_console(ardubus.ardubus):
         self.bus = bus        
         self.switches = {}
         self.switch_states = {}
+	self.receivers = {}
    
         for input in config.items('inputs'):
             print "setting", input[1], "for signal", input[0]
             input_act = input[1].split(', ')
+            #either replace ConfigParser readable file to get rid of this
+            #hackishmishm. or preferably define all indexes to be in continous range in arduino scetches!!
+            #so we can set signal handler once here..
             insignal = re.search("([a-z,A-Z,_]*)", input[0]).group(1)
             receiver = None
-            if len(input_act) > 1:
-                receiver = self.call_with_offset(int(input_act[1]), 
-                                                 self.__getattribute__(input_act[0]))                
-                if len(input_act) == 4:
-                    receiver = self.make_interpolate(int(input_act[2]), 
-                                                     int(input_act[3]), 
-                                                     receiver)
-                elif len(input_act) == 6:
-                    receiver = self.make_interpolate2(int(input_act[2]),
-                                                      int(input_act[3]),
-                                                      int(input_act[4]),
-                                                      int(input_act[5]),
-                                                      receiver)
-            else:
-                receiver = self.__getattribute__(input_act[0])
-            
-            self.bus.add_signal_receiver(receiver, dbus_interface = "fi.hacklab.ardubus", 
+            assert(len(input_act) == 7)
+            #now we only care about one type 
+            pinpin = int(input_act[1])
+            receiver = self.map_called_method(int(input_act[2]),
+                                              int(input_act[3]),
+                                              int(input_act[4]),
+                                              int(input_act[5]),
+                                              int(input_act[6]),  
+                                              self.__getattribute__(input_act[0]))                
+            if insignal in self.receivers:
+                if pinpin in self.receivers[insignal]: 
+                   self.receivers[insignal][pinpin].append(receiver)
+                else:
+                   self.receivers[insignal][pinpin] = [receiver]
+	    else:
+		self.receivers[insignal]={pinpin:[receiver]}
+            	self.bus.add_signal_receiver(self.make_it(insignal, self.handle_receiver), dbus_interface = "fi.hacklab.ardubus", 
                                          signal_name = insignal)
 
         for output in config.items('outputs'):
@@ -66,7 +74,7 @@ class ardubus_console(ardubus.ardubus):
                 first_pin = int(output_act[1])
                 last_pin = int(output_act[2])
                 for i in range(first_pin, last_pin):
-                   self.switches[i] = OutputSignal(btf, first_pini, 0)
+                   self.switches[i] = OutputSignal(btf, first_pin, 0)
             elif output_act[0] == 'S':
                 first_pin = int(output_act[1])
                 self.switches[first_pin] = OutputSignal(btf, first_pin, 0)
@@ -77,25 +85,25 @@ class ardubus_console(ardubus.ardubus):
                 print "adding", ard_pin, swt_pin
 	    else:
                 raise Exception("unknown input mode", output_act[0])  
-    
-    #methods to modify how basic methods are called
-    def call_with_offset(self, offset, method):
-        def _m(num, *args):
-            method(num + offset, *args)
+
+    def map_called_method(self, offset, vmin, vmax, omin, omax, method):
+         scale = float(omax - omin) / float(vmax - vmin)
+         def _m(index, value, *args):
+             #print index, offset, value, omin, omax, vmin, vmax, method
+             method(offset, int( omin + (value - vmin)*scale), *args)
+         return _m
+
+    def make_it(self, insignal, method):
+        def _m(pin, *args):
+           
+           method(insignal, pin, *args)
         return _m
 
-    def make_interpolate(self, vmin, vmax, method):
-        scale = float(180) / float(vmax - vmin)
-        def _m(index, value, *args):
-            method(index, int( (value - vmin)*scale), *args)
-        return _m
-  
-    def make_interpolate2(self, vmin, vmax, omin, omax, method):
-	scale = float(omax - omin) / float(vmax - vmin)
-        def _m(index, value, *args):
-            method(index, int( omin + (value - vmin)*scale), *args)
-        return _m
-    
+    def handle_receiver(self, signal, pin, *args):
+        for r in self.receivers[signal][int(pin)]:
+            print signal, r
+            r(pin, *args)
+
     #override default signal generators with handlers  
     def dio_change(self, pin, state, sender):
         assert(pin in self.switches)

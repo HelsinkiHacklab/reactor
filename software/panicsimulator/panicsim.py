@@ -190,10 +190,10 @@ class reactor(dbus.service.Object):
                 
         timeCounter += tickTime
         tickCounter += 1
-        if tickCounter % 50 == 0:
+        if tickCounter % 5 == 0:
             status = ""
             for i, c in enumerate(self.fuel_channels):
-                status += "%s " % c.rodpos
+                status += "%d=%d, " % (i, c.rodpos)
                 self.control_rod_pos(i, c.rodpos)
             status += " %f" % highestTemp
             print(status)
