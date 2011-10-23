@@ -9,6 +9,8 @@ use people who already know what they are doing (train them separately if you ha
 to them the importance of doing things properly rather than quickly, any time saved going to quick-and-dirty
 way is lost three times over when it inevitably fails
 
+See also 17
+
 ## 2. Have simulated hardware
 
 We destroyed a bunch of servos since middleware was sending a lot of weird and off-spec drive commands to them, plan an
@@ -79,7 +81,7 @@ Sticking individual female jumper cables to pin-headers (where wires have just d
 many problems (and soldering those wires correctly without causing shorts or melting [and thus distorting] 
 the headers takes skill [see 1]).
 
-I guess flat cables would be ok, or RJ connectors, or Molex, or UMNL. Pay the price, it will save headache.
+I guess ribbon cables would be ok (and these can still be sanely connected to normal pin-headers), or RJ connectors, or Molex, or UMNL. Pay the price, it will save headache.
 
 ## 13. Servos don't make good indicator dials
 
@@ -95,3 +97,21 @@ Steppers might be considered but have other issues (like needing endstop sensors
 We took a bunch of photos (that still need to be categorized and stored somewhere for future reference) but having public journals
 would have been good. And no doubt we'll miss those journals even more two months from now when things are no longer in fresh memory.
 
+## 15. Integrate continuously
+
+Related to 4 and 2, make sure all your separate parts actually talk to each other early rather than late (this also means to test with real
+hardware once things works adequately on simulated HW), also use realistic cable lenghts when testing with hardware even if it's not yet in place.
+
+Try to also test the hardware together as soon as possible, there will be all kinds of interesting interactions that will cause the clock to glitch when trying to drive
+40 leds via shift-registers.
+
+## 16. PC powersupplies don't handle quick-changing loads nicely
+
+Even though they can supply relatively high amperage of constant load. We for example had huge voltage drops (from 5 to ~3.6 volts) on our servo power lines
+even though we had large (but not huge) capacitators next to each set of servo connectors when driving many servos at the same time (like at a reset), when using a borrowed
+rather high-end lab power-supply we saw ~7A peak currents (we used 5V for everything) and the PC supply was rated for 16A...
+
+## 17. Make heavy-duty power-rails
+
+Related to 16 (and 1), we also used basic female-female jumper cables (attached to pin-headers, though those are actually rated for over 5A) to daisy chain power lines etc, caused constant
+voltage drop across the line even with the lab-supply, also contributed to the mess of wires.
