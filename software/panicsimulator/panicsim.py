@@ -155,7 +155,6 @@ class reactor(dbus.service.Object):
             c.outtemp = c.temp
             
             if c.rodstepped:
-                assert(0 and "rod step should not happen")
                 #c.cooling += coolingStompIncrease
                 c.temp -= 100
                 c.outtemp += 50
@@ -195,7 +194,7 @@ class reactor(dbus.service.Object):
             status = ""
             for i, c in enumerate(self.fuel_channels):
                 status += "%s " % c.rodpos
-                # self.control_rod_pos(i, c.rodpos)
+                self.control_rod_pos(i, c.rodpos)
             status += " %f" % highestTemp
             print(status)
 
