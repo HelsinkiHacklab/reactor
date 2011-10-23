@@ -1,0 +1,472 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="en-us" />
+<title>/hacklab-reactor</title>
+</head>
+<body><b><u>Hacklab REACTOR SIMULATOR Game</u></b><br
+/><b><u>Хельсинки Hacklab на альтернативной партии 2011</u></b><br
+/>"a project is a dream with a deadline"<br
+/><br
+/>Tavoitteena rakentaa ydinreaktorisimulaattoripeli, löysästi inspiroituna Tsernobyl reaktorin designistä.&nbsp; Simulaattori tulee todennäköisesti koostumaan parista ~50 cm leveästä konsolista jotka tulevat pöydälle, sekä reaktorikannen pienennetty replika (~1.5-2m halkaisijaltaan), plus savukone ja muuta hauskaa.&nbsp;&nbsp;<br
+/><br
+/>Pelaajien tavoitteena on pitää reaktorin tuottotehot lähellä tavoitetasoa aiheuttamatta ydinräjähdystä.&nbsp; Haasteena on epästabiili vaikeasti ohjattava reaktoridesigni, huollon puutteesta sattuvia erilaisia rikkoutumia, sekä Puolueen 5 vuotis suunnitelmassa pysyminen.&nbsp; Ja jos reaktori kuumenee liikaa reaktorisauvat alkavat pomppimaan reaktorikannesta, jolloin reaktorihuoltoteknikon on mentävä hyppimään niitten päälle että ne saadaan takaisin alas.. ("Seconds before the 1986 explosion an engineer noticed the lids of #4's fuel channel dancing up and down")<br
+/><br
+/><br
+/>Kokoonnumme labilla joka maanantai klo ~18- rakentamaan simulaattoria ALT partyihin asti.<br
+/><br
+/><br
+/><b>Ständillä päivystää (hacklabilla 5kpl lippua)</b><br
+/><ul><li>suovula - hacklabin lippu</li
+><li>inZka - hacklabin lippu</li
+><li>Harald ? - hacklabin lippu</li
+><li>Rambo - hacklabin lippu</li
+><li>anacron&nbsp; - hacklabin lippu</li
+><li>Hans - oma lippu</li
+><li><br/></li
+><li><br/><br/><br
+/><br/><br
+/><br/><br
+/><br/><br
+/></li></ul
+><b>Specialized pads</b><br
+/><ul><li>Tasklist<ul><li><a href="http://kirjoitusalusta.fi/hacklab-reactor-todo"><u>http://kirjoitusalusta.fi/hacklab-reactor-todo</u></a></li></ul
+></li
+><li>Needed sound effects<ul><li><a href="http://kirjoitusalusta.fi/hacklab-reactor-sounds"><u>http://kirjoitusalusta.fi/hacklab-reactor-sounds</u></a></li></ul
+></li
+><li>Script for video sequences<ul><li><a href="http://kirjoitusalusta.fi/hacklab-reactor-video"><u>http://kirjoitusalusta.fi/hacklab-reactor-video</u></a></li></ul
+></li
+><li>API for the DBUS communication<ul><li><a href="http://kirjoitusalusta.fi/hacklab-reactor-API"><u>http://kirjoitusalusta.fi/hacklab-reactor-API</u></a></li></ul
+></li
+><li>Outline of simulated reactor structure&nbsp;<ul><li><a href="http://kirjoitusalusta.fi/hacklab-reactor-simulation"><u>http://kirjoitusalusta.fi/hacklab-reactor-simulation</u></a><br/><br
+/><br/><br
+/><br/><br
+/><br/><br
+/></li></ul
+></li></ul
+><b>Other links</b><br
+/><ul><li>GitHub project<ul><li><a href="https://github.com/HelsinkiHacklab/reactor"><b>https://github.com/HelsinkiHacklab/reactor</b></a><br/><br
+/></li></ul
+></li></ul
+><b>Concept art and reference</b><br
+/><ul><li><b>Hacklab scale model concept 1:10:</b><ul><li><a href="http://www.dropbox.com/gallery/39575647/2/Hacklab/MicroReactor?h=b693d5">http://www.dropbox.com/gallery/39575647/2/Hacklab/MicroReactor?h=b693d5</a></li></ul
+></li
+><li>Reactor lid concept art:<ul><li><a href="http://media.englishrussia.com/atomic_station/23.jpg">http://media.englishrussia.com/atomic_station/23.jpg</a></li
+><li><a href="http://www.flickr.com/photos/liilliil/3494919856/">http://www.flickr.com/photos/liilliil/3494919856/</a></li></ul
+></li
+><li>Light panel concept art:<ul><li><a href="http://www.flickr.com/photos/liilliil/3486392541/">http://www.flickr.com/photos/liilliil/3486392541/</a></li></ul
+></li
+><li>Button panel concept art:<ul><li><a href="http://media.englishrussia.com/atomic_station/33.jpg">http://media.englishrussia.com/atomic_station/33.jpg</a></li></ul
+></li
+><li>Inspiration for designing educational interactive experiences:&nbsp;<ul><li><a href="http://learningspaces2008.pbworks.com/f/Allen_Exploratorium.pdf">http://learningspaces2008.pbworks.com/f/Allen_Exploratorium.pdf</a>&nbsp; (Studying Science Museum Exhibits That Do More Than Entertain)</li></ul
+></li
+><li>Propaganda<ul><li><a href="http://lh6.googleusercontent.com/_hVOW2U7K4-M/TbhmQMepG5I/AAAAAAABeAc/VJkbsfD4IrY/s800/w34ewewfefef.jpg">http://lh6.googleusercontent.com/_hVOW2U7K4-M/TbhmQMepG5I/AAAAAAABeAc/VJkbsfD4IrY/s800/w34ewewfefef.jpg</a>'</li
+><li><a href="http://lh5.googleusercontent.com/_hVOW2U7K4-M/TcCZbj_WlpI/AAAAAAABeHQ/HefdBJzMPV0/s800/nuclear-powerd-zeppelin.jpg">http://lh5.googleusercontent.com/_hVOW2U7K4-M/TcCZbj_WlpI/AAAAAAABeHQ/HefdBJzMPV0/s800/nuclear-powerd-zeppelin.jpg</a></li
+><li><a href="http://lh4.ggpht.com/_hVOW2U7K4-M/SdRkQ294ZAI/AAAAAAAA9yM/xOAIk8nOqF4/s640/etyjrethetdf.jpg">http://lh4.ggpht.com/_hVOW2U7K4-M/SdRkQ294ZAI/AAAAAAAA9yM/xOAIk8nOqF4/s640/etyjrethetdf.jpg</a><br/><br
+/><br/><br
+/><br/><br
+/><br/><br
+/></li></ul
+></li></ul
+><b>------------------------------</b><br
+/><b>TODO: Allaolevan voisi siivota, jotain konseptilinkkejä ja suunnitelmia vielä säästää, toteutetut ja tehdyt ja turhat jaarittelut pois tai alisivuille.</b><br
+/><b>------------------------------</b><br
+/><br
+/><br
+/>Nyt näyttää bonkin suhteen hyvältä :) Vielä puuttuu:<br
+/><ul><li><b><s>Mini-TV, noin 5-6 tuumaa, mustavalko ok.</s></b><ul><li>Tai mustavalko valvontamonitori, mallia kalansilmä</li
+><li>zzorn osti (tulee postissa) -&gt; DONE</li></ul
+></li
+><li><br/></li
+><li><s>Autokyyti puutavaran hakemiseen (mieluiten mahdollisuus kuljettaa 3 x 1.5m levyjä)</s><ul><li>rambo todnäk kykenee järjestämään, milloin mennään ja mihin ?</li
+><li>roudattu la 10.9</li></ul
+></li
+><li><b><s>punainen (ja harmaa?) puhelin pöytään upotettuna</s></b></li
+><li><b><s>kaksi mustaa puhelinta</s></b><s> </s>-&gt; DONE</li
+><li>leimasimet<ul><li>idea 1: 3D tulostetaan ja lateksi pintaan.</li
+><li>idea 2: 3D tulostetaan negatiivi ja valetaan lateksi tms.</li
+><li>Ja toki ne kuviot puuttuu, pitää piirrellä.<ul><li><a href="http://ww2army.com/images/4000-4999/4743/6.jpg">http://ww2army.com/images/4000-4999/4743/6.jpg</a></li
+><li><br/></li></ul
+></li></ul
+></li
+><li><s>led segments tjsp.</s><ul><li>Voidaan muotoilla polymorphista</li></ul
+></li
+><li>reaktorin manuaali</li
+><li>Yksi savukone (rambolta lainaan?)</li
+><li>Normaali käyttöspotti reaktorikannelle, sekä joku vähän vahvempi valo jota voidan pitää päällä räjähdyksen / palon simuloimiseen.</li
+><li>Hacklabin mainosjuliste neuvostotyyliin?</li
+><li>Kaiuttimet joista saa riittävästi mökää ulos, rambolla on 500W PA vahvistin mutta ei kaappeja...</li
+><li><s>Supernakkijärkkääjä</s> - zzorn nakitettu altyhteyshenkilöksi</li
+><li>Geiger-mittarin laatikko ja mittapää<ul><li><s>Rambolle tulossa unkarista aito neuvostovehje</s>, ei tullutkaan logistiikka-ongelmien vuoksi.</li
+><li><s>Jari löysi hienon 0-100% CCCP mittarin, 3.9k etuvastuksella 0-4.5V (ja 5V sopivasti vähän yli 100%), ardun PWM:ää ja hyvä tulee</s><ul><li><s>Mittarivalo pitää kehittää, rambo kokeilee pintaliitosled(e)illä</s></li></ul
+></li
+><li><a href="https://github.com/HelsinkiHacklab/reactor/tree/master/software/geiger">https://github.com/HelsinkiHacklab/reactor/tree/master/software/geiger</a><br/><br
+/></li></ul
+></li></ul
+><b>Rambo ehdottaa pc:llä pyörivästä softasta seuraavaa</b>:<br
+/><ul><li>Pythonia<ul><li>Helppo ja hyvä, vähintäänkin riittävän nopea</li
+><li>GStreamer tuki löytyy joten voidaan tehdä vaikka mitä video ja audio kikkailua helposti.</li
+><li>Sopii minullekkin, ja varmaan aika yleisesti osattua.&nbsp; Sitä ehdotettiin jo aikaisemmin. --zzorn</li></ul
+></li
+><li>Arduinojen kanssa kommunikoivat palat omiin prosesseihinsa ja MCP (Master Control Program) = simulaatioengine omaansa<ul><li>kommunikoivat DBUS-messageilla toisilleen (esim ardu-prosessit emittaa kaikki kytkimien vaihdokset yms koko väylälle ja MCP [ja muut mahdollisesti kiinnostuneet tahot] kuuntelee), lisäksi ne rekisteröi suoria metodeja joita voi MCP [tai muut] kutsua jos/kun pitää ajaa outputteja pyynnöstä eikä vaan firmiksen omalla logiikalla.</li
+><li>Bonuspuolena se että voidaan myöskin simuloida hardware tosi triviaalisti vaan tekemällä dummy softia jotka passaa noita DBUS signaaleja ja implementoi metodit stubeina</li
+><li>Myös random-encouterit (lisää/vähennä tehoa, turbiinin korjaus jne) voidaan hoitaa itse MCP:n ulkopuolella tällä tavoin jolloin itse MCP:stä saadaan robustimpi.</li></ul
+></li
+><li>Mitä hyötyä monesta eri DBUS ohjelmasta on verrattuna yhteen python ohjelmaan?&nbsp;<ul><li>Ohjelman pilkkominen eri ohjelmiin sisäisten luokkien tai modulien sijaan varmaan aiheuttaa jonkin verran lisävaivaa, ja sitten eri DBUS ohjelmat pitää käynnistää ja initialisoida järkevästi, eli näyttäisi että tulee enemmän debuggailua, ja logiikka vain siirretään ohjelman sisältä ohjelmien välille.<ul><li>Toki tuo enforcaa modulaarisuutta enemmän kuin vain design guideline.</li
+><li>Pienempiä moduuleita on helpompi testata yksinään (eli debugata) ja helpompi käyttää uudelleen (esim ardu-sketchi + pythoni joka emittaa kytkinten tilanvaihdokset on aikalailla yleispätevä)<ul><li>Totta.</li></ul
+></li></ul
+></li
+><li>Timing ongelmia syntyy jos simuloidut voimalan osat ovat eri ohjelmissa, mutta jos ne kaikki sijoitetaan yhteen ohjelmaan niin enimmät synkkausongelmat luultavasti vältetään.<ul><li>Idea oli nimenomaan se että itse simulaatio-engine on yksi ohjelma, random-eventtien triggaus (turbine failure jne) voi periaatteessa olla siinäkin mutta luulen että tulee parempi jos se engine on vaan engine ja noista random-harmeista vastaa joku toinen pala (sitäpaitsi silloin niitä harmeja voi trigata at-will enginen ulkopuolelta ilman että siihen tarvitsee erikseen tehdä tukea engineen).<ul><li>Ja jos käynnistää turbiinin uudestaan kesken korjauksen niin MCP emittoi aiheesta viestin ("You killed dimitri"), ja joku muu softa voi hoitaa sen että mitän tästä ilmoitetaan pelaajalle (eli sen puhelinkuvion hallinnoinnin)</li
+><li>Mutta jutellaan tarkemmin kun nähdään, mulla on suht selkeä visio mutta se ehkä pitäis piirtää auki -rambo<ul><li>Kuulostaa hyvältä, lähdetään varmaan siitä sitten.</li></ul
+></li></ul
+></li></ul
+></li
+><li>UI:n helppo vaihtaminen vaikka desktop applikaation ja arduino ohjatun paneelin välillä tosin kiinnostava idea.</li
+><li>Tietysti voidaan sitten eri palasia toteuttaa eri kielillä tjms, mutta jos tehdään kaikki pythonilla niin tällä ei ole niin suurta merkitystä.<ul><li>Jos tehdään videoprosessointia niin saattaa olla tarpeen kirjottaa jotain pätkiä käännettävällä kielellä, parempi olla valmiudet siihenkin.<ul><li>Jep</li></ul
+></li></ul
+></li
+><li>Mutta voidaan toki DBUSia kokeilla --zzorn<ul><li>Se on varsinkin Pythonissa todella helppo käyttää, signaalien emitti on melkolailla triviaalia, kutsuttavien metodien publish ei juurikaan vaikeampaa, metodikutsut on oletuksena synkronisia joten ei tartte pohtia rinnakkaisuuksia.<ul><li>Ok</li></ul
+></li></ul
+></li></ul
+></li
+><li>Tuonne voi alata rakentelemaan:&nbsp;<b> </b><a href="https://github.com/HelsinkiHacklab/reactor">https://github.com/HelsinkiHacklab/reactor</a><br/><br
+/><br/><br
+/></li></ul
+><b>советский реактор симулятор (Soviet reactor simulator) aka Chernobyl projekti:</b><br
+/><ul><li>Reaktorityyppi RBMK: <a href="http://en.wikipedia.org/wiki/RBMK">http://en.wikipedia.org/wiki/RBMK</a><ul><li>РБМК</li></ul
+></li
+><li>asustus: valkoinen takki, housut ja päähine<ul><li><a href="http://www.iaea.org/newscenter/focus/images/e1-420x300.jpg">http://www.iaea.org/newscenter/focus/images/e1-420x300.jpg</a></li
+><li>lisää&nbsp; hacknas/Projects/Alt2011/Concept Art</li></ul
+></li
+><li><s>NBC puku FTW</s>: <a href="http://www.varusteleka.fi/search.php?action=send_search&condition=ydin&Hae.x=0&Hae.y=0">http://www.varusteleka.fi/search.php?action=send_search&amp;condition=ydin&amp;Hae.x=0&amp;Hae.y=0</a><ul><li>Erityisest NVA-kokonaisuus näytää "hyvältä": <a href="http://www.varusteleka.fi/product/suojavaatteet/nva-ydinsuojakokonaisuus-sba-1-kumihaalarilla-kayttamaton/_36A0MKGBN">http://www.varusteleka.fi/product/suojavaatteet/nva-ydinsuojakokonaisuus-sba-1-kumihaalarilla-kayttamaton/_36A0MKGBN</a></li
+><li>Sellaisille joita ei punnita neuvolassa <a href="http://www.varusteleka.fi/product/suojavaatteet/nva-kokovartalokondomi-sbu-67-vihrea-uudenveroinen/_3320OLGIO">http://www.varusteleka.fi/product/suojavaatteet/nva-kokovartalokondomi-sbu-67-vihrea-uudenveroinen/_3320OLGIO</a> mahtunee paremmin.</li
+><li>Tai hukkunut-ydinsuoja-sadettakkiin malli: <a href="http://www.varusteleka.fi/product/suojavaatteet/tsekkilainen-pvc-ydinsuojaviitta-hupulla-ja-kengilla-uudenveroinen/_2VJ0MDMVA">http://www.varusteleka.fi/product/suojavaatteet/tsekkilainen-pvc-ydinsuojaviitta-hupulla-ja-kengilla-uudenveroinen/_2VJ0MDMVA</a> -&gt; DONE</li></ul
+></li
+><li>tausta-aineisto, kysy suovulalta, zzornilta tai haraldilta, että mistä löytyy:<ul><li>"Disaster at Chernobyl (2005) [Discovery Channel] [se subs].avi"<ul><li>0:28:30 : valvontamonitori</li
+><li>0:29:28 : AЗ-5 (AZ-5)</li
+><li>0:30:13 : pöytänapit vilkkuu</li
+><li>0:30:20 : nappia painettiin?</li
+><li>0:31:31 : KABOOM !</li
+><li>0:32:10 : Blackout</li></ul
+></li
+><li>"Simpsons - S03E05 - Homer Defined (1991).avi"<ul><li>0:06:41 :&nbsp;</li></ul
+></li
+><li>"Simpsons - S05E03 - Homer Goes To College (1993).mp4"<ul><li>h:MM:SS : jne.. saa katsoa videot ja merkitä timestampit</li></ul
+></li></ul
+></li
+><li>rambolla on glow-in-the-dark spray-maalia (olettaen että ei ole mennyt pilalle), kellertävää.</li
+><li>Labilla myös flurisoivia akrylivärejä</li
+><li>My Nuke: <a href="http://www.timhunkin.com/a160_My-nuke.htm">http://www.timhunkin.com/a160_My-nuke.htm</a><ul><li>YouTube: <a href="http://youtu.be/sayuNoQGXfc">http://youtu.be/sayuNoQGXfc</a></li
+><li>Nuclear tourism: <a href="http://www.timhunkin.com/a161_nuclear-tourism.htm">http://www.timhunkin.com/a161_nuclear-tourism.htm</a></li
+><li>Making remote manipulator arm: <a href="http://www.timhunkin.com/a162_nuclear-arm.htm">http://www.timhunkin.com/a162_nuclear-arm.htm</a></li
+><li>Making the rest of the machine: <a href="http://www.timhunkin.com/a163_mynuke-construction.htm">http://www.timhunkin.com/a163_mynuke-construction.htm</a></li></ul
+></li
+><li>Rambolla&nbsp; on vielä 5 boardia (mutta ei IC:eitä, niitä saa tilaamalla) 3x16ch&nbsp; ledidriveriin (20ma sink / kanava, voi ajaa myös trankkua&nbsp; source-moodissa), eli 240 ledin matriisi saataisiin jos joku muu kolvaa&nbsp; sen ledimatriisin ja kertoo minkä kokoiset vastukset laitetaan&nbsp; kontrollerille virranrajoittimiksi.</li
+><li>Pitää&nbsp; rakentaa "geiger-mittari", jos sais jollain herkemmällä vahvistimella&nbsp; ja foil-antennilla mitattua vaikka wlan/bt kenttää (tms, että saa jotain&nbsp; vaihtelua paikan mukaan ilman että tarttee itse heiluttaa potikkaa) ja&nbsp; sitten joku override -nappi jolla saa lisää vauhtia kun "mittaa" jonkun&nbsp; ihmisen.&nbsp;<ul><li>pitäiskö tän liittyä aktiivisesti peliin? (xbee linkillä)</li
+><li><s>Geiger Counter Sound : </s><a href="http://www.youtube.com/watch?v=upPiJ9vOYiY"><s>http://www.youtube.com/watch?v=upPiJ9vOYiY</s></a></li
+><li><s>Varmaan&nbsp; paras tehdä niin että meillä on joku suht tiukka looppi jossa sitten&nbsp; naksahduksen todennäköisyys kasvaa exponentiaalisesti sen mukaan mitä&nbsp; analog-inputissa on potikan asento.</s></li
+><li>Arduino koodi autenttisten naksahdusten generointiin löytyy rambolta, tungen githubin&nbsp; jossain välissä<ul><li><a href="https://github.com/HelsinkiHacklab/reactor/tree/master/software/geiger">https://github.com/HelsinkiHacklab/reactor/tree/master/software/geiger</a><br/><br
+/></li></ul
+></li></ul
+></li
+><li>Hälysoundeja<ul><li><a href="http://www.policeinterceptor.com/navysounds.htm">http://www.policeinterceptor.com/navysounds.htm</a></li
+><li><a href="http://members.cox.net/jlharmon3/navywav.html">http://members.cox.net/jlharmon3/navywav.html</a></li
+><li><a href="http://www.defense.gov/multimedia/audio/">http://www.defense.gov/multimedia/audio/</a></li></ul
+></li
+><li>Nixie-tubes<ul><li><a href="http://tubehobby.com/store.php?cat=2">http://tubehobby.com/store.php?cat=2</a></li
+><li><a href="http://www.nocrotec.com/shop/index.php/cat/c4_Nixie-Tubes-and-Sockets.html/XTCsid/aa52656674d636714d98fd17f644b688">http://www.nocrotec.com/shop/index.php/cat/c4_Nixie-Tubes-and-Sockets.html/XTCsid/aa52656674d636714d98fd17f644b688</a></li
+><li><a href="http://www.kosbo.com/index.php?option=com_content&view=category&layout=blog&id=51&Itemid=53">http://www.kosbo.com/index.php?option=com_content&amp;view=category&amp;layout=blog&amp;id=51&amp;Itemid=53</a></li></ul
+></li
+><li>Voidaan&nbsp; myös periaatteessa tehdä pientä pyrotekniikkaa, tai jos muuten niin&nbsp; ainakin savukoneella vois leikkiä (höyrypäästö FTW). rambolla kalusteita&nbsp; ja tietotaitoa (sekä luvat)</li
+><li><b>suovula: </b>pitäskö&nbsp; ottaa yksi tuollainen ja pitää kisaa, että kuinka nopeasti pystyy tuon&nbsp; (NVA suojapuvun) pukemaan päällensä sitä rikkomatta<ul><li><b>Rambo</b>:&nbsp; synopsis: ensin savukone puhaltaa höyryt ulos, sitten alkaa armoton&nbsp; AWOOGA AWOOGA mökä ja valot vilkkua, ja isolla näytöllä rupeaa sekunnit&nbsp; juoksemaan. Vilkkuvalon saa saksasta halvalla: <a href="http://www.thomann.de/fi/american_dj_led_beacon_red_police_light.htm">http://www.thomann.de/fi/american_dj_led_beacon_red_police_light.htm</a> rambolla on savukone (haluavalla oma savukone halvalla: <a href="http://www.thomann.de/fi/stairville_sf80_nebelmhttp://kirjoitusalusta.fi/hacklab-reactoraschine.htm)">http://www.thomann.de/fi/stairville_sf80_nebelmhttp://kirjoitusalusta.fi/hacklab-reactoraschine.htm)</a></li></ul
+></li
+><li>"Tanssipeli"<ul><li>eli tallo reaktorikannen pomppivat polttoainesauvat takaisin.</li
+><li>Tai sitten "Whack-A-Mole" vasaroi kumivasaralla polttoainesauvoja<br/><br
+/><br/><br
+/></li></ul
+></li></ul
+><b><u>Reactor Simulator Game</u></b><br
+/><br
+/><b>Players</b><br
+/><ul><li>The game is ideally played by a 2-4 people team<ul><li>Reactor Control Engineer<ul><li>Handles fuel rods</li></ul
+></li
+><li>Assistant Control Engineer<ul><li>Handles pumps and pipe routing, answering calls, and stomping rods if there is no third player</li></ul
+></li
+><li>(Optional) Reactor Maintenance Technician<ul><li>Stomps rods if there is overpressure</li></ul
+></li
+><li>(Optional) Communication Officer<ul><li>Coordinates the operation, answers phones, keeps track of what crises need to be solved<br/><br
+/></li></ul
+></li></ul
+></li></ul
+><b>I/O</b><br
+/><ul><li>Power level meter<ul><li>Shows the current output of the plant</li></ul
+></li
+><li>Target power level<ul><li>Not a meter, but rather a target power level that is demanded from outside the plant by the red phone now and then.&nbsp; Players need to remember it, they get angry phone calls and may be fired to sibiria if it is off too much.</li></ul
+></li
+><li>Power generated so far counter<ul><li>More or less the game score</li></ul
+></li
+><li>Chronometer<ul><li>Time that the simulation has been running.&nbsp; The other component of the score.</li></ul
+></li
+><li>Radiation level indicator / alert&nbsp;<ul><li>Just binary or few-state alert indicating radiation levels in control room (and other places?&nbsp; Reactor room?)</li></ul
+></li
+><li>Reactor overview table - around 12-18 control rods<ul><li>One two color mixable LED for each control rod (red-yellow-green)<ul><li>Green-yellow color mix indicates how lowered the rod is (green = lowered, yellow = rised)</li
+><li>Blinking to red indicates overheating</li></ul
+></li
+><li>A switch for each control rod<ul><li>Starts raising or lowering the rod depending on the state it is in.<ul><li>Rods have a complex effect on the reactor depending on how raised or lowered they are, as they are tipped with graphite, they will speed up the reaction if partially inserted.</li></ul
+></li></ul
+></li></ul
+></li
+><li>Reactor sensor panel<ul><li>Shows sensors placed between rods, showing pressure, temperature, and radiation level readings</li
+><li><a href="http://www.newscientist.com/blogs/shortsharpscience/2011/04/life-inside-chernobyl-25-years.html">http://www.newscientist.com/blogs/shortsharpscience/2011/04/life-inside-chernobyl-25-years.html</a></li
+><li>The indicators are physical indicator based (stepper or servo driven), sometimes they (or one or two of them) can 'jam' until knocked on (piezo for knock sensor)<ul><li><a href="http://robottini.altervista.org/12-servos-controller-low-cost">http://robottini.altervista.org/12-servos-controller-low-cost</a></li></ul
+></li></ul
+></li
+><li>AZ-5 Switch<ul><li>Lowers all control rods at once</li></ul
+></li
+><li>Water pump control buttons<ul><li>Used to start and stop water pumps, and route the water between the reactor, the turbines, the water tank and the reserve tank, and outside..<ul><li>Controls the steam pressure in the reactor and tanks, and the tank cooling, and power generation</li></ul
+></li></ul
+></li
+><li>Water and steampipe routing and status chart<ul><li>Indicates status of pumps and levels in tanks</li
+><li>Not always reliable</li></ul
+></li
+><li>CRT videoscreen.&nbsp; Shows video image of reactor lid (and other places in the facility), or recorded footage of the person speaking on a phone.</li
+><li>Red phone<ul><li>Used by the Party to contact the station.<ul><li>Rings if powerlevels are too low or too high<ul><li>If kept too low or too high there is first an angry call, and if still not fixed it's off to Sibiria for all operators and game over.</li></ul
+></li></ul
+></li></ul
+></li
+><li>Grey phone<ul><li>Internal phone. Used&nbsp;</li
+><li>Possible messages:<ul><li>Water pipe has sprung a leak between pump number x and reactor / water tank (-&gt; close pump and emergency gates)<ul><li>Water pipe between reactor/water tank and pump x has been patched, ok to open pump again</li
+><li>If started before repairs are ready, engineer is injured from steam or radioactive water</li></ul
+></li
+><li>Reactor rods are jumping in the reactor room! (-&gt; go stomp them down, or the rod is unresponsive to commands)</li
+><li>Internal power transformers failing / failed (from oversurge?)<ul><li>If both transformers fail, worklights go out, some controls nonresponsive, until fixed</li></ul
+></li
+><li>Turbine malfunction<ul><li>Need to shut down turbine to allow engineer to repair it<ul><li>If started before engineer is ready engineer (k) dies, and there is an angry phone call from the next engineer (k+1)</li
+><li>There is a limited number of engineers, if all die, faults of that type can no longer be fixed.</li></ul
+></li></ul
+></li
+><li>Fire in xx place<ul><li>Shut down power there, to enable fixing it</li></ul
+></li
+><li>Mutant creatures under reactor?</li
+><li>Hardware upgrade?</li
+><li>Technicians have nothing to do, and call up for next chess move<ul><li>Happens if there has not been any emergency for a long time</li></ul
+></li></ul
+></li></ul
+></li
+><li>Alert light<ul><li>Buzzer and light activated if there is an emergency situation</li></ul
+></li
+><li>Public messaging loudspeaker<ul><li>Informs the public about possible undesired nuclear fission events (=meltdown), or plays random propaganda messages.&nbsp; Sometimes inexplicably plays kalinka when there is a nuclear meltdown ongoing.</li></ul
+></li
+><li>Reactor lid / lids of fuel channels<ul><li><a href="http://www.corbisimages.com/images/42-19655765.jpg?size=67&uid=72bbb380-222f-4f46-a99d-c75fafd0d6b8">http://www.corbisimages.com/images/42-19655765.jpg?size=67&amp;uid=72bbb380-222f-4f46-a99d-c75fafd0d6b8</a></li
+><li>flat 1.5-2m diameter platform, about 10-15 cm high<ul><li>Has square lids of fuel channels that may shake if there is overpressure, and can be stomped down by a reactor maintenance technician</li
+><li>Also has a smoke generator that can pipe smoke under the rods so it leaks up around their edges.&nbsp; Used when the reactor blows up or is about to blow up</li
+><li>Has four bright RGB LED:s embedded under some rods for effects</li
+><li>Has some additional bright warm white leds embedded in center holes of stationary rod lids, which can be used to illuminate the smoke on an explosion</li
+><li>8 vibrating fuel channel lids, 10 stationary ones</li
+><li>Two speakers for reactor rumble</li
+><li>Made from four sections that can be disengaged for transport</li></ul
+></li></ul
+></li
+><li>Worklights<ul><li>Warm led lights illuminating the panels and reactor lid</li
+><li>Will be shut down along with other lights if there is an explosion</li></ul
+></li
+><li>Emergency lights<ul><li>Bluish, weak, activate a bit after normal power goes off<br/><br
+/><br/><br
+/><br/><br
+/></li></ul
+></li></ul
+><b>Power station parts / rooms &amp; flowchart</b><br
+/>- Only control room and reactor are modeled, rest are just to get an idea of where there can be malfunctions etc.<br
+/>- Example: <a href="http://4.bp.blogspot.com/-k_lC7Jdp5Rw/TXt8q0_rvII/AAAAAAAAJ-I/UdJ-erLffp8/s1600/nuclear_power_diagram.jpg">http://4.bp.blogspot.com/-k_lC7Jdp5Rw/TXt8q0_rvII/AAAAAAAAJ-I/UdJ-erLffp8/s1600/nuclear_power_diagram.jpg</a><br
+/>- Chernobyl - A Canadian Perspective: <a href="http://canteach.candu.org/library/19910101.pdf">http://canteach.candu.org/library/19910101.pdf</a><br
+/><s>TODO: Need chernobyl specific flowchart</s><br
+/>&nbsp;&nbsp;&nbsp; - The canadian report above had one.<br
+/><ul><li>Control room (where players are)</li
+><li>Reactor room (above reactor, where players stomp rods)</li
+><li>Primary loop? -&nbsp;<ul><li>Reactor core water heating area</li
+><li>Steampipe from reactor to heat exchanger</li
+><li>waterpipe from heat exchanger to reactor</li></ul
+></li
+><li>Secondary loop?<ul><li>Turbines<ul><li>With spin-down generation</li></ul
+></li
+><li>water tanks</li></ul
+></li
+><li>Tertiary loop?<ul><li>Cooling</li></ul
+></li
+><li>Emergency release valve (into the atmosphere)</li
+><li>External power lines</li
+><li>Internal power supply<ul><li>Transformers</li
+><li>Emergency diesel engines</li></ul
+></li
+><li>Regional power headquarters, the authority the next level up, commanding the desired power levels<br/><br
+/><br/><br
+/><br/><br
+/><br/><br
+/></li></ul
+><b><u>Hardware component list</u></b><br
+/>Nämä voi rakentaa aika riippumattomasti toisistaan.<br
+/><br
+/><b>LED Segment indicators</b><br
+/><ul><li>Power level, produced power, and time indicators<ul><li>Four digit LED segment displays, at least 5cm high (no upper limit :</li></ul
+></li
+><li>Controlled with data, clock and latch pulses from a common arduino</li
+><li>Implementaatioehdotus:<ul><li>Erilliset ledit, polymorphista muotilla segmentit niille, eteen vaikka ohut tummennettu muovilevy tjms.<ul><li>zzorn toteuttamassa</li></ul
+></li
+><li>595 piiri vaikka jokaiselle numerolle, mahdollisuus ketjuttaa näyttöjä</li></ul
+></li
+><li><a href="http://www.sparkfun.com/tutorials/47">http://www.sparkfun.com/tutorials/47</a> Siitä inspiraatiota.</li
+><li><a href="http://hackaday.com/2011/08/25/large-7-segment-display-made-from-glue/">http://hackaday.com/2011/08/25/large-7-segment-display-made-from-glue/</a></li
+><li><br/><br/><br
+/></li></ul
+><b>Alarm Light</b><br
+/><ul><li>Attached on top of the communication console.</li
+><li><a href="http://www.thomann.de/fi/american_dj_led_beacon_red_police_light.htm">http://www.thomann.de/fi/american_dj_led_beacon_red_police_light.htm</a> tilattu.</li
+><li><s>Rakennetaan löydettyyn 30 senttiseen lasikupuun</s><ul><li>ko. kupu painaa liikaa.</li
+><li>Mikäli joku haluaa silti rakentaa jostain toisesta <b>muovi</b>kuvusta niin rambolla on punasta värikalvoa joka kestää riittävästi lämpöä.</li></ul
+></li
+><li>Connection: on / of line, driveable from MCU pin(s)<ul><li>Rambo rakentaa 4-kanavaisen 220V relesysteemin (4ch relekortin pohjalta) jota ohjataan 5V logiikalla<br/><br
+/></li></ul
+></li></ul
+><b>Communication console</b><br
+/><ul><li>Phone (maybe one is enough, used for both internal and external communication - or if two, just connect them to the same audio card)<ul><li>Sensor for when the phone is lifted, if it is not built into the phone</li
+><li>Light to indicate when the phone is ringing</li
+><li>Mechanical ringer if not built into phone</li></ul
+></li
+><li>CRT tube monitor, that can be connected to a normal computer</li
+><li>Large LED segment display showing the simulation time (starts at 00:00, first shows minutes:seconds, then hours:minutes if a session last longer than an hour)</li
+><li>Buttons for controlling the simulation - Start, Stop, Pause, Save, Menu select + navigation for selecting different scenarios or tuning simulation parameters (e.g. target game length = difficulty).</li
+><li>Connection: Headphone and Mic lines to computer, some kind of composite or other video signal from computer, alarm line from MCU pin, phone handle lifted signal to MCU pin<br/><br
+/><br/><br
+/><br/><br
+/></li></ul
+><b>Reactor control console</b><br
+/><ul><li>switches to put rods down / up. and lights to show state (light on = one cell full power)</li
+><li>k3 is intentionally broken!</li
+><li>Reactor console side view: <a href="http://dl.dropbox.com/u/19531278/hacklab%20reactor/console.pdf">http://dl.dropbox.com/u/19531278/hacklab%20reactor/console.pdf</a><br/><br
+/><br/><br
+/></li></ul
+><b>Plant control console</b><br
+/><ul><li>layout of whole nuclean plant with indicator lights</li
+><li>pump buttons more/less power</li
+><li>Plant control console side view: <a href="http://dl.dropbox.com/u/19531278/hacklab%20reactor/console.pdf">http://dl.dropbox.com/u/19531278/hacklab%20reactor/console.pdf</a><br/><br
+/><br/><br
+/></li></ul
+><b>Reactor lid</b><br
+/><ul><li><s>Split reactor lid frame in four parts for easier transportability</s></li
+><li><s>The parts should be possible to attach and detach to each other securely and with relative ease.</s></li
+><li><s>Size 200 cm x 175 cm</s></li
+><li>Reactor rod modules<ul><li><s>24 x 24 cm, ~12 cm korkeita</s></li
+><li><s>20 x 20 cm, ~10-15 cm korkeita</s></li
+><li>37 - 4 = 33 kpl + varapalikat</li
+><li>4 suojakantta, sininen, vihreä, punainen, keltainen</li
+><li>vaahtomuovilla irti lattiasta, mikrokytkin tms. ja ledi</li></ul
+></li
+><li><s>Palikoiden&nbsp; liikuttamiseen voisi käyttää esim seuraavanlaista mekanismia,&nbsp; hydrauliikkavarren sijaan vaan alustassa oleva moottori joka vetää&nbsp; alustaa vasten liukuvaa jalkaa elastisella narulla: </s><a href="http://demonstrations.wolfram.com/LiftTable/"><s>http://demonstrations.wolfram.com/LiftTable/</s></a><s>&nbsp;&nbsp; Yksi moottori voisi nostaa jompaa kumpaa kahdesta sauvasta, jos sillä&nbsp; on pitkä akseli ja akselin ympäri kierretty nostonarua eri palikoille&nbsp; eri päin.</s><ul><li><s>Etuina: Jäykkä rakenne, kansi liikkuu suoraan ylös tai alas</s></li
+><li><s>Materiaalit: 4 x sarana + 4 x kuulalaakeri tai muu pyöritin + 1/2 moottoria + microswitchi pitkällä anturiliuskalla per palikka.</s></li
+><li>Käytännössä oli aika työläs rakentaa ja tarvitsi paljon osia.</li></ul
+></li
+><li>Käytetään liikuttamiseen joustavaa köyttä kansirivistön läpi, jota voidaan oskiloida DC moottorilla.&nbsp; Polttoainesauvojen kannet lepäävät joustavalla pohjamateriaalilla</li
+><li>Blueprint: <a href="http://dl.dropbox.com/u/19531278/hacklab%20reactor/reactorlid.pdf">http://dl.dropbox.com/u/19531278/hacklab%20reactor/reactorlid.pdf</a>&nbsp; ( <a href="http://dl.dropbox.com/u/19531278/hacklab%20reactor/reactorlid.svg">http://dl.dropbox.com/u/19531278/hacklab%20reactor/reactorlid.svg</a> )<br/><br
+/></li></ul
+><b>Lighting</b><br
+/><ul><li>Inkza:lla on teholedirenkaita, käytetään niitä.&nbsp;&nbsp;<ul><li>Eivät ehkä tarpeeksi tehokkaita, ehkä perinteinen halogeenispottilamppu tjms.</li></ul
+></li
+><li><s>Could be easy to do with off the shelf 220V lights, controlled e.g. by using claes ohlsson remote controls and hacking the 12V remote control -&gt; no need to touch 220V.</s><ul><li>The remote controlled lights suck, not reliable (stops working after 3-4 cycles, need powercycle to reboot).&nbsp; Use led or other lights insted.</li
+><li>Get kim/temmi some other HAM licensed guy to oversee it and we can simply use relays to switch 220V.<ul><li>alternatively we do the relay modules out of lab (and thus do not break the rules :)</li
+><li>rambo has a ready made relay-board for 4 relays, each can switch 10 or so A of 220V</li></ul
+></li></ul
+></li
+><li>Needed lights:<ul><li>A controllable light illuminating the reactor lid, sitting on / attached to the table or a separate stand</li
+><li>Worklights for the consoles</li
+><li>Emergency lighting (could be blue leds)</li
+><li>Reactor explosion light</li></ul
+></li
+><li>Control using 3-4 MCU out pins or similar<br/><br
+/></li></ul
+><b>Sound</b><br
+/><ul><li>Sellainen tötterömallinen kaiutin pulic information messageille vois olla hauska, muttei tarvita</li
+><li>Borrowed off the shelf amplifier</li
+><li>Connection: Audio cable to computer<br/><br
+/></li></ul
+>Communication console contains the main game computer, that communicates with other modules (arduinos) with USB serial.<br
+/><br
+/><b>DONE Harald</b><br
+/><ul><li>PANEL 1<ul><li>WD40 is used or rust removal</li
+><li>Wiring of panel have been metered and labeled and all wires are peeled.</li
+><li>I checked LEDs and Switches.&nbsp;<ul><li>SALDO:&nbsp; Only 14 switches of 32 works. Good thing: only 5 LEDs are broken.</li></ul
+></li></ul
+></li
+><li>PANEL 2<ul><li>WD40 is used or rust removal</li
+><li>Connectors for panel switches/LEDs (about 70) are peeled and ready to be&nbsp; joined.<br/><br
+/><br/><br
+/></li></ul
+></li></ul
+><b><u>Materiaalihankintaa</u></b><br
+/><br
+/><b><s>Puutavaraa</s></b><br
+/><ul><li><s>Filmivaneeria sileällä ja viirapinnalla</s><ul><li><b><s>3 x FILMI/VIIRA I 9.0MM&nbsp; 4.500m2 1500x3000mm&nbsp; 25,15€ kpl&nbsp; =&gt; 75,45€</s></b><ul><li><a href="http://www.puukeskus.fi/tuotteet/rakennuslevyt/vanerit"><s>http://www.puukeskus.fi/tuotteet/rakennuslevyt/vanerit</s></a></li></ul
+></li></ul
+></li
+><li><s>Reaktorikannen reunarakenteet</s><ul><li><b><s>15 m x AB/ST KUUSI 22x125mm&nbsp; 1,10€/m&nbsp;&nbsp; =&gt; 15,15€</s></b><ul><li><a href="http://www.puukeskus.fi/tuotteet/puutavara/sahatavara"><s>http://www.puukeskus.fi/tuotteet/puutavara/sahatavara</s></a></li></ul
+></li></ul
+></li
+><li><s>Konsolien reunatuet, reaktorikansien jousimekanismit</s><ul><li><b><s>15 m x C/VI SAHATAVARA 25x50mm 0,50€/m&nbsp;&nbsp; =&gt; 7,5€</s></b><ul><li><a href="http://www.puukeskus.fi/tuotteet/puutavara/sahatavara"><s>http://www.puukeskus.fi/tuotteet/puutavara/sahatavara</s></a></li></ul
+></li></ul
+></li
+><li><s>Sauvojen jalat 5x5 cm (pitää olla tarpeeksi tukevat)</s><ul><li><b><s>12 m x C/VI SAHATAVARA 50x50mm 0,94€ / m&nbsp; =&gt; 11,4€</s></b><ul><li><a href="http://www.puukeskus.fi/tuotteet/puutavara/sahatavara"><s>http://www.puukeskus.fi/tuotteet/puutavara/sahatavara</s></a></li></ul
+></li></ul
+></li
+><li><s>Konsolien paneeleihin kovalevyä (ja muuhunkin sitä voi aina käyttää):</s><ul><li><b><s>3x KOVALEVY RL 3.0mm&nbsp;&nbsp; 1220x2745mm&nbsp;&nbsp; 3,05€ kpl =&gt; 9,15€</s></b><ul><li><a href="http://www.puukeskus.fi/tuotteet/rakennuslevyt/rakennuslevyt"><s>http://www.puukeskus.fi/tuotteet/rakennuslevyt/rakennuslevyt</s></a></li></ul
+></li></ul
+></li
+><li><b><s>Puutavara yhteensä: ~118,65€&nbsp;</s></b><ul><li><s>(Puukeskus toistaiseksi halvin löydetty paikka, joissain muissa esim filmivaneeri oli 2 kertaa kalliimpaa)&nbsp; Puukeskuksessa oli hinnat merkitty neliöissä eikä kappaleissa -&gt; oikeasti kaksi kertaa kallimpaa kuin muut</s></li></ul
+></li
+><li>Puutavara nyt hankittu, ostettu tai dyykattu.<br/><br
+/><br/><br
+/></li></ul
+><b>Saranoita, sankoja ja kahvoja</b><br
+/><ul><li><s>Tarvitaan kiinnitysjuttuja konsolien ja reaktorikannen lukitsemiseen auki tai kiinni, ainakin 3 per konsoli, mieluiten 6 (2-4 command consolilla), ja 2 reaktorikannelle.&nbsp; Eli yhteensä 10 tai 18, riippuen siitä kuinka turvallisia halutaan olla.</s><ul><li><s>Esim: </s><a href="http://www.biltema.fi/osteri/osteri.cgi?sivu=skriptisivut/index_kauppa.htm&linkki=86598.htm&tuote=86598"><s>http://www.biltema.fi/osteri/osteri.cgi?sivu=skriptisivut/index_kauppa.htm&amp;linkki=86598.htm&amp;tuote=86598</s></a><s>&nbsp; (~2€ / kpl) =&gt; 20€ - 46€</s></li
+><li><s>Löytyisiköhän tälle jotain vaihtoehtoista kiinnitysratkaisua?</s></li
+><li>Solkia dyykkattu Zzornin kanssa la 10.9, paljonko tarvitaan lisää ?<ul><li>Solkia on nyt riittävästi</li></ul
+></li></ul
+></li
+><li><s>Saranoita tarvitaan konsolien ja reaktorikannen aukitaittomekanismeihin 4-6 per konsoli (90 senttiä leveä tarvinnee 6, muut 4.&nbsp; Reaktorikansi esim 4.&nbsp; Eli yhteensä 18 saranaa</s><ul><li><s>Esim </s><a href="http://www.biltema.fi/osteri/osteri.cgi?sivu=skriptisivut/index_kauppa.htm&linkki=86178.htm&tuote=86178"><s>http://www.biltema.fi/osteri/osteri.cgi?sivu=skriptisivut/index_kauppa.htm&amp;linkki=86178.htm&amp;tuote=86178</s></a><s>&nbsp; (~3€ / 2kpl) =&gt; 27€</s></li
+><li><s>Kannattaa myös vilkaista Bauhausista tjms, halvemmalla voi kyllä saada saranoita</s></li
+><li>Saranat ostettu</li></ul
+></li
+><li><b>Konsolit tarvitsevat kantokahvat</b>, labilla on kaksi järeätä.&nbsp; Eli yhteensä ostettava 4kpl<ul><li>Esim: <a href="http://www.biltema.fi/osteri/osteri.cgi?sivu=skriptisivut/index_kauppa.htm&linkki=86285.htm&tuote=86285">http://www.biltema.fi/osteri/osteri.cgi?sivu=skriptisivut/index_kauppa.htm&amp;linkki=86285.htm&amp;tuote=86285</a> (~3€ / 2kpl) =&gt; 6€</li></ul
+></li
+><li><s>Pyörät reaktorikannen liikuttamiseen, löytynee labilta.</s><ul><li>Reaktorikansi voidaan paloitella ja pakata pahvilaatikoihin<br/><br
+/><br/><br
+/></li></ul
+></li></ul
+><b>Torxiruuveja</b><br
+/><ul><li><s>Joku laatikollinen, eri pituisia.&nbsp;</s><ul><li>Lyhyitä hankittu tausta ja etulevyjen kiinnittämiseen, labilla on pitempiä.&nbsp; Reaktorikannelle ehkä tarvitaan vielä toinen aski.<br/><br
+/><br/><br
+/></li></ul
+></li></ul
+><b>Maalaus</b><br
+/><ul><li><s>Paneeleihin&nbsp; / konsoleihin tarvitaan maalia, joko sävytetty niiden bonkkilevyjen&nbsp; mukaan tai lähellä olevaa valmista (spray?)&nbsp; (myymiöt: dekoväri /&nbsp; greezers / ?)</s><ul><li><s>Sprayvärillä tulee varmaan tasaisinta, ja se yleensä pysyy tuossa filmivaneerissa aika hyvin</s></li></ul
+></li
+><li>inzKa hankkinut sprayvärit<br/><br
+/></li></ul
+>AUDIO ja muuhun?<br
+/><br
+/><ul><li>Max/MSP modulaarinen audiovisuaalinen ohjelmointialusta signaalinkäsittelyyn: Voidaan lukea ja lähettää Arduinosignaaleja, midiä tai Open Sound Control viestejä vaikkapa netin yli ja luoda ohjelmointikerroksen päälle erillinen käyttöliittymäkerros modattavine slidereineen ja mittareineen, nappuloineen ja indikaattoreineen. Käytännössä Maxilla voi ohjata ja lukea mitä tahansa, jonka lisäksi siihen voi javascriptillä luoda lisää toiminnallisuutta.</li
+><li>Minulla on siis olemassa Maxin versio 5 ja siihen MSP ja Jitter-lisäosat, eli käytännössä täydellisin saatavissa oleva paketti signaalin/audion/videon käsittelyyn. Projektit voi tulostaa standalone-sovelluksina tarvittaessa.</li
+><li>Maxilla tuon projektin audiopuoli on tosi vaivaton toteuttaa, jonka lisäksi ylijäämäkapasiteettia voi käyttää kaikkeen muuhun tarvittavaan. Onnistuu lähes minkälainen tahansa signaalinkäsittely. Jos tilaan tulee jotain lisävaloja niin niiden DMX-ohjaukset ja muut onnistuu myös, tai videokuvan prosessointi.</li
+><li>MAxilla esimerkiksi voitaneen luoda valvontamonitoreihin efektit, jotka reagoi johonkin haluttuun parametriin jostain toisesta palikasta, ja sama äänelle. (videopuoli on vähän hämärä vielä, olen tehnyt audiota, mutta kaikki työkalut on olemassa reaaliaikaisen kuvan käsittelyyn).</li
+><li>Monikanavaisen äänikortin kanssa onnistuisi surround-äänet, ja tapahtumiin reagoivan äänikudoksen rakentaminen.</li
+><li>Tuo OSC protokolla on siitä mielenkiintoinen, että sen avulla voi Maxia ja sitä kautta kaikkea siihen liittyvää ohjata iPhonella tai iPadilla itse rakennettavalla UI:lla. En tiedä onko muissa laitteissa vastaavaa, mutta ainakin noille saisi.<ul><li>Kuulostaa kiinnostavalta, onko tuohon jotain linkkiä.. hmm, googlaan<ul><li><a href="http://opensoundcontrol.org/">http://opensoundcontrol.org/</a></li></ul
+></li
+><li>TouchOSC: <a href="http://hexler.net/software/touchosc">http://hexler.net/software/touchosc</a></li></ul
+></li
+><li>Lisään tähän vielä vastaisen varalle asiasanan "sensorit", en tiedä olisiko tässä projektissa tarvetta, mutta käytännössä mitä tahansa asento/paikka/tms sensoridataa voi myös hyödyntää. SparkFunilta ainakin saa sopivia alustoja ja vaikka langattomia pieniä lähettimiä tarvittaessa.<ul><li>Luultavasti kiihtyvyysantureita ei suoranaisesti tarvita missään, mahdollisesti jotain tärinäantureita tjms.&nbsp; Reaktorikanteen tulee ihan metallilangalla sitten astuinsensorit (kun polttoainesauvakansia on 37 kpl, niin monimutkaisempi anturi tulisi kalliiksi ja työlääksi siihen).<br/><br
+/><br/><br
+/><br/><br
+/><br/><br
+/></li></ul
+></li></ul
+></body>
+</html>

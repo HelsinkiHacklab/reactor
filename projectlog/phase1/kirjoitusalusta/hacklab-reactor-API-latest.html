@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="en-us" />
+<title>/hacklab-reactor-API</title>
+</head>
+<body><b>DBUS API Helsinki Hacklabin reactori simulaattorille ( </b><a href="http://kirjoitusalusta.fi/hacklab-reactor"><b>http://kirjoitusalusta.fi/hacklab-reactor</b></a><b> )</b><br
+/><br
+/><br
+/><ul><li><b>simulator communicates with simulator level events</b></li
+><li><b>game level events are on same level of abstraction&nbsp;</b><br/><br
+/></li
+><li>ardubridge components map events to commands passed to panels and convert panel actions to simulator level actions&nbsp;<br/><br
+/></li></ul
+><u>signals emitted by simulator:</u><br
+/><ul><li>main_pump_speed(pump_number, speed)</li
+><li>main_pump_state(pump_number, state) #on, off, broken</li
+><li>main_stream_temp(separetor_number,&nbsp; temp)</li
+><li>main_stream_speed(separator_number, temp)</li
+><li>inner_stream_pressure(pipe_number, pressure)</li
+><li>generator_speed(generator_number, speed)</li
+><li>generator_state(generator_number, state) #oline, offline, broken,...&nbsp;</li
+><li>ETC - TODO, name all events form&nbsp; <a href="http://kirjoitusalusta.fi/hacklab-reactor-simulation">http://kirjoitusalusta.fi/hacklab-reactor-simulation</a> to signals here&nbsp;<br/><br
+/></li></ul
+><u>signals emitted by game:</u><br
+/><ul><li>game emits signals like&nbsp;<ul><li>water_inlet_state(inlet_number, state) #blocked, free</li
+><li>power_demand(demand)<br/><br
+/></li></ul
+></li></ul
+><u>signals emitted by consoles:</u><br
+/><ul><li>generator_switch(generator_number, state) #on, off, mainline, internal..</li
+><li>reactor_rod(rod_number, direction)</li
+><li>etc&nbsp;<br/><br
+/></li></ul
+>simulation is independed what ever some instance listens to those signals or emits those, tho it must react to command signals.<br
+/><br
+/><br
+/>simulator must have following methods that master game controller calls<br
+/><ul><li>simulator_start()</li
+><li>simulator_stop()</li
+><li>simulator_save()</li
+><li>simulator_resume()<br/><br
+/><br/><br
+/><br/><br
+/><br/><br
+/><br/><br
+/><br/><br
+/><br/><br
+/><br/><br
+/></li></ul
+><b>Signals out from simulator</b><br
+/><ul><li><br/></li
+><li><br/></li
+><li><br/></li
+><li><br/></li
+><li><br/></li
+><li>MainPumpThrottle(number,&nbsp; speed) =0..120 %</li
+><li>MainPumpActive(number, active) off (0), on (1)</li
+><li>MainPumpState(number,state) 0 = ok, 1 = broken in some way,2=brokenotherway etc</li
+><li>SteamSeparatorValve(number, open) open =0..100&nbsp; %</li
+><li>SteamSeparatorActive(number,active) = off(0), on (1)</li
+><li>SteamSeparatorState(number,state)0=0k,1=broken</li
+><li>TurbineValve</li
+><li>TurbineActive</li
+><li>TurbineState</li
+><li>CoolingPumpThrottle</li
+><li>CoolingPumpActive</li
+><li>CoolingPumpState<br/><br
+/><br/><br
+/><br/><br
+/></li></ul
+>Gauge output from simulator:<br
+/><ul><li>Main pump x 4<ul><li>Power 0..120 %</li></ul
+></li
+><li>Steam separator x 2<ul><li>Water temperature 0..400 Celsius</li
+><li>Steam pressure 0..10 MPa</li></ul
+></li
+><li>Turbines x 2<ul><li>Generated power&nbsp; 0..700 MW</li></ul
+></li
+><li>River pump x 2<ul><li>Power 0..120%</li></ul
+></li
+><li>Cooling pump x 2<ul><li>Power 0..120%<br/><br
+/></li></ul
+></li></ul
+>Reactor outputs:<br
+/><ul><li>Control rod positions %</li
+><li>Light on/off for rod on light panel</li
+><li>Led gauges</li
+><li>Segment screen</li
+><li><br/><br/><br
+/><br/><br
+/><br/><br
+/><br/><br
+/><br/><br
+/><br/><br
+/><br/><br
+/><br/><br
+/><br/><br
+/></li></ul
+></body>
+</html>
