@@ -63,7 +63,6 @@ class ardubus_console(ardubus.ardubus):
             output_act = output[1].split(', ')
             #TODO: add other types of inputs
             if output_act[0] =='R':
-                
                 first_pin = int(output_act[1])
                 last_pin = int(output_act[2])
                 for i in range(first_pin, last_pin):
@@ -99,17 +98,21 @@ class ardubus_console(ardubus.ardubus):
     
     #override default signal generators with handlers  
     def dio_change(self, pin, state, sender):
-        self.switch_states[pin] = ~state
+        assert(pin in self.switches)
+        self.switch_states[pin] = state
         self.switches[pin].signal(self, pin - self.switches[pin].index+self.switches[pin].pin, not state) 
 	#print "SIGNALLING: Pin %d changed to %d on %s" % (pin, state, sender)
         pass
 
     def dio_report(self, pin, state, time, sender):
-        if pin in self.switch_states and self.switch_states[pin] != ~state:
+        if pin not in self.switches:
+            print("Received report for unknown pin %s" % pin)
+            return
+        if pin in self.switch_states and self.switch_states[pin] != state:
 		self.switches[pin].signal(self, pin - self.switches[pin].index+self.switches[pin].pin, not state)
         elif pin not in self.switch_states:
 		self.switches[pin].signal(self, pin - self.switches[pin].index+self.switches[pin].pin, not state)
-	self.switch_states[pin] = ~state
+	self.switch_states[pin] = state
         #print "SIGNALLING: Pin %d has been %d for %dms on %s" % (pin, state, time, sender)
         pass
   
