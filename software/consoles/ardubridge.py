@@ -35,11 +35,11 @@ class ardubus_console(ardubus.ardubus):
             if len(input_act) > 1:
                 receiver = self.call_with_offset(int(input_act[1]), 
                                                  self.__getattribute__(input_act[0]))                
-                if len(input_act) == 3:
+                if len(input_act) == 4:
                     receiver = self.make_interpolate(int(input_act[2]), 
                                                      int(input_act[3]), 
                                                      receiver)
-                elif len(input_act) == 5:
+                elif len(input_act) == 6:
                     receiver = self.make_interpolate2(int(input_act[2]),
                                                       int(input_act[3]),
                                                       int(input_act[4]),
