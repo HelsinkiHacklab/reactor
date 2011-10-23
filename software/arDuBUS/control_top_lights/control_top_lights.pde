@@ -4,7 +4,7 @@
 #include <pca9635.h> // For some weird reason including this in the relevant .h file does not work
 #include <pca9635RGB.h> // For some weird reason including this in the relevant .h file does not work
 #include <pca9635RGBJBOL.h> // For some weird reason including this in the relevant .h file does not work
-#define ARDUBUS_PCA9635RGBJBOL_BOARDS { 0 }
+#define ARDUBUS_PCA9635RGBJBOL_BOARDS { 0, 8 }
 
 #include <ardubus.h>
 void setup()
@@ -23,17 +23,21 @@ void setup()
 void loop()
 {
     ardubus_update();
+    /*
     // Test code, blink each led once
     for (byte i = 0; i < 48; i++)
     {
         Serial.println(i, DEC);
         ardubus_pca9635RGBJBOLs[0].set_led_pwm(i, 255);
-        /*
-        ardubus_pca9635RGBJBOLs[0].R.dump_registers(0x2, 0x11);
-        ardubus_pca9635RGBJBOLs[0].G.dump_registers(0x2, 0x11);
-        ardubus_pca9635RGBJBOLs[0].B.dump_registers(0x2, 0x11);
-        */
         delay(250);
         ardubus_pca9635RGBJBOLs[0].set_led_pwm(i, 0);
     }
+    for (byte i = 0; i < 48; i++)
+    {
+        Serial.println(i, DEC);
+        ardubus_pca9635RGBJBOLs[1].set_led_pwm(i, 255);
+        delay(250);
+        ardubus_pca9635RGBJBOLs[1].set_led_pwm(i, 0);
+    }
+    */
 }
