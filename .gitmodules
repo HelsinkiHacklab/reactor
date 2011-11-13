@@ -10,3 +10,6 @@
 [submodule "software/arDuBUS/sketch/libraries/pca9635RGB"]
 	path = software/arDuBUS/sketch/libraries/pca9635RGB
 	url = git://github.com/rambo/pca9635RGB.git
+[submodule "software/arDuBUS/sketch/libraries/pca9635RGBJBOL"]
+	path = software/arDuBUS/sketch/libraries/pca9635RGBJBOL
+	url = git://github.com/rambo/pca9635RGBJBOL.git
