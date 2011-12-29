@@ -16,7 +16,7 @@ Rectangle
                 spacing: 0
                 Rectangle
                 {
-                    width: 30; height: 30
+                    width: 60; height: 60
                     Reactor3Switch
                     {
                         id: switch1

@@ -28,6 +28,20 @@ Item
                     Rectangle
                     {
                         width: 15; height: 15
+                        Text
+                        {
+                            text: "+"
+                        }
+                        MouseArea
+                        {
+                            anchors.fill: parent
+                            id: click_up
+                            onClicked: { reactor3Switch.value = reactor3Switch.value+1 }
+                        }
+                    }
+                    Rectangle
+                    {
+                        width: 15; height: 15
                         color: "green"
                         Text
                         {
@@ -38,20 +52,6 @@ Item
                             anchors.fill: parent
                             id: click_down
                             onClicked: { reactor3Switch.value = reactor3Switch.value-1 }
-                        }
-                    }
-                    Rectangle
-                    {
-                        width: 15; height: 15
-                        Text
-                        {
-                            text: "+"
-                        }
-                        MouseArea
-                        {
-                            anchors.fill: parent
-                            id: click_up
-                            onClicked: { reactor3Switch.value = reactor3Switch.value+1 }
                         }
                     }
                 }
