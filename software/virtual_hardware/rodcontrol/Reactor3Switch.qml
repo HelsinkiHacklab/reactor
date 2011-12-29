@@ -5,6 +5,20 @@ Item
     id: reactor3Switch
     
     property int value: 0
+    function up()
+    {
+        if (value < 1)
+        {
+            value = value+1
+        }
+    }
+    function down()
+    {
+        if (value > -1)
+        {
+            value = value-1
+        }
+    }
     
     Rectangle
     {
@@ -38,7 +52,7 @@ Item
                         {
                             anchors.fill: parent
                             id: click_up
-                            onClicked: { reactor3Switch.value = reactor3Switch.value+1 }
+                            onClicked: { reactor3Switch.up() }
                         }
                     }
                     Rectangle
@@ -53,7 +67,7 @@ Item
                         {
                             anchors.fill: parent
                             id: click_down
-                            onClicked: { reactor3Switch.value = reactor3Switch.value-1 }
+                            onClicked: { reactor3Switch.down() }
                         }
                     }
                 }
