@@ -8,12 +8,13 @@ Item
     
     Rectangle
     {
-        width: 60
+        width: 30; height: 30
         Row
         {
+            width: parent.width; height: parent.height
             Rectangle
             {
-                width: 30; height: 30
+                width: parent.width/2; height: parent.height
                 color: "red"
                 Text
                 {
@@ -22,12 +23,13 @@ Item
             }
             Rectangle
             {
-                width: 30; height: 30
+                width: parent.width/2; height: parent.height
                 Column
                 {
+                    width: parent.width; height: parent.height
                     Rectangle
                     {
-                        width: 15; height: 15
+                        width: parent.width; height: parent.height/2
                         Text
                         {
                             text: "+"
@@ -41,7 +43,7 @@ Item
                     }
                     Rectangle
                     {
-                        width: 15; height: 15
+                        width: parent.width; height: parent.height/2
                         color: "green"
                         Text
                         {
