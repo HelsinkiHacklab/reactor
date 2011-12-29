@@ -17,6 +17,14 @@ Rectangle
                 Rectangle
                 {
                     width: 30; height: 30
+                    Reactor3Switch
+                    {
+                        id: switch1
+                    }
+                }
+                Rectangle
+                {
+                    width: 30; height: 30
                     color: "black"
                 }
                 Rectangle
