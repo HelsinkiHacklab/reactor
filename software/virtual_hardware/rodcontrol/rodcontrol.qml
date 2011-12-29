@@ -2,7 +2,43 @@ import QtQuick 1.0
 
 Rectangle
 {
-    width: 400; height: 400; color: "black"
+    id: switches
+    width: 400; height: 400;
+    // Rows
+    Column
+    {
+        spacing: 5
+        Repeater 
+        {
+            id: rowrepeater
+            model: 7
+            Rectangle
+            {
+                width: switches.width; height: 30
+                Row
+                {
+                    spacing: 5
+                    Repeater 
+                    {
+                        model: 7
+                        id: columnrepeater
+                        Rectangle
+                        {
+                            width: 30; height: 30
+                            Text
+                            {
+                                text: index
+                                font.pointSize: 15
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+
+    /*
     Grid
     {
         x: 5; y: 5
@@ -23,4 +59,6 @@ Rectangle
             }
         }
     }
+    */
+
 }
