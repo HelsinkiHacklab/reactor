@@ -2,6 +2,8 @@ import QtQuick 1.0
 
 Item
 {
+    width: parent.width; height: parent.height
+    //width: 30; height: 30
     id: reactor3Switch
     
     property int value: 0
@@ -22,7 +24,8 @@ Item
     
     Rectangle
     {
-        width: 30; height: 30
+        width: parent.width; height: parent.height
+        //width: 30; height: 30
         Row
         {
             width: parent.width; height: parent.height
