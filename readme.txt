@@ -6,4 +6,4 @@ The primary goal is to get this ready for ALT-party 2011 in Helsinki ( http://ww
 
 Design and plans in etherpad here: http://kirjoitusalusta.fi/hacklab-reactor
 
-
+NOTE: now uses submodules, remember "git submodule init" "git submodule update"
