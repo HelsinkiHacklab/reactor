@@ -7,7 +7,64 @@ Rectangle
     // Rows
     Column
     {
-        spacing: 5
+        // Row 1
+        Rectangle
+        {
+            width: switches.width; height: 30
+            Row
+            {
+                spacing: 0
+                Rectangle
+                {
+                    width: 30; height: 30
+                    color: "black"
+                }
+                Rectangle
+                {
+                    width: 30; height: 30
+                    color: "black"
+                }
+                Rectangle
+                {
+                    width: 30; height: 30
+                    Text
+                    {
+                        text: "1"
+                        font.pointSize: 15
+                    }
+                }
+                Rectangle
+                {
+                    width: 30; height: 30
+                    Text
+                    {
+                        text: "2"
+                        font.pointSize: 15
+                    }
+                }
+                Rectangle
+                {
+                    width: 30; height: 30
+                    Text
+                    {
+                        text: "3"
+                        font.pointSize: 15
+                    }
+                }
+                Rectangle
+                {
+                    width: 30; height: 30
+                    color: "black"
+                }
+                Rectangle
+                {
+                    width: 30; height: 30
+                    color: "black"
+                }
+            }
+        }
+        spacing: 0
+        /*
         Repeater 
         {
             id: rowrepeater
@@ -17,7 +74,7 @@ Rectangle
                 width: switches.width; height: 30
                 Row
                 {
-                    spacing: 5
+                    spacing: 0
                     Repeater 
                     {
                         model: 7
@@ -35,6 +92,7 @@ Rectangle
                 }
             }
         }
+        */
     }
     
 

@@ -11,6 +11,9 @@ from PySide import QtDeclarative
 
 
 
+
+
+
 app = QtGui.QApplication(sys.argv)
 
 view = QtDeclarative.QDeclarativeView()
