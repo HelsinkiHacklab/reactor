@@ -52,9 +52,70 @@ servo_namemap = dict(
 switch_states = {}
 
 switch_servo_map = {
-    42: ('13-13', 'down'),
-    60: ('13-13', 'up'),
-   
+    11: ('22-13', 'down'),
+    56: ('22-13', 'up'),
+    62: ('21-13', 'up'),
+    1: ('21-13', 'down'),
+    65: ('20-13','up' ),
+    40: ('20-13', 'down'),
+    19: ('13-13', 'up'),
+    45: ('13-13', 'down'),
+    22: ('12-13', 'up'),
+    36: ('12-13', 'down'),
+    32: ('11-13', 'up'),
+    38: ('11-13', 'down'),
+    24: ('10-13', 'up'),
+    39: ('10-13', 'down'),
+    57: ('22-20', 'up'),
+    9:  ('22-20', 'down'),
+    55: ('21-20', 'up'),
+    16: ('21-20', 'down'),
+    63: ('20-20', 'up'),
+    46: ('20-20', 'down'),
+    21: ('13-20', 'up'),
+    13: ('13-20', 'down'),
+    27: ('12-20', 'up'),
+    0:  ('12-20', 'down'),
+    34: ('10-20', 'up'),
+    50: ('10-20', 'down'),
+    53: ('21-21', 'up'),
+    41: ('21-21', 'down'),
+    26: ('13-21', 'up'),
+    49: ('13-21', 'down'),
+    20: ('11-20', 'up'),
+    35: ('11-20', 'down'),
+    59: ('20-22', 'up'),
+    44: ('20-22', 'down'),
+    25: ('13-22', 'up'),
+    14: ('13-22', 'down'),
+    28: ('12-22', 'up'),
+    5:  ('12-22', 'down'),
+    58: ('22-12', 'up'),
+    8:  ('22-12', 'down'),
+    66: ('20-12', 'up'),
+    6:  ('20-12', 'down'),
+    52: ('13-12', 'up'),
+    47: ('13-13', 'down'),
+    31: ('12-12', 'up'),
+    4:  ('12-12', 'down'),
+    30: ('11-12', 'up'),
+    43: ('11-12', 'down'),
+    18: ('10-12', 'up'),
+    17: ('10-12', 'down'),
+    51: ('21-11', 'up'),
+    48: ('21-11', 'down'),
+    54: ('20-11', 'up'),
+    15: ('20-11', 'down'),
+    64: ('13-11', 'up'),
+    7:  ('13-11', 'down'),
+    33: ('11-11', 'up'),
+    3:  ('11-11', 'down'),
+    60: ('20-10', 'up'),
+    42: ('20-10', 'down'),
+    61: ('13-10', 'up'),
+    12: ('13-10', 'down'),
+    23: ('12-10', 'up'),
+    2:  ('12-10', 'down'),
 }
 
 class ardubus_listener():
@@ -79,14 +140,17 @@ class ardubus_listener():
 	    # TODO: map switch k to servo
 	    if switch_servo_map.has_key(switch):
 		servo_name = switch_servo_map[switch][0]
+                if not named_servo_values.has_key(servo_name):
+                    continue
+
 		if switch_servo_map[switch][1] == 'down':
 		   named_servo_values[servo_name] -= 10;
                 else:
 		   named_servo_values[servo_name] += 10;
-                if named_servo_values[servo_name] < 600:
-                   named_servo_values[servo_name] = 600
-                if named_servo_values[servo_name] > 2400:
-                   named_servo_values[servo_name] = 2400
+                if named_servo_values[servo_name] < 800:
+                   named_servo_values[servo_name] = 800
+                if named_servo_values[servo_name] > 2200:
+                   named_servo_values[servo_name] = 2200
                 self.named_servo(servo_name, named_servo_values[servo_name])
 	return True
 

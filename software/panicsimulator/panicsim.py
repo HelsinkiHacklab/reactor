@@ -9,6 +9,8 @@ import dbus
 import dbus.service
 import dbus.mainloop.glib
 import random
+import math
+import sys
 from time import sleep
 
 from collections import namedtuple
@@ -50,7 +52,7 @@ tickTime = 0.01
 highestTemp = 0
 exploding = False
 timeCounter = 0
-
+tickCounter = 0
 
 
 class reactor(dbus.service.Object):
@@ -69,30 +71,35 @@ class reactor(dbus.service.Object):
         self.bus.add_signal_receiver(self.controlRodStepped, dbus_interface = "fi.hacklab.ardubus", signal_name = "control_rod_stepped")       
          
         self.fuel_channels = []
-        self.ph_channels = [None, None,    0,   1,    2, None, None, 
-                            None,    3, None,   4,    5,    6, None,
-                               7,    8,    9,  10,   11, None,   12,
-                              13,   14,   15,  16,   17,   18,   19,   
-                              20,  None,  21,  22,   23,   24,   25,
-                            None,    26,  27,  28, None,   29, None,
-                            None,  None,  30,  31,   32, None, None]
+        self.ph_channels = [[None, None,    0,   1,    2, None, None],
+                            [None,    3, None,   4,    5,    6, None],
+                            [  7,    8,    9,  10,   11, None,   12],
+                            [  13,   14,   15,  16,   17,   18,   19],   
+                            [  20,  None,  21,  22,   23,   24,   25],
+                            [None,    26,  27,  28, None,   29, None],
+                            [None,  None,  30,  31,   32, None, None]]
         
+
         for i in range(0, 33):
             self.fuel_channels.append(fuel_channel(200, 100, 50, 100, 100, 100, 100, False, False, False))
-        
+        self.kakkatimer = 0 
+        assert(len(self.get_neighbours(0, 2)) == 4)
+        assert(len(self.get_neighbours(3, 0)) == 4)
         self.simulator_thread = threading.Thread(target=self.simulator_loop)
         self.simulator_thread.setDaemon(1)
         self.simulator_thread.start()
 
-    def get_neighbours(self, index):
+    def get_neighbours(self, x, y):
         neighbours = []
-        for x in range(-1, 1):
-            for y in range(-1, 1):
-                nindex = y * grid_w + x
-                if nindex > 0 and nindex < grid_w * grid_h:
-                    nitem = self.ph_channels[nindex]
-                    if nitem:
-                        neighbours.append(self.fuel_channels[nitem])
+        for dx in range(-1, 2):
+            x2 = x + dx
+            for dy in range(-1, 2):
+                y2 = y + dy
+                if x2 == x and y2 == y:
+                    continue
+                if x2 >= 0 and x2 < grid_w and y2 >= 0 and y2 < grid_h:
+                    if self.ph_channels[y2][x2] != None:
+                        neighbours.append(self.fuel_channels[self.ph_channels[y2][x2]])
         return neighbours
 
     def signal_received(self, *args, **kwargs):
@@ -123,6 +130,7 @@ class reactor(dbus.service.Object):
         global exploding
         global highestTemp
         global timeCounter
+        global tickCounter
         highestTemp = 0
         for c in self.fuel_channels:
             #print type(c), c, c.temp
@@ -162,21 +170,33 @@ class reactor(dbus.service.Object):
         #for c in self.fuel_channels:
         #    c.flux += # Sum of adjacent channel outfluxes multiplied by fluxSpreadFactor * time
         #    c.temp += # Sum of adjacent channel outtemps multiplied by tempSpreadFactor * time
-        for i, currentRod in enumerate(self.ph_channels):
-            if currentRod !=None:
-                #print i, currentRod
-                currentRod = self.fuel_channels[currentRod]
-                neighbors = self.get_neighbours(i)
-                if len(neighbors)  > 0:
-                    #currentRod.flux = sum( [neigborRod.flux for neigborRod in neighbors] ) * fluxSpreadFactor * time 
-                    currentRod.temp = currentRod.temp * (1.0 - tempSpreadFactor) + tempSpreadFactor * sum( [neigborRod.temp for neigborRod in neighbors] ) / len(neighbors)
+        for y in range(0, grid_h):
+            for x in range(0, grid_w):
+                if self.ph_channels[y][x] != None:
+                    currentRod = self.fuel_channels[self.ph_channels[y][x]]
+                    neighbors = self.get_neighbours(x, y)
+
+                    if len(neighbors) > 0:
+                        currentRod.flux = sum( [neigborRod.flux for neigborRod in neighbors] ) * fluxSpreadFactor * time 
+                        currentRod.temp = currentRod.temp * (1.0 - tempSpreadFactor) + tempSpreadFactor * sum( [neigborRod.temp for neigborRod in neighbors] ) / len(neighbors)
+                    else:
+                        print(x, y)
+                        assert(len(neighbors) > 0)
                 
+                
+        for c in self.fuel_channels:
+            if c.temp < 20.0:
+                c.temp = 20.0
                 
         timeCounter += tickTime
-        if (timeCounter > 1):
-          roundCounter = 0
-          for i, c in enumerate(self.fuel_channels):
-              self.control_rod_pos(i, c.rodpos)
+        tickCounter += 1
+        if tickCounter % 5 == 0:
+            status = ""
+            for i, c in enumerate(self.fuel_channels):
+                status += "%d=%d, " % (i, c.rodpos)
+                self.control_rod_pos(i, c.rodpos)
+            status += " %f" % highestTemp
+            print(status)
 
         # TODO: For the four measurement rods, send out flux and temperature readings.       
         
@@ -187,10 +207,10 @@ class reactor(dbus.service.Object):
         if ((highestTemp < recoverTemp) and exploding):
             exploding = False
             print "Explosion end"
-        print "Maxtemp ", highestTemp   
         
 
 if __name__ == '__main__':
+    # make sure that ardubridge is not running at this point
     gobject.threads_init()
     dbus.mainloop.glib.threads_init()
     dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
