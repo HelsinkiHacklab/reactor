@@ -1,0 +1,174 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="en-us" />
+<title>/hacklab-reactor-simulation</title>
+</head>
+<body><br
+/><br
+/><b>Reactor loop</b><br
+/><ul><li>Steam separator x 2<ul><li>Switch input to steam separator 1..2 on and of</li
+><li>Steam exit temperature gauges for steam separator 1 and 2</li
+><li>Steam exit speed for steam separator 1 and 2</li
+><li>Water level in steam separator 1 and 2</li></ul
+></li
+><li>Main circulaton pump x 4<ul><li>Adjust speed of main pumps</li
+><li>Switch main pump 1..4 on / off</li
+><li>Main pump 1..4 status lights</li></ul
+></li
+><li>Main loop valves x 4<ul><li>Main flow speed gauges 1..4</li></ul
+></li
+><li>Piping to reactor x&nbsp; 37</li
+><li>Pressure tubes x 37</li
+><li>Piping to steam separator from reactor<br/><br
+/><br/><br
+/></li></ul
+><b>Turbine loop</b><br
+/><ul><li>Steam separator x 2<ul><li>Adjust steam output level to turbine</li></ul
+></li
+><li>Steam separator to turbine piping<ul><li>Switch steam to turbine 1..2 on / off</li></ul
+></li
+><li>Turbine x 2<ul><li>Speed gauge for turbine 1..2</li
+><li>Voi hajota</li
+><li>Bearings can overheat</li
+><li>Voi vuotaa</li
+><li>Tuotta sähköä</li
+><li>Model inertia</li
+><li>Generator can be disconnected from external network and/or internal<ul><li>External is heavier</li></ul
+></li></ul
+></li
+><li>Condenser x 2<ul><li>Switch steam input to condenser 1..2 on / off</li
+><li>Temperature gauge for condenser 1..2</li></ul
+></li
+><li>Water tank x 2<ul><li>Water tank level gauge for tank 1..2</li></ul
+></li
+><li>Water pump x 2<ul><li>Adjust water pump speed</li
+><li>Turn water pump 1..2 on / off<br/><br
+/><br/><br
+/></li></ul
+></li></ul
+><b>Cooling loop</b><br
+/><ul><li>Water inlet x 2<ul><li>Voi tukkeutua esim kaloista</li></ul
+></li
+><li>Cooling river water pump x 2<ul><li>Adjust river water pump power</li
+><li>Turn river water pump 1..2 on / off</li
+><li>Voi tukkeutua</li
+><li>Voi hajota</li></ul
+></li
+><li>Condenser x 2<ul><li>(Switch river water input to condenser 1..2 on / off)</li
+><li>Voi vuotaa -&gt; radioaktiivista vettä jokeen</li
+><li>Voi rikkoutua -&gt; radioaktiivista höyryä laitokseen</li></ul
+></li
+><li>Cooling water outlet x 1<ul><li>Voi tukkeutua?<br/><br
+/><br/><br
+/></li></ul
+></li></ul
+><b>Emergency cooling loop</b><br
+/><ul><li>Emergency water tank x 1</li
+><li>Emerency water pump x 1<ul><li>Switch emergency cooling water pump on/off</li></ul
+></li
+><li>Emergency water valves x 2<ul><li>Open / close emergency water valves<br/><br
+/><br/><br
+/></li></ul
+></li></ul
+><b>Electricity wiring</b><br
+/><ul><li>Generator x 2</li
+><li>External power output<ul><li>Connect external power output on / off</li></ul
+></li
+><li>External power input<ul><li>Switch external power grid input to plant power on/off</li></ul
+></li
+><li>Diesel generators<ul><li>Startup 10 seconds</li
+><li>Manual startup (and stop?) emergency generators</li></ul
+></li
+><li>Pumps etc use elctricity<ul><li>Internal power level warning indicator (or gauge?)</li
+><li>Emergency power indicator light</li
+><li>No power indicator light<br/><br
+/><br/><br
+/><br/><br
+/><br/><br
+/><br/><br
+/><br/><br
+/></li></ul
+></li></ul
+><b><u>Control Panels</u></b><br
+/><br
+/><b>Plant Panel</b><br
+/><ul><li>Bottom<ul><li>Used switches: 10 adjustable, 14 on/off (11 red, 4 black), 3 turnwitches</li
+><li>Reactor Loop - 4 on/off, 2 adjustable<ul><li>2 Steam separators<ul><li>Steam separator 1..2 input on / off (red)</li></ul
+></li
+><li>4 Main pumps (adjustable)<ul><li>Each pump supplies water to mostly one corner of the reactor</li
+><li>Main pump 1..4 on / off (red)</li
+><li>Increase / decrease main pump 1..4 power</li></ul
+></li></ul
+></li
+><li>Turbine Loop - 6 on / off, 4 adjustable<ul><li>2 Turbines (adjustable)<ul><li>Increase / decrease steam throughput to turbine 1..2</li
+><li>Turbine 1..2 (steam input) on / off (black)</li></ul
+></li
+><li>Steam condenser</li
+><li>2 Water pumps (adjustable)<ul><li>Increase / decrease water pump 1..2 speed</li
+><li>Turn water pump 1..2 on / off (red)</li></ul
+></li></ul
+></li
+><li>Cooling Loop -&nbsp; 2 on/ff, 2 adjustable<ul><li>2 River water pumps (adjustable)<ul><li>Increase / decrease river water pump 1..2</li
+><li>Turn river water pump 1..2 on / off (red)</li></ul
+></li></ul
+></li
+><li>Emergency&nbsp; - 3 red pushbuttons<ul><li>Turn emergency cooling pump on / off (red)</li
+><li>Emergency venting of steam (into bubbler pool?&nbsp; Or atmosphere?) (red)</li
+><li>Turn emergency diesel generators on / off (pushbutton, red)</li></ul
+></li
+><li>Electricity - 3 turnswitches<ul><li>Connect generator 1..2 to external power on / off</li
+><li>(Use external grid power for plant on / off ?)</li></ul
+></li></ul
+></li
+><li>Mid<ul><li>Main pump x 4<ul><li>Power 0..120 %</li></ul
+></li
+><li>Steam separator x 2<ul><li>Water temperature 0..400 Celsius</li
+><li>Steam pressure 0..10 MPa</li></ul
+></li
+><li>Turbines x 2<ul><li>Generated power&nbsp; 0..700 MW</li></ul
+></li
+><li>River pump x 2<ul><li>Power 0..120%</li></ul
+></li
+><li>Cooling pump x 2<ul><li>Power 0..120%<br/><br
+/><br/><br
+/></li></ul
+></li></ul
+></li></ul
+><b>Gauges</b><br
+/><ul><li>Size: 10 x 10 cm&nbsp;</li
+><li>Readings:<ul><li>8 x 0..125%</li
+><li>2 x 0..700 MW</li
+><li>2 x 0..400 C</li
+><li>2 x 0..10 MPascal<br/><br
+/><br/><br
+/><br/><br
+/><br/><br
+/></li></ul
+></li></ul
+><b>Component sizes</b><br
+/><ul><li>Turnswitch x3 with knob, 2 without<ul><li>47 x47 mm</li></ul
+></li
+><li>Single large pushbutton (11 red, 5 black))<ul><li>67 x 103 mm</li></ul
+></li
+><li>Dual large pushbuttons (19 black (of wich 6 have one long edge shortened))<ul><li>68 x 150 mm</li></ul
+></li
+><li>Mounting panel<ul><li>400 x 890 mm<br/><br
+/><br/><br
+/></li></ul
+></li></ul
+><b>Layouts</b><br
+/><ul><li><a href="http://dl.dropbox.com/u/19531278/hacklab%20reactor/plantconsole_layout.pdf">http://dl.dropbox.com/u/19531278/hacklab%20reactor/plantconsole_layout.pdf</a><br/><br
+/><br/><br
+/><br/><br
+/><br/><br
+/><br/><br
+/><br/><br
+/><br/><br
+/><br/><br
+/><br/><br
+/><br/><br
+/></li></ul
+></body>
+</html>

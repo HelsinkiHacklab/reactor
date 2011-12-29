@@ -1,0 +1,208 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="en-us" />
+<title>/hacklab-reactor-todo</title>
+</head>
+<body><b>Taskilista Helsinki Hacklabin reactori simulaattorille ( </b><a href="http://kirjoitusalusta.fi/hacklab-reactor"><b>http://kirjoitusalusta.fi/hacklab-reactor</b></a><b> )</b><br
+/><br
+/><b>Miten käyttää</b><br
+/><ul><li>Lisää taskit jotka pitää vielä tehdä</li
+><li>Merkitse nimimerkkisi taskin perään jos olet sitä tekemässä, ja muista päivittää statusta jos et ehdikkään tehdä sitä.</li
+><li>Viivaa taski yli kun se on tehty.</li
+><li>Taskit pitäisi priorisoida!<br/><br
+/></li></ul
+><b>Jaronekon läppäriltä muutokset talteen</b><br
+/><ul><li>Pushaamattomia (ja mahdollisesti committoimattomia) muutoksia, järjestäkää githubiin asti.<br/><br
+/></li></ul
+><b><i>Kirurginhatun kaavat!</i></b><br
+/><ul><li>A3 kokoisena tarkoitus tulostaa, leikata ja nitojalla kiinni, kuka löytää?<br/><br
+/></li></ul
+><b><i>Reaktorisimulaattori</i></b><br
+/><ul><li>AZ-5 -nappulalle suojakupu<ul><li>kääntökytkimen 'häntää' voi lyhentää viilaamalla, nyt menee yli laatikon reunojen</li
+><li>koko oli kai jotan 7x7 cm ja korkeus vaika 5 cm, mittaa!</li
+><li>laatikon kanteen tulostetaan isolla punainen "AЗ-5", reunoille mustakeltaa<br/><br
+/></li></ul
+></li></ul
+><b><i>Simulaatiosofta</i></b><br
+/><ul><li>33 polttoainekanavaa<ul><li>&nbsp;mallinnettu todella simppelisti, lämpö, paine ja neutronivuo?<ul><li>säätösauvat ovat reaktorin sisällä asteikolla 0..70 cm</li
+><li>vihreissä ja punaisissa kanavissa sauvat laskeutuvat ylhäältä sisään</li
+><li>keltaisissa ne nousevat alhaalta sisään</li
+><li>mittaritaulun servot kertovat sauvojen sijainnin, tässä vaiheessa ei simuloida vikoja</li
+><li>alussa sauvat sisällä ja reaktori on sammuksissa</li
+><li>jos sauvat vain vetää ulos, syntyy epästabiili tila, reaktori ylikuumenee ja räjähtää</li
+><li>kun kanavan virtaus/lämpö nousee kriittiseksi, se näkyy säätösauvan itsekseen liikkumisena jonka pejaaja voi havaita heiluvasta mittarista</li></ul
+></li
+><li>valotaulussa palaa kanavan kohdalla valo, jos sen virtaus ylittää jonkin raja-arvon,&nbsp; 50% maksimitehoon verrattuna?</li></ul
+></li
+><li>4 neutronivuon mittauspistettä<ul><li>&nbsp;kertovat neutronivuon vihreillä ledeillä ja lämpötilan punaisilla ledeillä. Asteikko 0..4 lediä molemmissa</li
+><li>Tässä vaiheessa nämä ovat ainoat indikaattorit pelaajalle reaktorin tilasta</li></ul
+></li
+><li>kolmitilakytkimillä säätösauvoja ajetaan sisään ja ulos reaktorista, tässä vaiheessa mikään ei hajoa vaikka kytkin jäisi siirtoasentoon eikä sähköjärjestelmä ylikuormitu vaikka kaikkia liikuttaisi yhtä aikaa</li
+><li>AZ-3 kytkimellä ohitetaan edelliset ja sauvat ajetaan kaikki sisään<ul><li>punainen valo vilkkuu</li
+><li>kun sauvat ovat kaikki sisällä vihreä valo sammuu ja punainen jää päälle, reaktori on nyt hätäsammutettu<ul><li>tähän mallinnetaan sitten Tsernobyl tyylinen räjähdys, jos hätäsammutus tehdään liian kuumalle reaktorille tms.</li></ul
+></li
+><li>hätäsammutus ajetaan aina loppuun asti vaikka kytkin olisikin heti käännetty off-asentoon</li
+><li>reaktorin voi sammuttaa myös normaalisti vain ajamalla sauvat sisään yksittäiskytkimillä</li></ul
+></li
+><li>paneelissa oleva musta painokykin voisi olla se jolla sauvoja liikutetaan<ul><li>eli asentokytkimet haluttuun asentoon ja tätä painamalla ne liikkuvat</li
+><li>kaikki pysähtyy jos kytkimiin koskee sauvojen liikkumisen aikana; sulake ns. palaa&nbsp; ja joutuu odottamaan 5 s. tms<br/><br
+/><br/><br
+/></li></ul
+></li></ul
+><b><u>Taskeja</u></b><br
+/><ul><li><b>Tavaraa</b><ul><li>USB-hubi (powered)<ul><li>Näitå pitäis olla läbillä, tarvitaan useampi (joku 10-12 porttia yhteensä olis varmaan hyvä kun siinä läppärissa on vaan 2...)</li
+><li>Lisäksi tarvitaan virtaliittimet näille (lähteillä ei niin väliä, siita AT:sta saa enemmän kuin riittävästi)</li></ul
+></li
+><li><s>standoffeja joilla ardut siistiski kiinni: </s><a href="http://www.partco.biz/verkkokauppa/product_info.php?products_id=10133"><s>http://www.partco.biz/verkkokauppa/product_info.php?products_id=10133</s></a><ul><li><s>Jaroneko tuo partcosta</s></li></ul
+></li
+><li><b><s>Asustus: Valkoinen takki</s>, hassu hattu</b><ul><li><a href="http://www.iaea.org/newscenter/focus/images/e1-420x300.jpg">http://www.iaea.org/newscenter/focus/images/e1-420x300.jpg</a></li
+><li>lisää&nbsp; hacknas/Projects/Alt2011/Concept Art</li
+><li><a href="http://tuotteet.etra.fi/main.html?nodeUid=13788404&catalogUid=2224442&parents=%7c2235437%7c13788264%7c13788395&path=1">http://tuotteet.etra.fi/main.html?nodeUid=13788404&amp;catalogUid=2224442&amp;parents=%7c2235437%7c13788264%7c13788395&amp;path=1</a></li
+><li>Paikkoja läbin lähistöllä: <a href="http://www.hejco.com/">http://www.hejco.com/</a> <a href="http://www.fristads.com/">http://www.fristads.com/</a> ja <a href="http://www.imagewear.eu/">http://www.imagewear.eu/</a></li></ul
+></li
+><li><s>*pitkä* USB-jatkokaapeli (esim mallia "aktiivinen"), tulee ohjauskoneelta reaktorikannen ardulle (joka ohjaa savua ja kannen ledejä)</s></li
+><li><s>lisää yksirivistä piikkirimaa ?</s><ul><li><s>Läbillä olleet loppu</s></li
+><li><s>jaroneko tuo partcosta</s></li></ul
+></li
+><li><s>Järeitä 5V powereita</s><ul><li><s>Rambo toi vanhan AT (oikealla virtakytkimellä :) lähteen josta saa 16A 5V virtaa.</s></li></ul
+></li
+><li><b><s>Pohjamaalia</s></b><s>,valkoista tai harmaata, lattiaväri on plus, noin 4 m2</s> Ostettu</li
+><li><b>Kasvomaalia</b>, mallia maastoväri tjms, kuvauksia varten.&nbsp; Värillä ei väliä.&nbsp; Somivärikin käy.</li
+><li><s>roudausväline</s><ul><li>rambo lainaa landikan</li></ul
+></li
+><li><s>Laptop tai pöytäkone ohjaamaan simulaatiota, ei saa olla ihan kaput.</s><ul><li>Linux (Debian tai Ubuntu ja GUI),&nbsp;</li
+><li>Jaronekon läppäri otetaan tähän käyttöön</li></ul
+></li
+><li><s>Toinen kone ohjaamaan valvontamonitoria ja puhelinta</s><ul><li>Sama Jaronekon läppäri hoitaa, sille on lainassa scan-konvertteri jolla saatiin vihdoin monitorille asti kuva</li></ul
+></li
+><li><b><s>Vaahtomuovia tanssilattian pohjalle</s></b><ul><li><s>UUSI speksi: on 3 cm paksuus ja 2 m^2 tarvitaan (0.2m*0.2m*7*7=1.96m2)</s><ul><li><s>rambo hakee la 2011.10.15 kunhan herää. </s>haettu 1.45m*1.45m pala</li></ul
+></li></ul
+></li
+><li><b><s>Konsolit tarvitsevat kantokahvat</s></b><s>, labilla on kaksi järeätä.&nbsp; Eli yhteensä ostettava 4kpl</s><ul><li><s>Esim: </s><a href="http://www.biltema.fi/osteri/osteri.cgi?sivu=skriptisivut/index_kauppa.htm&linkki=86285.htm&tuote=86285"><s>http://www.biltema.fi/osteri/osteri.cgi?sivu=skriptisivut/index_kauppa.htm&amp;linkki=86285.htm&amp;tuote=86285</s></a><s> (~3€ / 2kpl) =&gt; 6€</s></li></ul
+></li
+><li><s>Äänentoistoa tarvitaan vielä jonkin verran</s><ul><li>on "riittävä" subbari ja Jaronekolta lainaan myös diskantit ja niille vahvistin</li></ul
+></li></ul
+></li
+><li><b>Suunniteltavaa</b><ul><li>Simulaation päätyttyä pelaajat saavat joko jonkun rintamerkin / mitallin / diplomin reaktorin ajamisesta, tai yksisuuntaisen junalipun siperiaan jos räjäyttivät reaktorin tai eivät tuottaneet vaadittavaa kiintiötä (tai molemmat)<ul><li>Diplomi &amp; lippu ovat helpoimpia, printtailaan vaan etukäteen</li
+><li><s>Mitallin voi ehkä 3D tulostaa, mutta jälki ei kovin hyvää, ja aika kevyt</s><ul><li><s>Tai voi käyttä polymorphia, mutta aika muovisen tuntuista</s><ul><li>-&gt; joten käytetään neukkifilosofiaa, ja palkitaan halvimmalla tavalla -&gt; paperidiplomi</li></ul
+></li></ul
+></li></ul
+></li
+><li>Reaktorin manuaali<ul><li>Paljon venäjää konekirjoitusfontilla kuluneella paperilla, suttuisia diagrammeja, ja moniaskelisia ohjeita<ul><li>Bonus jos oikeasti kuvaa oikeata laitetta<ul><li>Lisäbonus jos ohjeet toimivat</li></ul
+></li></ul
+></li></ul
+></li
+><li>Mainosjuliste Helsinki hacklabista ja reaktorisimulaattorista, neuvostopropagandajulistetyyliin</li
+><li><s>Helsinki Hacklab -kyrillinen stencil, jolla voidaan sitten sprayailla/maalailla sitä takkeihin yms.</s><ul><li><s>suovulalla mallit tulostusta odottamassa</s></li
+><li><s>sitten joku tarkkakätinen saa ne askarteluveitsellä leikellä auki</s></li></ul
+></li></ul
+></li
+><li><b>Kuvattavaa</b><ul><li>Kaikki videopätkät<ul><li><a href="http://kirjoitusalusta.fi/hacklab-reactor-video"><u>http://kirjoitusalusta.fi/hacklab-reactor-video</u></a></li></ul
+></li
+><li>Netistä vanhaa neuvostopropagandaa ydinvoimasta, tai muuten vaan teollisuudesta</li></ul
+></li
+><li><b>Rakennettavaa</b><ul><li><s>Savulevitysputkien päihin "PC-flektit" (imee savua putkesta ulos), johdot tuodaan savunsyötön luokse jossa plussat saa mennä yhteen mutta maita pitää voida kytkeä PWM:llä</s><ul><li><s>4 flektiä voi purkaa mediahuoneessa olevasta flektimatriisista</s><ul><li><s>toimii ilmankin tarpeeksi hyvin</s></li></ul
+></li></ul
+></li
+><li><s>servo power-rail x 2 (33 servoa reaktoripaneelissa ja 12? toisessa)</s><ul><li><s>dist hoitanut</s></li></ul
+></li
+><li>Puhelinluuri-äänikortti sovitin<ul><li>D9-LIITIN:<ul><li>1,2 (kel,vih) = kuuloke (n. 120 ohm, voisi toimia kuuloke-outissa, vih,rus)</li
+><li>3,4,5 (sin,mus,har) = on-hook, 3-4 luuri paikallaan, 4-5 luuri paikoiltaan (kytkin hieman pykivä, mutta putsattuna tuntuisi toimivan kohtuullisen luotettavasti)</li
+><li>6,9 (pun,rus) = push-to-talk kytkin luurissa (sin,mus)</li
+><li>7 (vio) NC</li
+><li>8,9 (val,rus) = mikrofoni (dynaaminen, voisi toimia PC microphone in, val,val)</li
+><li>luurikytkimen voisi johdottaa mikrofonista irralliseksi välille 6,7 siirtämällä kuulokkeesta tuleva musta johto D-liittimen pinnistä 9 pinniin 7? (siirretty - t)</li
+><li>kytkentäkaavio suovulan lokerossa</li></ul
+></li
+><li><s>Rakenna rasia jossa D9-liitin (tämmöinen saattaa jopa varastosta löytyä :)</s><ul><li><s>3.5 plugit audio line-in ja mic-out -&gt; tietokoneeseen</s></li
+><li><s>3 pinninen GND, on-hook, push-to-talk -&gt; arduinoon</s></li
+><li>tehty: punainen - mikrofoni, musta - kuuloke, latta - kytkimet (pun/ruskea - hook, musta/harmaa ptt (vaatii siirron 9-&gt;7))<ul><li>tämä muutos tehty Nokia puhelimeen ja sen liitäntäsovittimeen, noksun pinout<ul><li>1,2 kuuloke</li
+><li>3,4,5 hook switch (4 common)</li
+><li>6,7 ptt</li
+><li>8,9 mic</li></ul
+></li
+><li>sovittimen pinout<ul><li>kuulokeliitin musta, mu/ke</li
+><li>mikkiliitin punanen, mu/ke</li
+><li>arskaliitin luettavaks esim&nbsp;<ul><li>ru common</li
+><li>pu hook</li
+><li>mu hook</li
+><li>ha ptt<br/><br
+/></li></ul
+></li></ul
+></li></ul
+></li></ul
+></li></ul
+></li
+><li><s>Geigermittari - Rambo on rakentamassa</s><ul><li><a href="https://github.com/HelsinkiHacklab/reactor/tree/master/software/geiger"><s>https://github.com/HelsinkiHacklab/reactor/tree/master/software/geiger</s></a></li
+><li><s>suovula tekee laatikon;kun ehtii; ei ehtinyt, pikkuapulaiset paskartelee parhailllaan</s></li></ul
+></li
+><li>Savukoneen arduohjaus - rambo hoitaa<ul><li>menee olemassaolevalla koodilla, pitää vaan tehdä sovitinpalikka jolla saadaan savukoneen "ready" digital-in:niin ja ohjaus PWM:llä (10V joten hiukan vaatii sovittamista)<ul><li><a href="http://www.arduino.cc/cgi-bin/yabb2/YaBB.pl?num=1216381158">http://www.arduino.cc/cgi-bin/yabb2/YaBB.pl?num=1216381158</a>&nbsp;</li
+><li>andrew tekee palikkaa</li></ul
+></li></ul
+></li
+><li><s>Mahdollisesti lisää 595-breakoutteja (voi olla että nykyisistä kaikki paitsi se eka [tunnistaa vihreästä pin-headerista oikealla] on sutta ja sekundaa [kärvänny piiri tjsp])</s><ul><li><s>korjattu 3 (x3) piiriä vanhoista, neljäs työn alla - rambo</s></li
+><li><s>tulossa lisää 2x4 piirin 595-breakoutteja -rambo</s></li></ul
+></li
+><li>LED segment display power levelille - Hans tekemässä</li
+><li><s>Kommunikaatiokonsoli</s><ul><li><s>Puhelimen asennus</s></li
+><li><s>TV-ruudun upotus</s><ul><li><s>nassissa on hyvä mallikuva, kysy suovulalta</s></li></ul
+></li></ul
+></li
+><li>Konsolit<ul><li><s>Konsolien maalaus</s><ul><li>paikkailuja ja koristeluja sitten vaikka perjantaina akryyliväreillä</li></ul
+></li
+><li>Mittarit<ul><li>arDuBUS tukee tukee nyt servojen microsekunttiohjausta, eli sen kummemempaa kalibraatiota ei tällä tasolla tarvitse</li
+><li>servojen nimeäminen<ul><li>reaktorissa polttoainekanavan mukaan: servo1212 ?</li
+><li>voimalassa servo123 ?</li></ul
+></li></ul
+></li
+><li><s>Reaktorin valotaulu</s><ul><li><s>kirjahyllystä löytyy A3-template jolla voi 37 lediä porata 2-3 mm levyyn</s></li
+><li><s>muistaakseni 43 mm gridi</s></li
+><li><s>zzornilta ledit joihin voi johdot juottaa</s></li></ul
+></li
+><li><s>Nappien kytkeminen arduinoon jotenkin</s><ul><li><s>reaktorikonsolin 33-kytkintä johdotettu?</s></li></ul
+></li
+><li><s>Flowchart voimalasta -&nbsp; Hans tekee</s></li></ul
+></li
+><li><s>Reaktorikansi</s><ul><li><s>Reaktorikannen osien sirkkelöiminen</s></li
+><li><s>Reaktorisauvojen pätkiminen ja kuminauhaputkien poraaminen</s></li
+><li><s>Palikoiden kokoonpano</s></li
+><li><s>Maalaus</s><ul><li><s>palikat ensin hiomakoneella, 100 paperilla tms.</s></li
+><li><s>pohjamaalipurkki olohuoneessa</s><ul><li><s>&nbsp;kannen yläpinnat tärkeimmät, sivulevy jos/kun maalia riittää</s></li></ul
+></li></ul
+></li
+><li>K<s>ehyksen sisäpinnoille pahvit ja niiden maalaus</s></li
+><li><s>Laitetaan kehys lattialle kasaan ja maalataan stencilillä numerot</s></li
+><li><s>Valitaan neljä huonointa palikkaa ja tehdään näistä neutronivuon mittauspisteitä</s><ul><li><s>joku levy päälle ja siihen kaksi pitkulaista koloa kuten pienoismallissa</s></li
+><li><s>levyt joko kaikki sinisiksi tai siten kuten pienoismallissa jotta tulee väriä</s></li
+><li><s>stencilillä koordinaatit näiden neljän palikan kanteen, värinä varmaan musta</s><ul><li><s>koordinaatit 21·12, 20·21, 12·11 ja 11·20</s></li></ul
+></li></ul
+></li></ul
+></li
+><li><s>Led matriisinäyttö, ledien juottamista, Hans voi selittää</s><ul><li><s>HUOM: 595:lla ei voi charlieplexata (koska HiZ:taan saa vain koko rekisterin kerrallaan)</s></li></ul
+></li></ul
+></li
+><li><b>Softat</b> (kommunikoivat DBUS:in yli)<ul><li>DBUS komento APIn suunnittelu<ul><li><a href="http://kirjoitusalusta.fi/hacklab-reactor-API"><u>http://kirjoitusalusta.fi/hacklab-reactor-API</u></a></li></ul
+></li
+><li>Arduohjaus<ul><li>Low-level -ohjaus aika hyvällä mallilla: <a href="https://github.com/HelsinkiHacklab/reactor/tree/master/software/arDuBUS">https://github.com/HelsinkiHacklab/reactor/tree/master/software/arDuBUS</a></li></ul
+></li
+><li>Ardusoftat<ul><li>Low-level -ohjauksen sketchi ja kirjastot aika hyvällä mallilla: <a href="https://github.com/HelsinkiHacklab/reactor/tree/master/software/arDuBUS/sketch">https://github.com/HelsinkiHacklab/reactor/tree/master/software/arDuBUS/sketch</a></li></ul
+></li
+><li>Video-ohjaus komponentti</li
+><li>Musiikki-ohjaus komponentti</li
+><li>Simulaation hallinta (ja eventtigenerointi?)<ul><li>Tulisi mahdollistaa start, pause/resume, stop, adjust difficulty, ja mahdollisesti save / load to/from save slot toiminnot</li></ul
+></li
+><li>Simulaatiosofta --Hans kirjoittelee</li
+><li>Softan hardaus (kunhan se ensin toimii muuten)<ul><li>automaattiset restartit virheiden jälkeen jne</li
+><li>DBUS objektin nimen lukeminen sarjan yli boardilta (tai joku tapa bindata linuxissa se sarjaportin nimi siten että sama device_id saa aina saman porttinimen [ala mac])<ul><li>lindi konfas tähän jonkun ratkasun - t<br/><br
+/><br/><br
+/><br/><br
+/><br/><br
+/><br/><br
+/></li></ul
+></li></ul
+></li></ul
+></li></ul
+></body>
+</html>

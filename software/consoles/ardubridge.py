@@ -88,9 +88,11 @@ class ardubus_console(ardubus.ardubus):
 
     def map_called_method(self, offset, vmin, vmax, omin, omax, method):
          scale = float(omax - omin) / float(vmax - vmin)
+         print "scale=%s" % scale
          def _m(index, value, *args):
-             #print index, offset, value, omin, omax, vmin, vmax, method
-             method(offset, int( omin + (value - vmin)*scale), *args)
+             scaled_value = int( omin + (value - vmin)*scale)
+             print "index=%d, offset=%d, value=%d, omin=%d, omax=%d, vmin=%d, vmax=%d, method=%s, scaled_value=%d" % (index, offset, value, omin, omax, vmin, vmax, method, scaled_value)
+             method(offset, scaled_value, *args)
          return _m
 
     def make_it(self, insignal, method):

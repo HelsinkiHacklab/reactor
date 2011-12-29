@@ -130,7 +130,7 @@ class ardubus(dbus.service.Object):
             if (self.input_buffer[:2] == 'RA'):
                 self.aio_report(ord(input_buffer[2]), int(input_buffer[3:7], 16), int(input_buffer[6:15], 16), self.object_name)
                 pass
-        except IndexError,e:
+        except Exception,e:
             print "message_received: Got exception %s" % e
             # Ignore indexerrors, they just mean we could not parse the command
             pass
