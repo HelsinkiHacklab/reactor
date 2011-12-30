@@ -16,6 +16,7 @@ class Controller(QtCore.QObject):
     @QtCore.Slot(QtCore.QObject)
     def switch_changed(self, switch_instance):
         print "switch_changed called with id: %s, state: %s" % (switch_instance.property('id'), switch_instance.property('value'))
+        print "switch_instance: %s" % repr(switch_instance)
 
 app = QtGui.QApplication(sys.argv)
 
