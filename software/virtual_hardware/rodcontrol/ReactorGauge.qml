@@ -12,11 +12,13 @@ Item
     function setPosition(pos)
     {
         value = pos
+        valueText.text = value
     }
-    function setUSec(value)
+    function setUSec(pos)
     {
-        uValue = value
-        
+        uValue = pos
+        value = uValue-1000*(1000/255)
+        valueText.text = uValue + "uS"
     }
 
     Rectangle
@@ -52,8 +54,12 @@ Item
                     height: parent.height*0.9/2
                     color: "black"
                     y: face.y+face.height/2-height
-                    //transformOrigin: bottom
-                    rotation: 180/256*reactorGauge.value
+                    transform: Rotation
+                    {
+                        origin.x: dial.width/2
+                        origin.y: dial.height
+                        angle: 180/255*reactorGauge.value
+                    }
                 }
             }
             Rectangle
