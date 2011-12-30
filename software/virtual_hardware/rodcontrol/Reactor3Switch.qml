@@ -6,13 +6,17 @@ Item
     //width: 30; height: 30
     id: reactor3Switch
     
+    property int upPin: 0
+    property int downPin: 0
     property int value: 0
+    property int prevValue: 0
     function up()
     {
         if (value < 1)
         {
             value = value+1
             controller.switch_changed(this)
+            prevValue = value
         }
     }
     function down()
@@ -21,6 +25,7 @@ Item
         {
             value = value-1
             controller.switch_changed(this)
+            prevValue = value
         }
     }
     

@@ -19,7 +19,8 @@ Rectangle
                     width: 30; height: 30
                     Reactor3Switch
                     {
-                        id: switch1
+                        upPin: 1
+                        downPin: 2
                     }
                 }
                 Rectangle

@@ -15,8 +15,21 @@ class Controller(QtCore.QObject):
 
     @QtCore.Slot(QtCore.QObject)
     def switch_changed(self, switch_instance):
-        print "switch_changed called with id: %s, state: %s" % (switch_instance.property('id'), switch_instance.property('value'))
-        print "switch_instance: %s" % repr(switch_instance)
+        # Switched to center
+        if (int(switch_instance.property('value')) == 0):
+            if (int(switch_instance.property('prevValue')) == 1):
+                print "pin %d went high (ie switch stopped pulling down)" % int(switch_instance.property('upPin'))
+            else:
+                print "pin %d went high (ie switch stopped pulling down)" % int(switch_instance.property('downPin'))
+            return
+        # Switched up/down
+        if (int(switch_instance.property('value')) == 1):
+            print "pin %d went low" % int(switch_instance.property('upPin'))
+        else:
+            print "pin %d went low" % int(switch_instance.property('downPin'))
+        return
+
+        
 
 app = QtGui.QApplication(sys.argv)
 
