@@ -21,14 +21,26 @@ Rectangle
         {
             width: parent.width; height: parent.height/3
             color: "red"
-            Text
+            Grid
             {
-                anchors.centerIn: parent
-                text: "gauges panel placeholder"
-            }
-            ReactorGauge
-            {
-                objectName: "servo1"
+                id: gaugeGrid
+                width: parent.width; height: parent.height
+                columns: 7
+                rows: 5
+                Repeater
+                {
+                    model: 32
+                    Rectangle
+                    {
+                        width: gaugeGrid.width/gaugeGrid.columns
+                        height: gaugeGrid.height/gaugeGrid.rows
+                        color: "transparent"
+                        ReactorGauge
+                        {
+                            objectName: "servo" + index
+                        }
+                    }
+                }
             }
         }
         Rectangle
