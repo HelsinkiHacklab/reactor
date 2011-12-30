@@ -26,6 +26,10 @@ Rectangle
                 anchors.centerIn: parent
                 text: "gauges panel placeholder"
             }
+            ReactorGauge
+            {
+                id: servo1
+            }
         }
         Rectangle
         {
