@@ -3,12 +3,11 @@ import QtQuick 1.0
 Rectangle
 {
     id: mainContainer
-    objectName: "mainContainer"
     width: 300; height: 800
     Column
     {
         id: foo
-        objectName: "foo"
+        //objectName: "foo"
         width: parent.width; height: parent.height
         Rectangle
         {
@@ -32,7 +31,7 @@ Rectangle
             ReactorGauge
             {
                 id: servo1
-                objectName: "servo1"
+                //objectName: "servo1"
             }
         }
         Rectangle
