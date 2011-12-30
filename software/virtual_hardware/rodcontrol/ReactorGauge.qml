@@ -38,7 +38,7 @@ Item
             {
                 id: face
                 anchors.horizontalCenter: parent.horizontalCenter
-                width: (parent.width<parent.height?parent.width:parent.height) * 0.85
+                width: (parent.width<parent.height?parent.width:parent.height) * 0.75
                 height: width
                 color: "white"
                 border.color: "black"
@@ -64,13 +64,13 @@ Item
             }
             Rectangle
             {
-                width: parent.width; height: parent.height*0.15
+                width: parent.width; height: parent.height*0.25
                 color: "transparent"
                 Text
                 {
                     id: valueText
                     anchors.centerIn: parent
-                    font.pixelSize: parent.height/3
+                    font.pixelSize: parent.height/2
                     text: reactorGauge.value
                 }
             }

@@ -3,13 +3,13 @@ import QtQuick 1.0
 Rectangle
 {
     id: mainContainer
-    width: 300; height: 800
+    width: 768; height: 1024
     Column
     {
         width: parent.width; height: parent.height
         Rectangle
         {
-            width: parent.width; height: parent.height/3
+            width: parent.width; height: parent.height/4
             color: "lightgreen"
             Text
             {
@@ -19,7 +19,7 @@ Rectangle
         }
         Rectangle
         {
-            width: parent.width; height: parent.height/3
+            width: parent.width; height: parent.height/4*2
             color: "red"
             Grid
             {
@@ -45,7 +45,7 @@ Rectangle
         }
         Rectangle
         {
-            width: parent.width; height: parent.height/3
+            width: parent.width; height: parent.height/4
             RodSwitches{}
         }
     }
