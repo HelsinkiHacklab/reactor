@@ -7,16 +7,28 @@ Rectangle
     // Rows
     Column
     {
+        width: parent.width; height: parent.height
         // Row 1
         Rectangle
         {
-            width: switches.width; height: 30
+            width: parent.width; height: parent.height/7
             Row
             {
+                width: parent.width; height: parent.height
                 spacing: 0
                 Rectangle
                 {
-                    width: 30; height: 30
+                    width: parent.width/7; height: parent.height
+                    color: "black"
+                }
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    color: "black"
+                }
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
                     Reactor3Switch
                     {
                         upPin: 1
@@ -25,107 +37,446 @@ Rectangle
                 }
                 Rectangle
                 {
-                    width: 30; height: 30
-                    color: "black"
-                }
-                Rectangle
-                {
-                    width: 30; height: 30
-                    color: "black"
-                }
-                Rectangle
-                {
-                    width: 30; height: 30
-                    Text
+                    width: parent.width/7; height: parent.height
+                    Reactor3Switch
                     {
-                        text: "1"
-                        font.pointSize: 15
+                        upPin: 3
+                        downPin: 4
                     }
                 }
                 Rectangle
                 {
-                    width: 30; height: 30
-                    Text
+                    width: parent.width/7; height: parent.height
+                    Reactor3Switch
                     {
-                        text: "2"
-                        font.pointSize: 15
+                        upPin: 5
+                        downPin: 6
                     }
                 }
                 Rectangle
                 {
-                    width: 30; height: 30
-                    Text
-                    {
-                        text: "3"
-                        font.pointSize: 15
-                    }
-                }
-                Rectangle
-                {
-                    width: 30; height: 30
+                    width: parent.width/7; height: parent.height
                     color: "black"
                 }
                 Rectangle
                 {
-                    width: 30; height: 30
+                    width: parent.width/7; height: parent.height
                     color: "black"
                 }
             }
         }
-        spacing: 0
-        /*
-        Repeater 
-        {
-            id: rowrepeater
-            model: 7
-            Rectangle
-            {
-                width: switches.width; height: 30
-                Row
-                {
-                    spacing: 0
-                    Repeater 
-                    {
-                        model: 7
-                        id: columnrepeater
-                        Rectangle
-                        {
-                            width: 30; height: 30
-                            Text
-                            {
-                                text: index
-                                font.pointSize: 15
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        */
-    }
-    
 
-    /*
-    Grid
-    {
-        x: 5; y: 5
-        rows: 5; columns: 5; spacing: 10
-        Repeater 
+        // Row 2
+        Rectangle
         {
-            model: 24
-            Rectangle
+            width: parent.width; height: parent.height/7
+            Row
             {
-                width: 70; height: 70
-                color: "lightgreen"
-                Text
+                width: parent.width; height: parent.height
+                spacing: 0
+                Rectangle
                 {
-                    text: index
-                    font.pointSize: 30
-                    anchors.centerIn: parent
+                    width: parent.width/7; height: parent.height
+                    color: "black"
+                }
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    Reactor3Switch
+                    {
+                        upPin: 7
+                        downPin: 8
+                    }
+                }
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    Reactor3Switch
+                    {
+                        upPin: 9
+                        downPin: 10
+                    }
+                }
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    Reactor3Switch
+                    {
+                        upPin: 11
+                        downPin: 12
+                    }
+                }
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    Reactor3Switch
+                    {
+                        upPin: 13
+                        downPin: 14
+                    }
+                }
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    Reactor3Switch
+                    {
+                        upPin: 15
+                        downPin: 16
+                    }
+                }
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    color: "black"
                 }
             }
         }
-    }
-    */
 
+        // Row 3
+        Rectangle
+        {
+            width: parent.width; height: parent.height/7
+            Row
+            {
+                width: parent.width; height: parent.height
+                spacing: 0
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    Reactor3Switch
+                    {
+                        upPin: 17
+                        downPin: 18
+                    }
+                }
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    Reactor3Switch
+                    {
+                        upPin: 19
+                        downPin: 20
+                    }
+                }
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    Reactor3Switch
+                    {
+                        upPin: 21
+                        downPin: 22
+                    }
+                }
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    Reactor3Switch
+                    {
+                        upPin: 23
+                        downPin: 24
+                    }
+                }
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    Reactor3Switch
+                    {
+                        upPin: 25
+                        downPin: 26
+                    }
+                }
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    Reactor3Switch
+                    {
+                        upPin: 27
+                        downPin: 28
+                    }
+                }
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    Reactor3Switch
+                    {
+                        upPin: 29
+                        downPin: 30
+                    }
+                }
+            }
+        }
+
+        // Row 4
+        Rectangle
+        {
+            width: parent.width; height: parent.height/7
+            Row
+            {
+                width: parent.width; height: parent.height
+                spacing: 0
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    Reactor3Switch
+                    {
+                        upPin: 31
+                        downPin: 32
+                    }
+                }
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    Reactor3Switch
+                    {
+                        upPin: 33
+                        downPin: 34
+                    }
+                }
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    Reactor3Switch
+                    {
+                        upPin: 35
+                        downPin: 36
+                    }
+                }
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    Reactor3Switch
+                    {
+                        upPin: 37
+                        downPin: 38
+                    }
+                }
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    Reactor3Switch
+                    {
+                        upPin: 39
+                        downPin: 40
+                    }
+                }
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    Reactor3Switch
+                    {
+                        upPin: 41
+                        downPin: 42
+                    }
+                }
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    Reactor3Switch
+                    {
+                        upPin: 43
+                        downPin: 44
+                    }
+                }
+            }
+        }
+
+        // Row 5
+        Rectangle
+        {
+            width: parent.width; height: parent.height/7
+            Row
+            {
+                width: parent.width; height: parent.height
+                spacing: 0
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    Reactor3Switch
+                    {
+                        upPin: 45
+                        downPin: 46
+                    }
+                }
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    Reactor3Switch
+                    {
+                        upPin: 47
+                        downPin: 48
+                    }
+                }
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    Reactor3Switch
+                    {
+                        upPin: 49
+                        downPin: 50
+                    }
+                }
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    Reactor3Switch
+                    {
+                        upPin: 51
+                        downPin: 52
+                    }
+                }
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    Reactor3Switch
+                    {
+                        upPin: 53
+                        downPin: 54
+                    }
+                }
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    Reactor3Switch
+                    {
+                        upPin: 44
+                        downPin: 56
+                    }
+                }
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    Reactor3Switch
+                    {
+                        upPin: 57
+                        downPin: 58
+                    }
+                }
+            }
+        }
+
+        // Row 6
+        Rectangle
+        {
+            width: parent.width; height: parent.height/7
+            Row
+            {
+                width: parent.width; height: parent.height
+                spacing: 0
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    color: "black"
+                }
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    Reactor3Switch
+                    {
+                        upPin: 59
+                        downPin: 60
+                    }
+                }
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    Reactor3Switch
+                    {
+                        upPin: 61
+                        downPin: 62
+                    }
+                }
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    Reactor3Switch
+                    {
+                        upPin: 63
+                        downPin: 64
+                    }
+                }
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    Reactor3Switch
+                    {
+                        upPin: 65
+                        downPin: 66
+                    }
+                }
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    Reactor3Switch
+                    {
+                        upPin: 67
+                        downPin: 68
+                    }
+                }
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    color: "black"
+                }
+            }
+        }
+
+        // Row 7
+        Rectangle
+        {
+            width: parent.width; height: parent.height/7
+            Row
+            {
+                width: parent.width; height: parent.height
+                spacing: 0
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    color: "black"
+                }
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    color: "black"
+                }
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    Reactor3Switch
+                    {
+                        upPin: 69
+                        downPin: 70
+                    }
+                }
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    Reactor3Switch
+                    {
+                        upPin: 71
+                        downPin: 72
+                    }
+                }
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    Reactor3Switch
+                    {
+                        upPin: 73
+                        downPin: 74
+                    }
+                }
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    color: "black"
+                }
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    color: "black"
+                }
+            }
+        }
+    // End column
+    }
 }
