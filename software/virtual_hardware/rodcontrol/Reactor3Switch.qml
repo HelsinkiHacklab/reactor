@@ -12,6 +12,7 @@ Item
         if (value < 1)
         {
             value = value+1
+            controller.switch_changed(this)
         }
     }
     function down()
@@ -19,6 +20,7 @@ Item
         if (value > -1)
         {
             value = value-1
+            controller.switch_changed(this)
         }
     }
     
