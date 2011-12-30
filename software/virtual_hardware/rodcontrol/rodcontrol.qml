@@ -11,11 +11,7 @@ Rectangle
         {
             width: parent.width; height: parent.height/4
             color: "lightgreen"
-            Text
-            {
-                anchors.centerIn: parent
-                text: "status lights panel placeholder"
-            }
+            LidLights{}
         }
         Rectangle
         {
