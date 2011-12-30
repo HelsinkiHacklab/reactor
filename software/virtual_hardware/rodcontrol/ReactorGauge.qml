@@ -27,6 +27,7 @@ Item
 
 
         // This is actually a circle....
+        /*
         Rectangle
         {
             width: parent.width<parent.height?parent.width:parent.height
@@ -38,7 +39,19 @@ Item
             Text
             {
                 anchors.centerIn: parent
-                color: "red"
+                color: "black"
+                text: "Boom"
+            }
+        }
+        */
+        Circle
+        {
+            r: 40
+            color: "red"
+            Text
+            {
+                anchors.centerIn: parent
+                color: "black"
                 text: "Boom"
             }
         }
