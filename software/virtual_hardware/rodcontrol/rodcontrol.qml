@@ -7,6 +7,8 @@ Rectangle
     width: 300; height: 800
     Column
     {
+        id: foo
+        objectName: "foo"
         width: parent.width; height: parent.height
         Rectangle
         {
