@@ -17,8 +17,8 @@ Item
     function setUSec(pos)
     {
         uValue = pos
-        value = uValue-1000*(1000/255)
-        valueText.text = uValue + "uS"
+        value = (uValue-1000)*(255/1000)
+        valueText.text = uValue + "us"
     }
 
     Rectangle

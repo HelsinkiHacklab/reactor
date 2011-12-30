@@ -61,8 +61,8 @@ class Proxy(QtCore.QObject):
 
     def update_gauge(self):
         import random
-        #self.qml_root.findChild(QtDeclarative.QDeclarativeItem, "servo1").setUSec(random.randint(1000,2000))
-        self.qml_root.findChild(QtDeclarative.QDeclarativeItem, "servo1").setPosition(random.randint(0,255))
+        self.qml_root.findChild(QtDeclarative.QDeclarativeItem, "servo1").setUSec(random.randint(1000,2000))
+        #self.qml_root.findChild(QtDeclarative.QDeclarativeItem, "servo1").setPosition(random.randint(0,255))
 
 if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)
