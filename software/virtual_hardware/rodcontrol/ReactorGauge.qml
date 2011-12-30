@@ -40,7 +40,7 @@ Item
                 anchors.horizontalCenter: parent.horizontalCenter
                 width: (parent.width<parent.height?parent.width:parent.height) * 0.85
                 height: width
-                color: "red"
+                color: "white"
                 border.color: "black"
                 border.width: 1
                 radius: width/2
@@ -50,7 +50,7 @@ Item
                 {
                     anchors.horizontalCenter: parent.horizontalCenter
                     id: dial
-                    width: 5
+                    width: ((face.width/100)<1)?1:face.width/100
                     height: parent.height*0.9/2
                     color: "black"
                     y: face.y+face.height/2-height
