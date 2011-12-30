@@ -7,7 +7,7 @@ Rectangle
     Column
     {
         id: foo
-        //objectName: "foo"
+        objectName: "foo"
         width: parent.width; height: parent.height
         Rectangle
         {
@@ -31,7 +31,7 @@ Rectangle
             ReactorGauge
             {
                 id: servo1
-                //objectName: "servo1"
+                objectName: "servo1"
             }
         }
         Rectangle
