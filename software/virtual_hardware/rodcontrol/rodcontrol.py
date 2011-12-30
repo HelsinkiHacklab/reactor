@@ -2,7 +2,26 @@
 
 """Rod control panel"""
 
-import sys
+import sys, os
+
+# Add arDuBUS path
+# Don't do this yet, I have no dbus on my mac
+#ardubus_module_dir = os.path.join(os.path.dirname( os.path.realpath( __file__ ) ),  '..', '..', 'arDuBUS')
+#if os.path.isdir(ardubus_module_dir):                                       
+#    sys.path.append(ardubus_module_dir)
+#import ardubus as ardubus_real
+#
+#class ardubus(ardubus_real.ardubus):
+#    def __init__(self, bus, object_name):
+#        # Fake config for now
+#        import ConfigParser
+#        config = ConfigParser.SafeConfigParser()
+#        ardubus_real.ardubus.__init__(self, bus, object_name, config)
+#
+#    def initialize_serial(self):
+#        print "Dummy serial"
+#        pass
+
 
 from PySide import QtCore
 from PySide import QtGui
@@ -31,19 +50,19 @@ class Controller(QtCore.QObject):
 
         
 
-app = QtGui.QApplication(sys.argv)
 
-view = QtDeclarative.QDeclarativeView()
-view.setWindowTitle(__doc__)
-view.setResizeMode(QtDeclarative.QDeclarativeView.SizeRootObjectToView)
+if __name__ == '__main__':
+    app = QtGui.QApplication(sys.argv)
+    view = QtDeclarative.QDeclarativeView()
+    view.setWindowTitle(__doc__)
+    view.setResizeMode(QtDeclarative.QDeclarativeView.SizeRootObjectToView)
+    
+    rc = view.rootContext()
 
-rc = view.rootContext()
-
-controller = Controller()
-rc.setContextProperty('controller', controller)
-
-view.setSource(__file__.replace('.py', '.qml'))
-
-view.show()
-app.exec_()
+    controller = Controller()
+    rc.setContextProperty('controller', controller)
+    
+    view.setSource(__file__.replace('.py', '.qml'))
+    view.show()
+    app.exec_()
 
