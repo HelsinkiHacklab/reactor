@@ -61,7 +61,12 @@ class Proxy(QtCore.QObject):
 
     def update_gauge(self):
         import random
+        # Random servo to random position
         self.qml_root.findChild(QtDeclarative.QDeclarativeItem, "servo%d"%random.randint(0,31)).setUSec(random.randint(1000,2000))
+        # Random rod-switch panel led to random value
+        self.qml_root.findChild(QtDeclarative.QDeclarativeItem, "rodled%d"%random.randint(0,3)).setPWM(random.randint(0,255))
+        # Random status panel led to random value
+        self.qml_root.findChild(QtDeclarative.QDeclarativeItem, "statusled%d"%random.randint(0,36)).setPWM(random.randint(0,255))
 
 if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)

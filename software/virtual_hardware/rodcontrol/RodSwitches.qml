@@ -94,6 +94,7 @@ Rectangle
                     ReactorLed
                     {
                         ledColor: "white"
+                        objectName: "rodled0"
                     }
                 }
                 Rectangle
@@ -190,6 +191,7 @@ Rectangle
                     ReactorLed
                     {
                         ledColor: "white"
+                        objectName: "rodled1"
                     }
                 }
                 Rectangle
@@ -301,6 +303,7 @@ Rectangle
                     ReactorLed
                     {
                         ledColor: "white"
+                        objectName: "rodled2"
                     }
                 }
                 Rectangle
@@ -397,6 +400,7 @@ Rectangle
                     ReactorLed
                     {
                         ledColor: "white"
+                        objectName: "rodled3"
                     }
                 }
                 Rectangle
