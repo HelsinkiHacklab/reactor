@@ -91,10 +91,9 @@ Rectangle
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    Reactor3Switch
+                    ReactorLed
                     {
-                        upPin: 9
-                        downPin: 10
+                        ledColor: "white"
                     }
                 }
                 Rectangle
@@ -188,10 +187,9 @@ Rectangle
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    Reactor3Switch
+                    ReactorLed
                     {
-                        upPin: 27
-                        downPin: 28
+                        ledColor: "white"
                     }
                 }
                 Rectangle
@@ -300,10 +298,9 @@ Rectangle
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    Reactor3Switch
+                    ReactorLed
                     {
-                        upPin: 47
-                        downPin: 48
+                        ledColor: "white"
                     }
                 }
                 Rectangle
@@ -397,10 +394,9 @@ Rectangle
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    Reactor3Switch
+                    ReactorLed
                     {
-                        upPin: 65
-                        downPin: 66
+                        ledColor: "white"
                     }
                 }
                 Rectangle
