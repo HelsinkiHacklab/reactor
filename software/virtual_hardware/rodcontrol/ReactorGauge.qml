@@ -16,7 +16,9 @@ Item
     function setUSec(value)
     {
         uValue = value
+        
     }
+
     Rectangle
     {
         id: container
@@ -26,42 +28,46 @@ Item
         border.width: 2
 
 
-        // This is actually a circle....
-        /*
-        Rectangle
+        Column
         {
-            width: parent.width<parent.height?parent.width:parent.height
-            height: width
-            color: "red"
-            border.color: "black"
-            border.width: 1
-            radius: width*0.5
-            Text
+            width: parent.width; height: parent.height
+            // Gauge face, actually a circle (go figure...)
+            Rectangle
             {
-                anchors.centerIn: parent
-                color: "black"
-                text: "Boom"
+                id: face
+                anchors.horizontalCenter: parent.horizontalCenter
+                width: (parent.width<parent.height?parent.width:parent.height) * 0.85
+                height: width
+                color: "red"
+                border.color: "black"
+                border.width: 1
+                radius: width/2
+                
+                // Gauge dial
+                Rectangle
+                {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    id: dial
+                    width: 5
+                    height: parent.height*0.9/2
+                    color: "black"
+                    y: face.y+face.height/2-height
+                    //transformOrigin: bottom
+                    rotation: 180/256*reactorGauge.value
+                }
             }
-        }
-        */
-        Circle
-        {
-            r: 40
-            color: "red"
-            Text
+            Rectangle
             {
-                anchors.centerIn: parent
-                color: "black"
-                text: "Boom"
+                width: parent.width; height: parent.height*0.15
+                color: "transparent"
+                Text
+                {
+                    id: valueText
+                    anchors.centerIn: parent
+                    font.pixelSize: parent.height/3
+                    text: reactorGauge.value
+                }
             }
-        }
-        
-        Text
-        {
-            id: valueText
-            anchors.centerIn: parent
-            font.pixelSize: parent.height/3
-            text: reactorGauge.value
         }
     }
     

@@ -3,7 +3,6 @@ import QtQuick 1.0
 Item
 {
     width: parent.width; height: parent.height
-    //width: 30; height: 30
     id: reactor3Switch
     
     property int upPin: 0
