@@ -31,31 +31,40 @@ Item
     
     Rectangle
     {
+        id: container
         width: parent.width; height: parent.height
-        //width: 30; height: 30
+        color: "#c0c0c0"
+        border.color: "black"
+        border.width: 2
         Row
         {
             width: parent.width; height: parent.height
             Rectangle
             {
                 width: parent.width/2; height: parent.height
-                color: "red"
+                color: "transparent"
                 Text
                 {
+                    anchors.centerIn: parent
+                    font.pixelSize: parent.height/3
                     text: reactor3Switch.value
                 }
             }
             Rectangle
             {
                 width: parent.width/2; height: parent.height
+                color: "transparent"
                 Column
                 {
                     width: parent.width; height: parent.height
                     Rectangle
                     {
                         width: parent.width; height: parent.height/2
+                        color: "transparent"
                         Text
                         {
+                            anchors.centerIn: parent
+                            font.pixelSize: parent.height
                             text: "+"
                         }
                         MouseArea
@@ -68,10 +77,12 @@ Item
                     Rectangle
                     {
                         width: parent.width; height: parent.height/2
-                        color: "green"
+                        color: "transparent"
                         Text
                         {
+                            anchors.centerIn: parent
                             text: "-"
+                            font.pixelSize: parent.height
                         }
                         MouseArea
                         {
