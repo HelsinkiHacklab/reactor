@@ -32,6 +32,7 @@ class Controller(QtCore.QObject):
     def __init__(self):
         QtCore.QObject.__init__(self)
 
+
     @QtCore.Slot(QtCore.QObject)
     def switch_changed(self, switch_instance):
         # Switched to center
@@ -48,8 +49,22 @@ class Controller(QtCore.QObject):
             print "pin %d went low" % int(switch_instance.property('downPin'))
         return
 
-        
+class Proxy(QtCore.QObject):        
+    def __init__(self, qml_root):
+        QtCore.QObject.__init__(self)
+        self.qml_root = qml_root
 
+        # Start a timer to mess with the gauge
+        timer = QtCore.QTimer(self)
+        self.connect(timer, QtCore.SIGNAL("timeout()"), self.update_gauge)
+        timer.start(2000)
+
+    def update_gauge(self):
+        import random
+        #print repr(self.qml_root)
+        print repr(self.qml_root.findChild(QtGui.QWidget, "mainContainer"))
+        print repr(self.qml_root.findChild(QtGui.QWidget, u'mainContainer'))
+        #self.qml_root.findChild(QtGui.QWidget, "servo1").setUSec(random.randint(1000,2000))
 
 if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)
@@ -59,10 +74,16 @@ if __name__ == '__main__':
     
     rc = view.rootContext()
 
+    #proxy = Proxy(rc)
+    proxy = Proxy(view)
+
     controller = Controller()
     rc.setContextProperty('controller', controller)
     
     view.setSource(__file__.replace('.py', '.qml'))
     view.show()
-    app.exec_()
+
+
+
+    sys.exit(app.exec_())
 

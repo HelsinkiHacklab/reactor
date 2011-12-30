@@ -33,7 +33,7 @@ Item
         Column
         {
             width: parent.width; height: parent.height
-            // Gauge face, actually a circle (go figure...)
+            // Gauge face, actually a circle (go figure why rectangle is used to make one...)
             Rectangle
             {
                 id: face
