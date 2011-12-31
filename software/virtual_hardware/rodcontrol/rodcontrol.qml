@@ -1,4 +1,5 @@
-import QtQuick 1.0
+//import QtQuick 1.0
+import Qt 4.7
 
 Rectangle
 {
@@ -33,7 +34,7 @@ Rectangle
                         color: "transparent"
                         ReactorGauge
                         {
-                            objectName: "servo" + index
+                            objectName: "arduino0_servo" + index
                         }
                     }
                 }

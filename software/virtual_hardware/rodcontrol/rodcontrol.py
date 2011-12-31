@@ -4,23 +4,41 @@
 
 import sys, os
 
-# Add arDuBUS path
-# Don't do this yet, I have no dbus on my mac
-#ardubus_module_dir = os.path.join(os.path.dirname( os.path.realpath( __file__ ) ),  '..', '..', 'arDuBUS')
-#if os.path.isdir(ardubus_module_dir):                                       
-#    sys.path.append(ardubus_module_dir)
-#import ardubus as ardubus_real
-#
-#class ardubus(ardubus_real.ardubus):
-#    def __init__(self, bus, object_name):
-#        # Fake config for now
-#        import ConfigParser
-#        config = ConfigParser.SafeConfigParser()
-#        ardubus_real.ardubus.__init__(self, bus, object_name, config)
-#
-#    def initialize_serial(self):
-#        print "Dummy serial"
-#        pass
+ardubus_module_dir = os.path.join(os.path.dirname( os.path.realpath( __file__ ) ),  '..', '..', 'arDuBUS')
+if os.path.isdir(ardubus_module_dir):                                       
+    sys.path.append(ardubus_module_dir)
+import ardubus as ardubus_real
+import dbus
+import dbus.service
+import dbus.mainloop.glib
+
+class ardubus(ardubus_real.ardubus):
+    def __init__(self, bus, object_name, qml_proxy):
+        self.qml_proxy = qml_proxy
+        # Fake config for now
+        import ConfigParser
+        config = ConfigParser.SafeConfigParser()
+        ardubus_real.ardubus.__init__(self, bus, object_name, config)
+
+    def initialize_serial(self):
+        print "Dummy serial"
+        pass
+
+
+    @dbus.service.method('fi.hacklab.ardubus', in_signature='yy') # "y" is the signature for a byte
+    def set_servo(self, servo_index, value):
+        if value > 180:
+            value = 180 # Servo library accepts values from 0 to 180 (degrees)
+        if value in [ 13, 10]: #Offset values that map to CR or LF by one
+            value += 1
+        
+        qml_object_name = self.object_name + "_servo" + str(servo_index)
+        self.qml_proxy.get_object(qml_object_name).setPosition(int(value))
+
+    @dbus.service.method('fi.hacklab.ardubus', in_signature='yn') # "y" is the signature for a byte, n is 16bit signed integer
+    def set_servo_us(self, servo_index, value):
+        qml_object_name = self.object_name + "_servo" + str(servo_index)
+        self.qml_proxy.get_object(qml_object_name).setUSec(int(value))
 
 
 from PySide import QtCore
@@ -31,6 +49,7 @@ from PySide import QtDeclarative
 class Controller(QtCore.QObject):
     def __init__(self):
         QtCore.QObject.__init__(self)
+        self.ardbus_objects = {}
 
 
     @QtCore.Slot(QtCore.QObject)
@@ -49,26 +68,24 @@ class Controller(QtCore.QObject):
             print "pin %d went low" % int(switch_instance.property('downPin'))
         return
 
-class Proxy(QtCore.QObject):        
+class QMLProxy(QtCore.QObject):        
     def __init__(self, qml_root):
         QtCore.QObject.__init__(self)
         self.qml_root = qml_root
 
-        # Start a timer to mess with the gauge
-        timer = QtCore.QTimer(self)
-        self.connect(timer, QtCore.SIGNAL("timeout()"), self.update_gauge)
-        timer.start(2000)
 
-    def update_gauge(self):
-        import random
-        # Random servo to random position
-        self.qml_root.findChild(QtDeclarative.QDeclarativeItem, "servo%d"%random.randint(0,31)).setUSec(random.randint(1000,2000))
-        # Random rod-switch panel led to random value
-        self.qml_root.findChild(QtDeclarative.QDeclarativeItem, "rodled%d"%random.randint(0,3)).setPWM(random.randint(0,255))
-        # Random status panel led to random value
-        self.qml_root.findChild(QtDeclarative.QDeclarativeItem, "statusled%d"%random.randint(0,36)).setPWM(random.randint(0,255))
+    def get_object(self, objectName):
+        return self.qml_root.findChild(QtDeclarative.QDeclarativeItem, objectName)
 
 if __name__ == '__main__':
+    # not using threading yet, besided I think I should use QT threads anyway
+    #gobject.threads_init()
+    #dbus.mainloop.glib.threads_init()
+    dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
+    bus = dbus.SessionBus()
+
+
+
     app = QtGui.QApplication(sys.argv)
     view = QtDeclarative.QDeclarativeView()
     view.setWindowTitle(__doc__)
@@ -81,8 +98,13 @@ if __name__ == '__main__':
     rc.setContextProperty('controller', controller)
     
     view.setSource(__file__.replace('.py', '.qml'))
-    proxy = Proxy(view.rootObject())
+    proxy = QMLProxy(view.rootObject())
     view.show()
+    
+    servo_arduino = ardubus(bus, 'arduino0', proxy)
+    controller.ardbus_objects[servo_arduino.object_name] = servo_arduino
+    switch_arduino = ardubus(bus, 'arduino1', proxy)
+    controller.ardbus_objects[switch_arduino.object_name] = switch_arduino
 
 
 

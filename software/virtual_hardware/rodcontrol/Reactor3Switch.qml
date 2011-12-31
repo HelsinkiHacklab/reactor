@@ -1,4 +1,5 @@
-import QtQuick 1.0
+//import QtQuick 1.0
+import Qt 4.7
 
 Item
 {
@@ -9,22 +10,24 @@ Item
     property int downPin: 0
     property int value: 0
     property int prevValue: 0
+    property string boardName: "arduino1"
+
     function up()
     {
         if (value < 1)
         {
-            value = value+1
-            controller.switch_changed(this)
-            prevValue = value
+            value = value+1;
+            controller.switch_changed(this);
+            prevValue = value;
         }
     }
     function down()
     {
         if (value > -1)
         {
-            value = value-1
-            controller.switch_changed(this)
-            prevValue = value
+            value = value-1;
+            controller.switch_changed(this);
+            prevValue = value;
         }
     }
     
