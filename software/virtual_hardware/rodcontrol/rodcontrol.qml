@@ -10,12 +10,13 @@ Rectangle
         Rectangle
         {
             width: parent.width; height: parent.height/4
+            color: "transparent"
             LidLights{}
         }
         Rectangle
         {
             width: parent.width; height: parent.height/4*2
-            color: "red"
+            color: "transparent"
             Grid
             {
                 id: gaugeGrid
@@ -41,6 +42,7 @@ Rectangle
         Rectangle
         {
             width: parent.width; height: parent.height/4
+            color: "transparent"
             Row
             {
                 width: parent.width; height: parent.height
