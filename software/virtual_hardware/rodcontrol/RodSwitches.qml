@@ -6,6 +6,7 @@ Rectangle
     id: rodSwitches
     width: parent.width; height: parent.height
     // Rows
+    // TODO: change the "pins" to the indices mapped in simple_servo_control.py
     Column
     {
         width: parent.width; height: parent.height
