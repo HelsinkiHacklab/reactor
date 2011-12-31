@@ -27,9 +27,25 @@ Item
     {
         id: container
         width: parent.width; height: parent.height
-        color: "#eeeeee"
+        color: "black"
         border.color: "black"
         border.width: 2
+        Rectangle
+        {
+            id: light
+            anchors.centerIn: parent
+            width: (parent.width<parent.height?parent.width:parent.height) * 0.9
+            height: width
+            color: { var hexPWM = reactorStatusLed.pwmValue.toString(16); return "#" + hexPWM + hexPWM + hexPWM;  }
+            radius: width/2
+        }
+        Rectangle
+        {
+            id: lid
+            width: parent.width; height: parent.height
+            color: { if (reactorStatusLed.lidColor == "blue") { return "#600000ff"; } else { return "#60ffffff"; } }
+        }
+
         Text
         {
             anchors.centerIn: parent
