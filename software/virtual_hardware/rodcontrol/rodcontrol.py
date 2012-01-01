@@ -32,13 +32,16 @@ class ardubus(ardubus_real.ardubus):
         if value in [ 13, 10]: #Offset values that map to CR or LF by one
             value += 1
         
-        qml_object_name = self.object_name + "_servo" + str(servo_index)
+        qml_object_name = self.object_name + "_servo" + str(int(servo_index))
         self.qml_proxy.get_object(qml_object_name).setPosition(int(value))
 
     @dbus.service.method('fi.hacklab.ardubus', in_signature='yn') # "y" is the signature for a byte, n is 16bit signed integer
     def set_servo_us(self, servo_index, value):
-        qml_object_name = self.object_name + "_servo" + str(servo_index)
+        qml_object_name = self.object_name + "_servo" + str(int(servo_index))
         self.qml_proxy.get_object(qml_object_name).setUSec(int(value))
+
+# Use a global for storing these
+ardubus_instances = {}
 
 
 from PySide import QtCore
@@ -49,23 +52,27 @@ from PySide import QtDeclarative
 class Controller(QtCore.QObject):
     def __init__(self):
         QtCore.QObject.__init__(self)
-        self.ardbus_objects = {}
 
 
     @QtCore.Slot(QtCore.QObject)
     def switch_changed(self, switch_instance):
+        ardubus_proxy = ardubus_instances[switch_instance.property('boardName')]
         # Switched to center
         if (int(switch_instance.property('value')) == 0):
             if (int(switch_instance.property('prevValue')) == 1):
                 print "pin %d went high (ie switch stopped pulling down)" % int(switch_instance.property('upPin'))
+                ardubus_proxy.dio_change(switch_instance.property('upPin'), True, ardubus_proxy.object_name)
             else:
                 print "pin %d went high (ie switch stopped pulling down)" % int(switch_instance.property('downPin'))
+                ardubus_proxy.dio_change(switch_instance.property('downPin'), True, ardubus_proxy.object_name)
             return
         # Switched up/down
         if (int(switch_instance.property('value')) == 1):
             print "pin %d went low" % int(switch_instance.property('upPin'))
+            ardubus_proxy.dio_change(switch_instance.property('upPin'), False, ardubus_proxy.object_name)
         else:
             print "pin %d went low" % int(switch_instance.property('downPin'))
+            ardubus_proxy.dio_change(switch_instance.property('downPin'), False, ardubus_proxy.object_name)
         return
 
 class QMLProxy(QtCore.QObject):        
@@ -92,8 +99,6 @@ if __name__ == '__main__':
     view.setResizeMode(QtDeclarative.QDeclarativeView.SizeRootObjectToView)
     
     rc = view.rootContext()
-
-
     controller = Controller()
     rc.setContextProperty('controller', controller)
     
@@ -102,9 +107,9 @@ if __name__ == '__main__':
     view.show()
     
     servo_arduino = ardubus(bus, 'arduino0', proxy)
-    controller.ardbus_objects[servo_arduino.object_name] = servo_arduino
+    ardubus_instances[servo_arduino.object_name] = servo_arduino
     switch_arduino = ardubus(bus, 'arduino1', proxy)
-    controller.ardbus_objects[switch_arduino.object_name] = switch_arduino
+    ardubus_instances[switch_arduino.object_name] = switch_arduino
 
 
 
