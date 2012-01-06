@@ -3,7 +3,7 @@ import QtQuick 1.0
 Rectangle
 {
     id: mainContainer
-    width: 768; height: 1024
+    width: 600; height: 900
     Column
     {
         width: parent.width; height: parent.height
