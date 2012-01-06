@@ -33,18 +33,20 @@ class ardubus(ardubus_real.ardubus):
             value += 1
         
         qml_object_name = self.object_name + "_servo" + str(int(servo_index))
-        if not qml_object_name:
+        qml_object = self.qml_proxy.get_object(qml_object_name)
+        if not qml_object:
             print "QML object %s not found" % qml_object_name
             return False
-        self.qml_proxy.get_object(qml_object_name).setPosition(int(value))
+        qml_object.setPosition(int(value))
 
     @dbus.service.method('fi.hacklab.ardubus', in_signature='yn') # "y" is the signature for a byte, n is 16bit signed integer
     def set_servo_us(self, servo_index, value):
         qml_object_name = self.object_name + "_servo" + str(int(servo_index))
-        if not qml_object_name:
+        qml_object = self.qml_proxy.get_object(qml_object_name)
+        if not qml_object:
             print "QML object %s not found" % qml_object_name
             return False
-        self.qml_proxy.get_object(qml_object_name).setUSec(int(value))
+        qml_object.setUSec(int(value))
 
 # Use a global for storing these
 ardubus_instances = {}
