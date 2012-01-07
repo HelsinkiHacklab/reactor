@@ -19,6 +19,38 @@ class ardubus_qml(ardubus_real.ardubus):
         print "Dummy serial"
         pass
 
+    @dbus.service.method('fi.hacklab.ardubus', in_signature='yy') # "y" is the signature for a byte
+    def set_servo(self, servo_index, value):
+        if value > 180:
+            value = 180 # Servo library accepts values from 0 to 180 (degrees)
+        if value in [ 13, 10]: #Offset values that map to CR or LF by one
+            value += 1
+        
+        qml_object_name = self.object_name + "_servo" + str(int(servo_index))
+        qml_object = self.qml_proxy.get_object(qml_object_name)
+        if not qml_object:
+            print "QML object %s not found" % qml_object_name
+            return False
+        qml_object.setPosition(int(value))
+
+    @dbus.service.method('fi.hacklab.ardubus', in_signature='yn') # "y" is the signature for a byte, n is 16bit signed integer
+    def set_servo_us(self, servo_index, value):
+        qml_object_name = self.object_name + "_servo" + str(int(servo_index))
+        qml_object = self.qml_proxy.get_object(qml_object_name)
+        if not qml_object:
+            print "QML object %s not found" % qml_object_name
+            return False
+        qml_object.setUSec(int(value))
+
+    @dbus.service.method('fi.hacklab.ardubus', in_signature='yy') # "y" is the signature for a byte
+    def set_pwm(self, pwm_index, cycle):
+        pass
+
+    @dbus.service.method('fi.hacklab.ardubus', in_signature='yyy') # "y" is the signature for a byte
+    def set_jbol_pwm(self, jbol_index, ledno, cycle):
+        if cycle in [ 13, 10]: #Offset values that map to CR or LF by one
+            cycle += 1
+        pass
 
     @dbus.service.method('fi.hacklab.ardubus', in_signature='yy') # "y" is the signature for a byte
     def set_servo(self, servo_index, value):
@@ -42,6 +74,25 @@ class ardubus_qml(ardubus_real.ardubus):
             print "QML object %s not found" % qml_object_name
             return False
         qml_object.setUSec(int(value))
+
+    @dbus.service.method('fi.hacklab.ardubus', in_signature='yb') # "y" is the signature for a byte
+    def set_595bit(self, bit_index, state):
+        if state:
+            pass
+        else:
+            pass
+
+    @dbus.service.method('fi.hacklab.ardubus', in_signature='yy') # "y" is the signature for a byte
+    def set_595byte(self, reg_index, state):
+        pass
+
+    @dbus.service.method('fi.hacklab.ardubus', in_signature='yb') # "y" is the signature for a byte
+    def set_dio(self, digital_index, state):
+        if state:
+            pass
+        else:
+            pass
+
 
 if __name__ == '__main__':
     print "Use ardbus_launcher.py"
