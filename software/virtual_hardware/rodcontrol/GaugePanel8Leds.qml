@@ -15,14 +15,15 @@ Item
         rows: 4
         Repeater
         {
+            id: ledRepeater
             model: 8
             Rectangle
             {
                 width: ledGrid.width/2; height: ledGrid.height/4
                 ReactorLed
                 {
-                    ledColor: { if ( (index % 1) == 0) { return "green"; } else { return "red"; } }
-                    objectName: gaugePanel8Leds.boardName + "_led" + (gaugePanel8Leds.index_base + index)
+                    ledColor: { if ( (ledRepeater.index % 2) == 1) { return "green"; } else { return "red"; } }
+                    objectName: gaugePanel8Leds.boardName + "_led" + (gaugePanel8Leds.index_base + ledRepeater.index)
                 }
             }
         }
