@@ -32,8 +32,8 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     Reactor3Switch
                     {
-                        upPin: 1
-                        downPin: 2
+                        upPin: 18
+                        downPin: 17
                     }
                 }
                 Rectangle
@@ -41,8 +41,8 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     Reactor3Switch
                     {
-                        upPin: 3
-                        downPin: 4
+                        upPin: 24
+                        downPin: 39
                     }
                 }
                 Rectangle
@@ -50,8 +50,8 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     Reactor3Switch
                     {
-                        upPin: 5
-                        downPin: 6
+                        upPin: 34
+                        downPin: 50
                     }
                 }
                 Rectangle
@@ -85,8 +85,8 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     Reactor3Switch
                     {
-                        upPin: 7
-                        downPin: 8
+                        upPin: 33
+                        downPin: 3
                     }
                 }
                 Rectangle
@@ -103,8 +103,8 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     Reactor3Switch
                     {
-                        upPin: 11
-                        downPin: 12
+                        upPin: 30
+                        downPin: 43
                     }
                 }
                 Rectangle
@@ -112,8 +112,8 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     Reactor3Switch
                     {
-                        upPin: 13
-                        downPin: 14
+                        upPin: 32
+                        downPin: 38
                     }
                 }
                 Rectangle
@@ -121,8 +121,8 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     Reactor3Switch
                     {
-                        upPin: 15
-                        downPin: 16
+                        upPin: 20
+                        downPin: 35
                     }
                 }
                 Rectangle
@@ -146,35 +146,8 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     Reactor3Switch
                     {
-                        upPin: 17
-                        downPin: 18
-                    }
-                }
-                Rectangle
-                {
-                    width: parent.width/7; height: parent.height
-                    Reactor3Switch
-                    {
-                        upPin: 19
-                        downPin: 20
-                    }
-                }
-                Rectangle
-                {
-                    width: parent.width/7; height: parent.height
-                    Reactor3Switch
-                    {
-                        upPin: 21
-                        downPin: 22
-                    }
-                }
-                Rectangle
-                {
-                    width: parent.width/7; height: parent.height
-                    Reactor3Switch
-                    {
                         upPin: 23
-                        downPin: 24
+                        downPin: 2
                     }
                 }
                 Rectangle
@@ -182,8 +155,35 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     Reactor3Switch
                     {
-                        upPin: 25
-                        downPin: 26
+                        upPin: 31
+                        downPin: 4
+                    }
+                }
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    Reactor3Switch
+                    {
+                        upPin: 22
+                        downPin: 36
+                    }
+                }
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    Reactor3Switch
+                    {
+                        upPin: 27
+                        downPin: 0
+                    }
+                }
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    Reactor3Switch
+                    {
+                        upPin: 28
+                        downPin: 5
                     }
                 }
                 Rectangle
@@ -200,8 +200,8 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     Reactor3Switch
                     {
-                        upPin: 29
-                        downPin: 30
+                        upPin: 61
+                        downPin: 12
                     }
                 }
             }
@@ -220,8 +220,8 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     Reactor3Switch
                     {
-                        upPin: 31
-                        downPin: 32
+                        upPin: 64
+                        downPin: 7
                     }
                 }
                 Rectangle
@@ -229,8 +229,8 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     Reactor3Switch
                     {
-                        upPin: 33
-                        downPin: 34
+                        upPin: 52
+                        downPin: -1
                     }
                 }
                 Rectangle
@@ -238,8 +238,8 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     Reactor3Switch
                     {
-                        upPin: 35
-                        downPin: 36
+                        upPin: 19
+                        downPin: 47
                     }
                 }
                 Rectangle
@@ -247,8 +247,8 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     Reactor3Switch
                     {
-                        upPin: 37
-                        downPin: 38
+                        upPin: 21
+                        downPin: 13
                     }
                 }
                 Rectangle
@@ -256,8 +256,8 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     Reactor3Switch
                     {
-                        upPin: 39
-                        downPin: 40
+                        upPin: 26
+                        downPin: 49
                     }
                 }
                 Rectangle
@@ -265,17 +265,17 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     Reactor3Switch
                     {
-                        upPin: 41
+                        upPin: 25
+                        downPin: 14
+                    }
+                }
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    Reactor3Switch
+                    {
+                        upPin: 60
                         downPin: 42
-                    }
-                }
-                Rectangle
-                {
-                    width: parent.width/7; height: parent.height
-                    Reactor3Switch
-                    {
-                        upPin: 43
-                        downPin: 44
                     }
                 }
             }
@@ -294,8 +294,8 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     Reactor3Switch
                     {
-                        upPin: 45
-                        downPin: 46
+                        upPin: 54
+                        downPin: 15
                     }
                 }
                 Rectangle
@@ -312,8 +312,8 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     Reactor3Switch
                     {
-                        upPin: 49
-                        downPin: 50
+                        upPin: 66
+                        downPin: 6
                     }
                 }
                 Rectangle
@@ -321,8 +321,8 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     Reactor3Switch
                     {
-                        upPin: 51
-                        downPin: 52
+                        upPin: 65
+                        downPin: 40
                     }
                 }
                 Rectangle
@@ -330,8 +330,8 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     Reactor3Switch
                     {
-                        upPin: 53
-                        downPin: 54
+                        upPin: 63
+                        downPin: 46
                     }
                 }
                 Rectangle
@@ -339,8 +339,8 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     Reactor3Switch
                     {
-                        upPin: 44
-                        downPin: 56
+                        upPin: 59
+                        downPin: 44
                     }
                 }
                 Rectangle
@@ -348,8 +348,8 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     Reactor3Switch
                     {
-                        upPin: 57
-                        downPin: 58
+                        upPin: 62
+                        downPin: 1
                     }
                 }
             }
@@ -373,8 +373,8 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     Reactor3Switch
                     {
-                        upPin: 59
-                        downPin: 60
+                        upPin: 55
+                        downPin: 16
                     }
                 }
                 Rectangle
@@ -382,8 +382,8 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     Reactor3Switch
                     {
-                        upPin: 61
-                        downPin: 62
+                        upPin: 53
+                        downPin: 41
                     }
                 }
                 Rectangle
@@ -391,8 +391,8 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     Reactor3Switch
                     {
-                        upPin: 63
-                        downPin: 64
+                        upPin: 58
+                        downPin: 8
                     }
                 }
                 Rectangle
@@ -409,8 +409,8 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     Reactor3Switch
                     {
-                        upPin: 67
-                        downPin: 68
+                        upPin: 56
+                        downPin: 11
                     }
                 }
                 Rectangle
@@ -444,8 +444,8 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     Reactor3Switch
                     {
-                        upPin: 69
-                        downPin: 70
+                        upPin: 57
+                        downPin: 9
                     }
                 }
                 Rectangle
