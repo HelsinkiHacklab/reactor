@@ -7,46 +7,10 @@ import sys, os
 ardubus_module_dir = os.path.join(os.path.dirname( os.path.realpath( __file__ ) ),  '..', '..', 'arDuBUS')
 if os.path.isdir(ardubus_module_dir):                                       
     sys.path.append(ardubus_module_dir)
-import ardubus as ardubus_real
+import ardubus_qml as ardubus
 import dbus
 import dbus.service
 import dbus.mainloop.glib
-
-class ardubus(ardubus_real.ardubus):
-    def __init__(self, bus, object_name, qml_proxy):
-        self.qml_proxy = qml_proxy
-        # Fake config for now
-        import ConfigParser
-        config = ConfigParser.SafeConfigParser()
-        ardubus_real.ardubus.__init__(self, bus, object_name, config)
-
-    def initialize_serial(self):
-        print "Dummy serial"
-        pass
-
-
-    @dbus.service.method('fi.hacklab.ardubus', in_signature='yy') # "y" is the signature for a byte
-    def set_servo(self, servo_index, value):
-        if value > 180:
-            value = 180 # Servo library accepts values from 0 to 180 (degrees)
-        if value in [ 13, 10]: #Offset values that map to CR or LF by one
-            value += 1
-        
-        qml_object_name = self.object_name + "_servo" + str(int(servo_index))
-        qml_object = self.qml_proxy.get_object(qml_object_name)
-        if not qml_object:
-            print "QML object %s not found" % qml_object_name
-            return False
-        qml_object.setPosition(int(value))
-
-    @dbus.service.method('fi.hacklab.ardubus', in_signature='yn') # "y" is the signature for a byte, n is 16bit signed integer
-    def set_servo_us(self, servo_index, value):
-        qml_object_name = self.object_name + "_servo" + str(int(servo_index))
-        qml_object = self.qml_proxy.get_object(qml_object_name)
-        if not qml_object:
-            print "QML object %s not found" % qml_object_name
-            return False
-        qml_object.setUSec(int(value))
 
 # Use a global for storing these
 ardubus_instances = {}
@@ -114,9 +78,9 @@ if __name__ == '__main__':
     proxy = QMLProxy(view.rootObject())
     view.show()
     
-    servo_arduino = ardubus(bus, 'arduino0', proxy)
+    servo_arduino = ardubus.ardubus_qml(bus, 'arduino0', proxy)
     ardubus_instances[servo_arduino.object_name] = servo_arduino
-    switch_arduino = ardubus(bus, 'arduino1', proxy)
+    switch_arduino = ardubus.ardubus_qml(bus, 'arduino1', proxy)
     ardubus_instances[switch_arduino.object_name] = switch_arduino
 
 
