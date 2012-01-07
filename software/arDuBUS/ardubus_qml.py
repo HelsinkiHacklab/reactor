@@ -87,6 +87,8 @@ class ardubus_qml(ardubus_real.ardubus):
 
     @dbus.service.method('fi.hacklab.ardubus', in_signature='yb') # "y" is the signature for a byte
     def set_595bit(self, bit_index, state):
+        print "Not implemented: set_595bit"
+        return False
         if state:
             pass
         else:
@@ -94,7 +96,8 @@ class ardubus_qml(ardubus_real.ardubus):
 
     @dbus.service.method('fi.hacklab.ardubus', in_signature='yy') # "y" is the signature for a byte
     def set_595byte(self, reg_index, state):
-        pass
+        print "Not implemented: set_595byte"
+        return False
 
     @dbus.service.method('fi.hacklab.ardubus', in_signature='yb') # "y" is the signature for a byte
     def set_dio(self, digital_index, state):
