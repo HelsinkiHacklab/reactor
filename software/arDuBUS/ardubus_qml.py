@@ -44,13 +44,23 @@ class ardubus_qml(ardubus_real.ardubus):
 
     @dbus.service.method('fi.hacklab.ardubus', in_signature='yy') # "y" is the signature for a byte
     def set_pwm(self, pwm_index, cycle):
-        pass
+        qml_object_name = self.object_name + "_led" + str(int(pwm_index))
+        qml_object = self.qml_proxy.get_object(qml_object_name)
+        if not qml_object:
+            print "QML object %s not found" % qml_object_name
+            return False
+        qml_object.setPWM(int(cycle))
 
     @dbus.service.method('fi.hacklab.ardubus', in_signature='yyy') # "y" is the signature for a byte
     def set_jbol_pwm(self, jbol_index, ledno, cycle):
         if cycle in [ 13, 10]: #Offset values that map to CR or LF by one
             cycle += 1
-        pass
+        qml_object_name = self.object_name + "_pca9635RGBJBOL" + str(int(jbol_index)) + "_led" + str(int(ledno))
+        qml_object = self.qml_proxy.get_object(qml_object_name)
+        if not qml_object:
+            print "QML object %s not found" % qml_object_name
+            return False
+        qml_object.setPWM(int(cycle))
 
     @dbus.service.method('fi.hacklab.ardubus', in_signature='yy') # "y" is the signature for a byte
     def set_servo(self, servo_index, value):
@@ -88,11 +98,11 @@ class ardubus_qml(ardubus_real.ardubus):
 
     @dbus.service.method('fi.hacklab.ardubus', in_signature='yb') # "y" is the signature for a byte
     def set_dio(self, digital_index, state):
+        # Only used for leds for now
         if state:
-            pass
+            self.set_pwm(digital_index, 255)
         else:
-            pass
-
+            self.set_pwm(digital_index, 0)
 
 if __name__ == '__main__':
     print "Use ardbus_launcher.py"
