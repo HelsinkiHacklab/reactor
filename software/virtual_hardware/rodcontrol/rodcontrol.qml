@@ -17,27 +17,7 @@ Rectangle
         {
             width: parent.width; height: parent.height/4*2
             color: "transparent"
-            Grid
-            {
-                id: gaugeGrid
-                width: parent.width; height: parent.height
-                columns: 7
-                rows: 5
-                Repeater
-                {
-                    model: 32
-                    Rectangle
-                    {
-                        width: gaugeGrid.width/gaugeGrid.columns
-                        height: gaugeGrid.height/gaugeGrid.rows
-                        color: "transparent"
-                        ReactorGauge
-                        {
-                            objectName: "arduino0_servo" + index
-                        }
-                    }
-                }
-            }
+            RodGauges{}
         }
         Rectangle
         {
