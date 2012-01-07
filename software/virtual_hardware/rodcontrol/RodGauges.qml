@@ -88,10 +88,9 @@ Rectangle
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    ReactorLed
+                    GaugePanel8Leds
                     {
-                        ledColor: "white"
-                        objectName: "rodled0"
+                        index_base: 0
                     }
                 }
                 Rectangle
@@ -177,10 +176,9 @@ Rectangle
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    ReactorLed
+                    GaugePanel8Leds
                     {
-                        ledColor: "white"
-                        objectName: "rodled2"
+                        index_base: 8
                     }
                 }
                 Rectangle
@@ -280,10 +278,9 @@ Rectangle
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    ReactorLed
+                    GaugePanel8Leds
                     {
-                        ledColor: "white"
-                        objectName: "rodled2"
+                        index_base: 16
                     }
                 }
                 Rectangle
@@ -369,10 +366,9 @@ Rectangle
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    ReactorLed
+                    GaugePanel8Leds
                     {
-                        ledColor: "white"
-                        objectName: "rodled3"
+                        index_base: 24
                     }
                 }
                 Rectangle
