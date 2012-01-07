@@ -31,7 +31,7 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     ReactorStatusLed
                     {
-                        objectName: "statusled0"
+                        objectName: "arduino0_pca9635RGBJBOL0_led0"
                     }
                 }
                 Rectangle
@@ -39,7 +39,7 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     ReactorStatusLed
                     {
-                        objectName: "statusled1"
+                        objectName: "arduino0_pca9635RGBJBOL0_led1"
                     }
                 }
                 Rectangle
@@ -47,7 +47,7 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     ReactorStatusLed
                     {
-                        objectName: "statusled2"
+                        objectName: "arduino0_pca9635RGBJBOL0_led2"
                     }
                 }
                 Rectangle
@@ -81,7 +81,7 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     ReactorStatusLed
                     {
-                        objectName: "statusled3"
+                        objectName: "arduino0_pca9635RGBJBOL0_led3"
                     }
                 }
                 Rectangle
@@ -89,7 +89,7 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     ReactorStatusLed
                     {
-                        objectName: "statusled4"
+                        objectName: "arduino0_pca9635RGBJBOL0_led4"
                         lidColor: "blue"
                     }
                 }
@@ -98,7 +98,7 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     ReactorStatusLed
                     {
-                        objectName: "statusled5"
+                        objectName: "arduino0_pca9635RGBJBOL0_led5"
                     }
                 }
                 Rectangle
@@ -106,7 +106,7 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     ReactorStatusLed
                     {
-                        objectName: "statusled6"
+                        objectName: "arduino0_pca9635RGBJBOL0_led6"
                     }
                 }
                 Rectangle
@@ -114,7 +114,7 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     ReactorStatusLed
                     {
-                        objectName: "statusled7"
+                        objectName: "arduino0_pca9635RGBJBOL0_led7"
                     }
                 }
                 Rectangle
@@ -138,7 +138,7 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     ReactorStatusLed
                     {
-                        objectName: "statusled8"
+                        objectName: "arduino0_pca9635RGBJBOL0_led8"
                     }
                 }
                 Rectangle
@@ -146,7 +146,7 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     ReactorStatusLed
                     {
-                        objectName: "statusled9"
+                        objectName: "arduino0_pca9635RGBJBOL0_led9"
                     }
                 }
                 Rectangle
@@ -154,7 +154,7 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     ReactorStatusLed
                     {
-                        objectName: "statusled10"
+                        objectName: "arduino0_pca9635RGBJBOL0_led10"
                     }
                 }
                 Rectangle
@@ -162,7 +162,7 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     ReactorStatusLed
                     {
-                        objectName: "statusled11"
+                        objectName: "arduino0_pca9635RGBJBOL0_led11"
                     }
                 }
                 Rectangle
@@ -170,7 +170,7 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     ReactorStatusLed
                     {
-                        objectName: "statusled12"
+                        objectName: "arduino0_pca9635RGBJBOL0_led12"
                     }
                 }
                 Rectangle
@@ -178,7 +178,7 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     ReactorStatusLed
                     {
-                        objectName: "statusled13"
+                        objectName: "arduino0_pca9635RGBJBOL0_led13"
                         lidColor: "blue"
                     }
                 }
@@ -187,7 +187,7 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     ReactorStatusLed
                     {
-                        objectName: "statusled14"
+                        objectName: "arduino0_pca9635RGBJBOL0_led14"
                     }
                 }
             }
@@ -206,7 +206,7 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     ReactorStatusLed
                     {
-                        objectName: "statusled15"
+                        objectName: "arduino0_pca9635RGBJBOL0_led15"
                     }
                 }
                 Rectangle
@@ -214,7 +214,7 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     ReactorStatusLed
                     {
-                        objectName: "statusled16"
+                        objectName: "arduino0_pca9635RGBJBOL0_led16"
                     }
                 }
                 Rectangle
@@ -222,7 +222,7 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     ReactorStatusLed
                     {
-                        objectName: "statusled17"
+                        objectName: "arduino0_pca9635RGBJBOL0_led17"
                     }
                 }
                 Rectangle
@@ -230,7 +230,7 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     ReactorStatusLed
                     {
-                        objectName: "statusled18"
+                        objectName: "arduino0_pca9635RGBJBOL0_led18"
                     }
                 }
                 Rectangle
@@ -238,7 +238,7 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     ReactorStatusLed
                     {
-                        objectName: "statusled19"
+                        objectName: "arduino0_pca9635RGBJBOL0_led19"
                     }
                 }
                 Rectangle
@@ -246,7 +246,7 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     ReactorStatusLed
                     {
-                        objectName: "statusled20"
+                        objectName: "arduino0_pca9635RGBJBOL0_led20"
                     }
                 }
                 Rectangle
@@ -254,7 +254,7 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     ReactorStatusLed
                     {
-                        objectName: "statusled21"
+                        objectName: "arduino0_pca9635RGBJBOL0_led21"
                     }
                 }
             }
@@ -273,7 +273,7 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     ReactorStatusLed
                     {
-                        objectName: "statusled22"
+                        objectName: "arduino0_pca9635RGBJBOL0_led22"
                     }
                 }
                 Rectangle
@@ -281,7 +281,7 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     ReactorStatusLed
                     {
-                        objectName: "statusled23"
+                        objectName: "arduino0_pca9635RGBJBOL0_led23"
                         lidColor: "blue"
                     }
                 }
@@ -290,7 +290,7 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     ReactorStatusLed
                     {
-                        objectName: "statusled24"
+                        objectName: "arduino0_pca9635RGBJBOL0_led24"
                     }
                 }
                 Rectangle
@@ -298,7 +298,7 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     ReactorStatusLed
                     {
-                        objectName: "statusled25"
+                        objectName: "arduino0_pca9635RGBJBOL0_led25"
                     }
                 }
                 Rectangle
@@ -306,7 +306,7 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     ReactorStatusLed
                     {
-                        objectName: "statusled26"
+                        objectName: "arduino0_pca9635RGBJBOL0_led26"
                     }
                 }
                 Rectangle
@@ -314,7 +314,7 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     ReactorStatusLed
                     {
-                        objectName: "statusled27"
+                        objectName: "arduino0_pca9635RGBJBOL0_led27"
                     }
                 }
                 Rectangle
@@ -322,7 +322,7 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     ReactorStatusLed
                     {
-                        objectName: "statusled28"
+                        objectName: "arduino0_pca9635RGBJBOL0_led28"
                     }
                 }
             }
@@ -346,7 +346,7 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     ReactorStatusLed
                     {
-                        objectName: "statusled29"
+                        objectName: "arduino0_pca9635RGBJBOL0_led29"
                     }
                 }
                 Rectangle
@@ -354,7 +354,7 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     ReactorStatusLed
                     {
-                        objectName: "statusled30"
+                        objectName: "arduino0_pca9635RGBJBOL0_led30"
                     }
                 }
                 Rectangle
@@ -362,7 +362,7 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     ReactorStatusLed
                     {
-                        objectName: "statusled31"
+                        objectName: "arduino0_pca9635RGBJBOL0_led31"
                     }
                 }
                 Rectangle
@@ -370,7 +370,7 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     ReactorStatusLed
                     {
-                        objectName: "statusled32"
+                        objectName: "arduino0_pca9635RGBJBOL0_led32"
                         lidColor: "blue"
                     }
                 }
@@ -379,7 +379,7 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     ReactorStatusLed
                     {
-                        objectName: "statusled33"
+                        objectName: "arduino0_pca9635RGBJBOL0_led33"
                     }
                 }
                 Rectangle
@@ -413,7 +413,7 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     ReactorStatusLed
                     {
-                        objectName: "statusled34"
+                        objectName: "arduino0_pca9635RGBJBOL0_led34"
                     }
                 }
                 Rectangle
@@ -421,7 +421,7 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     ReactorStatusLed
                     {
-                        objectName: "statusled35"
+                        objectName: "arduino0_pca9635RGBJBOL0_led35"
                     }
                 }
                 Rectangle
@@ -429,7 +429,7 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     ReactorStatusLed
                     {
-                        objectName: "statusled36"
+                        objectName: "arduino0_pca9635RGBJBOL0_led36"
                     }
                 }
                 Rectangle

@@ -5,7 +5,7 @@ Item
     width: parent.width; height: parent.height
     id: gaugePanel8Leds
 
-    property string boardName: "arduino1"
+    property string namePrefix: "arduino1_pca9635RGBJBOL0_led"
     property int index_base: 0
     Grid
     {
@@ -22,7 +22,7 @@ Item
                 ReactorLed
                 {
                     ledColor: { if ( (index % 2) == 1) { return "red"; } else { return "green"; } }
-                    objectName: gaugePanel8Leds.boardName + "_led" + (gaugePanel8Leds.index_base + index)
+                    objectName: gaugePanel8Leds.namePrefix + (gaugePanel8Leds.index_base + index)
                 }
             }
         }
