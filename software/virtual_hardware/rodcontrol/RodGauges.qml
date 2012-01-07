@@ -186,7 +186,7 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     ReactorGauge
                     {
-                        objectName: "arduino0_servo13"
+                        objectName: "arduino0_servo12"
                     }
                 }
             }
@@ -200,6 +200,14 @@ Rectangle
             {
                 width: parent.width; height: parent.height
                 spacing: 0
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    ReactorGauge
+                    {
+                        objectName: "arduino0_servo13"
+                    }
+                }
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
@@ -248,14 +256,6 @@ Rectangle
                         objectName: "arduino0_servo19"
                     }
                 }
-                Rectangle
-                {
-                    width: parent.width/7; height: parent.height
-                    ReactorGauge
-                    {
-                        objectName: "arduino0_servo20"
-                    }
-                }
             }
         }
 
@@ -272,7 +272,7 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     ReactorGauge
                     {
-                        objectName: "arduino0_servo21"
+                        objectName: "arduino0_servo20"
                     }
                 }
                 Rectangle
@@ -281,6 +281,14 @@ Rectangle
                     GaugePanel8Leds
                     {
                         index_base: 16
+                    }
+                }
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    ReactorGauge
+                    {
+                        objectName: "arduino0_servo21"
                     }
                 }
                 Rectangle
@@ -315,14 +323,6 @@ Rectangle
                         objectName: "arduino0_servo25"
                     }
                 }
-                Rectangle
-                {
-                    width: parent.width/7; height: parent.height
-                    ReactorGauge
-                    {
-                        objectName: "arduino0_servo26"
-                    }
-                }
             }
         }
 
@@ -344,6 +344,14 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     ReactorGauge
                     {
+                        objectName: "arduino0_servo26"
+                    }
+                }
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    ReactorGauge
+                    {
                         objectName: "arduino0_servo27"
                     }
                 }
@@ -353,14 +361,6 @@ Rectangle
                     ReactorGauge
                     {
                         objectName: "arduino0_servo28"
-                    }
-                }
-                Rectangle
-                {
-                    width: parent.width/7; height: parent.height
-                    ReactorGauge
-                    {
-                        objectName: "arduino0_servo29"
                     }
                 }
                 Rectangle
@@ -376,7 +376,7 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     ReactorGauge
                     {
-                        objectName: "arduino0_servo30"
+                        objectName: "arduino0_servo29"
                     }
                 }
                 Rectangle
@@ -410,6 +410,14 @@ Rectangle
                     width: parent.width/7; height: parent.height
                     ReactorGauge
                     {
+                        objectName: "arduino0_servo30"
+                    }
+                }
+                Rectangle
+                {
+                    width: parent.width/7; height: parent.height
+                    ReactorGauge
+                    {
                         objectName: "arduino0_servo31"
                     }
                 }
@@ -419,14 +427,6 @@ Rectangle
                     ReactorGauge
                     {
                         objectName: "arduino0_servo32"
-                    }
-                }
-                Rectangle
-                {
-                    width: parent.width/7; height: parent.height
-                    ReactorGauge
-                    {
-                        objectName: "arduino0_servo33"
                     }
                 }
                 Rectangle
