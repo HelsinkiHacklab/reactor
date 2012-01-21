@@ -1,7 +1,7 @@
 
 // Please read Bounce.h for information about the liscence and authors
 
-#include "WProgram.h"
+#include "Arduino.h"
 #include "Bounce.h"
 
 

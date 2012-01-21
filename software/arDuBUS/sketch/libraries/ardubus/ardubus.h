@@ -1,6 +1,6 @@
 #ifndef ardubus_h
 #define ardubus_h
-#include <WProgram.h> 
+#include <Arduino.h> 
 #ifndef ARDUBUS_REPORT_INTERVAL
 #define ARDUBUS_REPORT_INTERVAL 5000 // Milliseconds
 #endif

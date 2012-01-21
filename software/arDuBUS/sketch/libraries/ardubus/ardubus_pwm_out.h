@@ -1,6 +1,6 @@
 #ifndef ardubus_pwm_out_h
 #define ardubus_pwm_out_h
-#include <WProgram.h> 
+#include <Arduino.h> 
 const byte ardubus_pwm_out_pins[] = ARDUBUS_PWM_OUTPUTS; // Digital outputs
 
 inline void ardubus_pwm_out_setup()

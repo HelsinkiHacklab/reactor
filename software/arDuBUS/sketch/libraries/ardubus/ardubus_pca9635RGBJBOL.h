@@ -1,6 +1,6 @@
 #ifndef ardubus_pca9635RGBJBOL_h
 #define ardubus_pca9635RGBJBOL_h
-#include <WProgram.h> 
+#include <Arduino.h> 
 #include <pca9635RGBJBOL.h>
 
 // Enumerate the pca9635RGBJBOL pins from the preprocessor

@@ -1,6 +1,6 @@
 #ifndef ardubus_analog_in_h
 #define ardubus_analog_in_h
-#include <WProgram.h> 
+#include <Arduino.h> 
 #ifndef ARDUBUS_ANALOG_IN_UPDATE_TIME
 #define ARDUBUS_ANALOG_IN_UPDATE_TIME 5 // Milliseconds, how often to check if inputs have changed
 #endif

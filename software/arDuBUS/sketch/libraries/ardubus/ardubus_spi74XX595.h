@@ -1,6 +1,6 @@
 #ifndef ardubus_spi74XX595_h
 #define ardubus_spi74XX595_h
-#include <WProgram.h> 
+#include <Arduino.h> 
 #include <SPI.h>
 #ifndef ARDUBUS_SPI74XX595_INITVALUE
 #define ARDUBUS_SPI74XX595_INITVALUE 0x0

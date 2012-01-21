@@ -1,6 +1,6 @@
 #ifndef ardubus_servo_h
 #define ardubus_servo_h
-#include <WProgram.h> 
+#include <Arduino.h> 
 #include <Servo.h>
 
 // Enumerate the servo pins from the preprocessor

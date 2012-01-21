@@ -1,6 +1,6 @@
 #ifndef ardubus_digital_out_h
 #define ardubus_digital_out_h
-#include <WProgram.h> 
+#include <Arduino.h> 
 const byte ardubus_digital_out_pins[] = ARDUBUS_DIGITAL_OUTPUTS; // Digital outputs
 
 inline void ardubus_digital_out_setup()

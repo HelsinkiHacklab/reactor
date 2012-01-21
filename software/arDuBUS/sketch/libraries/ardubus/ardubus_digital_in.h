@@ -1,6 +1,6 @@
 #ifndef ardubus_digital_in_h
 #define ardubus_digital_in_h
-#include <WProgram.h> 
+#include <Arduino.h> 
 #include <Bounce.h>
 #ifndef ARDUBUS_DIGITAL_IN_DEBOUNCE_TIME
 #define ARDUBUS_DIGITAL_IN_DEBOUNCE_TIME 20 // milliseconds, see Bounce library
