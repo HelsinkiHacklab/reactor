@@ -8,7 +8,7 @@
  * Superceded byt the I2C master library
 #include <Wire.h>
  */
-#include <I2C.h> // Get it from http://dsscircuits.com/articles/arduino-i2c-master-library.html
+#include <I2C.h> // Get it from http://github.com/rambo/I2C
 
 class i2c_device
 {

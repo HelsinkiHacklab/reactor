@@ -115,7 +115,7 @@ boolean pca9635::set_led_mode(byte mode)
 /**
  * Enable given SUBADDRess (1-3)
  */
-boolean pca9635::enable_subddr(byte addr)
+boolean pca9635::enable_subaddr(byte addr)
 {
     byte value;
     switch (addr)

@@ -16,9 +16,9 @@ void pca9635RGB::begin(byte board_num, boolean wire_begin)
     R.begin(board_num | (0x1 << 5), false, false);
     G.begin(board_num | (0x2 << 5), false, false);
     B.begin(board_num | (0x3 << 5), false, false);
-    R.enable_subddr(1);
-    G.enable_subddr(2);
-    B.enable_subddr(3);
+    R.enable_subaddr(1);
+    G.enable_subaddr(2);
+    B.enable_subaddr(3);
     PCA9635.set_driver_mode(0x0); // Default to open-drain mode for all drivers (via all-call)
     PCA9635.set_led_mode(3); // Default to PWM mode for all drivers (via all-call)
 }
