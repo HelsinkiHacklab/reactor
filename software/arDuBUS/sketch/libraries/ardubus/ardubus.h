@@ -12,9 +12,9 @@
 #endif
 
 /**
- * Parses ASCII [0-9A-F] hexadecimal to byte value
+ * Parses ASCII [0-9A-F] hexadecimal to uint8_t value
  */
-inline byte ardubus_hex2byte(byte hexchar)
+inline uint8_t ardubus_hex2byte(byte hexchar)
 {
     if (   0x40 < hexchar
         && hexchar < 0x47) // A-F
@@ -30,19 +30,19 @@ inline byte ardubus_hex2byte(byte hexchar)
     
 }
 
-inline byte ardubus_hex2byte(byte hexchar0, byte hexchar1)
+inline uint8_t ardubus_hex2byte(byte hexchar0, byte hexchar1)
 {
-    return (ardubus_hex2byte(hexchar0) << 4) | ardubus_hex2byte(hexchar1);
+    return (ardubus_hex2uint8_t(hexchar0) << 4) | ardubus_hex2byte(hexchar1);
 }
 
-inline int ardubus_hex2int(byte hexchar0, byte hexchar1, byte hexchar2, byte hexchar3)
+inline int ardubus_hex2int(uint8_t hexchar0, byte hexchar1, byte hexchar2, byte hexchar3)
 {
-    return ardubus_hex2byte(hexchar0, hexchar1) << 8 | ardubus_hex2byte(hexchar2, hexchar3);
+    return ardubus_hex2uint8_t(hexchar0, hexchar1) << 8 | ardubus_hex2byte(hexchar2, hexchar3);
 }
 
 
 // Utility functions for outputting fixed lenght nex encoded numbers
-inline void ardubus_print_byte_as_2hex(byte input)
+inline void ardubus_print_uint8_t_as_2hex(byte input)
 {
     if (input < 0x10)
     {
@@ -53,16 +53,16 @@ inline void ardubus_print_byte_as_2hex(byte input)
 
 inline void ardubus_print_ulong_as_8hex(unsigned long input)
 {
-    ardubus_print_byte_as_2hex((byte)(input >> 24));
-    ardubus_print_byte_as_2hex((byte)((input >> 16) & 0xff));
-    ardubus_print_byte_as_2hex((byte)((input >> 8) & 0xff));
-    ardubus_print_byte_as_2hex((byte)(input & 0xff));
+    ardubus_print_uint8_t_as_2hex((byte)(input >> 24));
+    ardubus_print_uint8_t_as_2hex((byte)((input >> 16) & 0xff));
+    ardubus_print_uint8_t_as_2hex((byte)((input >> 8) & 0xff));
+    ardubus_print_uint8_t_as_2hex((byte)(input & 0xff));
 }
 
 inline void ardubus_print_int_as_4hex(int input)
 {
-    ardubus_print_byte_as_2hex((byte)(input >> 8));
-    ardubus_print_byte_as_2hex((byte)(input & 0xff));
+    ardubus_print_uint8_t_as_2hex((byte)(input >> 8));
+    ardubus_print_uint8_t_as_2hex((byte)(input & 0xff));
 }
 
 // Include enabled submodules
@@ -157,7 +157,7 @@ inline void ardubus_check_report()
 
 // We need to declare this early
 char ardubus_incoming_command[ARDUBUS_COMMAND_STRING_SIZE+2]; //Reserve space for CRLF too.
-byte ardubus_incoming_position;
+uint8_t ardubus_incoming_position;
 void ardubus_process_command()
 {
 #ifdef ARDUBUS_DIGITAL_INPUTS
@@ -184,9 +184,9 @@ void ardubus_process_command()
 }
 
 // Handle incoming Serial data, try to find a command in there
-inline void ardubus_read_command_bytes()
+inline void ardubus_read_command_uint8_ts()
 {
-    for (byte d = Serial.available(); d > 0; d--)
+    for (uint8_t d = Serial.available(); d > 0; d--)
     {
         ardubus_incoming_command[ardubus_incoming_position] = Serial.read();
         // Check for line end and in such case do special things
@@ -228,7 +228,7 @@ inline void ardubus_read_command_bytes()
  */
 void ardubus_update()
 {
-    ardubus_read_command_bytes();
+    ardubus_read_command_uint8_ts();
 #ifdef ARDUBUS_DIGITAL_INPUTS
     ardubus_digital_in_update();
 #endif
