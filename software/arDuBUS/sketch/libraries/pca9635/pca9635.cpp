@@ -7,7 +7,7 @@ pca9635::pca9635()
     autoincrement_bits = 0x80; // Autoincrement all
 }
 
-void pca9635::begin(uint8_t dev_addr, uint8_t wire_begin, boolean init)
+void pca9635::begin(byte dev_addr, boolean wire_begin, boolean init)
 {
     i2c_device::begin(dev_addr, wire_begin);
     if (init)
@@ -18,7 +18,7 @@ void pca9635::begin(uint8_t dev_addr, uint8_t wire_begin, boolean init)
     }
 }
 
-void pca9635::begin(uint8_t dev_addr, uint8_t wire_begin)
+void pca9635::begin(byte dev_addr, boolean wire_begin)
 {
     pca9635::begin(dev_addr, wire_begin, false);
 }
@@ -32,9 +32,9 @@ void pca9635::begin(uint8_t dev_addr, uint8_t wire_begin)
  *
  * Remember that led numbers start from 0
  */
-uint8_t pca9635::set_led_mode(uint8_t ledno, byte mode)
+boolean pca9635::set_led_mode(byte ledno, byte mode)
 {
-    uint8_t reg = 0x17;
+    byte reg = 0x17;
     // PONDER: Is there a more optimized way
     if (8 < ledno < 11)
     {
@@ -48,7 +48,7 @@ uint8_t pca9635::set_led_mode(uint8_t ledno, byte mode)
     {
         reg = 0x14;
     }
-    uint8_t value = 0;
+    byte value = 0;
     switch (mode)
     {
         case 0:
@@ -64,20 +64,20 @@ uint8_t pca9635::set_led_mode(uint8_t ledno, byte mode)
             value = B11111111;
             break;
     }
-    uint8_t mask = B00000000;
+    byte mask = B00000000;
     switch(ledno%4)
     {
         case 0:
-            mask = (uint8_t)~B00000011;
+            mask = (byte)~B00000011;
             break;
         case 1:
-            mask = (uint8_t)~B00001100;
+            mask = (byte)~B00001100;
             break;
         case 2:
-            mask = (uint8_t)~B00110000;
+            mask = (byte)~B00110000;
             break;
         case 3:
-            mask = (uint8_t)~B11000000;
+            mask = (byte)~B11000000;
             break;
     }
     return this->read_modify_write(reg | autoincrement_bits, mask, value);
@@ -90,9 +90,9 @@ uint8_t pca9635::set_led_mode(uint8_t ledno, byte mode)
  * 2=individual PWM only
  * 3=individual and group PWM
  */
-uint8_t pca9635::set_led_mode(uint8_t mode)
+boolean pca9635::set_led_mode(byte mode)
 {
-    uint8_t value;
+    byte value;
     switch (mode)
     {
         case 0:
@@ -108,16 +108,16 @@ uint8_t pca9635::set_led_mode(uint8_t mode)
             value = B11111111;
             break;
     }
-    uint8_t values[] = { value, value, value, value };
+    byte values[] = { value, value, value, value };
     return this->write_many(0x14 | autoincrement_bits, 4, values);
 }
 
 /**
  * Enable given SUBADDRess (1-3)
  */
-uint8_t pca9635::enable_subaddr(uint8_t addr)
+boolean pca9635::enable_subaddr(byte addr)
 {
-    uint8_t value;
+    byte value;
     switch (addr)
     {
         case 1:
@@ -130,19 +130,19 @@ uint8_t pca9635::enable_subaddr(uint8_t addr)
             value = _BV(1); // 0x74
             break;
     }
-    uint8_t mask = ~value;
+    byte mask = ~value;
     return this->read_modify_write(0x0 | autoincrement_bits, mask, value);
 }
 
 
-uint8_t pca9635::set_driver_mode(uint8_t mode)
+boolean pca9635::set_driver_mode(byte mode)
 {
-    return this->read_modify_write(0x01 | autoincrement_bits, (uint8_t)~_BV(2), mode << 2);
+    return this->read_modify_write(0x01 | autoincrement_bits, (byte)~_BV(2), mode << 2);
 }
 
-uint8_t pca9635::set_sleep(uint8_t sleep)
+boolean pca9635::set_sleep(byte sleep)
 {
-    return this->read_modify_write(0x00 | autoincrement_bits, (uint8_t)~_BV(4), sleep << 4);
+    return this->read_modify_write(0x00 | autoincrement_bits, (byte)~_BV(4), sleep << 4);
 }
 
 
@@ -151,9 +151,9 @@ uint8_t pca9635::set_sleep(uint8_t sleep)
  * 
  * Remember that led numbers start from 0
  */
-uint8_t pca9635::set_led_pwm(uint8_t ledno, byte cycle)
+boolean pca9635::set_led_pwm(byte ledno, byte cycle)
 {
-    uint8_t reg = 0x02 + ledno;
+    byte reg = 0x02 + ledno;
     return this->write_many(reg | autoincrement_bits, 1, &cycle);
 }
 
@@ -161,12 +161,12 @@ uint8_t pca9635::set_led_pwm(uint8_t ledno, byte cycle)
 /**
  * Do the software-reset song-and-dance, this should reset all drivers on the bus
  */
-uint8_t pca9635::reset()
+boolean pca9635::reset()
 {
 #ifdef I2C_DEVICE_DEBUG
     Serial.println("pca9635::reset() called");
 #endif
-    uint8_t result = I2c.write(0x03, 0xa5, 0x5a);
+    byte result = I2c.write(0x03, 0xa5, 0x5a);
     if (result > 0)
     {
 #ifdef I2C_DEVICE_DEBUG

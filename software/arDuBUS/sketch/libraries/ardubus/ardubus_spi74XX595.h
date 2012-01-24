@@ -8,7 +8,7 @@
 
 #define ARDUBUS_SPI74XX595_LATCHPIN 10
 
-uint8_t ardubus_spi74XX595_values[ARDUBUS_SPI74XX595_REGISTER_COUNT];
+byte ardubus_spi74XX595_values[ARDUBUS_SPI74XX595_REGISTER_COUNT];
 
 inline void ardubus_spi74XX595_reset()
 {
@@ -23,9 +23,9 @@ inline void ardubus_spi74XX595_write()
 {
     ardubus_spi74XX595_reset();
     digitalWrite(ARDUBUS_SPI74XX595_LATCHPIN, LOW);
-    for (uint8_t i=0; i<ARDUBUS_SPI74XX595_REGISTER_COUNT; i++)
+    for (byte i=0; i<ARDUBUS_SPI74XX595_REGISTER_COUNT; i++)
     {
-        uint8_t reg = (ARDUBUS_SPI74XX595_REGISTER_COUNT-1)-i;
+        byte reg = (ARDUBUS_SPI74XX595_REGISTER_COUNT-1)-i;
         SPI.transfer(ardubus_spi74XX595_values[reg]);
         /*
         Serial.print("DEBUG: wrote ardubus_spi74XX595_values[");
@@ -44,7 +44,7 @@ inline void ardubus_spi74XX595_setup()
     SPI.setDataMode(SPI_MODE0);
     SPI.setBitOrder(LSBFIRST);
     SPI.setClockDivider(SPI_CLOCK_DIV4); // This should still work with messy cables
-    for (uint8_t i=0; i<ARDUBUS_SPI74XX595_REGISTER_COUNT; i++)
+    for (byte i=0; i<ARDUBUS_SPI74XX595_REGISTER_COUNT; i++)
     {
         ardubus_spi74XX595_values[(ARDUBUS_SPI74XX595_REGISTER_COUNT-1)-i] = ARDUBUS_SPI74XX595_INITVALUE;
     }
@@ -65,17 +65,17 @@ inline void ardubus_spi74XX595_process_command(char *incoming_command)
 {
     switch(incoming_command[0])
     {
-        case 0x42: // ASCII "B" (B<indexuint8_t><value>) //Note that the indexbyte is index of the bit
+        case 0x42: // ASCII "B" (B<indexbyte><value>) //Note that the indexbyte is index of the bit
         {
-            uint8_t bit_value;
+            byte bit_value;
             // TODO: Can the compiler optimize all this or do I need to write oneliners ?
-            uint8_t bit_index = incoming_command[1]-ARDUBUS_INDEX_OFFSET;
-            uint8_t bit_pos = 7-(bit_index%8);
-            uint8_t reg_index = bit_index/8;
-            uint8_t mask = (byte)~_BV(bit_pos);
+            byte bit_index = incoming_command[1]-ARDUBUS_INDEX_OFFSET;
+            byte bit_pos = 7-(bit_index%8);
+            byte reg_index = bit_index/8;
+            byte mask = (byte)~_BV(bit_pos);
             if (incoming_command[2] == 0x31) // ASCII "1"
             {
-                bit_value = (uint8_t)_BV(bit_pos); // Raise the correct bit
+                bit_value = (byte)_BV(bit_pos); // Raise the correct bit
             }
             else
             {
@@ -90,10 +90,10 @@ inline void ardubus_spi74XX595_process_command(char *incoming_command)
             Serial.println(0x6, BYTE); // ACK
             break;
         }
-        case 0x57: // ASCII "W" (B<indexuint8_t><valuehex>) //Note that the indexbyte is index of register, value is two hex chars
+        case 0x57: // ASCII "W" (B<indexbyte><valuehex>) //Note that the indexbyte is index of register, value is two hex chars
         {
-            uint8_t reg_index = incoming_command[1]-ARDUBUS_INDEX_OFFSET;
-            ardubus_spi74XX595_values[reg_index] = ardubus_hex2uint8_t(incoming_command[2], incoming_command[3]);
+            byte reg_index = incoming_command[1]-ARDUBUS_INDEX_OFFSET;
+            ardubus_spi74XX595_values[reg_index] = ardubus_hex2byte(incoming_command[2], incoming_command[3]);
             ardubus_spi74XX595_write();
             Serial.print("W");
             Serial.print(incoming_command[1]);

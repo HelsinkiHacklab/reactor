@@ -1,7 +1,7 @@
 #include "pca9635RGBJBOL.h"
 
 // Proxies to all the individual drivers
-uint8_t pca9635RGBJBOL::set_led_pwm(uint8_t ledno, byte cycle)
+boolean pca9635RGBJBOL::set_led_pwm(byte ledno, byte cycle)
 {
     switch (ledno%3)
     {
@@ -16,31 +16,31 @@ uint8_t pca9635RGBJBOL::set_led_pwm(uint8_t ledno, byte cycle)
             break;
     }
 }
-uint8_t pca9635RGBJBOL::set_led_mode(uint8_t ledno, byte mode)
+boolean pca9635RGBJBOL::set_led_mode(byte ledno, byte mode)
 {
-    uint8_t rstat = R.set_led_mode(ledno, mode);
-    uint8_t gstat = G.set_led_mode(ledno, mode);
-    uint8_t bstat = B.set_led_mode(ledno, mode);
+    boolean rstat = R.set_led_mode(ledno, mode);
+    boolean gstat = G.set_led_mode(ledno, mode);
+    boolean bstat = B.set_led_mode(ledno, mode);
     return rstat && gstat && bstat;
 }
-uint8_t pca9635RGBJBOL::set_led_mode(uint8_t mode)
+boolean pca9635RGBJBOL::set_led_mode(byte mode)
 {
-    uint8_t rstat = R.set_led_mode(mode);
-    uint8_t gstat = G.set_led_mode(mode);
-    uint8_t bstat = B.set_led_mode(mode);
+    boolean rstat = R.set_led_mode(mode);
+    boolean gstat = G.set_led_mode(mode);
+    boolean bstat = B.set_led_mode(mode);
     return rstat && gstat && bstat;
 }
-uint8_t pca9635RGBJBOL::set_driver_mode(uint8_t mode)
+boolean pca9635RGBJBOL::set_driver_mode(byte mode)
 {
-    uint8_t rstat = R.set_driver_mode(mode);
-    uint8_t gstat = G.set_driver_mode(mode);
-    uint8_t bstat = B.set_driver_mode(mode);
+    boolean rstat = R.set_driver_mode(mode);
+    boolean gstat = G.set_driver_mode(mode);
+    boolean bstat = B.set_driver_mode(mode);
     return rstat && gstat && bstat;
 }
-uint8_t pca9635RGBJBOL::set_sleep(uint8_t sleep)
+boolean pca9635RGBJBOL::set_sleep(byte sleep)
 {
-    uint8_t rstat = R.set_sleep(sleep);
-    uint8_t gstat = G.set_sleep(sleep);
-    uint8_t bstat = B.set_sleep(sleep);
+    boolean rstat = R.set_sleep(sleep);
+    boolean gstat = G.set_sleep(sleep);
+    boolean bstat = B.set_sleep(sleep);
     return rstat && gstat && bstat;
 }

@@ -1,6 +1,6 @@
 #include "i2c_device.h"
 
-void i2c_device::begin(uint8_t dev_addr, uint8_t wire_begin)
+void i2c_device::begin(byte dev_addr, boolean wire_begin)
 {
     device_address = dev_addr;
     if (wire_begin)
@@ -14,26 +14,26 @@ void i2c_device::begin(uint8_t dev_addr, uint8_t wire_begin)
 // TODO: Re-write the simplified methods to take advantage of the features of the I2C library
 // TODO: Re-write to check for status codes from the I2C library on each send.
 
-uint8_t i2c_device::read(uint8_t address, byte *target)
+boolean i2c_device::read(byte address, byte *target)
 {
     return this->read_many(address, 1, target);
 }
-uint8_t i2c_device::read(byte address)
+byte i2c_device::read(byte address)
 {
-    uint8_t target;
+    byte target;
     this->read_many(address, 1, &target);
     return target;
 }
 
-uint8_t i2c_device::read_many(uint8_t address, byte req_num, byte *target)
+boolean i2c_device::read_many(byte address, byte req_num, byte *target)
 {
-    uint8_t result = I2c.read(device_address, address, req_num, target);
+    byte result = I2c.read(device_address, address, req_num, target);
     if (result > 0)
     {
 #ifdef I2C_DEVICE_DEBUG
         Serial.print("DEBUG: Read ");
         Serial.print(req_num, DEC);
-        Serial.print(" uint8_ts from dev 0x");
+        Serial.print(" bytes from dev 0x");
         Serial.print(device_address, HEX);
         Serial.print(" reg 0x");
         Serial.print(address, HEX);
@@ -47,17 +47,17 @@ uint8_t i2c_device::read_many(uint8_t address, byte req_num, byte *target)
 
 
 /**
- * Write a single uint8_t and check the result
+ * Write a single byte and check the result
  */
-uint8_t i2c_device::write(uint8_t address, byte value)
+boolean i2c_device::write(byte address, byte value)
 {
-    uint8_t result = I2c.write(device_address, address, value);
+    byte result = I2c.write(device_address, address, value);
     if (result > 0)
     {
 #ifdef I2C_DEVICE_DEBUG
         Serial.print("DEBUG: Writing value 0x ");
         Serial.print(value, HEX);
-        Serial.print(" uint8_ts to dev 0x");
+        Serial.print(" bytes to dev 0x");
         Serial.print(device_address, HEX);
         Serial.print(" reg 0x");
         Serial.print(address, HEX);
@@ -70,17 +70,17 @@ uint8_t i2c_device::write(uint8_t address, byte value)
 }
 
 /**
- * Write multiple uint8_ts and check result
+ * Write multiple bytes and check result
  */
-uint8_t i2c_device::write_many(uint8_t address, byte num, byte *source)
+boolean i2c_device::write_many(byte address, byte num, byte *source)
 {
-    uint8_t result = I2c.write(device_address, address, source, num);
+    byte result = I2c.write(device_address, address, source, num);
     if (result > 0)
     {
 #ifdef I2C_DEVICE_DEBUG
         Serial.print("DEBUG: Write ");
         Serial.print(num, DEC);
-        Serial.print(" uint8_ts to dev 0x");
+        Serial.print(" bytes to dev 0x");
         Serial.print(device_address, HEX);
         Serial.print(" reg 0x");
         Serial.print(address, HEX);
@@ -101,9 +101,9 @@ uint8_t i2c_device::write_many(uint8_t address, byte num, byte *source)
  * 2=XOR
  *
  */
-uint8_t i2c_device::read_modify_write(uint8_t address, byte mask, byte value, byte operand)
+boolean i2c_device::read_modify_write(byte address, byte mask, byte value, byte operand)
 {
-    uint8_t tmp;
+    byte tmp;
     if (!this->read_many(address, 1, &tmp))
     {
         return false;
@@ -124,7 +124,7 @@ uint8_t i2c_device::read_modify_write(uint8_t address, byte mask, byte value, by
     Serial.println(value, BIN);
 #endif
 */
-    // TODO: These need a re-think, basically: how to set the masked bits to the values in the value uint8_t
+    // TODO: These need a re-think, basically: how to set the masked bits to the values in the value byte
     switch (operand)
     {
         case 0:
@@ -153,7 +153,7 @@ uint8_t i2c_device::read_modify_write(uint8_t address, byte mask, byte value, by
     return this->write_many(address, 1, &tmp);
 }
 
-uint8_t i2c_device::read_modify_write(uint8_t address, byte mask, byte value)
+boolean i2c_device::read_modify_write(byte address, byte mask, byte value)
 {
     return this->read_modify_write(address, mask, value, 0);
 }
@@ -163,10 +163,10 @@ uint8_t i2c_device::read_modify_write(uint8_t address, byte mask, byte value)
  * usually supposed-to-be-present register autoincrement does not work as
  * expected
  */
-void i2c_device::dump_registers(uint8_t addr_start, byte addr_end)
+void i2c_device::dump_registers(byte addr_start, byte addr_end)
 {
-    uint8_t tmp;
-    for (uint8_t addr = addr_start; addr <= addr_end; addr++)
+    byte tmp;
+    for (byte addr = addr_start; addr <= addr_end; addr++)
     {
         if (!i2c_device::read(addr, &tmp))
         {

@@ -8,11 +8,11 @@ class pca9635RGB
 {
     public:
         // Initialize the object and chip        
-        void begin(uint8_t board_num, uint8_t wire_begin);
+        void begin(byte board_num, boolean wire_begin);
         // A funky way to handle optional arguments
-        void begin(uint8_t board_num);
+        void begin(byte board_num);
         void begin();
-        uint8_t set_rgb(uint8_t ledno, byte rcycle, byte gcycle, byte bcycle);
+        boolean set_rgb(byte ledno, byte rcycle, byte gcycle, byte bcycle);
         // Color channel instances, allow public access for debugging
         pca9635 R;
         pca9635 G;

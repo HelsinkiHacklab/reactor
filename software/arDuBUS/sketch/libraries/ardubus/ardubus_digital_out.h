@@ -1,11 +1,11 @@
 #ifndef ardubus_digital_out_h
 #define ardubus_digital_out_h
 #include <Arduino.h> 
-const uint8_t ardubus_digital_out_pins[] = ARDUBUS_DIGITAL_OUTPUTS; // Digital outputs
+const byte ardubus_digital_out_pins[] = ARDUBUS_DIGITAL_OUTPUTS; // Digital outputs
 
 inline void ardubus_digital_out_setup()
 {
-    for (uint8_t i=0; i < sizeof(ardubus_digital_out_pins); i++)
+    for (byte i=0; i < sizeof(ardubus_digital_out_pins); i++)
     {
         pinMode(ardubus_digital_out_pins[i], OUTPUT);
         digitalWrite(ardubus_digital_out_pins[i], LOW);
@@ -26,8 +26,8 @@ inline void ardubus_digital_out_process_command(char *incoming_command)
 {
     switch(incoming_command[0])
     {
-        case 0x44: // ASCII "D" (D<pinuint8_t><statebyte>) //The pin must have been declared in ardubus_digital_out_pins or unexpected things will happen
-            uint8_t pin = ardubus_digital_out_pins[incoming_command[1]-ARDUBUS_INDEX_OFFSET];
+        case 0x44: // ASCII "D" (D<pinbyte><statebyte>) //The pin must have been declared in ardubus_digital_out_pins or unexpected things will happen
+            byte pin = ardubus_digital_out_pins[incoming_command[1]-ARDUBUS_INDEX_OFFSET];
             if (incoming_command[2] == 0x31) // ASCII "1"
             {
                 digitalWrite(pin, HIGH);
