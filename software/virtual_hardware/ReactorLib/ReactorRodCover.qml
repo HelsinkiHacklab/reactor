@@ -7,8 +7,9 @@ Item
     
     property int downPin: 0
     property int ledValue: 0
-    property int value: 0
     property int ledNo: 0
+    property int value: 0
+    property int prevValue: 0
     property string boardName: "arduino2"
     property string namePrefix: "arduino2_pca9635RGBJBOL0_led"
 
@@ -38,15 +39,16 @@ Item
         color: "#c0c0c0"
         border.color: "black"
         border.width: 2
-        reactorLed
+        ReactorLed
         {
             objectName: reactorRodCover.namePrefix + reactorRodCover.ledNo
         }
         MouseArea
         {
             anchors.fill: parent
-            id: click_up
-            onClicked: { reactor3Switch.down() }
+            id: click_down
+            onPressed: { reactorRodCover.down() }
+            onReleased: { reactorRodCover.up() }
         }
     }
 }

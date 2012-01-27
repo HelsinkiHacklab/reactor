@@ -26,26 +26,20 @@ class Controller(QtCore.QObject):
         QtCore.QObject.__init__(self)
 
 
-#    @QtCore.Slot(QtCore.QObject)
-#    def switch_changed(self, switch_instance):
-#        ardubus_proxy = ardubus_instances[switch_instance.property('boardName')]
-#        # Switched to center
-#        if (int(switch_instance.property('value')) == 0):
-#            if (int(switch_instance.property('prevValue')) == 1):
-#                print "pin %d went high (ie switch stopped pulling down)" % int(switch_instance.property('upPin'))
-#                ardubus_proxy.dio_change(switch_instance.property('upPin'), True, ardubus_proxy.object_name)
-#            else:
-#                print "pin %d went high (ie switch stopped pulling down)" % int(switch_instance.property('downPin'))
-#                ardubus_proxy.dio_change(switch_instance.property('downPin'), True, ardubus_proxy.object_name)
-#            return
-#        # Switched up/down
-#        if (int(switch_instance.property('value')) == 1):
-#            print "pin %d went low" % int(switch_instance.property('upPin'))
-#            ardubus_proxy.dio_change(switch_instance.property('upPin'), False, ardubus_proxy.object_name)
-#        else:
-#            print "pin %d went low" % int(switch_instance.property('downPin'))
-#            ardubus_proxy.dio_change(switch_instance.property('downPin'), False, ardubus_proxy.object_name)
-#        return
+    @QtCore.Slot(QtCore.QObject)
+    def switch_changed(self, switch_instance):
+        ardubus_proxy = ardubus_instances[switch_instance.property('boardName')]
+        # Switched to center
+        if (int(switch_instance.property('value')) == 0):
+            if (int(switch_instance.property('prevValue')) == -1):
+                print "pin %d went high (ie switch stopped pulling down)" % int(switch_instance.property('downPin'))
+                ardubus_proxy.dio_change(switch_instance.property('downPin'), True, ardubus_proxy.object_name)
+            return
+        # Switched up/down
+        if (int(switch_instance.property('value')) == -1):
+            print "pin %d went low" % int(switch_instance.property('downPin'))
+            ardubus_proxy.dio_change(switch_instance.property('downPin'), False, ardubus_proxy.object_name)
+        return
 
 class QMLProxy(QtCore.QObject):        
     def __init__(self, qml_root):

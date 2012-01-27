@@ -88,10 +88,10 @@ Rectangle
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    ReactorRodCover
+                    // TODO: one of those special nonclickable covers
+                    Text
                     {
-                        objectName: "arduino0_pca9635RGBJBOL0_led4"
-                        lidColor: "blue"
+                        text: "TODO"
                     }
                 }
                 Rectangle
@@ -177,10 +177,10 @@ Rectangle
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    ReactorRodCover
+                    // TODO: one of those special nonclickable covers
+                    Text
                     {
-                        objectName: "arduino0_pca9635RGBJBOL0_led13"
-                        lidColor: "blue"
+                        text: "TODO"
                     }
                 }
                 Rectangle
@@ -280,10 +280,10 @@ Rectangle
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    ReactorRodCover
+                    // TODO: one of those special nonclickable covers
+                    Text
                     {
-                        objectName: "arduino0_pca9635RGBJBOL0_led23"
-                        lidColor: "blue"
+                        text: "TODO"
                     }
                 }
                 Rectangle
@@ -369,10 +369,10 @@ Rectangle
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    ReactorRodCover
+                    // TODO: one of those special nonclickable covers
+                    Text
                     {
-                        objectName: "arduino0_pca9635RGBJBOL0_led32"
-                        lidColor: "blue"
+                        text: "TODO"
                     }
                 }
                 Rectangle
