@@ -30,25 +30,28 @@ Rectangle
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    ReactorStatusLed
+                    ReactorRodCover
                     {
-                        objectName: "arduino0_pca9635RGBJBOL0_led0"
+                        ledNo: 0
+                        downPin: 0
                     }
                 }
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    ReactorStatusLed
+                    ReactorRodCover
                     {
-                        objectName: "arduino0_pca9635RGBJBOL0_led1"
+                        ledNo: 1
+                        downPin: 1
                     }
                 }
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    ReactorStatusLed
+                    ReactorRodCover
                     {
-                        objectName: "arduino0_pca9635RGBJBOL0_led2"
+                        ledNo: 2
+                        downPin: 2
                     }
                 }
                 Rectangle
@@ -80,42 +83,46 @@ Rectangle
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    ReactorStatusLed
+                    ReactorRodCover
                     {
-                        objectName: "arduino0_pca9635RGBJBOL0_led3"
+                        ledNo: 3
+                        downPin: 3
                     }
                 }
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    ReactorStatusLed
+                    // TODO: one of those special nonclickable covers
+                    Text
                     {
-                        objectName: "arduino0_pca9635RGBJBOL0_led4"
-                        lidColor: "blue"
+                        text: "TODO"
                     }
                 }
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    ReactorStatusLed
+                    ReactorRodCover
                     {
-                        objectName: "arduino0_pca9635RGBJBOL0_led5"
+                        ledNo: 5
+                        downPin: 5
                     }
                 }
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    ReactorStatusLed
+                    ReactorRodCover
                     {
-                        objectName: "arduino0_pca9635RGBJBOL0_led6"
+                        ledNo: 6
+                        downPin: 6
                     }
                 }
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    ReactorStatusLed
+                    ReactorRodCover
                     {
-                        objectName: "arduino0_pca9635RGBJBOL0_led7"
+                        ledNo: 7
+                        downPin: 7
                     }
                 }
                 Rectangle
@@ -137,58 +144,64 @@ Rectangle
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    ReactorStatusLed
+                    ReactorRodCover
                     {
-                        objectName: "arduino0_pca9635RGBJBOL0_led8"
+                        ledNo: 8
+                        downPin: 8
                     }
                 }
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    ReactorStatusLed
+                    ReactorRodCover
                     {
-                        objectName: "arduino0_pca9635RGBJBOL0_led9"
+                        ledNo: 9
+                        downPin: 9
                     }
                 }
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    ReactorStatusLed
+                    ReactorRodCover
                     {
-                        objectName: "arduino0_pca9635RGBJBOL0_led10"
+                        ledNo: 10
+                        downPin: 10
                     }
                 }
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    ReactorStatusLed
+                    ReactorRodCover
                     {
-                        objectName: "arduino0_pca9635RGBJBOL0_led11"
+                        ledNo: 11
+                        downPin: 11
                     }
                 }
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    ReactorStatusLed
+                    ReactorRodCover
                     {
-                        objectName: "arduino0_pca9635RGBJBOL0_led12"
+                        ledNo: 12
+                        downPin: 12
                     }
                 }
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    ReactorStatusLed
+                    // TODO: one of those special nonclickable covers
+                    Text
                     {
-                        objectName: "arduino0_pca9635RGBJBOL0_led13"
-                        lidColor: "blue"
+                        text: "TODO"
                     }
                 }
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    ReactorStatusLed
+                    ReactorRodCover
                     {
-                        objectName: "arduino0_pca9635RGBJBOL0_led14"
+                        ledNo: 14
+                        downPin: 14
                     }
                 }
             }
@@ -205,57 +218,64 @@ Rectangle
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    ReactorStatusLed
+                    ReactorRodCover
                     {
-                        objectName: "arduino0_pca9635RGBJBOL0_led15"
+                        ledNo: 15
+                        downPin: 15
                     }
                 }
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    ReactorStatusLed
+                    ReactorRodCover
                     {
-                        objectName: "arduino0_pca9635RGBJBOL0_led16"
+                        ledNo: 16
+                        downPin: 16
                     }
                 }
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    ReactorStatusLed
+                    ReactorRodCover
                     {
-                        objectName: "arduino0_pca9635RGBJBOL0_led17"
+                        ledNo: 17
+                        downPin: 17
                     }
                 }
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    ReactorStatusLed
+                    ReactorRodCover
                     {
-                        objectName: "arduino0_pca9635RGBJBOL0_led18"
+                        ledNo: 18
+                        downPin: 18
                     }
                 }
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    ReactorStatusLed
+                    ReactorRodCover
                     {
-                        objectName: "arduino0_pca9635RGBJBOL0_led19"
+                        ledNo: 19
+                        downPin: 19
                     }
                 }
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    ReactorStatusLed
+                    ReactorRodCover
                     {
-                        objectName: "arduino0_pca9635RGBJBOL0_led20"
+                        ledNo: 20
+                        downPin: 20
                     }
                 }
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    ReactorStatusLed
+                    ReactorRodCover
                     {
-                        objectName: "arduino0_pca9635RGBJBOL0_led21"
+                        ledNo: 21
+                        downPin: 21
                     }
                 }
             }
@@ -272,58 +292,64 @@ Rectangle
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    ReactorStatusLed
+                    ReactorRodCover
                     {
-                        objectName: "arduino0_pca9635RGBJBOL0_led22"
+                        ledNo: 22
+                        downPin: 22
                     }
                 }
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    ReactorStatusLed
+                    // TODO: one of those special nonclickable covers
+                    Text
                     {
-                        objectName: "arduino0_pca9635RGBJBOL0_led23"
-                        lidColor: "blue"
+                        text: "TODO"
                     }
                 }
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    ReactorStatusLed
+                    ReactorRodCover
                     {
-                        objectName: "arduino0_pca9635RGBJBOL0_led24"
+                        ledNo: 24
+                        downPin: 24
                     }
                 }
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    ReactorStatusLed
+                    ReactorRodCover
                     {
-                        objectName: "arduino0_pca9635RGBJBOL0_led25"
+                        ledNo: 25
+                        downPin: 25
                     }
                 }
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    ReactorStatusLed
+                    ReactorRodCover
                     {
-                        objectName: "arduino0_pca9635RGBJBOL0_led26"
+                        ledNo: 26
+                        downPin: 26
                     }
                 }
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    ReactorStatusLed
+                    ReactorRodCover
                     {
-                        objectName: "arduino0_pca9635RGBJBOL0_led27"
+                        ledNo: 27
+                        downPin: 27
                     }
                 }
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    ReactorStatusLed
+                    ReactorRodCover
                     {
-                        objectName: "arduino0_pca9635RGBJBOL0_led28"
+                        ledNo: 28
+                        downPin: 28
                     }
                 }
             }
@@ -345,42 +371,46 @@ Rectangle
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    ReactorStatusLed
+                    ReactorRodCover
                     {
-                        objectName: "arduino0_pca9635RGBJBOL0_led29"
+                        ledNo: 29
+                        downPin: 29
                     }
                 }
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    ReactorStatusLed
+                    ReactorRodCover
                     {
-                        objectName: "arduino0_pca9635RGBJBOL0_led30"
+                        ledNo: 30
+                        downPin: 30
                     }
                 }
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    ReactorStatusLed
+                    ReactorRodCover
                     {
-                        objectName: "arduino0_pca9635RGBJBOL0_led31"
+                        ledNo: 31
+                        downPin: 31
                     }
                 }
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    ReactorStatusLed
+                    // TODO: one of those special nonclickable covers
+                    Text
                     {
-                        objectName: "arduino0_pca9635RGBJBOL0_led32"
-                        lidColor: "blue"
+                        text: "TODO"
                     }
                 }
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    ReactorStatusLed
+                    ReactorRodCover
                     {
-                        objectName: "arduino0_pca9635RGBJBOL0_led33"
+                        ledNo: 33
+                        downPin: 33
                     }
                 }
                 Rectangle
@@ -412,25 +442,28 @@ Rectangle
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    ReactorStatusLed
+                    ReactorRodCover
                     {
-                        objectName: "arduino0_pca9635RGBJBOL0_led34"
+                        ledNo: 34
+                        downPin: 34
                     }
                 }
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    ReactorStatusLed
+                    ReactorRodCover
                     {
-                        objectName: "arduino0_pca9635RGBJBOL0_led35"
+                        ledNo: 35
+                        downPin: 35
                     }
                 }
                 Rectangle
                 {
                     width: parent.width/7; height: parent.height
-                    ReactorStatusLed
+                    ReactorRodCover
                     {
-                        objectName: "arduino0_pca9635RGBJBOL0_led36"
+                        ledNo: 36
+                        downPin: 36
                     }
                 }
                 Rectangle

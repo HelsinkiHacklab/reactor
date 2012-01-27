@@ -5,6 +5,7 @@ Item
     width: parent.width; height: parent.height
     id: reactorLed
     property int pwmValue: 0
+    // Supported colors: "red","green" TODO: add "white".
     property string ledColor: "red"
 
     function setPWM(value)
