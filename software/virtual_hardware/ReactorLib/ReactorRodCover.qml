@@ -36,7 +36,7 @@ Item
     {
         id: container
         width: parent.width; height: parent.height
-        color: "#c0c0c0"
+        color: { if (reactorRodCover.value==-1) { return "white"; } else { return "#c0c0c0"; } }
         border.color: "black"
         border.width: 2
         ReactorLed
