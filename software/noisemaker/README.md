@@ -1,5 +1,15 @@
 # DBUS Audio server
 
-Initially will be trivial, just to test the concept, later will add support for loops, fades, volume-control and possible "3D audio"
+Currently possible to play named samples or predefined sequences/loops, uses Gstreamer & ALSAsink so this process
+does not need to think about mixing.
 
-http://trac.jackaudio.org/wiki/JackDbusPackaging & http://trac.jackaudio.org/wiki/WalkThrough/User/jack_control are probably interesting if we don't want implement our own mixer in GStreamer
+Currently should do everything we *actually* need.
+
+## Wishlist
+
+  - Autogenerate loop_id and respond with that, so that the callee does not need to do that themselves (first checking the active loops list)
+  - Specifying fades on software level instead of making them part of the samples ?
+  - 3D audio (specifying sound location)
+  - JACK & explicit multichannel support (use with multiple speakers with or without 3D audio for even better sound source control)
+
+
