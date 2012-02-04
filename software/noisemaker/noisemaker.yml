@@ -1,7 +1,7 @@
 general:
     sample_dir: '../../sounds/'
 sequences:
-    rod_movement:
-        start: 'rod_start.wav'
-        loop: 'rod_move.wav'
-        end: 'rod_stop.wav'
+    test1:
+        start: 'alarm.wav'
+        loop: 'mechanical movement.wav'
+        end: 'steam_release.wav'
