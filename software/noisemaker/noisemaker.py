@@ -37,10 +37,19 @@ class noisemaker(dbus.service.Object):
 
     @dbus.service.method('fi.hacklab.noisemaker', in_signature='s')
     def play_sample(self, sample_name):
+        sample_path = os.path.join(self.samples_path, sample_name)
+        print "Playing %s via GST Alsa" % sample_path
+        player = gst.parse_launch("filesrc location=%s ! decodebin !  audioconvert ! audioresample ! alsasink" % sample_path)
+        player.set_state(gst.STATE_PLAYING)
+
+    @dbus.service.method('fi.hacklab.noisemaker', in_signature='ss')
+    def start_sequence(self, sequence_name, loop_id):
+        """Will play the configured start sample of sequnce and then start looping the loop, caller must provide also the identifier that will be used for stopping the sequence"""
         pass
 
     @dbus.service.method('fi.hacklab.noisemaker', in_signature='s')
-    def play_sequence(self, sample_name):
+    def stop_sequence(self, loop_id):
+        """Will stop playing the loop identified with loop_id and then play the end sample of the corresponding sequence"""
         pass
 
 
