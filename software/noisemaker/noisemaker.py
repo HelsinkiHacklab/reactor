@@ -62,6 +62,8 @@ class noisemaker(dbus.service.Object):
         ret = []
         for k, v in self.active_loops.iteritems():
             ret.append((k, v.state))
+        if len(ret) == 0:
+            return None
         return ret
 
 class noisemaker_sequence:
@@ -140,6 +142,7 @@ class noisemaker_sequence:
 
     def stop_via_end(self):
         """Immeadiate stop of loop and playing of end sample"""
+        # TODO: use local pipeline and unload from active loops only when actually done
         self.unload_player()
         if self.sequence['end']:
             self.state = 'end'
