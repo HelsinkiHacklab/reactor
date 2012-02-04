@@ -1,7 +1,13 @@
 general:
     sample_dir: '../../sounds/'
 sequences:
-    test1:
-        start: 'alarm.wav'
+    features_test:
+        start: 'extrapora.wav'
         loop: 'mechanical movement.wav'
+        end: 'steam_release.wav'
+        loop_count: 3
+    loop_only:
+        loop: 'hugemechanics.wav'
+    startend_only:
+        start: 'extrapora.wav'
         end: 'steam_release.wav'

@@ -47,51 +47,112 @@ class noisemaker(dbus.service.Object):
     def start_sequence(self, sequence_name, loop_id):
         """Will play the configured start sample of sequnce and then start looping the loop, caller must provide also the identifier that will be used for stopping the sequence"""
         sequence = self.config['sequences'][sequence_name]
-        # TODO: Make separate sequence class that can handle the playlist correctly, now start and loop samples are played on top of each other
-        if sequence['start']:
-            self.play_sample(sequence['start'])
-        sample_path = os.path.join(self.samples_path, sequence['loop'])
-        self.active_loops[loop_id] = noisemaker_loop(sample_path, sequence, self)
+        self.active_loops[loop_id] = noisemaker_sequence(sequence, self, loop_id)
         self.active_loops[loop_id].start()
 
     @dbus.service.method('fi.hacklab.noisemaker', in_signature='s')
     def stop_sequence(self, loop_id):
         """Will stop playing the loop identified with loop_id and then play the end sample of the corresponding sequence"""
-        self.active_loops[loop_id].stop()
-        del(self.active_loops[loop_id])
+        self.active_loops[loop_id].stop_at_next()
+        # Note that the sequence object will handle unloading since it can finish the loop by itself as well
 
-class noisemaker_loop:
-    def __init__(self, sample_path, sequence_config, noisemaker_instance):
+    @dbus.service.method('fi.hacklab.noisemaker')
+    def list_loops(self):
+        """Returns a list of tuples (of loop ids and their states)"""
+        ret = []
+        for k, v in self.active_loops.iteritems():
+            ret.append((k, v.state))
+        return ret
+
+class noisemaker_sequence:
+    def __init__(self, sequence_config, noisemaker_instance, loop_id):
+        self.loop_id = loop_id
         self.loop_count = 0
         self.loop_to = -1
-        self.sample_path = sample_path
-        print "noisemaker_loop: Playing %s via GST Alsa" % sample_path
-        self.player = gst.parse_launch("filesrc location=\"%s\" ! decodebin !  audioconvert ! audioresample ! alsasink" % self.sample_path)
-        self.sequence = sequence_config
-        self.nm = noisemaker_instance
+        self.state = False
 
+        self.sequence = self.normalize_config(sequence_config)
+        self.nm = noisemaker_instance
+        
+        if self.sequence.has_key('loop_count'):
+            self.loop_to = self.sequence['loop_count']
+
+        if self.sequence['start']:
+            self.init_player(self.sequence['start'])
+            self.state = 'start'
+        else:
+            self.init_player(self.sequence['loop'])
+            self.state = 'loop'
+
+    def normalize_config(self, sequence_config):
+        if not sequence_config.has_key('loop_count'):
+            sequence_config['loop_count'] = -1
+        if not sequence_config.has_key('start'):
+            sequence_config['start'] = None
+        if not sequence_config.has_key('end'):
+            sequence_config['end'] = None
+        if not sequence_config.has_key('loop'):
+            sequence_config['loop'] = None
+        return sequence_config
+
+    def init_player(self, sample_name):
+        self.sample_path = os.path.join(self.nm.samples_path, sample_name)
+        self.player = gst.parse_launch("filesrc location=\"%s\" ! decodebin !  audioconvert ! audioresample ! alsasink" % self.sample_path)
         self.bus = self.player.get_bus()
         self.bus.add_signal_watch()
         self.bus.connect('message::eos', self.on_eos)
 
+    def unload_player(self):
+        self.player.set_state(gst.STATE_NULL)
+        self.bus.remove_signal_watch()
+        del(self.bus)
+        del(self.player)
+
     def on_eos(self, bus, msg):
+        # If already in loop, pass to that method
+        if self.state == 'loop':
+            return self.on_eos_loop(bus,msg)
+        # Start sample finished, switch to loop
+        if (    self.state == 'start'
+            and self.sequence['loop']):
+            self.unload_player()
+            self.init_player(self.sequence['loop'])
+            self.state = 'loop'
+            self.player.set_state(gst.STATE_PLAYING)
+        else:
+            # not in loop and no loop sample specified, only on option remains
+            return self.stop_via_end()
+
+    def on_eos_loop(self, bus, msg):
         self.loop_count = self.loop_count+1
         if (   self.loop_to > 0
             and self.loop_count > self.loop_to):
-            return self.stop()
-        print "noisemaker_loop: Sample %s loop %d" % (self.sample_path, self.loop_count)
+            return self.stop_via_end()
+        print "noisemaker_sequence: Sample %s loop %d" % (self.sample_path, self.loop_count)
         self.player.seek_simple(gst.FORMAT_TIME, gst.SEEK_FLAG_FLUSH, 0)
-        
+
     def start(self):
         self.player.set_state(gst.STATE_PLAYING)
-    
-    def stop(self):
-        self.player.set_state(gst.STATE_NULL)
-        self.bus.remove_signal_watch()
+
+    def stop_at_next(self):
+        """At the end of current loop play the stop sequence"""
+        self.loop_to = self.loop_count
+
+    def stop_via_end(self):
+        """Immeadiate stop of loop and playing of end sample"""
+        self.unload_player()
         if self.sequence['end']:
+            self.state = 'end'
             self.nm.play_sample(self.sequence['end'])
+        # Unload from noisemakers active loops
+        del(self.nm.active_loops[self.loop_id])
 
 
+    def stop(self):
+        """Immeadiate stop, no not play end sample"""
+        self.unload_player()
+        # Unload from noisemakers active loops
+        del(self.nm.active_loops[self.loop_id])
 
 if __name__ == '__main__':
     # Read config
