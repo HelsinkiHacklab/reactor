@@ -4,3 +4,4 @@ Collection of samples used by the reactor simulator. Since we use GStreamer to p
 
 When making layered loops etc please provide also the individual samples used.
 
+Feel free to reorganize the file hierarchy when needed, see also: https://github.com/HelsinkiHacklab/reactor/tree/master/software/noisemaker
