@@ -24,6 +24,7 @@ class rod(dbus.service.Object):
         self.set_depth(float(depth)/2) # This is float so we can keep track of progress in smaller steps, for simulation purposes it will be rounded to int
         self.current_max_speed = default_max_speed
         self.current_water_flow = default_water_flow
+        self.current_velocity = 0.0 # at rest
         
         self.water_level = 1.0 # This is basically percentage of the full depth 1.0 means full of water
         self.steam_pressure = 0.0 # In whatever unit we feel is most convinient
@@ -84,9 +85,12 @@ class rod(dbus.service.Object):
 
     @dbus.service.method('fi.hacklab.reactorsimulator')
     def report(self):
-        self.emit_temp(self.get_cell_temps(), self.object_path)
-        self.emit_neutrons(self.get_cell_neutrons(), self.object_path)
-        self.emit_pressure(self.steam_pressure, self.object_path)
+        self.emit_temp(self.x, self.y, self.get_cell_temps(), self.object_path)
+        self.emit_neutrons(self.x, self.y, self.get_cell_neutrons(), self.object_path)
+        self.emit_pressure(self.x, self.y, self.steam_pressure, self.object_path)
+        
+        # TODO: Report dpeth and velocity
+        self.emit_depth(self.x, self.y, self.depth, self.current_velocity, self.object_path)
 
         # Clear the neutron counts
         for cell in self.cells:
@@ -104,17 +108,22 @@ class rod(dbus.service.Object):
         self.calc_avg_temp()
 
     @dbus.service.signal('fi.hacklab.reactorsimulator')
-    def emit_temp(self, temp, sender):
+    def emit_depth(self, x, y, depth, velocity, sender):
+        """This emits the current depth and velocity (<0 is going up >0 going down)"""
+        pass
+
+    @dbus.service.signal('fi.hacklab.reactorsimulator')
+    def emit_temp(self, x, y, temp, sender):
         """This emits the temperatures of the cells of the current rod"""
         pass
 
     @dbus.service.signal('fi.hacklab.reactorsimulator')
-    def emit_neutrons(self, neutrons, sender):
+    def emit_neutrons(self, x, y, neutrons, sender):
         """This emits the neutron counts of the cells of the current rod"""
         pass
 
     @dbus.service.signal('fi.hacklab.reactorsimulator')
-    def emit_pressure(self, pressure, sender):
+    def emit_pressure(self, x, y, pressure, sender):
         """This emits the pressure of current rod"""
         pass
 

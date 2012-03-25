@@ -81,12 +81,18 @@ class well(dbus.service.Object):
     @dbus.service.method('fi.hacklab.reactorsimulator')
     def report(self):
         #self.emit_temp(self.temp, self.object_path)
-        self.emit_neutrons(self.neutrons_seen, self.object_path)
+        self.emit_neutrons(self.x, self.y, self.neutrons_seen, self.object_path)
+        self.emit_temp(self.x, self.y, self.temperatures, self.object_path)
+        self.neutrons_seen = [0 for i in range(self.depth)] # reset the count
 
     @dbus.service.signal('fi.hacklab.reactorsimulator')
-    def emit_neutrons(self, neutrons, sender):
+    def emit_neutrons(self, x, y, neutrons, sender):
         """This emits the temperature of current cell"""
-        self.neutrons_seen = [0 for i in range(self.depth)] # reset the count
+        pass
+
+    @dbus.service.signal('fi.hacklab.reactorsimulator')
+    def emit_temp(self, x, y, temp, sender):
+        """This emits the temperatures of the cells of the current rod"""
         pass
 
 
