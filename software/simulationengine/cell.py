@@ -31,6 +31,7 @@ class cell(dbus.service.Object):
         self.y = y
         self.depth = depth
         self.rod = rod
+        self.neutrons_seen = 0
         
         self.temp = ambient_temp # Celcius ?
 
@@ -54,9 +55,26 @@ class cell(dbus.service.Object):
         print "DEBUG: %s cool(), temp %f" % (self.object_path, self.temp)
 
 
+    @dbus.service.signal('fi.hacklab.reactorsimulator')
+    def emit_temp(self, temp, sender):
+        """This emits the temperature of current cell"""
+        pass
+
+    @dbus.service.signal('fi.hacklab.reactorsimulator')
+    def emit_neutrons(self, neutrons, sender):
+        """This emits the temperature of current cell"""
+        self.neutrons_seen = 0 #reset the count
+        pass
+
+    @dbus.service.method('fi.hacklab.reactorsimulator')
+    def report(self):
+        self.emit_temp(self.temp, self.object_path)
+        self.emit_neutrons(self.neutrons_seen, self.object_path)
+
     @dbus.service.method('fi.hacklab.reactorsimulator')
     def neutron_hit(self):
         """This is where most of the magic happens, whenever we have a split atom we generate heat and with some P trigger hits in neighbours"""
+        self.neutrons_seen += 1 # keep track of the flow in case we need it
 
         # If the moderator is past this point it will always absorb the hits, nothing will happen
         if (self.rod.moderator_depth >= self.depth):

@@ -34,6 +34,10 @@ class rod(dbus.service.Object):
         # Final debug statement
         print "%s initialized" % self.object_path
 
+    def tick(self):
+        self.cool()  
+        self.decay() # This method will update rod avg temp too
+
     def get_cell_temps(self):
         """Return list of cell temperatures"""
         return map(lambda x: x.temp, self.cells)
@@ -68,6 +72,25 @@ class rod(dbus.service.Object):
         for cell in self.cells:
             cell.cool()
         self.calc_avg_temp()
+
+    @dbus.service.method('fi.hacklab.reactorsimulator')
+    def report(self):
+        for cell in self.cells:
+            cell.report()
+        # TODO: Report the rod averages
+        self.emit_temp(self.avg_temp, self.object_path)
+        self.emit_pressure(self.steam_pressure, self.object_path)
+
+    @dbus.service.signal('fi.hacklab.reactorsimulator')
+    def emit_temp(self, temp, sender):
+        """This emits the temperature of current rod"""
+        pass
+
+    @dbus.service.signal('fi.hacklab.reactorsimulator')
+    def emit_pressure(self, pressure, sender):
+        """This emits the pressure of current rod"""
+        pass
+
 
 if __name__ == '__main__':
     print "Use simulationengine.py"

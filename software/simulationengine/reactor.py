@@ -63,8 +63,7 @@ class reactor(dbus.service.Object):
 
         # Call the decay methods on the rods
         for rod in self.rods:
-            rod.cool()  # This method will update rod avg temp
-            rod.decay() # This method will update rod avg temp too
+            rod.tick() # This method will update rod avg temp
 
         # Update the reactor average values
         self.calc_avg_temp()
@@ -72,8 +71,21 @@ class reactor(dbus.service.Object):
         
         # TODO: check if we're within set limits
 
+        # Trigger reports at each tick
+        self.report()
         # return true to keep ticking
         return True
+
+    @dbus.service.method('fi.hacklab.reactorsimulator')
+    def report(self):
+        """This will trigger report methods for everything else, they will emit signals"""
+
+        for rod in self.rods:
+            rod.report()
+
+        for well in self.mwells:
+            well.report()
+
 
     def get_rod_temps(self):
         """Return list of rod temperatures, NOTE: does not trigger recalculation on the rod so might return old data"""
