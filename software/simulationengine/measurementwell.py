@@ -19,6 +19,12 @@ class well(dbus.service.Object):
         # Final debug statement
         print "%s initialized" % self.object_path
 
+    @dbus.service.method('fi.hacklab.reactorsimulator')
+    def neutron_hit(self, depth):
+        """Trigger neutron hit on cell at depth, indices start from zero"""
+        pass
+
+
 if __name__ == '__main__':
     print "Use simulationengine.py"
     sys.exit(1)

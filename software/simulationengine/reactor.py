@@ -56,6 +56,7 @@ class reactor(dbus.service.Object):
         """Return list of rod temperatures, NOTE: does not trigger recalculation so might return old data"""
         return map(lambda x: x.avg_temp, self.rods)
 
+    @dbus.service.method('fi.hacklab.reactorsimulator')
     def calc_avg_temp(self):
         """Recalculates the value of the avg_temp property and returns it"""
         self.avg_temp = sum(self.get_rod_temps()) / count(self.rods)

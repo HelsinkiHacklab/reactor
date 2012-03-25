@@ -4,6 +4,9 @@ import dbus
 import dbus.service
 import cell
 
+default_max_speed = 1.0
+default_scram_speed = 2.0
+
 
 class rod(dbus.service.Object):
     def __init__(self, bus, mainloop, path_base, x, y, depth, reactor):
@@ -15,7 +18,9 @@ class rod(dbus.service.Object):
         self.reactor = reactor
         self.x = x
         self.y = y
-        self.depth = depth
+        self.well_depth = depth
+        self.depth = float(depth)/2 # This is float so we can keep track of progress in smaller steps, for simulation purposes it will be rounded to int
+        self.current_max_speed = default_max_speed
         
         self.water_level = 1.0 # This is basically percentage of the full depth 1.0 means full of water
         self.steam_pressure = 0.0 # In whatever unit we feel is most convinient
@@ -23,7 +28,7 @@ class rod(dbus.service.Object):
         
         
         self.cells = []
-        for i in range(self.depth):
+        for i in range(self.well_depth):
             self.cells.append(cell.cell(bus, self.loop, self.object_path, self.x, self.y, i, self.reactor, self))
 
         # Final debug statement
@@ -33,11 +38,30 @@ class rod(dbus.service.Object):
         """Return list of cell temperatures"""
         return map(lambda x: x.temp, self.cells)
 
+    @dbus.service.method('fi.hacklab.reactorsimulator')
     def calc_avg_temp(self):
         """Recalculates the value of the avg_temp property and returns it"""
-        self.avg_temp = sum(self.get_cell_temps()) / self.depth
+        self.avg_temp = sum(self.get_cell_temps()) / self.well_depth
         return self.avg_temp;
 
+    @dbus.service.method('fi.hacklab.reactorsimulator')
+    def neutron_hit(self, depth):
+        """Trigger neutron hit on cell at depth, indices start from zero"""
+        self.cells[depth].neutron_hit()
+
+    @dbus.service.method('fi.hacklab.reactorsimulator')
+    def decay(self):
+        """This is the time-based decay, it will be called by a timer in the reactor"""
+        for cell in self.cells:
+            cell.decay()
+        self.calc_avg_temp()
+
+    @dbus.service.method('fi.hacklab.reactorsimulator')
+    def cool(self):
+        """This is the time-based cooling, it will be called by a timer in the reactor"""
+        for cell in self.cells:
+            cell.cool()
+        self.calc_avg_temp()
 
 if __name__ == '__main__':
     print "Use simulationengine.py"

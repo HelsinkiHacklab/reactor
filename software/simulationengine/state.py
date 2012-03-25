@@ -24,15 +24,23 @@ class state(dbus.service.Object):
         # Final debug statement
         print "%s initialized" % self.object_path
 
+    @dbus.service.method('fi.hacklab.reactorsimulator')
     def run(self):
         self.loop.run()
 
+    @dbus.service.method('fi.hacklab.reactorsimulator')
+    def pause(self):
+        pass
+
+    @dbus.service.method('fi.hacklab.reactorsimulator')
     def get_state(self):
         pass
 
+    @dbus.service.method('fi.hacklab.reactorsimulator')
     def save_state(self):
         pass
         
+    @dbus.service.method('fi.hacklab.reactorsimulator')
     def load_state(self):
         pass
 
