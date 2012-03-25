@@ -7,6 +7,9 @@ except ImportError:
 import dbus
 import dbus.service
 import reactor
+import gobject
+
+save_every_n_ticks = 50
 
 class state(dbus.service.Object):
     def __init__(self, bus, mainloop):
@@ -19,18 +22,36 @@ class state(dbus.service.Object):
         self.loop = mainloop
         self.reactor = reactor.reactor(bus, self.loop, self.object_path)
         self.reactor.load_layout(reactor.default_layout, reactor.default_depth)
-        
-        
+        self.tick_count = 0
+
         # Final debug statement
         print "%s initialized" % self.object_path
 
+    def tick(self):
+        """Wrapper to reactors tick method to allow us to pause the simulation"""
+        if not self.is_running:
+            return False
+        self.tick_count += 1
+        if ((self.tick_count % save_every_n_ticks) == 1):
+            self.save_state()
+        return self.reactor.tick()
+
     @dbus.service.method('fi.hacklab.reactorsimulator')
     def run(self):
-        self.loop.run()
+        self.is_running = True
+        # Set the reactor to tick every 100ms
+        gobject.timeout_add(100, self.tick)
+        if not self.loop.is_running():
+            self.loop.run()
 
     @dbus.service.method('fi.hacklab.reactorsimulator')
     def pause(self):
-        pass
+        """Just sets an internal variable to control ticks"""
+        self.is_running = False
+
+    def quit(self):
+        self.is_running = False
+        self.loop.quit()
 
     @dbus.service.method('fi.hacklab.reactorsimulator')
     def get_state(self):

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import os,sys
+import os,sys,math
 import dbus
 import dbus.service
 import cell
@@ -19,7 +19,7 @@ class rod(dbus.service.Object):
         self.x = x
         self.y = y
         self.well_depth = depth
-        self.depth = float(depth)/2 # This is float so we can keep track of progress in smaller steps, for simulation purposes it will be rounded to int
+        self.set_depth(float(depth)/2) # This is float so we can keep track of progress in smaller steps, for simulation purposes it will be rounded to int
         self.current_max_speed = default_max_speed
         
         self.water_level = 1.0 # This is basically percentage of the full depth 1.0 means full of water
@@ -37,6 +37,12 @@ class rod(dbus.service.Object):
     def get_cell_temps(self):
         """Return list of cell temperatures"""
         return map(lambda x: x.temp, self.cells)
+
+    @dbus.service.method('fi.hacklab.reactorsimulator')
+    def set_depth(self, depth):
+        self.depth = float(depth)
+        self.moderator_depth = math.floor(self.depth)
+        self.tip_depth = self.moderator_depth+1
 
     @dbus.service.method('fi.hacklab.reactorsimulator')
     def calc_avg_temp(self):
