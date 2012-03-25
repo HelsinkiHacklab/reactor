@@ -26,12 +26,15 @@ class reactor(dbus.service.Object):
 
 
         self.loop = mainloop
+        self.avg_temp = 0.0
 
         # Final debug statement
         print "%s initialized" % self.object_path
 
     def load_layout(self, layout, depth):
         self.layout = []
+        self.rods = []
+        self.mwells = []
         xcount = len(layout)
         ycount = len(layout[0])
         for x in range(xcount):
@@ -40,12 +43,23 @@ class reactor(dbus.service.Object):
                 # We have a controllable rod here
                 if (layout[x][y] == '*'):
                     col.append(rod.rod(self.bus, self.loop, self.object_path, x, y, depth, self))
+                    self.rods.append(col[y])
                 if (layout[x][y] == '#'):
                     col.append(measurementwell.well(self.bus, self.loop, self.object_path, x, y, depth, self))
+                    self.mwells.append(col[y])
                 # Default case is to skip
                 col.append(None)
-                
-                
+            self.layout.append(col)
+
+
+    def get_rod_temps(self):
+        """Return list of rod temperatures, NOTE: does not trigger recalculation so might return old data"""
+        return map(lambda x: x.avg_temp, self.rods)
+
+    def calc_avg_temp(self):
+        """Recalculates the value of the avg_temp property and returns it"""
+        self.avg_temp = sum(self.get_rod_temps()) / count(self.rods)
+        return self.avg_temp;
 
 
 if __name__ == '__main__':

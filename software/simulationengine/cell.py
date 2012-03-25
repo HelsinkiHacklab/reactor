@@ -17,6 +17,8 @@ class cell(dbus.service.Object):
         self.y = y
         self.depth = depth
         self.rod = rod
+        
+        self.temp = 0.0 # Celcius ?
 
         # Final debug statement
         print "%s initialized" % self.object_path
