@@ -80,7 +80,7 @@ class reactor(dbus.service.Object):
         return map(lambda x: x.avg_temp, self.rods)
 
     def get_rod_pressures(self):
-        """Return list of rod temperatures, NOTE: does not trigger recalculation on the rod so might return old data"""
+        """Return list of rod pressures, NOTE: does not trigger recalculation on the rod so might return old data"""
         return map(lambda x: x.steam_pressure, self.rods)
 
     @dbus.service.method('fi.hacklab.reactorsimulator')
