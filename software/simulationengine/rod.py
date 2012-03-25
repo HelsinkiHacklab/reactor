@@ -78,13 +78,19 @@ class rod(dbus.service.Object):
         for cell in self.cells:
             cell.cool(cool_by)
 
+    def get_cell_neutrons(self):
+        """Return list of cell neutrons_seen"""
+        return map(lambda x: x.neutrons_seen, self.cells)
+
     @dbus.service.method('fi.hacklab.reactorsimulator')
     def report(self):
-        for cell in self.cells:
-            cell.report()
-        # TODO: Report the rod averages
-        self.emit_temp(self.avg_temp, self.object_path)
+        self.emit_temp(self.get_cell_temps(), self.object_path)
+        self.emit_neutrons(self.get_cell_neutrons(), self.object_path)
         self.emit_pressure(self.steam_pressure, self.object_path)
+
+        # Clear the neutron counts
+        for cell in self.cells:
+            cell.neutrons_seen = 0
 
     @dbus.service.method('fi.hacklab.reactorsimulator')
     def calc_blend_temp(self):
@@ -99,7 +105,12 @@ class rod(dbus.service.Object):
 
     @dbus.service.signal('fi.hacklab.reactorsimulator')
     def emit_temp(self, temp, sender):
-        """This emits the temperature of current rod"""
+        """This emits the temperatures of the cells of the current rod"""
+        pass
+
+    @dbus.service.signal('fi.hacklab.reactorsimulator')
+    def emit_neutrons(self, neutrons, sender):
+        """This emits the neutron counts of the cells of the current rod"""
         pass
 
     @dbus.service.signal('fi.hacklab.reactorsimulator')

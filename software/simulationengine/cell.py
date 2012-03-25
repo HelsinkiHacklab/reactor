@@ -60,23 +60,6 @@ class cell(dbus.service.Object):
             self.temp = ambient_temp
         print "DEBUG: %s cool(), temp %f" % (self.object_path, self.temp)
 
-
-    @dbus.service.signal('fi.hacklab.reactorsimulator')
-    def emit_temp(self, temp, sender):
-        """This emits the temperature of current cell"""
-        pass
-
-    @dbus.service.signal('fi.hacklab.reactorsimulator')
-    def emit_neutrons(self, neutrons, sender):
-        """This emits the temperature of current cell"""
-        self.neutrons_seen = 0 #reset the count
-        pass
-
-    @dbus.service.method('fi.hacklab.reactorsimulator')
-    def report(self):
-        self.emit_temp(self.temp, self.object_path)
-        self.emit_neutrons(self.neutrons_seen, self.object_path)
-
     def calc_blend_temp(self):
         """Calculates next blend_temp"""
         self.blend_temp = 0.0
