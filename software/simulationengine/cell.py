@@ -4,8 +4,8 @@ import dbus
 import dbus.service
 
 # Tuning parameters
-neutron_hit_temp_increase = 0.5
-cool_temp_decrease = 0.1
+neutron_hit_temp_increase = 1.0
+cool_temp_decrease = 0.1 # This is ambient radiative cooling, the rod will have active cooling that is defined there
 tip_neutron_hit_p_increase = 0.1
 ambient_temp = 22.0
 decay_p = 0.5 # P of causing neutron_hit when decay is called
@@ -50,9 +50,12 @@ class cell(dbus.service.Object):
         self.neutron_hit()
 
     @dbus.service.method('fi.hacklab.reactorsimulator')
-    def cool(self):
+    def cool(self, cool_by=None):
         """This is the time-based cooling, it will be called by a timer in the reactor"""
-        self.temp -= cool_temp_decrease
+        if not cool_by:
+            self.temp -= cool_temp_decrease
+        else:
+            self.temp -= cool_by
         if self.temp < ambient_temp:
             self.temp = ambient_temp
         print "DEBUG: %s cool(), temp %f" % (self.object_path, self.temp)
@@ -84,9 +87,7 @@ class cell(dbus.service.Object):
                     x = self.x + (xdelta - 1)
                     y = self.y + (ydelta - 1)
                     z = self.depth + (zdelta - 1)
-                    if (   not self.in_grid(x, self.reactor.grid_limits[0])
-                        or not self.in_grid(y, self.reactor.grid_limits[1])
-                        or not self.in_grid(z, self.reactor.grid_limits[2])):
+                    if not self.reactor.in_grid(x,y,z):
                         #print "DEBUG blend [%d,%d,%d] is outside the grid" % (x,y,z)
                         continue
                     if not self.reactor.layout[x][y]:
@@ -112,12 +113,6 @@ class cell(dbus.service.Object):
         self.temp = float(self.blend_temp)
         #print "DEBUG: %s sync_blend_temp(), temp %f" % (self.object_path, self.temp)
 
-    def in_grid(self, x, grid_size):
-        if (   x >= grid_size
-            or x < 0):
-            return False
-        return True
-
     @dbus.service.method('fi.hacklab.reactorsimulator')
     def neutron_hit(self):
         """This is where most of the magic happens, whenever we have a split atom we generate heat and with some P trigger hits in neighbours"""
@@ -137,9 +132,7 @@ class cell(dbus.service.Object):
                     x = self.x + (xdelta - 1)
                     y = self.y + (ydelta - 1)
                     z = self.depth + (zdelta - 1)
-                    if (   not self.in_grid(x, self.reactor.grid_limits[0])
-                        or not self.in_grid(y, self.reactor.grid_limits[1])
-                        or not self.in_grid(z, self.reactor.grid_limits[2])):
+                    if not self.reactor.in_grid(x,y,z):
                         continue
                     hit_p = neutron_hit_p[xdelta][ydelta][zdelta]
                     # The graphite tip is at our place, accelerate reaction

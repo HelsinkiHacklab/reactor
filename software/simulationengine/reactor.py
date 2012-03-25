@@ -27,6 +27,7 @@ class reactor(dbus.service.Object):
 
         self.loop = mainloop
         self.tick_count = 0
+        self.grid_limits = [0,0,0]
 
 
         self.avg_temp = 0.0
@@ -34,6 +35,19 @@ class reactor(dbus.service.Object):
 
         # Final debug statement
         print "%s initialized" % self.object_path
+
+    def in_grid(self, x, y, z):
+        """Helper to check if given x,y,z is even in theory inside the reactor"""
+        if (   x >= self.grid_limits[0]
+            or x < 0):
+            return False
+        if (   y >= self.grid_limits[1]
+            or y < 0):
+            return False
+        if (   z >= self.grid_limits[2]
+            or z < 0):
+            return False
+        return True
 
     def load_layout(self, layout, depth):
         self.layout = []

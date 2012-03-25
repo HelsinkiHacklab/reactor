@@ -6,6 +6,8 @@ import cell
 
 default_max_speed = 1.0
 default_scram_speed = 2.0
+default_water_flow = 0.5 # 1.0 being max
+water_flow_cf = 2.0 # Cooling factor
 
 
 class rod(dbus.service.Object):
@@ -21,6 +23,7 @@ class rod(dbus.service.Object):
         self.well_depth = depth
         self.set_depth(float(depth)/2) # This is float so we can keep track of progress in smaller steps, for simulation purposes it will be rounded to int
         self.current_max_speed = default_max_speed
+        self.current_water_flow = default_water_flow
         
         self.water_level = 1.0 # This is basically percentage of the full depth 1.0 means full of water
         self.steam_pressure = 0.0 # In whatever unit we feel is most convinient
@@ -71,8 +74,9 @@ class rod(dbus.service.Object):
     @dbus.service.method('fi.hacklab.reactorsimulator')
     def cool(self):
         """This is the time-based cooling, it will be called by a timer in the reactor"""
+        cool_by = self.current_water_flow * water_flow_cf
         for cell in self.cells:
-            cell.cool()
+            cell.cool(cool_by)
 
     @dbus.service.method('fi.hacklab.reactorsimulator')
     def report(self):
