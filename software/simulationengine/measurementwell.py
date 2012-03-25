@@ -20,8 +20,6 @@ class well(dbus.service.Object):
         self.temperatures = [0 for i in range(self.depth)]
         self.avg_temp = 0.0
 
-        
-
         # Final debug statement
         print "%s initialized" % self.object_path
 

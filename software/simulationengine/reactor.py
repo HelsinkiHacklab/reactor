@@ -41,6 +41,7 @@ class reactor(dbus.service.Object):
         self.mwells = []
         xcount = len(layout)
         ycount = len(layout[0])
+        self.grid_limits = [xcount, ycount, depth]
         for x in range(xcount):
             col = []
             for y in range(ycount):
@@ -64,6 +65,14 @@ class reactor(dbus.service.Object):
         # Call the decay methods on the rods
         for rod in self.rods:
             rod.tick() # This method will update rod avg temp
+        
+        # after tiher tick actions blend temperatures
+        for rod in self.rods:
+            rod.calc_blend_temp()
+
+        # after tiher tick actions blend temperatures
+        for rod in self.rods:
+            rod.sync_blend_temp() # This method will update rod avg temp
 
         # Update the reactor average values
         self.calc_avg_temp()

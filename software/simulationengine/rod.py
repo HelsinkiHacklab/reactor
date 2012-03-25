@@ -36,7 +36,10 @@ class rod(dbus.service.Object):
 
     def tick(self):
         self.cool()  
-        self.decay() # This method will update rod avg temp too
+        self.decay()
+        for cell in self.cells:
+            cell.calc_blend_temp()
+        self.calc_avg_temp()
 
     def get_cell_temps(self):
         """Return list of cell temperatures"""
@@ -64,14 +67,12 @@ class rod(dbus.service.Object):
         """This is the time-based decay, it will be called by a timer in the reactor"""
         for cell in self.cells:
             cell.decay()
-        self.calc_avg_temp()
 
     @dbus.service.method('fi.hacklab.reactorsimulator')
     def cool(self):
         """This is the time-based cooling, it will be called by a timer in the reactor"""
         for cell in self.cells:
             cell.cool()
-        self.calc_avg_temp()
 
     @dbus.service.method('fi.hacklab.reactorsimulator')
     def report(self):
@@ -80,6 +81,17 @@ class rod(dbus.service.Object):
         # TODO: Report the rod averages
         self.emit_temp(self.avg_temp, self.object_path)
         self.emit_pressure(self.steam_pressure, self.object_path)
+
+    @dbus.service.method('fi.hacklab.reactorsimulator')
+    def calc_blend_temp(self):
+        for cell in self.cells:
+            cell.calc_blend_temp()
+
+    @dbus.service.method('fi.hacklab.reactorsimulator')
+    def sync_blend_temp(self):
+        for cell in self.cells:
+            cell.sync_blend_temp()
+        self.calc_avg_temp()
 
     @dbus.service.signal('fi.hacklab.reactorsimulator')
     def emit_temp(self, temp, sender):

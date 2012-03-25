@@ -9,6 +9,7 @@ cool_temp_decrease = 0.1
 tip_neutron_hit_p_increase = 0.1
 ambient_temp = 22.0
 decay_p = 0.5 # P of causing neutron_hit when decay is called
+temperature_blend_weight = 0.1
 
 # Initial inoform 3D probability of causing neutron_hit() in neighbour
 neutron_hit_size = 3 # Grid size, changin this is ill-adviced
@@ -33,7 +34,9 @@ class cell(dbus.service.Object):
         self.rod = rod
         self.neutrons_seen = 0
         
-        self.temp = ambient_temp # Celcius ?
+        
+        self.temp = float(ambient_temp) # Celcius ?
+        self.blend_temp = 0.0
 
         # Final debug statement
         print "%s initialized" % self.object_path
@@ -71,6 +74,50 @@ class cell(dbus.service.Object):
         self.emit_temp(self.temp, self.object_path)
         self.emit_neutrons(self.neutrons_seen, self.object_path)
 
+    def calc_blend_temp(self):
+        """Calculates next blend_temp"""
+        self.blend_temp = 0.0
+        cell_count = 0
+        for xdelta in range(neutron_hit_size):
+            for ydelta in range(neutron_hit_size):
+                for zdelta in range(neutron_hit_size):
+                    x = self.x + (xdelta - 1)
+                    y = self.y + (ydelta - 1)
+                    z = self.depth + (zdelta - 1)
+                    if (   not self.in_grid(x, self.reactor.grid_limits[0])
+                        or not self.in_grid(y, self.reactor.grid_limits[1])
+                        or not self.in_grid(z, self.reactor.grid_limits[2])):
+                        #print "DEBUG blend [%d,%d,%d] is outside the grid" % (x,y,z)
+                        continue
+                    if not self.reactor.layout[x][y]:
+                        #print "DEBUG blend [%d,%d] has no rod" % (x,y)
+                        # Nothing there
+                        continue
+                    try:
+                        self.blend_temp += self.reactor.layout[x][y].cells[z].temp # Sum neighbouring cell temps
+                        cell_count += 1
+                    except:
+                        #print "DEBUG blend [%d,%d,%d] caused exception (is measurement well)" % (x,y,z)
+                        # Skip errors
+                        pass
+
+        if not cell_count:
+            self.blend_temp = self.temp
+            return
+        self.blend_temp /= cell_count # and average them
+        self.blend_temp = (1.0 - temperature_blend_weight) * self.temp + (temperature_blend_weight * self.blend_temp)
+
+    def sync_blend_temp(self):
+        """sync the buffered blend_temps to cell real temp"""
+        self.temp = float(self.blend_temp)
+        #print "DEBUG: %s sync_blend_temp(), temp %f" % (self.object_path, self.temp)
+
+    def in_grid(self, x, grid_size):
+        if (   x >= grid_size
+            or x < 0):
+            return False
+        return True
+
     @dbus.service.method('fi.hacklab.reactorsimulator')
     def neutron_hit(self):
         """This is where most of the magic happens, whenever we have a split atom we generate heat and with some P trigger hits in neighbours"""
@@ -82,12 +129,19 @@ class cell(dbus.service.Object):
         
         self.temp += neutron_hit_temp_increase
 
-        print "DEBUG: %s neutron_hit(), temp %f" % (self.object_path, self.temp)
+        #print "DEBUG: %s neutron_hit(), temp %f" % (self.object_path, self.temp)
 
-        for x in range(neutron_hit_size):
-            for y in range(neutron_hit_size):
-                for z in range(neutron_hit_size):
-                    hit_p = neutron_hit_p[x][y][z]
+        for xdelta in range(neutron_hit_size):
+            for ydelta in range(neutron_hit_size):
+                for zdelta in range(neutron_hit_size):
+                    x = self.x + (xdelta - 1)
+                    y = self.y + (ydelta - 1)
+                    z = self.depth + (zdelta - 1)
+                    if (   not self.in_grid(x, self.reactor.grid_limits[0])
+                        or not self.in_grid(y, self.reactor.grid_limits[1])
+                        or not self.in_grid(z, self.reactor.grid_limits[2])):
+                        continue
+                    hit_p = neutron_hit_p[xdelta][ydelta][zdelta]
                     # The graphite tip is at our place, accelerate reaction
                     if (self.rod.tip_depth == z):
                         hit_p += tip_neutron_hit_p_increase
