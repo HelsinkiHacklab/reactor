@@ -83,10 +83,14 @@ class reactor(dbus.service.Object):
         # after tiher tick actions blend temperatures
         for rod in self.rods:
             rod.calc_blend_temp()
+        for well in self.mwells:
+            well.calc_blend_temp()
 
         # after tiher tick actions blend temperatures
         for rod in self.rods:
             rod.sync_blend_temp() # This method will update rod avg temp
+        for well in self.mwells:
+            well.sync_blend_temp()
 
         # Update the reactor average values
         self.calc_avg_temp()

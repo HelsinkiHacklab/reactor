@@ -95,12 +95,14 @@ class cell(dbus.service.Object):
                         # Nothing there
                         continue
                     try:
-                        self.blend_temp += self.reactor.layout[x][y].cells[z].temp # Sum neighbouring cell temps
-                        cell_count += 1
+                        n_temp = self.reactor.layout[x][y].cells[z].temp
                     except:
-                        #print "DEBUG blend [%d,%d,%d] caused exception (is measurement well)" % (x,y,z)
-                        # Skip errors
-                        pass
+                        try:
+                            n_temp = self.reactor.layout[x][y].temperatures[z] # blend the measurement wells too
+                        except:
+                            pass
+                    self.blend_temp += n_temp # Sum neighbouring cell temps
+                    cell_count += 1
 
         if not cell_count:
             self.blend_temp = self.temp
