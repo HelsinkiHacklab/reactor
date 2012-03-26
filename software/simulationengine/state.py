@@ -40,7 +40,7 @@ class state(dbus.service.Object):
     def run(self):
         self.is_running = True
         # Set the reactor to tick every 100ms
-        gobject.timeout_add(100, self.tick)
+        gobject.timeout_add(200, self.tick)
         if not self.loop.is_running():
             self.loop.run()
 

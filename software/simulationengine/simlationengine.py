@@ -14,5 +14,9 @@ if __name__ == '__main__':
     bus = dbus.SessionBus()
     loop = gobject.MainLoop()
     state_instance = state.state(bus, loop)
-    state_instance.run()
+    try:
+        state_instance.run()
+    except KeyboardInterrupt:
+        state_instance.quit()
+        
 

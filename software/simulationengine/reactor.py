@@ -16,7 +16,7 @@ default_layout = [[' ', ' ', '*', '*', '*', ' ', ' '],
 
 # Depth of each rod well
 default_depth = 7
-
+max_temp = 1500.0 # This is used in visualizations etc, the max point temperature we are going to see while the reactor has not yet blown up
 
 # It seems that as things get hotter we start lagging behind in our clock or something, at least the visualization starts seeing longer and longer intervalls between report signals
 
@@ -104,6 +104,7 @@ class reactor(dbus.service.Object):
         # Trigger reports at each tick
         self.report()
         # return true to keep ticking
+        print "Reactor tick #%d done" % self.tick_count
         return True
 
     @dbus.service.method('fi.hacklab.reactorsimulator')

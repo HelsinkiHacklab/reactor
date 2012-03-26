@@ -58,7 +58,7 @@ class cell(dbus.service.Object):
             self.temp -= cool_by
         if self.temp < ambient_temp:
             self.temp = ambient_temp
-        print "DEBUG: %s cool(), temp %f" % (self.object_path, self.temp)
+        #print "DEBUG: %s cool(), temp %f" % (self.object_path, self.temp)
 
     def calc_blend_temp(self):
         """Calculates next blend_temp"""

@@ -35,6 +35,7 @@ class reactor_listener():
         self.neutron_slices = np.array([[[0.0 for z in range(reactor.default_depth)] for x in range(len(reactor.default_layout))] for y in range(len(reactor.default_layout[0]))])
 
 
+        self.temp_normalized = mpl.colors.Normalize(0.0, reactor.max_temp + 1.0)
         self.recalculate_normalizers()
 
 
@@ -93,8 +94,10 @@ class reactor_listener():
         self.redraw()
 
         self.temp_reports_received = 0
+        self.temp_full_reports_received = 0
         self.bus.add_signal_receiver(self.temp_report, dbus_interface = "fi.hacklab.reactorsimulator", signal_name = "emit_temp")
         self.neutron_reports_received = 0
+        self.neutron_full_reports_received = 0
         #self.bus.add_signal_receiver(self.neutron_report, dbus_interface = "fi.hacklab.reactorsimulator", signal_name = "emit_neutrons")
 
         # This blocks, need to figure some other way to draw the canvas
@@ -107,13 +110,13 @@ class reactor_listener():
 
     def recalculate_normalizers(self):
         self.max_temp = self.temp_slices.item(self.temp_slices.argmax())
-        self.temp_normalized = mpl.colors.Normalize(0.0, self.max_temp + 1.0)
+        #self.temp_normalized = mpl.colors.Normalize(0.0, self.max_temp + 1.0)
     
 
     def redraw(self):
         print "Redraw called on %f" % time.time()
         if self.redraw_in_progress:
-            print "   But cancelled"
+            print "   But already in progress"
             return
         self.redraw_in_progress = True
         self.recalculate_normalizers()
@@ -132,15 +135,27 @@ class reactor_listener():
         print "Redraw complete on %f" % time.time()
 
     def temp_report(self, x, y, temp, sender):
+        #print "temp_report called on %f" % time.time()
         self.temp_reports_received += 1
+        if  (self.temp_reports_received % self.reports_expected == 0):
+            self.temp_full_reports_received += 1
+        if (self.temp_full_reports_received % 10 <> 0):
+            # Process only every tenth *full* report so we have a hope of keeping up
+            return
         #print "%d mod %d = %d" % (self.temp_reports_received, self.reports_expected, self.temp_reports_received % self.reports_expected)
         for i in range(len(temp)):
             self.temp_slices[i][x][y] = temp[i]
+        #print "temp_report done on %f" % time.time()
         if  (self.temp_reports_received % self.reports_expected == 0):
             self.redraw()
 
     def neutron_report(self, x, y, neutrons, sender):
         self.neutron_reports_received += 1
+        if  (self.neutron_reports_received % self.reports_expected == 0):
+            self.neutron_full_reports_received += 1
+        if (self.neutron_full_reports_received % 10 <> 0):
+            # Process only every tenth *full* report so we have a hope of keeping up
+            return
         for i in range(len(neutrons)):
             self.neutron_slices[i][x][y] = neutrons[i]
         if  (self.neutron_reports_received % self.reports_expected == 0):
