@@ -17,6 +17,9 @@ default_layout = [[' ', ' ', '*', '*', '*', ' ', ' '],
 # Depth of each rod well
 default_depth = 7
 
+
+# It seems that as things get hotter we start lagging behind in our clock or something, at least the visualization starts seeing longer and longer intervalls between report signals
+
 class reactor(dbus.service.Object):
     def __init__(self, bus, mainloop, path_base):
         self.object_path = path_base + '/reactor'
