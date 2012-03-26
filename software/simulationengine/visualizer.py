@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from __future__ import with_statement
 import os,sys,math
 import numpy as np
 import matplotlib as mpl
@@ -8,6 +9,7 @@ import reactor
 import gtk
 from matplotlib.backends.backend_gtk import FigureCanvasGTK as FigureCanvas
 from matplotlib.figure import Figure
+
 
 
 import dbus
@@ -28,8 +30,8 @@ class reactor_listener():
         self.loop = loop
         
 
-        self.temp_slices = [[[0.0 for z in range(reactor.default_depth)] for x in range(len(reactor.default_layout))] for y in range(len(reactor.default_layout[0]))]
-        self.neutron_slices = [[[0.0 for z in range(reactor.default_depth)] for x in range(len(reactor.default_layout))] for y in range(len(reactor.default_layout[0]))]
+        self.temp_slices = np.array([[[0.0 for z in range(reactor.default_depth)] for x in range(len(reactor.default_layout))] for y in range(len(reactor.default_layout[0]))])
+        self.neutron_slices = np.array([[[0.0 for z in range(reactor.default_depth)] for x in range(len(reactor.default_layout))] for y in range(len(reactor.default_layout[0]))])
 
 
         self.recalculate_normalizers()
@@ -59,6 +61,7 @@ class reactor_listener():
         self.main_box = gtk.HBox()
         self.window.add(self.main_box)
         self.main_box.pack_start(self.canvas, True, True)
+        self.redraw_in_progress = False
 
         self.slice_cms = []
         # Set the data to axes
@@ -102,29 +105,34 @@ class reactor_listener():
         self.loop.quit()
 
     def recalculate_normalizers(self):
-        self.max_temp = max(max(max(self.temp_slices)))
+        self.max_temp = self.temp_slices.item(self.temp_slices.argmax())
         self.temp_normalized = mpl.colors.Normalize(0.0, self.max_temp + 1.0)
     
 
     def redraw(self):
-        print "redraw called"
+        print "Redraw called"
+        if self.redraw_in_progress:
+            print "   But cancelled"
+            return
+        self.redraw_in_progress = True
         self.recalculate_normalizers()
 
         # Set the data to axes
         for i in range(len(self.temp_slices)):
             # Could we define the slices arrays as NP arrays already and save a bit of CPU time ?? 
-            self.slice_cms[i].set_array(np.array(self.temp_slices[i]).ravel())
+            self.slice_cms[i].set_array(self.temp_slices[i].ravel())
             self.slice_cms[i].set_norm(self.temp_normalized)
         # I guess this could be optimized somehow by changing the values instead of recreating the whole thing
         self.temp_cb = mpl.colorbar.ColorbarBase(self.temps[self.fig_rows-1][self.fig_cols-1], norm=self.temp_normalized, orientation='horizontal')
 
         self.temp_fig.canvas.draw()
+        self.redraw_in_progress = False
 
     def temp_report(self, x, y, temp, sender):
         self.temp_reports_received += 1
+        print "%d mod %d = %d" % (self.temp_reports_received, self.reports_expected, self.temp_reports_received % self.reports_expected)
         for i in range(len(temp)):
             self.temp_slices[i][x][y] = temp[i]
-        print "%d mod %d = %d" % (self.temp_reports_received, self.reports_expected, self.temp_reports_received % self.reports_expected)
         if  (self.temp_reports_received % self.reports_expected == 0):
             self.redraw()
 
