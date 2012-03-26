@@ -7,6 +7,15 @@ import reactor
 import dbus
 import dbus.service
 
+# Some links to matplotlib examples in case it desides to start giving "too many connections" errors to me again
+#
+# http://matplotlib.sourceforge.net/examples/pylab_examples/pcolor_demo.html
+# http://matplotlib.sourceforge.net/examples/pylab_examples/image_nonuniform.html
+# http://matplotlib.sourceforge.net/examples/pylab_examples/custom_cmap.html
+# http://matplotlib.sourceforge.net/examples/axes_grid/demo_colorbar_with_inset_locator.html
+# http://matplotlib.sourceforge.net/examples/pylab_examples/ellipse_collection.html
+
+
 class reactor_listener():
     def __init__(self, bus, loop):
         self.bus = bus
