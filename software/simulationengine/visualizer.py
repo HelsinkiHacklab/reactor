@@ -33,6 +33,7 @@ class reactor_listener():
 
         self.temp_slices = np.array([[[0.0 for z in range(reactor.default_depth)] for x in range(len(reactor.default_layout))] for y in range(len(reactor.default_layout[0]))])
         self.neutron_slices = np.array([[[0.0 for z in range(reactor.default_depth)] for x in range(len(reactor.default_layout))] for y in range(len(reactor.default_layout[0]))])
+        self.depth_range = range(len(self.temp_slices))
 
 
         self.temp_normalized = mpl.colors.Normalize(0.0, reactor.max_temp + 1.0)
@@ -139,11 +140,12 @@ class reactor_listener():
         self.temp_reports_received += 1
         if  (self.temp_reports_received % self.reports_expected == 0):
             self.temp_full_reports_received += 1
-        if (self.temp_full_reports_received % 10 <> 0):
+        if (self.temp_full_reports_received % 5 <> 0):
             # Process only every tenth *full* report so we have a hope of keeping up
             return
         #print "%d mod %d = %d" % (self.temp_reports_received, self.reports_expected, self.temp_reports_received % self.reports_expected)
-        for i in range(len(temp)):
+        #print "temp_report started on %f" % time.time()
+        for i in self.depth_range:
             self.temp_slices[i][x][y] = temp[i]
         #print "temp_report done on %f" % time.time()
         if  (self.temp_reports_received % self.reports_expected == 0):
@@ -153,10 +155,10 @@ class reactor_listener():
         self.neutron_reports_received += 1
         if  (self.neutron_reports_received % self.reports_expected == 0):
             self.neutron_full_reports_received += 1
-        if (self.neutron_full_reports_received % 10 <> 0):
+        if (self.neutron_full_reports_received % 5 <> 0):
             # Process only every tenth *full* report so we have a hope of keeping up
             return
-        for i in range(len(neutrons)):
+        for i in self.depth_range:
             self.neutron_slices[i][x][y] = neutrons[i]
         if  (self.neutron_reports_received % self.reports_expected == 0):
             self.redraw()
