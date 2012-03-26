@@ -130,6 +130,7 @@ class cell(dbus.service.Object):
                         # Nothing to hit
                         continue
                     try:
+                        # I guess these should be marshalled through mainloops event system
                         self.reactor.layout[x][y].neutron_hit(z)
                     except:
                         # Skip errors
