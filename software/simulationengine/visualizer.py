@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from __future__ import with_statement
-import os,sys,math
+import os,sys,time
+import math
 import numpy as np
 import matplotlib as mpl
 mpl.use('GTKAgg')  # or 'GTK'
@@ -110,7 +111,7 @@ class reactor_listener():
     
 
     def redraw(self):
-        print "Redraw called"
+        print "Redraw called on %f" % time.time()
         if self.redraw_in_progress:
             print "   But cancelled"
             return
@@ -127,10 +128,11 @@ class reactor_listener():
 
         self.temp_fig.canvas.draw()
         self.redraw_in_progress = False
+        print "Redraw complete on %f" % time.time()
 
     def temp_report(self, x, y, temp, sender):
         self.temp_reports_received += 1
-        print "%d mod %d = %d" % (self.temp_reports_received, self.reports_expected, self.temp_reports_received % self.reports_expected)
+        #print "%d mod %d = %d" % (self.temp_reports_received, self.reports_expected, self.temp_reports_received % self.reports_expected)
         for i in range(len(temp)):
             self.temp_slices[i][x][y] = temp[i]
         if  (self.temp_reports_received % self.reports_expected == 0):
@@ -144,16 +146,5 @@ class reactor_listener():
             self.redraw()
 
 if __name__ == '__main__':
-    import dbus.mainloop.glib, gobject
-    gobject.threads_init()
-    dbus.mainloop.glib.threads_init()
-    dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
-    
-    bus = dbus.SessionBus()
-    loop = gobject.MainLoop()
-    listener = reactor_listener(bus, loop)
-
-
-    # TODO: Add some nicer way to exit than ctrl-c
-    listener.loop.run()
-
+    print "Use visualizer_launcher.py"
+    sys.exit(1)
