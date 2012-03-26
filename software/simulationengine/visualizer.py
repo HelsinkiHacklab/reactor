@@ -53,6 +53,7 @@ class reactor_listener():
         self.canvas = FigureCanvas(self.temp_fig)  # a gtk.DrawingArea
         self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
         self.window.connect("destroy", self.quit)
+        self.window.set_default_size(600,900)
         self.window.set_title('Temparatures')
         # Have a box just in case
         self.main_box = gtk.HBox()
