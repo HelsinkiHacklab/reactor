@@ -21,14 +21,21 @@ class reactor_listener():
         self.bus = bus
         self.loop = loop
         
+
         self.temp_slices = [[[0.0 for z in range(reactor.default_depth)] for x in range(len(reactor.default_layout))] for y in range(len(reactor.default_layout[0]))]
         self.neutron_slices = [[[0.0 for z in range(reactor.default_depth)] for x in range(len(reactor.default_layout))] for y in range(len(reactor.default_layout[0]))]
+
+        x = np.arange(len(reactor.default_layout))
+        y = np.arange(len(reactor.default_layout[0]))
+        X, Y = np.meshgrid(x,y)
+        
+        self.temp_fig, self.temps = plt.subplots(len(self.temp_slices), 1)
+        
+
         
         self.bus.add_signal_receiver(self.temp_report, dbus_interface = "fi.hacklab.reactorsimulator", signal_name = "emit_temp")
         self.bus.add_signal_receiver(self.neutron_report, dbus_interface = "fi.hacklab.reactorsimulator", signal_name = "emit_neutrons")
 
-        self.temps = plt.subplots(len(self.temp_slices), 1)
-        self.neutrons = plt.subplots(len(self.neutron_slices), 1)
         plt.show()
 
     def temp_report(self, x, y, temp, sender):
