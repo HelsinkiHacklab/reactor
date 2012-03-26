@@ -84,6 +84,7 @@ class reactor_listener():
                     # initialize the well places to nonzero temp
                     self.temp_slices[z][x][y] = 22.0
                     
+        self.reports_expected /= len(self.temp_slices)
         # And recalculate the normalization again
         self.redraw()
 
@@ -111,6 +112,7 @@ class reactor_listener():
 
         # Set the data to axes
         for i in range(len(self.temp_slices)):
+            # Could we define the slices arrays as NP arrays already and save a bit of CPU time ?? 
             self.slice_cms[i].set_array(np.array(self.temp_slices[i]).ravel())
             self.slice_cms[i].set_norm(self.temp_normalized)
         # I guess this could be optimized somehow by changing the values instead of recreating the whole thing
@@ -122,6 +124,7 @@ class reactor_listener():
         self.temp_reports_received += 1
         for i in range(len(temp)):
             self.temp_slices[i][x][y] = temp[i]
+        print "%d mod %d = %d" % (self.temp_reports_received, self.reports_expected, self.temp_reports_received % self.reports_expected)
         if  (self.temp_reports_received % self.reports_expected == 0):
             self.redraw()
 
