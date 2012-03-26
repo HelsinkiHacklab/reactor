@@ -2,8 +2,13 @@
 import os,sys,math
 import numpy as np
 import matplotlib as mpl
+mpl.use('GTKAgg')  # or 'GTK'
 import matplotlib.pyplot as plt
 import reactor
+import gtk
+from matplotlib.backends.backend_gtk import FigureCanvasGTK as FigureCanvas
+from matplotlib.figure import Figure
+
 
 import dbus
 import dbus.service
@@ -42,6 +47,17 @@ class reactor_listener():
         
         self.temp_fig, self.temps = plt.subplots(self.fig_rows, self.fig_cols)
         self.temp_fig.suptitle("Temparatures")
+        
+        
+        #Copied from my old maecalories code
+        self.canvas = FigureCanvas(self.temp_fig)  # a gtk.DrawingArea
+        self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
+        self.window.connect("destroy", self.quit)
+        self.window.set_title('Temparatures')
+        # Have a box just in case
+        self.main_box = gtk.HBox()
+        self.window.add(self.main_box)
+        self.main_box.pack_start(self.canvas, True, True)
 
         self.slice_cms = []
         # Set the data to axes
@@ -75,7 +91,13 @@ class reactor_listener():
         self.neutron_reports_received = 0
         #self.bus.add_signal_receiver(self.neutron_report, dbus_interface = "fi.hacklab.reactorsimulator", signal_name = "emit_neutrons")
 
-        plt.show()
+        # This blocks, need to figure some other way to draw the canvas
+        #plt.show()
+        self.window.show_all()
+
+
+    def quit(self, *args):
+        self.loop.quit()
 
     def recalculate_normalizers(self):
         self.max_temp = max(max(max(self.temp_slices)))
@@ -83,6 +105,7 @@ class reactor_listener():
     
 
     def redraw(self):
+        print "redraw called"
         self.recalculate_normalizers()
 
         # Set the data to axes
@@ -92,7 +115,7 @@ class reactor_listener():
         # I guess this could be optimized somehow by changing the values instead of recreating the whole thing
         self.temp_cb = mpl.colorbar.ColorbarBase(self.temps[self.fig_rows-1][self.fig_cols-1], norm=self.temp_normalized, orientation='horizontal')
 
-        plt.draw()
+        self.temp_fig.canvas.draw()
 
     def temp_report(self, x, y, temp, sender):
         self.temp_reports_received += 1
