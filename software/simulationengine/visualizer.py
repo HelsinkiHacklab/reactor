@@ -43,12 +43,14 @@ class reactor_listener():
         self.temp_fig, self.temps = plt.subplots(self.fig_rows, self.fig_cols)
         self.temp_fig.suptitle("Temparatures")
 
+        self.slice_cms = []
         # Set the data to axes
         for i in range(len(self.temp_slices)):
             row = i % self.fig_rows
             col = (i/self.fig_rows) % self.fig_cols
-            # I hope these go as pointers cleanly
-            self.temps[row][col].pcolor(self.X,self.Y,self.temp_slices[i], norm=self.temp_normalized)
+            # I hope these go as pointers cleanly (they don't see the redraw method)
+            tmp = self.temps[row][col].pcolor(self.X,self.Y,self.temp_slices[i], norm=self.temp_normalized)
+            self.slice_cms.append(tmp)
             self.temps[row][col].set_title("Slice %d" % i)
         # Set the colorbar to the final space (which is empty for 7 slices)
         self.temp_cb = mpl.colorbar.ColorbarBase(self.temps[self.fig_rows-1][self.fig_cols-1], norm=self.temp_normalized, orientation='horizontal')
@@ -85,16 +87,11 @@ class reactor_listener():
 
         # Set the data to axes
         for i in range(len(self.temp_slices)):
-            row = i % self.fig_rows
-            col = (i/self.fig_rows) % self.fig_cols
-            # I hope these go as pointers cleanly
-            self.temps[row][col].pcolor(self.X,self.Y,self.temp_slices[i], norm=self.temp_normalized)
-            self.temps[row][col].set_title("Slice %d" % i)
-        # Set the colorbar to the final space (which is empty for 7 slices)
+            self.slice_cms[i].set_array(np.array(self.temp_slices[i]).ravel())
+            self.slice_cms[i].set_norm(self.temp_normalized)
+        # I guess this could be optimized somehow by changing the values instead of recreating the whole thing
         self.temp_cb = mpl.colorbar.ColorbarBase(self.temps[self.fig_rows-1][self.fig_cols-1], norm=self.temp_normalized, orientation='horizontal')
-        self.temp_cb.set_label('Temperature')
 
-        
         plt.draw()
 
     def temp_report(self, x, y, temp, sender):
