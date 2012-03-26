@@ -1,5 +1,6 @@
 import os,sys,math,random
 import numpy as np
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 
 import reactor
@@ -19,6 +20,9 @@ for z in range(len(temp_slices)):
                 continue
             temp_slices[z][x][y] = random.random() * 1000
 
+all_slices_max = max(max(max(temp_slices)))
+
+
 # These need to be one larger than the actual data
 x = np.arange(len(reactor.default_layout)+1) 
 y = np.arange(len(reactor.default_layout[0])+1) 
@@ -27,18 +31,23 @@ print x,y
 
 X, Y = np.meshgrid(x,y)
 
+# figure dimensions
 rows = 4
 cols = 2
-#fig, axes = plt.subplots(len(temp_slices), 1, sharex=True, sharey=True)
-fig, axes = plt.subplots(rows, cols, sharex=True, sharey=True)
+fig, axes = plt.subplots(rows, cols)
 
 print axes
+
+temp_norm = mpl.colors.Normalize(0.0, all_slices_max)
 
 for i in range(len(temp_slices)):
     row = i % rows
     col = (i/rows) % cols
-    axes[row][col].pcolor(X,Y,temp_slices[i])
+    axes[row][col].pcolor(X,Y,temp_slices[i], norm=temp_norm)
+    axes[row][col].set_title("Slice %d" % i)
 
+CB1 = mpl.colorbar.ColorbarBase(axes[3][1], norm=temp_norm, orientation='horizontal')
+CB1.set_label('Temperature')
 
 
 
