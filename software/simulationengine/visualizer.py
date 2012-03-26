@@ -124,7 +124,8 @@ class reactor_listener():
             self.slice_cms[i].set_array(self.temp_slices[i].ravel())
             self.slice_cms[i].set_norm(self.temp_normalized)
         # I guess this could be optimized somehow by changing the values instead of recreating the whole thing
-        self.temp_cb = mpl.colorbar.ColorbarBase(self.temps[self.fig_rows-1][self.fig_cols-1], norm=self.temp_normalized, orientation='horizontal')
+        #self.temp_cb = mpl.colorbar.ColorbarBase(self.temps[self.fig_rows-1][self.fig_cols-1], norm=self.temp_normalized, orientation='horizontal')
+        #self.temp_cb.update_normal(self.temp_normalized)
 
         self.temp_fig.canvas.draw()
         self.redraw_in_progress = False
