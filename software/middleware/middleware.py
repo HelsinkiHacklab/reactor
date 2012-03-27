@@ -53,8 +53,8 @@ class ardubus_bridge(dbus.service.Object):
 
         self.max_neutrons_seen = 0
         # Listen temp/neutrons only from the measurment wells
-        self.bus.add_signal_receiver(self.neutron_report, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_neutrons", path='/fi/hacklab/reactorsimulator/engine/reactor/mwell')
-        #self.bus.add_signal_receiver(self.temp_report, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_temp", path='/fi/hacklab/reactorsimulator/engine/reactor/mwell')
+        self.bus.add_signal_receiver(self.neutron_report, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_neutrons")
+        #self.bus.add_signal_receiver(self.temp_report, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_temp",)
         
 
 
@@ -112,16 +112,24 @@ class ardubus_bridge(dbus.service.Object):
     	self.set_rod_leds = self.ardu_rodleds.get_dbus_method('set_jbol_pwm', 'fi.hacklab.ardubus')
 
     def neutron_report(self, x, y, neutrons, *args):
+        print " nutron check %s" % rod_map[x][y]
+        if (rod_map[x][y] <> '#'):
+            return
         # Autoscale at least until we know what the scales are
+        print "neutrons for %d,%d,%s" % (x,y,neutrons)
         current_max = max(neutrons)
         if current_max > self.max_neutrons_seen:
             self.max_neutrons_seen = current_max
-        led_base_index = (gauges8leds_map[x][y]*16)+8
+        led_base_index = (int(gauges8leds_map[x][y])*8)+4
         neutron_avg = sum(neutrons)/len(neutrons)
         self.led_gauge(led_base_index, 4, neutron_avg, self.max_neutrons_seen)
 
     def temp_report(self, x, y, temps, *args):
-        led_base_index = (gauges8leds_map[x][y]*16)
+        print " temp check %s" % rod_map[x][y]
+        if (rod_map[x][y] <> '#'):
+            return
+        print "temperatures for %d,%d,%s" % (x,y,neutrons)
+        led_base_index = (int(gauges8leds_map[x][y])*8)
         temp_avg = sum(temps)/len(temps)
         self.led_gauge(led_base_index, 4, temp_avg, self.max_temp)
 
