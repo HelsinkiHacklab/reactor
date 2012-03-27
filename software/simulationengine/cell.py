@@ -4,16 +4,16 @@ import dbus, gobject
 import dbus.service
 
 # Tuning parameters
-neutron_hit_temp_increase = 1.0
+neutron_hit_temp_increase = 4.0
 cool_temp_decrease = 0.1 # This is ambient radiative cooling, the rod will have active cooling that is defined there
-tip_neutron_hit_p_increase = 0.1
+tip_neutron_hit_p_increase = 0.10
 ambient_temp = 22.0
 decay_p = 0.5 # P of causing neutron_hit when decay is called
 temperature_blend_weight = 0.1
 
 # Initial inoform 3D probability of causing neutron_hit() in neighbour
 neutron_hit_size = 3 # Grid size, changin this is ill-adviced
-neutron_hit_p = [[[ 0.01 for val in range(neutron_hit_size)] for col in range(neutron_hit_size)] for row in range(neutron_hit_size)]
+neutron_hit_p = [[[ 0.05 for val in range(neutron_hit_size)] for col in range(neutron_hit_size)] for row in range(neutron_hit_size)]
 neutron_hit_p[1][1][1] = 0.0 # We're in the center, easiest way is to set p to zero
 
 

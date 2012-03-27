@@ -164,5 +164,17 @@ class reactor_listener():
             self.redraw()
 
 if __name__ == '__main__':
-    print "Use visualizer_launcher.py"
-    sys.exit(1)
+#    print "Use visualizer_launcher.py"
+#    sys.exit(1)
+    import dbus.mainloop.glib, gobject
+    gobject.threads_init()
+    dbus.mainloop.glib.threads_init()
+    dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
+    
+    # TODO: Add some nicer way to exit than ctrl-c
+    bus = dbus.SessionBus()
+    loop = gobject.MainLoop()
+    state_instance = reactor_listener(bus, loop)
+    loop.run()
+        
+
