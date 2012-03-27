@@ -38,7 +38,10 @@ class ardubus_bridge(dbus.service.Object):
         dbus.service.Object.__init__(self, self.bus_name, self.object_path)
 
         self.load_nm()
+        self.ardu_rodservos = None
+        self.ardu_rodleds = None
         self.load_servos()
+        self.load_leds()
 
         self.bus.add_signal_receiver(self.red_alert, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_redalert")
         self.bus.add_signal_receiver(self.red_alert_reset, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_redalert_reset")
@@ -64,11 +67,17 @@ class ardubus_bridge(dbus.service.Object):
         for i in range(num_leds):
             ledno = start_led + 2*i
             if mapped_value > 255:
+                print "self.set_rod_leds(%d, %d, 255)" % (jbol_idx, ledno)
                 self.set_rod_leds(jbol_idx, ledno, 255)
                 mapped_value -= 255
                 continue
+            if mapped_value < 0:
+                print "self.set_rod_leds(%d, %d, 0)" % (jbol_idx, ledno)
+                self.set_rod_leds(jbol_idx, ledno, 0)
+                continue
+            print "self.set_rod_leds(%d, %d, %d)" % (jbol_idx, ledno, mapped_value)
             self.set_rod_leds(jbol_idx, ledno, mapped_value)
-            break
+            mapped_value -= 255
 
     def red_alert(self, *args):
         if self.red_alert_active:
@@ -98,9 +107,9 @@ class ardubus_bridge(dbus.service.Object):
     	self.set_rod_servo = self.ardu_rodservos.get_dbus_method('set_servo', 'fi.hacklab.ardubus')
 
     def load_leds(self):
-        if not self.ardu_rodservos:
-            self.ardu_rodservos = self.bus.get_object('fi.hacklab.ardubus', '/fi/hacklab/ardubus/arduino0')
-    	self.set_rod_leds = self.ardu_rodservos.get_dbus_method('set_jbol_pwm', 'fi.hacklab.ardubus')
+        if not self.ardu_rodleds:
+            self.ardu_rodleds = self.bus.get_object('fi.hacklab.ardubus', '/fi/hacklab/ardubus/arduino1')
+    	self.set_rod_leds = self.ardu_rodleds.get_dbus_method('set_jbol_pwm', 'fi.hacklab.ardubus')
 
     def neutron_report(self, x, y, neutrons, *args):
         # Autoscale at least until we know what the scales are
