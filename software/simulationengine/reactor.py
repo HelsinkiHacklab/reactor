@@ -52,6 +52,8 @@ class reactor(dbus.service.Object):
         self.avg_pressure = 0.0
         self.power_output = 0.0
 
+        self.red_alert_given = False
+
         # Final debug statement
         print "%s initialized" % self.object_path
 
@@ -146,10 +148,23 @@ class reactor(dbus.service.Object):
         if self.avg_pressure > blowout_pressure:
             self.emit_blowout(self.object_path)
             self.state_instance.pause()
+        
+        if (self.avg_pressure < (blowout_pressure * blowout_safety_factor)):
+            if self.red_alert_given:
+                self.emit_redalert_reset(self.object_path)
+        
+    @dbus.service.signal('fi.hacklab.reactorsimulator')
+    def emit_redalert(self, sender):
+        """Reset the alarm"""
+        self.red_alert_given = False
+        print "Red alert reset"
 
     @dbus.service.signal('fi.hacklab.reactorsimulator')
     def emit_redalert(self, sender):
         """Sound the alarm!"""
+        if self.red_alert_given:
+            return
+        self.red_alert_given = True
         print "RED ALERT!!!"
 
     @dbus.service.signal('fi.hacklab.reactorsimulator')

@@ -37,6 +37,7 @@ class cell(dbus.service.Object):
         
         self.temp = float(ambient_temp) # Celcius ?
         self.blend_temp = 0.0
+        self.melted = False
 
         # Final debug statement
         print "%s initialized" % self.object_path

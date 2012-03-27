@@ -139,6 +139,9 @@ class rod(dbus.service.Object):
     @dbus.service.signal('fi.hacklab.reactorsimulator')
     def emit_cell_melted(self, x, y, z, sender):
         """Emitted when a cell in a rod melts"""
+        if self.cells[z].melted:
+            return
+        self.cells[z].melted =  True
         print "Cell %d,%d,%d melted!" % (x,y,z)
         pass
 
