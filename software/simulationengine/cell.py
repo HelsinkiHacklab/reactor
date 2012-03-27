@@ -10,6 +10,7 @@ tip_neutron_hit_p_increase = 0.10
 ambient_temp = 22.0
 decay_p = 0.5 # P of causing neutron_hit when decay is called
 temperature_blend_weight = 0.1
+cell_melt_temp = 1100
 
 # Initial inoform 3D probability of causing neutron_hit() in neighbour
 neutron_hit_size = 3 # Grid size, changin this is ill-adviced
@@ -33,7 +34,6 @@ class cell(dbus.service.Object):
         self.depth = depth
         self.rod = rod
         self.neutrons_seen = 0
-        
         
         self.temp = float(ambient_temp) # Celcius ?
         self.blend_temp = 0.0

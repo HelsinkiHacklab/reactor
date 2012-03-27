@@ -8,6 +8,7 @@ default_max_speed = 1.0
 default_scram_speed = 2.0
 default_water_flow = 0.5 # 1.0 being max
 water_flow_cf = 2.0 # Cooling factor
+stomp_temp_decrease = 50 # Drop temp of each cell by this when stomp if triggered
 
 
 class rod(dbus.service.Object):
@@ -24,9 +25,10 @@ class rod(dbus.service.Object):
         #self.set_depth(float(depth)/2) # This is float so we can keep track of progress in smaller steps, for simulation purposes it will be rounded to int
         self.set_depth(-2) # all-out
         self.current_max_speed = default_max_speed
+        self.current_max_flow = 1.0
         self.current_water_flow = default_water_flow
         self.current_velocity = 0.0 # at rest
-        
+
         self.water_level = 1.0 # This is basically percentage of the full depth 1.0 means full of water
         self.steam_pressure = 0.0 # In whatever unit we feel is most convinient
         self.avg_temp = 0.0
@@ -40,11 +42,34 @@ class rod(dbus.service.Object):
         print "%s initialized" % self.object_path
 
     def tick(self):
-        self.cool()  
+        self.cool()
         self.decay()
         for cell in self.cells:
             cell.calc_blend_temp()
         self.calc_avg_temp()
+        self.calc_steam_pressure()
+
+
+    @dbus.service.method('fi.hacklab.reactorsimulator')
+    def cell_melted(self):
+        """Cell has melted, everything is AFU"""
+        self.current_max_flow = 0.0
+        self.current_water_flow = 0.0
+        self.current_velocity = 0.0
+        self.current_max_speed  = 0.0
+
+    @dbus.service.method('fi.hacklab.reactorsimulator')
+    def stomp(self):
+        """Decreases avg temperature by dropping temp in each cell temp by the set amount and recalculating"""
+        for cell in self.cells:
+            cell.temp -= stomp_temp_decrease
+        self.calc_avg_temp()
+
+    @dbus.service.method('fi.hacklab.reactorsimulator')
+    def calc_steam_pressure(self):
+        """Recalculates the value of the steam_pressure property and returns it"""
+        self.steam_pressure = ((self.avg_temp + 273) ** 2) / 139129
+        return self.steam_pressure
 
     def get_cell_temps(self):
         """Return list of cell temperatures"""
@@ -96,6 +121,26 @@ class rod(dbus.service.Object):
         # Clear the neutron counts
         for cell in self.cells:
             cell.neutrons_seen = 0
+
+
+        # Check the limits
+        self.check_cell_melt()
+
+    def check_cell_melt(self):
+        """Checks if any cell has melted"""
+        for cell_instance in self.cells:
+            if cell_instance.temp < cell.cell_melt_temp:
+                continue
+            self.emit_cell_melted(self.x, self.y, cell_instance.depth, self.object_path)
+            self.cell_melted()
+            return
+        return
+
+    @dbus.service.signal('fi.hacklab.reactorsimulator')
+    def emit_cell_melted(self, x, y, z, sender):
+        """Emitted when a cell in a rod melts"""
+        print "Cell %d,%d,%d melted!" % (x,y,z)
+        pass
 
     @dbus.service.method('fi.hacklab.reactorsimulator')
     def calc_blend_temp(self):

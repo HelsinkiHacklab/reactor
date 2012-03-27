@@ -5,6 +5,17 @@ import dbus.service
 
 import rod, measurementwell
 
+
+###
+# suovulan luettelemia lukuja
+#
+# cooling water normally 75 atm jolloin temp olis about 285C
+# high-pressure jotain 158 atm
+# 
+#
+
+
+
 # Layout of the generator, '*' is a rod place, '#' is automatic whatever place, ' ' is nothing
 default_layout = [[' ', ' ', '*', '*', '*', ' ', ' '],
                   [' ', '*', '#', '*', '*', '*', ' '],
@@ -18,23 +29,28 @@ default_layout = [[' ', ' ', '*', '*', '*', ' ', ' '],
 default_depth = 7
 max_temp = 1500.0 # This is used in visualizations etc, the max point temperature we are going to see while the reactor has not yet blown up
 
+# Power ouput factor
+power_output_factor = 1024
+blowout_pressure = 150
+blowout_safety_factor = 0.85 
+
 # It seems that as things get hotter we start lagging behind in our clock or something, at least the visualization starts seeing longer and longer intervalls between report signals
 
 class reactor(dbus.service.Object):
-    def __init__(self, bus, mainloop, path_base):
+    def __init__(self, bus, mainloop, path_base, state):
+        self.state_instance = state
         self.object_path = path_base + '/reactor'
         self.bus_name = dbus.service.BusName('fi.hacklab.reactorsimulator', bus=bus)
         self.bus = bus
         dbus.service.Object.__init__(self, self.bus_name, self.object_path)
 
-
         self.loop = mainloop
         self.tick_count = 0
         self.grid_limits = [0,0,0]
 
-
         self.avg_temp = 0.0
-        self.avg_pressure = 0.0 
+        self.avg_pressure = 0.0
+        self.power_output = 0.0
 
         # Final debug statement
         print "%s initialized" % self.object_path
@@ -99,10 +115,9 @@ class reactor(dbus.service.Object):
         self.calc_avg_temp()
         self.calc_avg_pressure()
         
-        # TODO: check if we're within set limits
-
         # Trigger reports at each tick
         self.report()
+
         # return true to keep ticking
         print "Reactor tick #%d done" % self.tick_count
         return True
@@ -117,6 +132,30 @@ class reactor(dbus.service.Object):
         for well in self.mwells:
             well.report()
 
+        self.emit_pressure(self.avg_pressure, self.object_path)
+        self.emit_power(self.power_output, self.object_path)
+
+        # Check limits
+        self.check_pressure()
+
+    @dbus.service.method('fi.hacklab.reactorsimulator')
+    def check_pressure(self):
+        if (self.avg_pressure > (blowout_pressure * blowout_safety_factor)):
+            self.emit_redalert(self.object_path)
+
+        if self.avg_pressure > blowout_pressure:
+            self.emit_blowout(self.object_path)
+            self.state_instance.pause()
+
+    @dbus.service.signal('fi.hacklab.reactorsimulator')
+    def emit_redalert(self, sender):
+        """Sound the alarm!"""
+        print "RED ALERT!!!"
+
+    @dbus.service.signal('fi.hacklab.reactorsimulator')
+    def emit_blowout(self, sender):
+        """It's all over"""
+        print "FAIL: Reactor blew up!"
 
     def get_rod_temps(self):
         """Return list of rod temperatures, NOTE: does not trigger recalculation on the rod so might return old data"""
@@ -134,9 +173,21 @@ class reactor(dbus.service.Object):
 
     @dbus.service.method('fi.hacklab.reactorsimulator')
     def calc_avg_pressure(self):
-        """Recalculates the value of the avg_pressure property and returns it"""
+        """Recalculates the value of the avg_pressure property and returns it, also recalculates power output"""
         self.avg_pressure = sum(self.get_rod_pressures()) / self.rod_count
+        if self.avg_pressure > 1.0:
+            self.power_output = self.avg_pressure * power_output_factor
         return self.avg_pressure;
+
+    @dbus.service.signal('fi.hacklab.reactorsimulator')
+    def emit_pressure(self, pressure, sender):
+        """This emits the average pressure """
+        pass
+
+    @dbus.service.signal('fi.hacklab.reactorsimulator')
+    def emit_power(self, power, sender):
+        """This emits the average pressure """
+        pass
 
 
 if __name__ == '__main__':

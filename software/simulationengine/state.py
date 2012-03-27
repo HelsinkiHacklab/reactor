@@ -20,7 +20,7 @@ class state(dbus.service.Object):
         
         # Load the reactor object (that will load most of the other stuff)
         self.loop = mainloop
-        self.reactor = reactor.reactor(bus, self.loop, self.object_path)
+        self.reactor = reactor.reactor(bus, self.loop, self.object_path, self)
         self.reactor.load_layout(reactor.default_layout, reactor.default_depth)
         self.tick_count = 0
 
