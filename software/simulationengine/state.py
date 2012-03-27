@@ -14,7 +14,7 @@ save_every_n_ticks = 50
 class state(dbus.service.Object):
     def __init__(self, bus, mainloop):
         # DBUS boilerplate
-        self.object_path = '/fi/hacklab/reactorsimulator/simulationengine'
+        self.object_path = '/fi/hacklab/reactorsimulator/engine'
         self.bus_name = dbus.service.BusName('fi.hacklab.reactorsimulator.engine', bus=bus)
         dbus.service.Object.__init__(self, self.bus_name, self.object_path)
         
