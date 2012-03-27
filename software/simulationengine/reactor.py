@@ -154,7 +154,7 @@ class reactor(dbus.service.Object):
                 self.emit_redalert_reset(self.object_path)
         
     @dbus.service.signal('fi.hacklab.reactorsimulator.engine')
-    def emit_redalert(self, sender):
+    def emit_redalert_reset(self, sender):
         """Reset the alarm"""
         self.red_alert_given = False
         print "Red alert reset"
