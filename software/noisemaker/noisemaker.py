@@ -158,19 +158,5 @@ class noisemaker_sequence:
         del(self.nm.active_loops[self.loop_id])
 
 if __name__ == '__main__':
-    # Read config
-    with open(__file__.replace('.py', '.yml')) as f:
-        config = yaml.load(f)
-
-    # Initialize DBUS for us
-    from dbus.mainloop.glib import DBusGMainLoop
-    dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
-    bus = dbus.SessionBus()
-    
-    noisemaker_instance = noisemaker(config,bus)
-    
-    # TODO: Add some nicer way to exit than ctrl-c
-    loop = gobject.MainLoop()
-    loop.run()
-    
-    
+    print "use launcher"
+    sys.exit(1)

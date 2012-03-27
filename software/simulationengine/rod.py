@@ -23,7 +23,7 @@ class rod(dbus.service.Object):
         self.x = x
         self.y = y
         self.well_depth = depth
-        self.set_depth(float(depth)/2) # This is float so we can keep track of progress in smaller steps, for simulation purposes it will be rounded to int
+        self.set_depth(float(depth)*0.65) # This is float so we can keep track of progress in smaller steps, for simulation purposes it will be rounded to int
         #self.set_depth(-2) # all-out
         self.current_max_speed = default_max_speed
         self.current_max_flow = 1.0
