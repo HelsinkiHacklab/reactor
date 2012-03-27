@@ -6,7 +6,7 @@ import dbus.service
 # Tuning parameters
 neutron_hit_temp_increase = 4.0
 cool_temp_decrease = 0.1 # This is ambient radiative cooling, the rod will have active cooling that is defined there
-tip_neutron_hit_p_increase = 0.10
+tip_neutron_hit_p_increase = 0.01 # increasing this too much will break everything
 ambient_temp = 22.0
 decay_p = 0.5 # P of causing neutron_hit when decay is called
 temperature_blend_weight = 0.1
@@ -120,7 +120,7 @@ class cell(dbus.service.Object):
                     z = self.depth + (zdelta - 1)
                     if not self.reactor.in_grid(x,y,z):
                         continue
-                    hit_p = neutron_hit_p[xdelta][ydelta][zdelta]
+                    hit_p = float(neutron_hit_p[xdelta][ydelta][zdelta])
                     # The graphite tip is at our place, accelerate reaction
                     if (self.rod.tip_depth == z):
                         hit_p += tip_neutron_hit_p_increase

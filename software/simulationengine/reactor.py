@@ -27,7 +27,7 @@ default_layout = [[' ', ' ', '*', '*', '*', ' ', ' '],
 
 # Depth of each rod well
 default_depth = 7
-max_temp = 1500.0 # This is used in visualizations etc, the max point temperature we are going to see while the reactor has not yet blown up
+max_temp = 1200.0 # This is used in visualizations etc, the max point temperature we are going to see while the reactor has not yet blown up
 
 # Power ouput factor
 power_output_factor = 1024

@@ -9,6 +9,7 @@ default_scram_speed = 2.0
 default_water_flow = 0.5 # 1.0 being max
 water_flow_cf = 2.0 # Cooling factor
 stomp_temp_decrease = 50 # Drop temp of each cell by this when stomp if triggered
+steam_pressure_exponent = 3.5
 
 
 class rod(dbus.service.Object):
@@ -22,8 +23,8 @@ class rod(dbus.service.Object):
         self.x = x
         self.y = y
         self.well_depth = depth
-        #self.set_depth(float(depth)/2) # This is float so we can keep track of progress in smaller steps, for simulation purposes it will be rounded to int
-        self.set_depth(-2) # all-out
+        self.set_depth(float(depth)/2) # This is float so we can keep track of progress in smaller steps, for simulation purposes it will be rounded to int
+        #self.set_depth(-2) # all-out
         self.current_max_speed = default_max_speed
         self.current_max_flow = 1.0
         self.current_water_flow = default_water_flow
@@ -68,7 +69,7 @@ class rod(dbus.service.Object):
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def calc_steam_pressure(self):
         """Recalculates the value of the steam_pressure property and returns it"""
-        self.steam_pressure = ((self.avg_temp + 273) ** 2) / 139129
+        self.steam_pressure = ((self.avg_temp + 273) ** steam_pressure_exponent) / ((100+273) ** steam_pressure_exponent)
         return self.steam_pressure
 
     def get_cell_temps(self):
