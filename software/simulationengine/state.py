@@ -15,7 +15,7 @@ class state(dbus.service.Object):
     def __init__(self, bus, mainloop):
         # DBUS boilerplate
         self.object_path = '/fi/hacklab/reactorsimulator/simulationengine'
-        self.bus_name = dbus.service.BusName('fi.hacklab.reactorsimulator', bus=bus)
+        self.bus_name = dbus.service.BusName('fi.hacklab.reactorsimulator.engine', bus=bus)
         dbus.service.Object.__init__(self, self.bus_name, self.object_path)
         
         # Load the reactor object (that will load most of the other stuff)
@@ -36,7 +36,7 @@ class state(dbus.service.Object):
             self.save_state()
         return self.reactor.tick()
 
-    @dbus.service.method('fi.hacklab.reactorsimulator')
+    @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def run(self):
         self.is_running = True
         # Set the reactor to tick every 100ms
@@ -44,7 +44,7 @@ class state(dbus.service.Object):
         if not self.loop.is_running():
             self.loop.run()
 
-    @dbus.service.method('fi.hacklab.reactorsimulator')
+    @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def pause(self):
         """Just sets an internal variable to control ticks"""
         self.is_running = False
@@ -53,15 +53,15 @@ class state(dbus.service.Object):
         self.is_running = False
         self.loop.quit()
 
-    @dbus.service.method('fi.hacklab.reactorsimulator')
+    @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def get_state(self):
         pass
 
-    @dbus.service.method('fi.hacklab.reactorsimulator')
+    @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def save_state(self):
         pass
         
-    @dbus.service.method('fi.hacklab.reactorsimulator')
+    @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def load_state(self):
         pass
 

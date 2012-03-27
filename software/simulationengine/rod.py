@@ -14,7 +14,7 @@ stomp_temp_decrease = 50 # Drop temp of each cell by this when stomp if triggere
 class rod(dbus.service.Object):
     def __init__(self, bus, mainloop, path_base, x, y, depth, reactor):
         self.object_path = "%s/rod/%d/%d" % (path_base, x, y)
-        self.bus_name = dbus.service.BusName('fi.hacklab.reactorsimulator', bus=bus)
+        self.bus_name = dbus.service.BusName('fi.hacklab.reactorsimulator.engine', bus=bus)
         dbus.service.Object.__init__(self, self.bus_name, self.object_path)
 
         self.loop = mainloop
@@ -50,7 +50,7 @@ class rod(dbus.service.Object):
         self.calc_steam_pressure()
 
 
-    @dbus.service.method('fi.hacklab.reactorsimulator')
+    @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def cell_melted(self):
         """Cell has melted, everything is AFU"""
         self.current_max_flow = 0.0
@@ -58,14 +58,14 @@ class rod(dbus.service.Object):
         self.current_velocity = 0.0
         self.current_max_speed  = 0.0
 
-    @dbus.service.method('fi.hacklab.reactorsimulator')
+    @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def stomp(self):
         """Decreases avg temperature by dropping temp in each cell temp by the set amount and recalculating"""
         for cell in self.cells:
             cell.temp -= stomp_temp_decrease
         self.calc_avg_temp()
 
-    @dbus.service.method('fi.hacklab.reactorsimulator')
+    @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def calc_steam_pressure(self):
         """Recalculates the value of the steam_pressure property and returns it"""
         self.steam_pressure = ((self.avg_temp + 273) ** 2) / 139129
@@ -75,30 +75,30 @@ class rod(dbus.service.Object):
         """Return list of cell temperatures"""
         return map(lambda x: x.temp, self.cells)
 
-    @dbus.service.method('fi.hacklab.reactorsimulator')
+    @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def set_depth(self, depth):
         self.depth = float(depth)
         self.moderator_depth = math.floor(self.depth)
         self.tip_depth = self.moderator_depth+1
 
-    @dbus.service.method('fi.hacklab.reactorsimulator')
+    @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def calc_avg_temp(self):
         """Recalculates the value of the avg_temp property and returns it"""
         self.avg_temp = sum(self.get_cell_temps()) / self.well_depth
         return self.avg_temp;
 
-    @dbus.service.method('fi.hacklab.reactorsimulator')
+    @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def neutron_hit(self, depth):
         """Trigger neutron hit on cell at depth, indices start from zero"""
         self.cells[depth].neutron_hit()
 
-    @dbus.service.method('fi.hacklab.reactorsimulator')
+    @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def decay(self):
         """This is the time-based decay, it will be called by a timer in the reactor"""
         for cell in self.cells:
             cell.decay()
 
-    @dbus.service.method('fi.hacklab.reactorsimulator')
+    @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def cool(self):
         """This is the time-based cooling, it will be called by a timer in the reactor"""
         cool_by = self.current_water_flow * water_flow_cf
@@ -109,7 +109,7 @@ class rod(dbus.service.Object):
         """Return list of cell neutrons_seen"""
         return map(lambda x: x.neutrons_seen, self.cells)
 
-    @dbus.service.method('fi.hacklab.reactorsimulator')
+    @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def report(self):
         self.emit_temp(self.x, self.y, self.get_cell_temps(), self.object_path)
         self.emit_neutrons(self.x, self.y, self.get_cell_neutrons(), self.object_path)
@@ -136,7 +136,7 @@ class rod(dbus.service.Object):
             return
         return
 
-    @dbus.service.signal('fi.hacklab.reactorsimulator')
+    @dbus.service.signal('fi.hacklab.reactorsimulator.engine')
     def emit_cell_melted(self, x, y, z, sender):
         """Emitted when a cell in a rod melts"""
         if self.cells[z].melted:
@@ -145,33 +145,33 @@ class rod(dbus.service.Object):
         print "Cell %d,%d,%d melted!" % (x,y,z)
         pass
 
-    @dbus.service.method('fi.hacklab.reactorsimulator')
+    @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def calc_blend_temp(self):
         for cell in self.cells:
             cell.calc_blend_temp()
 
-    @dbus.service.method('fi.hacklab.reactorsimulator')
+    @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def sync_blend_temp(self):
         for cell in self.cells:
             cell.sync_blend_temp()
         self.calc_avg_temp()
 
-    @dbus.service.signal('fi.hacklab.reactorsimulator')
+    @dbus.service.signal('fi.hacklab.reactorsimulator.engine')
     def emit_depth(self, x, y, depth, velocity, sender):
         """This emits the current depth and velocity (<0 is going up >0 going down)"""
         pass
 
-    @dbus.service.signal('fi.hacklab.reactorsimulator')
+    @dbus.service.signal('fi.hacklab.reactorsimulator.engine')
     def emit_temp(self, x, y, temp, sender):
         """This emits the temperatures of the cells of the current rod"""
         pass
 
-    @dbus.service.signal('fi.hacklab.reactorsimulator')
+    @dbus.service.signal('fi.hacklab.reactorsimulator.engine')
     def emit_neutrons(self, x, y, neutrons, sender):
         """This emits the neutron counts of the cells of the current rod"""
         pass
 
-    @dbus.service.signal('fi.hacklab.reactorsimulator')
+    @dbus.service.signal('fi.hacklab.reactorsimulator.engine')
     def emit_pressure(self, x, y, pressure, sender):
         """This emits the pressure of current rod"""
         pass

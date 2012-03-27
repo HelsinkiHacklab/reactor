@@ -96,10 +96,10 @@ class reactor_listener():
 
         self.temp_reports_received = 0
         self.temp_full_reports_received = 0
-        self.bus.add_signal_receiver(self.temp_report, dbus_interface = "fi.hacklab.reactorsimulator", signal_name = "emit_temp")
+        self.bus.add_signal_receiver(self.temp_report, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_temp")
         self.neutron_reports_received = 0
         self.neutron_full_reports_received = 0
-        #self.bus.add_signal_receiver(self.neutron_report, dbus_interface = "fi.hacklab.reactorsimulator", signal_name = "emit_neutrons")
+        #self.bus.add_signal_receiver(self.neutron_report, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_neutrons")
 
         # This blocks, need to figure some other way to draw the canvas
         #plt.show()

@@ -24,7 +24,7 @@ class cell(dbus.service.Object):
         self.loop = mainloop
         self.reactor = reactor
         self.object_path = "%s/cell/%d" % (path_base, depth)
-        self.bus_name = dbus.service.BusName('fi.hacklab.reactorsimulator', bus=bus)
+        self.bus_name = dbus.service.BusName('fi.hacklab.reactorsimulator.engine', bus=bus)
         dbus.service.Object.__init__(self, self.bus_name, self.object_path)
 
         self.loop = mainloop
@@ -42,7 +42,7 @@ class cell(dbus.service.Object):
         # Final debug statement
         print "%s initialized" % self.object_path
 
-    @dbus.service.method('fi.hacklab.reactorsimulator')
+    @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def decay(self):
         """This is the time-based decay, it will be called by a timer in the reactor"""
         # Rod position is checked in the neutron_hit method
@@ -50,7 +50,7 @@ class cell(dbus.service.Object):
             return
         self.neutron_hit()
 
-    @dbus.service.method('fi.hacklab.reactorsimulator')
+    @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def cool(self, cool_by=None):
         """This is the time-based cooling, it will be called by a timer in the reactor"""
         if not cool_by:
@@ -99,7 +99,7 @@ class cell(dbus.service.Object):
         self.temp = float(self.blend_temp)
         #print "DEBUG: %s sync_blend_temp(), temp %f" % (self.object_path, self.temp)
 
-    @dbus.service.method('fi.hacklab.reactorsimulator')
+    @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def neutron_hit(self):
         """This is where most of the magic happens, whenever we have a split atom we generate heat and with some P trigger hits in neighbours"""
         self.neutrons_seen += 1 # keep track of the flow in case we need it

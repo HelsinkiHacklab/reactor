@@ -40,7 +40,7 @@ class reactor(dbus.service.Object):
     def __init__(self, bus, mainloop, path_base, state):
         self.state_instance = state
         self.object_path = path_base + '/reactor'
-        self.bus_name = dbus.service.BusName('fi.hacklab.reactorsimulator', bus=bus)
+        self.bus_name = dbus.service.BusName('fi.hacklab.reactorsimulator.engine', bus=bus)
         self.bus = bus
         dbus.service.Object.__init__(self, self.bus_name, self.object_path)
 
@@ -124,7 +124,7 @@ class reactor(dbus.service.Object):
         print "Reactor tick #%d done" % self.tick_count
         return True
 
-    @dbus.service.method('fi.hacklab.reactorsimulator')
+    @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def report(self):
         """This will trigger report methods for everything else, they will emit signals"""
 
@@ -140,7 +140,7 @@ class reactor(dbus.service.Object):
         # Check limits
         self.check_pressure()
 
-    @dbus.service.method('fi.hacklab.reactorsimulator')
+    @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def check_pressure(self):
         if (self.avg_pressure > (blowout_pressure * blowout_safety_factor)):
             self.emit_redalert(self.object_path)
@@ -153,13 +153,13 @@ class reactor(dbus.service.Object):
             if self.red_alert_given:
                 self.emit_redalert_reset(self.object_path)
         
-    @dbus.service.signal('fi.hacklab.reactorsimulator')
+    @dbus.service.signal('fi.hacklab.reactorsimulator.engine')
     def emit_redalert(self, sender):
         """Reset the alarm"""
         self.red_alert_given = False
         print "Red alert reset"
 
-    @dbus.service.signal('fi.hacklab.reactorsimulator')
+    @dbus.service.signal('fi.hacklab.reactorsimulator.engine')
     def emit_redalert(self, sender):
         """Sound the alarm!"""
         if self.red_alert_given:
@@ -167,7 +167,7 @@ class reactor(dbus.service.Object):
         self.red_alert_given = True
         print "RED ALERT!!!"
 
-    @dbus.service.signal('fi.hacklab.reactorsimulator')
+    @dbus.service.signal('fi.hacklab.reactorsimulator.engine')
     def emit_blowout(self, sender):
         """It's all over"""
         print "FAIL: Reactor blew up!"
@@ -180,13 +180,13 @@ class reactor(dbus.service.Object):
         """Return list of rod pressures, NOTE: does not trigger recalculation on the rod so might return old data"""
         return map(lambda x: x.steam_pressure, self.rods)
 
-    @dbus.service.method('fi.hacklab.reactorsimulator')
+    @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def calc_avg_temp(self):
         """Recalculates the value of the avg_temp property and returns it"""
         self.avg_temp = sum(self.get_rod_temps()) / self.rod_count
         return self.avg_temp;
 
-    @dbus.service.method('fi.hacklab.reactorsimulator')
+    @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def calc_avg_pressure(self):
         """Recalculates the value of the avg_pressure property and returns it, also recalculates power output"""
         self.avg_pressure = sum(self.get_rod_pressures()) / self.rod_count
@@ -194,12 +194,12 @@ class reactor(dbus.service.Object):
             self.power_output = self.avg_pressure * power_output_factor
         return self.avg_pressure;
 
-    @dbus.service.signal('fi.hacklab.reactorsimulator')
+    @dbus.service.signal('fi.hacklab.reactorsimulator.engine')
     def emit_pressure(self, pressure, sender):
         """This emits the average pressure """
         pass
 
-    @dbus.service.signal('fi.hacklab.reactorsimulator')
+    @dbus.service.signal('fi.hacklab.reactorsimulator.engine')
     def emit_power(self, power, sender):
         """This emits the average pressure """
         pass

@@ -7,7 +7,7 @@ import cell
 class well(dbus.service.Object):
     def __init__(self, bus, mainloop, path_base, x, y, depth, reactor):
         self.object_path = "%s/mwell/%d/%d" % (path_base, x, y)
-        self.bus_name = dbus.service.BusName('fi.hacklab.reactorsimulator', bus=bus)
+        self.bus_name = dbus.service.BusName('fi.hacklab.reactorsimulator.engine', bus=bus)
         dbus.service.Object.__init__(self, self.bus_name, self.object_path)
 
         self.loop = mainloop
@@ -24,13 +24,13 @@ class well(dbus.service.Object):
         # Final debug statement
         print "%s initialized" % self.object_path
 
-    @dbus.service.method('fi.hacklab.reactorsimulator')
+    @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def neutron_hit(self, depth):
         """Trigger neutron hit on cell at depth, indices start from zero"""
         self.neutrons_seen[depth] += 1 # keep track of the flow in case we need it
         pass
 
-    @dbus.service.method('fi.hacklab.reactorsimulator')
+    @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def calc_blend_temp(self):
         """Calculates next blend_temp"""
         self.blend_temperatures = [0.0 for i in range(self.depth)]
@@ -66,31 +66,31 @@ class well(dbus.service.Object):
             self.blend_temperatures[i] = (1.0 - cell.temperature_blend_weight) * self.temperatures[i]  + (cell.temperature_blend_weight * self.blend_temperatures[i])
         pass
 
-    @dbus.service.method('fi.hacklab.reactorsimulator')
+    @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def sync_blend_temp(self):
         for i in range(self.depth):
             self.temperatures[i] = float(self.blend_temperatures[i])
         self.calc_avg_temp()
 
-    @dbus.service.method('fi.hacklab.reactorsimulator')
+    @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def calc_avg_temp(self):
         """Recalculates the value of the avg_temp property and returns it"""
         self.avg_temp = sum(self.temperatures) / self.depth
         return self.avg_temp;
 
-    @dbus.service.method('fi.hacklab.reactorsimulator')
+    @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def report(self):
         #self.emit_temp(self.temp, self.object_path)
         self.emit_neutrons(self.x, self.y, self.neutrons_seen, self.object_path)
         self.emit_temp(self.x, self.y, self.temperatures, self.object_path)
         self.neutrons_seen = [0 for i in range(self.depth)] # reset the count
 
-    @dbus.service.signal('fi.hacklab.reactorsimulator')
+    @dbus.service.signal('fi.hacklab.reactorsimulator.engine')
     def emit_neutrons(self, x, y, neutrons, sender):
         """This emits the temperature of current cell"""
         pass
 
-    @dbus.service.signal('fi.hacklab.reactorsimulator')
+    @dbus.service.signal('fi.hacklab.reactorsimulator.engine')
     def emit_temp(self, x, y, temp, sender):
         """This emits the temperatures of the cells of the current rod"""
         pass
