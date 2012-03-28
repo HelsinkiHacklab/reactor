@@ -10,5 +10,5 @@ import service
 class test(service.baseclass):
     def __init__(self, mainloop, bus, config, **kwargs):
         super(test, self).__init__(mainloop, bus, config, **kwargs)
-        print "launcher test mainclass initialized as %s:%s with config %s" % (self.dbus_interface_name, self.dbus_object_path, repr(self.config))
+        #print "launcher test mainclass initialized as %s:%s with config %s" % (self.dbus_interface_name, self.dbus_object_path, repr(self.config))
 

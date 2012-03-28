@@ -33,12 +33,18 @@ class baseclass(dbus.service.Object):
         else:
             self.main_instance = None
 
+    def hook_signals(self):
+        """Hooks common UNIX signals to corresponding handlers"""
+        signal.signal(signal.SIGTERM, self.quit)
+        signal.signal(signal.SIGQUIT, self.quit)
+        signal.signal(signal.SIGHUP, self.reload)
+
     def quit(self):
         """Quits the mainloop"""
         self.mainloop.quit()
 
     def reload(self):
-        """Used to reload the config"""
+        """Used to reload the config (and if we have """
         self.load_config()
         # Seems we need to explicitly refresh this
         if self.main_instance:
