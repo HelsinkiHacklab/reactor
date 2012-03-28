@@ -30,6 +30,8 @@ class baseclass(dbus.service.Object):
         if kwargs.has_key('main_class_name'):
             exec("from %s import %s as main_class" % (kwargs['main_class_name'],kwargs['main_class_name']))
             self.main_instance = main_class(self.mainloop, self.bus, self.config, **kwargs)
+        else:
+            self.main_instance = None
 
     def quit(self):
         """Quits the mainloop"""
@@ -38,6 +40,9 @@ class baseclass(dbus.service.Object):
     def reload(self):
         """Used to reload the config"""
         self.load_config()
+        # I'm not sure this is actually needed, in fact it shouldn't be
+#        if self.main_instance:
+#            self.main_instance.config = self.config
 
     def load_config(self):
         """Loads (or reloads) the configuration file"""

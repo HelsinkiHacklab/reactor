@@ -1,6 +1,6 @@
 import dbus.service
 
-class test(dbus.service.Object):
+class baseclass(dbus.service.Object):
     def __init__(self, mainloop, bus, config, **kwargs):
         self.mainloop = mainloop
         self.bus = bus
@@ -14,6 +14,6 @@ class test(dbus.service.Object):
         # Start the DBUS stuff
         dbus.service.Object.__init__(self, dbus.service.BusName(self.dbus_interface_name, bus=self.bus), self.dbus_object_path)
         
-        print "Test class initialized as %s:%s with config %s" % (self.dbus_interface_name, self.dbus_object_path, repr(self.config))
+        print "service baseclass initialized as %s:%s with config %s" % (self.dbus_interface_name, self.dbus_object_path, repr(self.config))
 
 
