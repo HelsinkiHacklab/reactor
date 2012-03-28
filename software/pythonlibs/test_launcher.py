@@ -11,13 +11,14 @@ import launcher,dbus
 my_signature = 'fi.hacklab.launchertest'
 launcher_config = {
     'dbus_default_interface_name': my_signature,
-    'main_class_name': __file__.replace('_launcher.py', '.py')
+    'main_class_name': __file__.replace('_launcher.py', ''),
+    'config_file_path': __file__.replace('_launcher.py', '.yml'),
 }
 
 # Basic pass-through implementation
 class my_launcher(launcher.baseclass):
     def __init__(self, mainloop, bus, **kwargs):
-        launcher.baseclass(self, mainloop, bus, **kwargs)
+        super(my_launcher, self).__init__(mainloop, bus, **kwargs)
 
     @dbus.service.method(my_signature + '.launcher')
     def quit(self):

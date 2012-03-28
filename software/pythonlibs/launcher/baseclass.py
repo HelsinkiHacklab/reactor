@@ -14,19 +14,22 @@ class baseclass(dbus.service.Object):
             kwargs['dbus_launcher_interface_name'] = kwargs['dbus_default_interface_name'] + '.launcher'
         if not kwargs.has_key('dbus_launcher_object_path'):
             kwargs['dbus_launcher_object_path'] = "/%s" % kwargs['dbus_launcher_interface_name'].replace('.', '/')
-        self.dbus_object_path = kwargs['dbus_object_path']
-        self.dbus_interface_name = kwargs['dbus_interface_name']
+        self.dbus_object_path = kwargs['dbus_launcher_object_path']
+        self.dbus_interface_name = kwargs['dbus_launcher_interface_name']
         # Start the DBUS stuff
         dbus.service.Object.__init__(self, dbus.service.BusName(self.dbus_interface_name, bus=self.bus), self.dbus_object_path)
         
         # Load config
+        if kwargs.has_key('config_file_path'):
+            self.config_file_path = kwargs['config_file_path']
+        else:
+            self.config_file_path = None
         self.load_config()
 
         # If the class was defined import that too
-        if launcher_config.has_key('main_class_name')
-            exec("from %s import %s as main_class" % (launcher_config['main_class_name'],launcher_config['main_class_name']))
+        if kwargs.has_key('main_class_name'):
+            exec("from %s import %s as main_class" % (kwargs['main_class_name'],kwargs['main_class_name']))
             self.main_instance = main_class(self.mainloop, self.bus, self.config, **kwargs)
-
 
     def quit(self):
         """Quits the mainloop"""
@@ -38,5 +41,8 @@ class baseclass(dbus.service.Object):
 
     def load_config(self):
         """Loads (or reloads) the configuration file"""
+        if not self.config_file_path:
+            return False
         with open(self.config_file_path) as f:
             self.config = yaml.load(f)
+        return True
