@@ -40,9 +40,9 @@ class baseclass(dbus.service.Object):
     def reload(self):
         """Used to reload the config"""
         self.load_config()
-        # I'm not sure this is actually needed, in fact it shouldn't be
-#        if self.main_instance:
-#            self.main_instance.config = self.config
+        # Seems we need to explicitly refresh this
+        if self.main_instance:
+            self.main_instance.config = self.config
 
     def load_config(self):
         """Loads (or reloads) the configuration file"""

@@ -27,6 +27,7 @@ class my_launcher(launcher.baseclass):
     @dbus.service.method(my_signature + '.launcher')
     def reload(self):
         launcher.baseclass.reload(self)
+        print "reloaded config %s" % repr(self.main_instance.config)
 
 # Another small bit of boilerplate
 if __name__ == '__main__':
