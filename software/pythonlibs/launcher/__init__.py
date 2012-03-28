@@ -2,9 +2,8 @@ import sys,os
 from baseclass import *
 
 
-def main(interface_name, launcherclass, **kwargs):
+def main(launcherclass, **kwargs):
     """Boilerplate main program check, .launcher will be added to the interface by the baseclass and path generated from the interface"""
-    return 
     import dbus,gobject
     # Enable threading
     gobject.threads_init()
@@ -18,11 +17,12 @@ def main(interface_name, launcherclass, **kwargs):
     # If no launcher specified use the baseclass one    
     if not launcherclass:
         launcherclass = baseclass
-    # Create instance
-    kwargs['dbus_default_interface_name'] = interface_name
     instance = launcherclass(loop, bus, **kwargs)
-    # And start the eventloop
-    loop.run()
+    # And start the eventloop (catch KeyboardInterrupt here for [hopefully] clean mainloop quit)
+    try:
+        loop.run()
+    except KeyboardInterrupt:
+        loop.quit()
 
 # This does not work in a module, some copy-pasting is invariably going to be needed
 #def use_launcher(name=None):
