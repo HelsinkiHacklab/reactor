@@ -1,0 +1,4 @@
+[D-BUS Service]
+Name=fi.hacklab.launchertest
+Exec=/usr/bin/python /opt/hacklab/launchertest/test_launcher.py
+User=rambo
