@@ -8,4 +8,22 @@ Basic idea is that just about everything is an object and all interactions betwe
 
 # Usage
 
+Make sure you have the following packages (ubuntu/debian naming)
+
+    python-dbus
+    python-gobject
+    python-yaml
+
 Start with  python simulation_launcher.py
+
+# Visualizer
+
+Note, this is a bit slow since matplotlib is optimized for accuracy, not speed
+
+Make sure you have the following packages in addition to above (ubuntu/debian naming)
+
+    python-matplotlib
+
+Start with  python visualizer_launcher.py
+
+Then start the reactor and watch it veer out of control.
