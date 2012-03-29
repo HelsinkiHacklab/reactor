@@ -8,6 +8,8 @@ Basic idea is that just about everything is an object and all interactions betwe
 
 # Install dependencies
 
+Reactor uses python 2.7+ (might work with 2.4, won't work directly with 3.x).
+
 ## Simulation engine
 
     sudo apt-get install python-yaml python-dbus python-gobject
