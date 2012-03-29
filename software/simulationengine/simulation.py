@@ -5,7 +5,7 @@ if os.path.isdir(libs_dir):
     sys.path.append(libs_dir)
 
 # Import our DBUS service module
-import service,dbus
+import service,dbus,gobject
 
 # Import pickle for saving states
 try:
