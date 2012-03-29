@@ -1,7 +1,8 @@
 import os,sys,math
 import dbus
 import dbus.service
-import visualizer
+import threading
+import fast_visualizer
 
 
 if __name__ == '__main__':
@@ -12,9 +13,13 @@ if __name__ == '__main__':
     
     bus = dbus.SessionBus()
     loop = gobject.MainLoop()
-    listener = visualizer.reactor_listener(bus, loop)
+    listener = fast_visualizer.reactor_listener(bus)
 
+    # Run visualizer in own thread
+    listener.start()
 
     # TODO: Add some nicer way to exit than ctrl-c
-    listener.loop.run()
+
+    loop.run()
+
 

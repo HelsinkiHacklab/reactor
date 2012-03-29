@@ -29,6 +29,12 @@ default_layout = [[' ', ' ', '*', '*', '*', ' ', ' '],
 default_depth = 7
 max_temp = 1200.0 # This is used in visualizations etc, the max point temperature we are going to see while the reactor has not yet blown up
 
+# Size of reactor (outer bounds)
+reactor_width = 7
+reactor_height = 7
+reactor_depth = default_depth
+reactor_cube_size = reactor_width * reactor_height * reactor_depth
+
 # Power ouput factor
 power_output_factor = 1024
 blowout_pressure = 150

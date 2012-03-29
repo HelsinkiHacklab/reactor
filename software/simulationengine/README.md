@@ -16,7 +16,7 @@ Reactor uses python 2.7+ (might work with 2.4, won't work directly with 3.x).
 
 ## Visualizer
 
-    sudo apt-get install python-matplotlib
+    sudo apt-get install python-pygame
 
 # Usage
 
