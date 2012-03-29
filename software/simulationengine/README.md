@@ -15,4 +15,5 @@ Basic idea is that just about everything is an object and all interactions betwe
 Start components:  
 
 > python simulation_launcher.py &
+
 > python visualization_launcher.py &
