@@ -10,10 +10,13 @@ Basic idea is that just about everything is an object and all interactions betwe
 
 > sudo apt-get install python-yaml
 
+> sudo apt-get install python-matplotlib
+
 # Usage
 
 Start components:  
 
 > python simulation_launcher.py &
 
-> python visualization_launcher.py &
+> python visualizer_launcher.py &
+
