@@ -26,6 +26,7 @@ class simulation(service.baseclass):
         self.reactor = reactor.reactor(bus, self.mainloop, self.dbus_object_path, self)
         self.reactor.load_layout(reactor.default_layout, reactor.default_depth)
         self.tick_count = 0
+        self.run()
 
     def tick(self):
         """Wrapper to reactors tick method to allow us to pause the simulation"""
