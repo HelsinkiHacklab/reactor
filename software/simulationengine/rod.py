@@ -151,7 +151,7 @@ class rod(dbus.service.Object):
     def check_cell_melt(self):
         """Checks if any cell has melted"""
         for cell_instance in self.cells:
-            if cell_instance.temp < cell.cell_melt_temp:
+            if cell_instance.temp < cell_instance.config['cell_melt_temp']:
                 continue
             self.emit_cell_melted(self.x, self.y, cell_instance.depth, self.object_path)
             self.cell_melted()

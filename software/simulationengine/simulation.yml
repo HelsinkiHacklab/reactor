@@ -5,7 +5,7 @@ simulation:
     blend_grid_size: 3 # 3 cells (always in 3 axes)
 reactor:
     max_temp: 1200.0
-    power_output_factor: 512
+    power_output_factor: 128
     blowout_pressure: 150
     blowout_safety_factor: 0.85
 rod:
@@ -15,4 +15,11 @@ rod:
     water_flow_cf: 2.0 # Cooling factor, each cell is cooled by this amount times the water flow in the rod
     stomp_temp_decrease: 50 # Drop temp of each cell by this when stomp if triggered
     steam_pressure_exponent: 3.5
+cell:
+    neutron_hit_temp_increase: 4.0
+    cool_temp_decrease: 0.1 # This is ambient radiative cooling, the rod will have active cooling defined above as factor of water flow
+    tip_neutron_hit_p_increase: 0.01 # increasing this too much will break everything as all time is spent firing neutrons around
+    ambient_temp: 22.0 # Temperature will never go below this
+    decay_p: 0.5 # P of causing neutron_hit when decay is called
+    cell_melt_temp: 1100
 

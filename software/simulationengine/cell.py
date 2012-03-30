@@ -3,15 +3,6 @@ import os,sys,random
 import dbus, gobject
 import dbus.service
 
-# Tuning parameters
-neutron_hit_temp_increase = 4.0
-cool_temp_decrease = 0.1 # This is ambient radiative cooling, the rod will have active cooling that is defined there
-tip_neutron_hit_p_increase = 0.01 # increasing this too much will break everything
-ambient_temp = 22.0
-decay_p = 0.5 # P of causing neutron_hit when decay is called
-temperature_blend_weight = 0.1
-cell_melt_temp = 1100
-
 # Initial inoform 3D probability of causing neutron_hit() in neighbour
 neutron_hit_size = 3 # Grid size, changin this is ill-adviced
 neutron_hit_p = [[[ 0.05 for val in range(neutron_hit_size)] for col in range(neutron_hit_size)] for row in range(neutron_hit_size)]
@@ -30,11 +21,13 @@ class cell(dbus.service.Object):
         self.object_path = "%s/cell/%d" % (self.rod.object_path, self.depth)
         self.bus_name = dbus.service.BusName('fi.hacklab.reactorsimulator.engine', bus=self.simulation_instance.bus)
         dbus.service.Object.__init__(self, self.bus_name, self.object_path)
+        self.config = self.simulation_instance.config['cell']
+        self.simulation_config = self.simulation_instance.config['simulation']
 
         self.rod = rod
         self.neutrons_seen = 0
         
-        self.temp = float(ambient_temp) # Celcius ?
+        self.temp = float(self.config['ambient_temp']) # Celcius ?
         self.blend_temp = 0.0
         self.melted = False
 
@@ -45,7 +38,7 @@ class cell(dbus.service.Object):
     def decay(self):
         """This is the time-based decay, it will be called by a timer in the reactor"""
         # Rod position is checked in the neutron_hit method
-        if random.random() > decay_p:
+        if random.random() > self.config['decay_p']:
             return
         self.neutron_hit()
 
@@ -53,17 +46,18 @@ class cell(dbus.service.Object):
         self.remove_from_connection()
 
     def config_reloaded(self):
-        pass
+        self.config = self.simulation_instance.config['cell']
+        self.simulation_config = self.simulation_instance.config['simulation']
 
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def cool(self, cool_by=None):
         """This is the time-based cooling, it will be called by a timer in the reactor"""
         if not cool_by:
-            self.temp -= cool_temp_decrease
+            self.temp -= self.config['cool_temp_decrease']
         else:
             self.temp -= cool_by
-        if self.temp < ambient_temp:
-            self.temp = ambient_temp
+        if self.temp < self.config['ambient_temp']:
+            self.temp = self.config['ambient_temp']
         #print "DEBUG: %s cool(), temp %f" % (self.object_path, self.temp)
 
     def calc_blend_temp(self):
@@ -97,7 +91,7 @@ class cell(dbus.service.Object):
             self.blend_temp = self.temp
             return
         self.blend_temp /= cell_count # and average them
-        self.blend_temp = (1.0 - temperature_blend_weight) * self.temp + (temperature_blend_weight * self.blend_temp)
+        self.blend_temp = (1.0 - self.simulation_config['temperature_blend_weight']) * self.temp + (self.simulation_config['temperature_blend_weight'] * self.blend_temp)
 
     def sync_blend_temp(self):
         """sync the buffered blend_temps to cell real temp"""
@@ -113,7 +107,7 @@ class cell(dbus.service.Object):
         if (self.rod.moderator_depth >= self.depth):
             return
         
-        self.temp += neutron_hit_temp_increase
+        self.temp += self.config['neutron_hit_temp_increase']
 
         #print "DEBUG: %s neutron_hit(), temp %f" % (self.object_path, self.temp)
 
@@ -128,7 +122,7 @@ class cell(dbus.service.Object):
                     hit_p = float(neutron_hit_p[xdelta][ydelta][zdelta])
                     # The graphite tip is at our place, accelerate reaction
                     if (self.rod.tip_depth == z):
-                        hit_p += tip_neutron_hit_p_increase
+                        hit_p += self.config['tip_neutron_hit_p_increase']
                     if random.random() > hit_p:
                         # No hit
                         continue
