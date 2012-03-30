@@ -1,10 +1,11 @@
 import dbus.service
 
 class baseclass(dbus.service.Object):
-    def __init__(self, mainloop, bus, config, **kwargs):
-        self.mainloop = mainloop
-        self.bus = bus
+    def __init__(self, config, launcher_instance, **kwargs):
         self.config = config
+        self.launcher_instance = launcher_instance
+        self.mainloop = self.launcher_instance.mainloop
+        self.bus = self.launcher_instance.bus
         if not kwargs.has_key('dbus_interface_name'):
             kwargs['dbus_interface_name'] = kwargs['dbus_default_interface_name']
         if not kwargs.has_key('dbus_object_path'):

@@ -5,13 +5,13 @@ import dbus.service
 import cell
 
 class well(dbus.service.Object):
-    def __init__(self, bus, mainloop, path_base, x, y, depth, reactor):
-        self.object_path = "%s/mwell/%d/%d" % (path_base, x, y)
-        self.bus_name = dbus.service.BusName('fi.hacklab.reactorsimulator.engine', bus=bus)
+    def __init__(self, reactor, x, y, depth):
+        self.reactor = reactor
+        self.simulation_instance = self.reactor.simulation_instance
+        self.object_path = "%s/mwell/%d/%d" % (self.reactor.object_path, x, y)
+        self.bus_name = dbus.service.BusName('fi.hacklab.reactorsimulator.engine', bus=self.simulation_instance.bus)
         dbus.service.Object.__init__(self, self.bus_name, self.object_path)
 
-        self.loop = mainloop
-        self.reactor = reactor
         self.x = x
         self.y = y
         self.depth = depth
@@ -24,10 +24,16 @@ class well(dbus.service.Object):
         # Final debug statement
         print "%s initialized" % self.object_path
 
+    def unload(self):
+        self.remove_from_connection()
+
+    def config_reloaded(self):
+        pass
+
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def neutron_hit(self, depth):
         """Trigger neutron hit on cell at depth, indices start from zero"""
-        self.neutrons_seen[depth] += 1 # keep track of the flow in case we need it
+        self.neutrons_seen[depth] += 1 # keep track of the flow
         pass
 
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')

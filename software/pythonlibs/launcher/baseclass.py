@@ -29,7 +29,7 @@ class baseclass(dbus.service.Object):
         # If the class was defined import that too
         if kwargs.has_key('main_class_name'):
             exec("from %s import %s as main_class" % (kwargs['main_class_name'],kwargs['main_class_name']))
-            self.main_instance = main_class(self.mainloop, self.bus, self.config, **kwargs)
+            self.main_instance = main_class(self.config, self, **kwargs)
         else:
             self.main_instance = None
 

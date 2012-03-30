@@ -14,13 +14,13 @@ stomp_temp_decrease = 50 # Drop temp of each cell by this when stomp if triggere
 steam_pressure_exponent = 3.5
 
 class rod(dbus.service.Object):
-    def __init__(self, bus, mainloop, path_base, x, y, depth, reactor):
-        self.object_path = "%s/rod/%d/%d" % (path_base, x, y)
-        self.bus_name = dbus.service.BusName('fi.hacklab.reactorsimulator.engine', bus=bus)
+    def __init__(self, reactor, x, y, depth):
+        self.reactor = reactor
+        self.simulation_instance = self.reactor.simulation_instance
+        self.object_path = "%s/rod/%d/%d" % (self.reactor.object_path, x, y)
+        self.bus_name = dbus.service.BusName('fi.hacklab.reactorsimulator.engine', bus=self.simulation_instance.bus)
         dbus.service.Object.__init__(self, self.bus_name, self.object_path)
 
-        self.loop = mainloop
-        self.reactor = reactor
         self.x = x
         self.y = y
         self.well_depth = depth
@@ -39,10 +39,23 @@ class rod(dbus.service.Object):
         
         self.cells = []
         for i in range(self.well_depth):
-            self.cells.append(cell.cell(bus, self.loop, self.object_path, self.x, self.y, i, self.reactor, self))
+            self.cells.append(cell.cell(self, i))
 
         # Final debug statement
         print "%s initialized" % self.object_path
+
+    def unload(self):
+        for cell_i in self.cells:
+            cell_i.unload()
+        del(cell_i)
+        for i in range(len(self.cells)-1):
+            del(self.cells[0])
+
+        self.remove_from_connection()
+
+    def config_reloaded(self):
+        for i in range(len(self.cells)-1):
+            self.cells[i].config_reloaded()
 
     def tick(self, duration_seconds):
         # Update rod pos

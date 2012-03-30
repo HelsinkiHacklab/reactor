@@ -20,18 +20,17 @@ neutron_hit_p[1][1][1] = 0.0 # We're in the center, easiest way is to set p to z
 
 
 class cell(dbus.service.Object):
-    def __init__(self, bus, mainloop, path_base, x, y, depth, reactor, rod):
-        self.loop = mainloop
-        self.reactor = reactor
-        self.object_path = "%s/cell/%d" % (path_base, depth)
-        self.bus_name = dbus.service.BusName('fi.hacklab.reactorsimulator.engine', bus=bus)
+    def __init__(self, rod, depth):
+        self.rod = rod
+        self.reactor = self.rod.reactor
+        self.simulation_instance = self.reactor.simulation_instance
+        self.x = self.rod.x
+        self.y = self.rod.y
+        self.depth = depth
+        self.object_path = "%s/cell/%d" % (self.rod.object_path, self.depth)
+        self.bus_name = dbus.service.BusName('fi.hacklab.reactorsimulator.engine', bus=self.simulation_instance.bus)
         dbus.service.Object.__init__(self, self.bus_name, self.object_path)
 
-        self.loop = mainloop
-        self.reactor = reactor
-        self.x = x
-        self.y = y
-        self.depth = depth
         self.rod = rod
         self.neutrons_seen = 0
         
@@ -49,6 +48,12 @@ class cell(dbus.service.Object):
         if random.random() > decay_p:
             return
         self.neutron_hit()
+
+    def unload(self):
+        self.remove_from_connection()
+
+    def config_reloaded(self):
+        pass
 
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def cool(self, cool_by=None):
@@ -102,7 +107,7 @@ class cell(dbus.service.Object):
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def neutron_hit(self):
         """This is where most of the magic happens, whenever we have a split atom we generate heat and with some P trigger hits in neighbours"""
-        self.neutrons_seen += 1 # keep track of the flow in case we need it
+        self.neutrons_seen += 1 # keep track of the flow
 
         # If the moderator is past this point it will always absorb the hits, nothing will happen
         if (self.rod.moderator_depth >= self.depth):

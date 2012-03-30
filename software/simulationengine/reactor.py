@@ -1,7 +1,10 @@
-#!/usr/bin/env python
+# Boilerplate to add ../pythonlibs (via full path resolution) to import paths
 import os,sys
-import dbus
-import dbus.service
+libs_dir = os.path.join(os.path.dirname( os.path.realpath( __file__ ) ),  '..', 'pythonlibs')
+if os.path.isdir(libs_dir):                                       
+    sys.path.append(libs_dir)
+
+import dbus,gobject
 
 import rod, measurementwell
 
@@ -76,14 +79,13 @@ blowout_safety_factor = 0.85
 # It seems that as things get hotter we start lagging behind in our clock or something, at least the visualization starts seeing longer and longer intervalls between report signals
 
 class reactor(dbus.service.Object):
-    def __init__(self, bus, mainloop, path_base, state):
-        self.state_instance = state
+    def __init__(self, simulation_instance, path_base):
+        self.simulation_instance = simulation_instance
         self.object_path = path_base + '/reactor'
-        self.bus_name = dbus.service.BusName('fi.hacklab.reactorsimulator.engine', bus=bus)
-        self.bus = bus
+        self.bus = self.simulation_instance.bus
+        self.bus_name = dbus.service.BusName('fi.hacklab.reactorsimulator.engine', bus=self.bus)
         dbus.service.Object.__init__(self, self.bus_name, self.object_path)
 
-        self.loop = mainloop
         self.tick_count = 0
         self.grid_limits = [0,0,0]
 
@@ -123,17 +125,40 @@ class reactor(dbus.service.Object):
             for y in range(ycount):
                 # We have a controllable rod here
                 if (layout[x][y] == '*'):
-                    col.append(rod.rod(self.bus, self.loop, self.object_path, x, y, depth, self))
+                    col.append(rod.rod(self, x, y, depth))
                     self.rods.append(col[y])
                     continue
                 if (layout[x][y] == '#'):
-                    col.append(measurementwell.well(self.bus, self.loop, self.object_path, x, y, depth, self))
+                    col.append(measurementwell.well(self, x, y, depth))
                     self.mwells.append(col[y])
                     continue
                 # Default case is to skip
                 col.append(None)
             self.layout.append(col)
         self.rod_count = len(self.rods)
+
+    def unload(self):
+        for rod_i in self.rods:
+            rod_i.unload()
+        del(rod_i)
+        for i in range(len(self.rods)-1):
+            del(self.rods[0])
+
+        for mwell_i in self.mwells:
+            mwell_i.unload()
+        del(mwell_i)
+        for i in range(len(self.mwells)-1):
+            del(self.mwells[0])
+        
+        self.remove_from_connection()
+
+
+    def config_reloaded(self):
+        for i in range(len(self.rods)-1):
+            self.rods[i].config_reloaded()
+
+        for i in range(len(self.mwells)-1):
+            self.mwells[i].config_reloaded()
 
     def tick(self, duration_seconds):
         self.tick_count += 1
