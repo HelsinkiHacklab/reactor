@@ -1,3 +1,4 @@
+from __future__ import with_statement
 # Boilerplate to add ../pythonlibs (via full path resolution) to import paths
 import os,sys
 libs_dir = os.path.join(os.path.dirname( os.path.realpath( __file__ ) ),  '..', 'pythonlibs')
@@ -36,8 +37,8 @@ class simulation(service.baseclass):
         else:
             # Save state regularly
             self.tick_count += 1
-            if ((self.tick_count % save_every_n_ticks) == 1):
-                self.save_state()
+            #if ((self.tick_count % save_every_n_ticks) == 1):
+            #    self.save_state()
 
             # Calculate seconds since last tick
             now = time.time()
@@ -84,12 +85,23 @@ class simulation(service.baseclass):
         self.is_running = False
 
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')
-    def save_state(self):
-        pass
+    def save_state(self, name=''):
+        if not name:
+            name = 'latest'
+        path = os.path.join(os.path.dirname( os.path.realpath( __file__ ) ), "%s.state" % name)
+        with open(path, 'w') as f:
+            pickle.dump(self.reactor, f, -1)
         
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')
-    def load_state(self):
-        pass
+    def load_state(self, name=''):
+        if not name:
+            name = 'latest'
+        path = os.path.join(os.path.dirname( os.path.realpath( __file__ ) ), "%s.state" % name)
+        with open(path) as f:
+            # TODO: Do we need to unload first ?
+            self.reactor = pickle.load(f, -1)
+            self.tick_count = 0
+            self.last_tick_time = 0
 
     def config_reloaded(self):
         self.reactor.config_reloaded()
