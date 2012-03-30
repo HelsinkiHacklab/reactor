@@ -29,7 +29,4 @@ Reactor uses python 2.7+ (might work with 2.4, won't work directly with 3.x).
 
     python visualizer_launcher.py &
 
-Note, the visualizer is a bit slow since matplotlib is optimized for accuracy, speed is nice but accurate is better...
-
-For this reason the visualizer rate limits itself only displaying every fifth complete signal set.
 
