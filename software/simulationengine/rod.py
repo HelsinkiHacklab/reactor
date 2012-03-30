@@ -34,7 +34,8 @@ class rod(dbus.service.Object):
         self.water_level = 1.0 # This is basically percentage of the full depth 1.0 means full of water
         self.steam_pressure = 0.0 # In whatever unit we feel is most convinient
         self.avg_temp = 0.0
-        
+        self.max_temp = 0.0
+
         
         self.cells = []
         for i in range(self.well_depth):
@@ -96,9 +97,10 @@ class rod(dbus.service.Object):
 
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def calc_avg_temp(self):
-        """Recalculates the value of the avg_temp property and returns it"""
+        """Recalculates the value of the avg_temp and max_temp properties and returns avg_temp"""
         self.avg_temp = sum(self.get_cell_temps()) / self.well_depth
-        return self.avg_temp;
+        self.max_temp = max(self.get_cell_temps())
+        return self.avg_temp
 
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def neutron_hit(self, depth):

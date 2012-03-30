@@ -89,6 +89,8 @@ class reactor(dbus.service.Object):
 
         self.avg_temp = 0.0
         self.avg_pressure = 0.0
+        self.max_temp = 0.0
+        self.max_pressure = 0.0
         self.power_output = 0.0
 
         self.red_alert_given = False
@@ -155,7 +157,9 @@ class reactor(dbus.service.Object):
         # Update the reactor average values
         self.calc_avg_temp()
         self.calc_avg_pressure()
-        
+        self.calc_max_temp()
+        self.calc_max_pressure()
+
         # Trigger reports at each tick
         self.report()
 
@@ -174,7 +178,10 @@ class reactor(dbus.service.Object):
         for well in self.mwells:
             well.report()
 
-        self.emit_pressure(self.avg_pressure, self.object_path)
+        self.emit_avg_pressure(self.avg_pressure, self.object_path)
+        self.emit_avg_temperature(self.avg_temp, self.object_path)
+        self.emit_max_pressure(self.max_pressure, self.object_path)
+        self.emit_max_temperature(self.max_temp, self.object_path)
         self.emit_power(self.power_output, self.object_path)
 
         # Check limits
@@ -216,6 +223,10 @@ class reactor(dbus.service.Object):
         """Return list of rod temperatures, NOTE: does not trigger recalculation on the rod so might return old data"""
         return map(lambda x: x.avg_temp, self.rods)
 
+    def get_rod_max_temps(self):
+        """Return list of rod maximum temperatures, NOTE: does not trigger recalculation on the rod so might return old data"""
+        return map(lambda x: x.max_temp, self.rods)
+
     def get_rod_pressures(self):
         """Return list of rod pressures, NOTE: does not trigger recalculation on the rod so might return old data"""
         return map(lambda x: x.steam_pressure, self.rods)
@@ -224,7 +235,7 @@ class reactor(dbus.service.Object):
     def calc_avg_temp(self):
         """Recalculates the value of the avg_temp property and returns it"""
         self.avg_temp = sum(self.get_rod_temps()) / self.rod_count
-        return self.avg_temp;
+        return self.avg_temp
 
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def calc_avg_pressure(self):
@@ -232,11 +243,38 @@ class reactor(dbus.service.Object):
         self.avg_pressure = sum(self.get_rod_pressures()) / self.rod_count
         if self.avg_pressure > 1.0:
             self.power_output = self.avg_pressure * power_output_factor
-        return self.avg_pressure;
+        return self.avg_pressure
+
+    @dbus.service.method('fi.hacklab.reactorsimulator.engine')
+    def calc_max_temp(self):
+        """Recalculates the value of the max_temp property and returns it"""
+        self.max_temp = max(self.get_rod_max_temps())
+        return self.max_temp
+
+    @dbus.service.method('fi.hacklab.reactorsimulator.engine')
+    def calc_max_pressure(self):
+        """Recalculates the value of the max_pressure property and returns it"""
+        self.max_pressure = max(self.get_rod_pressures())
+        return self.max_pressure
 
     @dbus.service.signal('fi.hacklab.reactorsimulator.engine')
-    def emit_pressure(self, pressure, sender):
+    def emit_avg_pressure(self, pressure, sender):
         """This emits the average pressure """
+        pass
+
+    @dbus.service.signal('fi.hacklab.reactorsimulator.engine')
+    def emit_avg_temperature(self, temperature, sender):
+        """This emits the average temperature"""
+        pass
+
+    @dbus.service.signal('fi.hacklab.reactorsimulator.engine')
+    def emit_max_pressure(self, pressure, sender):
+        """This emits the maximum pressure in any rod channel"""
+        pass
+
+    @dbus.service.signal('fi.hacklab.reactorsimulator.engine')
+    def emit_max_temperature(self, temperature, sender):
+        """This emits the maximum temperature in any cell"""
         pass
 
     @dbus.service.signal('fi.hacklab.reactorsimulator.engine')
