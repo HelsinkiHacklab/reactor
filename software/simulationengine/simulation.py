@@ -10,9 +10,6 @@ import service,dbus,gobject
 
 import time
 
-# TODO: move to YAML config
-save_every_n_ticks = 50
-
 # Import the reactor module
 import reactor
 
@@ -32,7 +29,7 @@ class simulation(service.baseclass):
         else:
             # Save state regularly
             self.tick_count += 1
-            #if ((self.tick_count % save_every_n_ticks) == 1):
+            #if ((self.tick_count % self.config['simulation']['autosave_interval']) == 1):
             #    self.save_state()
 
             # Calculate seconds since last tick
@@ -58,7 +55,7 @@ class simulation(service.baseclass):
         print "RUNNING"
         self.is_running = True
         # Set the reactor to tick every N ms
-        gobject.timeout_add(200, self.tick)
+        gobject.timeout_add(self.config['simulation']['tick_interval'], self.tick)
 
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def reset(self):

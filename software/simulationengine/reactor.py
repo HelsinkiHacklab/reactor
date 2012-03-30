@@ -35,8 +35,8 @@ default_depth = 7
 max_temp = 1200.0 # This is used in visualizations etc, the max point temperature we are going to see while the reactor has not yet blown up
 
 # Size of reactor (outer bounds)
-reactor_width = 7
-reactor_height = 7
+reactor_width = len(default_layout)
+reactor_height = len(default_layout[0])
 reactor_depth = default_depth
 reactor_cube_size = reactor_width * reactor_height * reactor_depth
 
@@ -71,13 +71,6 @@ def baseN(num,b,numerals="0123456789abcdefghijklmnopqrstuvwxyz"):
 rod_min_depth = -2
 rod_max_depth = reactor_depth
 
-# Power ouput factor
-power_output_factor = 1024
-blowout_pressure = 150
-blowout_safety_factor = 0.85 
-
-# It seems that as things get hotter we start lagging behind in our clock or something, at least the visualization starts seeing longer and longer intervalls between report signals
-
 class reactor(dbus.service.Object):
     def __init__(self, simulation_instance, path_base):
         self.simulation_instance = simulation_instance
@@ -85,6 +78,11 @@ class reactor(dbus.service.Object):
         self.bus = self.simulation_instance.bus
         self.bus_name = dbus.service.BusName('fi.hacklab.reactorsimulator.engine', bus=self.bus)
         dbus.service.Object.__init__(self, self.bus_name, self.object_path)
+
+        global max_temp # Other modules might use this so if we get a new value from config try to override this
+        self.config = self.simulation_instance.config['reactor']
+        max_temp = self.config['max_temp']
+
 
         self.tick_count = 0
         self.grid_limits = [0,0,0]
@@ -154,6 +152,10 @@ class reactor(dbus.service.Object):
 
 
     def config_reloaded(self):
+        global max_temp # Other modules might use this so if we get a new value from config try to override this
+        self.config = self.simulation_instance.config['reactor']
+        max_temp = self.config['max_temp']
+
         for i in range(len(self.rods)-1):
             self.rods[i].config_reloaded()
 
@@ -214,14 +216,14 @@ class reactor(dbus.service.Object):
 
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def check_pressure(self):
-        if (self.avg_pressure > (blowout_pressure * blowout_safety_factor)):
+        if (self.avg_pressure > (self.config['blowout_pressure'] * self.config['blowout_safety_factor'])):
             self.emit_redalert(self.object_path)
 
-        if self.avg_pressure > blowout_pressure:
+        if self.avg_pressure > self.config['blowout_pressure']:
             self.emit_blowout(self.object_path)
-            self.state_instance.pause()
+            self.simulation_instance.pause()
         
-        if (self.avg_pressure < (blowout_pressure * blowout_safety_factor)):
+        if (self.avg_pressure < (self.config['blowout_pressure'] * self.config['blowout_safety_factor'])):
             if self.red_alert_given:
                 self.emit_redalert_reset(self.object_path)
         
@@ -267,7 +269,7 @@ class reactor(dbus.service.Object):
         """Recalculates the value of the avg_pressure property and returns it, also recalculates power output"""
         self.avg_pressure = sum(self.get_rod_pressures()) / self.rod_count
         if self.avg_pressure > 1.0:
-            self.power_output = self.avg_pressure * power_output_factor
+            self.power_output = self.avg_pressure * self.config['power_output_factor']
         return self.avg_pressure
 
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')

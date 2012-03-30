@@ -2,8 +2,11 @@ simulation:
     tick_interval: 200
     autosave_interval: 50
 reactor:
-    default_depth: 7
     max_temp: 1200.0
     power_output_factor: 1024
     blowout_pressure: 150
     blowout_safety_factor: 0.85
+rod:
+    foo: 1
+
+
