@@ -1,17 +1,9 @@
 #!/usr/bin/env python
-import os,sys,math
+import os,sys,math,random
 import dbus
-import dbus.service
-import cell
-import random
-import reactor as reactor_module
 
-default_max_speed = 1.0
-default_scram_speed = 2.0
-default_water_flow = 0.5 # 1.0 being max
-water_flow_cf = 2.0 # Cooling factor
-stomp_temp_decrease = 50 # Drop temp of each cell by this when stomp if triggered
-steam_pressure_exponent = 3.5
+import cell
+import reactor as reactor_module
 
 class rod(dbus.service.Object):
     def __init__(self, reactor, x, y, depth):
@@ -20,15 +12,16 @@ class rod(dbus.service.Object):
         self.object_path = "%s/rod/%d/%d" % (self.reactor.object_path, x, y)
         self.bus_name = dbus.service.BusName('fi.hacklab.reactorsimulator.engine', bus=self.simulation_instance.bus)
         dbus.service.Object.__init__(self, self.bus_name, self.object_path)
+        self.config = self.simulation_instance.config['rod']
 
         self.x = x
         self.y = y
         self.well_depth = depth
         self.set_depth(float(depth)*random.uniform(0, 1)) # This is float so we can keep track of progress in smaller steps, for simulation purposes it will be rounded to int
         #self.set_depth(-2) # all-out
-        self.current_max_speed = default_max_speed
+        self.current_max_speed = self.config['default_max_speed']
         self.current_max_flow = 1.0
-        self.current_water_flow = default_water_flow
+        self.current_water_flow = self.config['default_water_flow']
         self.current_velocity = random.uniform(-1, 1) # Rod movement.  Expressed in layers per second. Initialize to random speed
 
         self.water_level = 1.0 # This is basically percentage of the full depth 1.0 means full of water
@@ -54,6 +47,7 @@ class rod(dbus.service.Object):
         self.remove_from_connection()
 
     def config_reloaded(self):
+        self.config = self.simulation_instance.config['rod']
         for i in range(len(self.cells)-1):
             self.cells[i].config_reloaded()
 
@@ -84,13 +78,13 @@ class rod(dbus.service.Object):
     def stomp(self):
         """Decreases avg temperature by dropping temp in each cell temp by the set amount and recalculating"""
         for cell in self.cells:
-            cell.temp -= stomp_temp_decrease
+            cell.temp -= self.config['stomp_temp_decrease']
         self.calc_avg_temp()
 
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def calc_steam_pressure(self):
         """Recalculates the value of the steam_pressure property and returns it"""
-        self.steam_pressure = ((self.avg_temp + 273) ** steam_pressure_exponent) / ((100+273) ** steam_pressure_exponent)
+        self.steam_pressure = ((self.avg_temp + 273) ** self.config['steam_pressure_exponent']) / ((100+273) ** self.config['steam_pressure_exponent'])
         return self.steam_pressure
 
     def get_cell_temps(self):
@@ -129,7 +123,7 @@ class rod(dbus.service.Object):
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def cool(self):
         """This is the time-based cooling, it will be called by a timer in the reactor"""
-        cool_by = self.current_water_flow * water_flow_cf
+        cool_by = self.current_water_flow * self.config['water_flow_cf']
         for cell in self.cells:
             cell.cool(cool_by)
 

@@ -5,10 +5,14 @@ simulation:
     blend_grid_size: 3 # 3 cells (always in 3 axes)
 reactor:
     max_temp: 1200.0
-    power_output_factor: 1024
+    power_output_factor: 512
     blowout_pressure: 150
     blowout_safety_factor: 0.85
 rod:
-    foo: 1
-
+    default_max_speed: 1.0 # under normal moving rods cannot move faster than this (layers per second)
+    default_scram_speed: 2.0 # if SCRAMmed then this speed is used
+    default_water_flow: 0.5 # 1.0 being max
+    water_flow_cf: 2.0 # Cooling factor, each cell is cooled by this amount times the water flow in the rod
+    stomp_temp_decrease: 50 # Drop temp of each cell by this when stomp if triggered
+    steam_pressure_exponent: 3.5
 

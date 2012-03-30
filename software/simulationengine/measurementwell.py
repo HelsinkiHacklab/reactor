@@ -2,7 +2,6 @@
 import os,sys
 import dbus
 import dbus.service
-import cell
 
 class well(dbus.service.Object):
     def __init__(self, reactor, x, y, depth):
