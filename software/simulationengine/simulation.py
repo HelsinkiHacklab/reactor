@@ -24,10 +24,8 @@ class simulation(service.baseclass):
     def __init__(self, mainloop, bus, config, **kwargs):
         super(simulation, self).__init__(mainloop, bus, config, **kwargs)
 
-        self.reactor = reactor.reactor(bus, self.mainloop, self.dbus_object_path, self)
-        self.reactor.load_layout(reactor.default_layout, reactor.default_depth)
-        self.tick_count = 0
-        self.last_tick_time = 0
+        self.reactor = None
+        self.reset()
         self.run()
 
     def tick(self):
@@ -60,7 +58,13 @@ class simulation(service.baseclass):
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def reset(self):
         """Resets the simulation to startinng conditions"""
-        pass
+        if self.reactor:
+            self.reactor.unload()
+            del(self.reactor)
+        self.reactor = reactor.reactor(self, self.dbus_object_path)
+        self.reactor.load_layout(reactor.default_layout, reactor.default_depth)
+        self.tick_count = 0
+        self.last_tick_time = 0
 
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def pause(self):
