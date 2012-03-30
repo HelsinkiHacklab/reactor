@@ -77,6 +77,7 @@ class rod(dbus.service.Object):
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def stomp(self):
         """Decreases avg temperature by dropping temp in each cell temp by the set amount and recalculating"""
+        print "rod %d,%d stomped" % (self.x,self.y)
         for cell in self.cells:
             cell.temp -= self.config['stomp_temp_decrease']
         self.calc_avg_temp()

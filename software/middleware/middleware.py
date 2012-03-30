@@ -1,6 +1,13 @@
-import os,sys,time
-import dbus
-import dbus.service
+from __future__ import with_statement
+# Boilerplate to add ../pythonlibs (via full path resolution) to import paths
+import os,sys
+libs_dir = os.path.join(os.path.dirname( os.path.realpath( __file__ ) ),  '..', 'pythonlibs')
+if os.path.isdir(libs_dir):                                       
+    sys.path.append(libs_dir)
+
+# Import our DBUS service module
+import service,dbus,gobject
+import dbus,time
 
 import numpy as np
 
@@ -27,15 +34,10 @@ gauges8leds_map = [[' ', ' ', '*', '*', '*', ' ', ' '],
 max_temp = 800
 
 
-class ardubus_bridge(dbus.service.Object):
-    def __init__(self, bus, loop, config):
-        self.config = config
-        self.bus = bus
-        self.loop = loop
+class middleware(service.baseclass):
+    def __init__(self, config, launcher_instance, **kwargs):
+        super(middleware, self).__init__(config, launcher_instance, **kwargs)
 
-        self.object_path = '/fi/hacklab/reactorsimulator/middleware/bridge'
-        self.bus_name = dbus.service.BusName('fi.hacklab.reactorsimulator.middleware', bus=bus)
-        dbus.service.Object.__init__(self, self.bus_name, self.object_path)
 
         self.load_nm()
         self.ardu_rodservos = None
@@ -53,10 +55,30 @@ class ardubus_bridge(dbus.service.Object):
 
         self.max_neutrons_seen = 0
         # Listen temp/neutrons only from the measurment wells
-        self.bus.add_signal_receiver(self.neutron_report, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_neutrons")
+        #self.bus.add_signal_receiver(self.neutron_report, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_neutrons")
         #self.bus.add_signal_receiver(self.temp_report, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_temp",)
         
+        #self.bus.add_signal_receiver(self.temp_report, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_temp",)
 
+        self.bus.add_signal_receiver(self.stomp_received, dbus_interface = "fi.hacklab.ardubus", signal_name = "dio_change", path="/fi/hacklab/ardubus/arduino2")
+
+    def stomp_received(self, pin, state, sender, *args):
+        print "Pin %d changed(index) to %s on %s" % (pin, state, sender)
+        if state:
+            # high means pulled up, ie not switched
+            return
+        rod_y,rod_x = self.config['stomp_map']['pins2rods'][pin]
+        print "Stomped on rod %d,%d" % (rod_y,rod_x)
+        rod = self.bus.get_object('fi.hacklab.reactorsimulator.engine', "/fi/hacklab/reactorsimulator/engine/reactor/rod/%d/%d" % (rod_y,rod_x))
+        rod.stomp()
+
+    @dbus.service.method('fi.hacklab.reactorsimulator.engine')
+    def quit(self):
+        return self.launcher_instance.quit()
+
+    @dbus.service.method('fi.hacklab.reactorsimulator.engine')
+    def reload(self):
+        return self.launcher_instance.reload()
 
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def led_gauge(self, start_led, num_leds, value, map_max):
@@ -65,6 +87,7 @@ class ardubus_bridge(dbus.service.Object):
         mapped_value = int(np.interp(value, [0,map_max],[0,num_leds*255]))
         # and bin to leds
         for i in range(num_leds):
+            print "i=%d, mapped_value=%d" % (i, mapped_value)
             ledno = start_led + 2*i
             if mapped_value > 255:
                 print "self.set_rod_leds(%d, %d, 255)" % (jbol_idx, ledno)
@@ -96,7 +119,7 @@ class ardubus_bridge(dbus.service.Object):
 
     def depth_report(self, x, y, depth, *args):
         rod_id = int(rod_map[x][y]) -1 # forgot to start from zero
-        self.set_rod_servo(rod_id, int((255.0/7)*depth))
+        self.set_rod_servo(rod_id, int((255.0/9)*(depth+2)))
 
     def load_nm(self):
         self.nm = self.bus.get_object('fi.hacklab.noisemaker', '/fi/hacklab/noisemaker/noisemaker0')
@@ -112,7 +135,7 @@ class ardubus_bridge(dbus.service.Object):
     	self.set_rod_leds = self.ardu_rodleds.get_dbus_method('set_jbol_pwm', 'fi.hacklab.ardubus')
 
     def neutron_report(self, x, y, neutrons, *args):
-        print " nutron check %s" % rod_map[x][y]
+        #print "neutron check %s" % rod_map[x][y]
         if (rod_map[x][y] <> '#'):
             return
         # Autoscale at least until we know what the scales are
@@ -125,7 +148,7 @@ class ardubus_bridge(dbus.service.Object):
         self.led_gauge(led_base_index, 4, neutron_avg, self.max_neutrons_seen)
 
     def temp_report(self, x, y, temps, *args):
-        print " temp check %s" % rod_map[x][y]
+        #print "temp check %s" % rod_map[x][y]
         if (rod_map[x][y] <> '#'):
             return
         print "temperatures for %d,%d,%s" % (x,y,neutrons)
