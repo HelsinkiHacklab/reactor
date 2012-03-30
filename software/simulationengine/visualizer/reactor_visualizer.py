@@ -16,6 +16,7 @@ from pygame.locals import *
 
 import textutils
 import layout
+import graph
 from colorutils import *
 
 def cell_index(x, y, z):
@@ -23,6 +24,25 @@ def cell_index(x, y, z):
 
 def rod_index(x, y):
     return x + y*reactor.reactor_width
+
+
+class string_view():
+    def __init__(self, host, property, title, unit, color=grey, background_color=black, font=textutils.mediumFont):
+        self.host = host
+        self.property = property
+        self.title = title
+        self.unit = unit
+        self.color = color
+        self.background_color = background_color
+        self.font = font
+
+    def height(self):
+        return textutils.font_height(self.font)
+
+    def draw(self, surface, rect):
+        value = str(getattr(self.host, self.property))
+        text = self.title + ":  " + value + "  " + self.unit
+        textutils.drawTextInRect(surface, rect, text, self.color, self.background_color, self.font)
 
 class number_view():
     def __init__(self, host, property, title, unit, decimals = 0, color=grey, background_color=black, font=textutils.mediumFont):
@@ -39,7 +59,41 @@ class number_view():
         return textutils.font_height(self.font)
 
     def draw(self, surface, rect):
-        text = self.title + ":  " + (("%0."+str(self.decimals)+"f") % getattr(self.host, self.property)) + "  " + self.unit
+        value = getattr(self.host, self.property)
+        text = self.title + ":  " + (("%0."+str(self.decimals)+"f") % value) + "  " + self.unit
+        textutils.drawTextInRect(surface, rect, text, self.color, self.background_color, self.font)
+
+class series_view():
+    def __init__(self, data_series, decimals = 0, color=grey, background_color=black, font=textutils.mediumFont):
+        self.data_series = data_series
+        self.decimals = decimals
+        self.color = color
+        self.background_color = background_color
+        self.font = font
+
+    def height(self):
+        return textutils.font_height(self.font)
+
+    def draw(self, surface, rect):
+        value = self.data_series.latest_value()
+        text = self.data_series.name + ":  " + \
+               (("%0."+str(self.decimals)+"f") % value) + "  " + \
+               self.data_series.unit.name
+
+        # Draw label indicator
+        surface.lock()
+        m1 = 0
+        m2 = 1
+        s1 = rect.height - 2 * m1
+        s2 = rect.height - 2 * m2
+        pygame.draw.rect(surface, self.data_series.darker_color, (rect.left+m1, rect.top+m1, s1, s1))
+        pygame.draw.rect(surface, self.data_series.color,        (rect.left+m2, rect.top+m2, s2, s2))
+        surface.unlock()
+
+        # Draw label
+        offset = rect.height + 6
+        rect.left += offset
+        rect.w    -= offset
         textutils.drawTextInRect(surface, rect, text, self.color, self.background_color, self.font)
 
 class boolean_view():
@@ -67,30 +121,22 @@ class boolean_view():
             textutils.drawTextInRect(surface, rect, text, self.false_color, self.background_color, self.font)
 
 
+
 class reactor_listener(threading.Thread):
-    def __init__(self, bus):
+    def __init__(self, bus, loop):
         threading.Thread.__init__(self)
         self.bus = bus
+        self.loop = loop
         self.running = True
 
-        self.vertical_orientation = True
+        self.vertical_orientation = False
+        self.initial_screen_size = [1200, 800]
 
         self.name = "Reactor Core Visualizer"
-        self.helptext = "ESC: Quit,  SPACE: Toggle orientation,  BACKSPACE: Reset visualization state"
+        self.helptext = "ESC: Quit,  SPACE: Toggle layout,  BACKSPACE: Reset visualization state"
         self.background_color = black
 
         self.reset_state()
-
-        # Create some views
-        self.status_views = [
-            boolean_view(self, "blown_up", "Status", "Meltdown", "Operational", orange, grey, self.background_color),
-            boolean_view(self, "red_alert", "Alerts", "RED ALERT", "None", red, grey, self.background_color),
-            number_view(self, "power", "Power", "MWatt", background_color=self.background_color),
-            number_view(self, "avg_pressure", "Average Pressure", "atm", 2, background_color=self.background_color),
-            number_view(self, "max_pressure", "Maximum Pressure", "atm", 2, background_color=self.background_color),
-            number_view(self, "avg_temperature", "Average Temperature", "C", background_color=self.background_color),
-            number_view(self, "max_temperature", "Maximum Temperature", "C", background_color=self.background_color)
-        ]
 
         # Start listening to reactor state reports from DBUS
         self.bus.add_signal_receiver(self.temperature_report, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_temp")
@@ -105,9 +151,9 @@ class reactor_listener(threading.Thread):
         self.bus.add_signal_receiver(self.blowout_report, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_blowout")
         self.bus.add_signal_receiver(self.redalert_report, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_redalert")
         self.bus.add_signal_receiver(self.redalert_reset_report, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_redalert_reset")
-        self.bus.add_signal_receiver(self.cell_melter_report, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_cell_melted")
+        self.bus.add_signal_receiver(self.cell_melted_report, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_cell_melted")
 
-        # TODO: Listen to DBUS quit signal
+        # TODO: Listen to DBUS quit and restart signals
 
     def reset_state(self):
         """ Initializes or resets the visualized simulation state. Should be called when simulation is restarted. """
@@ -131,13 +177,40 @@ class reactor_listener(threading.Thread):
         self.height_range  = range(0, reactor.reactor_height)
         self.depth_range  = range(0, reactor.reactor_depth)
 
+        # Graphing
+        power_unit = graph.data_series_unit("MW", brightgreen, self.background_color)
+        temperature_unit = graph.data_series_unit("C", orange, self.background_color, 50)
+        pressure_unit = graph.data_series_unit("atm", purple, self.background_color, 100)
+        self.power_series = graph.data_series("Power Output", brightgreen, power_unit)
+        self.avg_temp_series = graph.data_series("Average Temperature", coldorange, temperature_unit)
+        self.max_temp_series = graph.data_series("Max Temperature", warmorange, temperature_unit)
+        self.avg_pressure_series = graph.data_series("Average Pressure", coldpurple, pressure_unit)
+        self.max_pressure_series = graph.data_series("Max Pressure", warmpurple, pressure_unit)
+        self.graph = graph.graph([
+            self.power_series,
+            self.avg_temp_series,
+            self.max_temp_series,
+            self.avg_pressure_series,
+            self.max_pressure_series
+        ])
+
+        # Create some views
+        self.status_views = [
+            boolean_view(self, "blown_up", "Status", "Meltdown", "Operational", orange, grey, self.background_color),
+            boolean_view(self, "red_alert", "Alerts", "RED ALERT", "None", red, grey, self.background_color),
+            series_view(self.power_series, background_color=self.background_color),
+            series_view(self.avg_temp_series, background_color=self.background_color),
+            series_view(self.max_temp_series, background_color=self.background_color),
+            series_view(self.avg_pressure_series, 2, background_color=self.background_color),
+            series_view(self.max_pressure_series, 2, background_color=self.background_color)
+        ]
+
+
 
     def run(self):
         # Setup screen
-        screenSizeX = 400
-        screenSizeY = 800
         pygame.init()
-        self.screen = pygame.display.set_mode([screenSizeX, screenSizeY], pygame.RESIZABLE)
+        self.screen = pygame.display.set_mode(self.initial_screen_size, pygame.RESIZABLE)
         pygame.display.set_caption(self.name)
 
         # Start mainloop
@@ -162,8 +235,8 @@ class reactor_listener(threading.Thread):
                 elif event.type == pygame.KEYDOWN and event.key == K_SPACE:
                     # Toggle orientation
                     self.vertical_orientation = not self.vertical_orientation
-                    screenW, screenH = self.screen.get_size()
-                    self.screen = pygame.display.set_mode([screenH, screenW],pygame.RESIZABLE)
+                    #screenW, screenH = self.screen.get_size()
+                    #self.screen = pygame.display.set_mode([screenH, screenW],pygame.RESIZABLE)
                 elif event.type == pygame.VIDEORESIZE:
                     # Screen was resized, resize display
                     new_size = [event.w, event.h]
@@ -178,9 +251,9 @@ class reactor_listener(threading.Thread):
             # Show the screen we just painted, and hide and start painting on the screen that was just visible
             pygame.display.flip()
 
-        # Clear screen to show immediate response to quit signal (closing can take a second or two if many resources used)
+        # Clear screen to show immediate response to quit signal (closing can take a second or two)
         self.screen.fill(black)
-        textutils.drawTextCentered(self.screen, self.name + " Closing")
+        textutils.drawTextCentered(self.screen, self.name + " Closing...")
         pygame.display.flip()
 
         # Release loaded resources, shut down pygame
@@ -200,19 +273,38 @@ class reactor_listener(threading.Thread):
         view_margin = 10
         helpH = 10
         mainH = base.h - helpH
+
+        # Setup layout
         mainRect, helpRect = layout.split_absolute(base, (mainH, mainH), True, view_margin)
-        generalRect, sliceRect = layout.split_proportional(mainRect, (0.4, 0.4), not self.vertical_orientation, view_margin)
-        statusRect, generalRect2 = layout.split_absolute(generalRect, (300, 240), self.vertical_orientation, view_margin)
-        graphRect, pressureRect = layout.split_proportional(generalRect2, (0.6, 0.4), self.vertical_orientation, view_margin)
-        tempRect, neutronRect = layout.split_rect(sliceRect, 2, not self.vertical_orientation, view_margin)
+        if self.vertical_orientation:
+            # A layout where the reactor slices are placed vertically
+            generalRect, sliceRect = layout.split_proportional(mainRect, (0.6, 0.6), False, view_margin)
+            generalRect2, graphRect = layout.split_absolute(generalRect, (240, 240), True, view_margin)
+            statusRect, pressureRect = layout.split_absolute(generalRect2, (260, 260), False, view_margin)
+            tempRect, neutronRect = layout.split_rect(sliceRect, 2, False, view_margin)
+        else:
+            # A layout where the reactor slices are placed horizontally
+            generalRect, sliceRect = layout.split_proportional(mainRect, (0.4, 0.4), True, view_margin)
+            statusRect, generalRect2 = layout.split_absolute(generalRect, (260, 240), False, view_margin)
+            graphRect, pressureRect = layout.split_proportional(generalRect2, (0.7, 0.7), False, view_margin)
+            tempRect, neutronRect = layout.split_rect(sliceRect, 2, True, view_margin)
 
         # Draw the different views
         self._draw_views("Status", self.status_views, statusRect)
+        self._draw_graph("Graphs", self.graph, graphRect)
         self._draw_layer("Pressure", self.pressure, 0, 10.0, pressureRect, False, white, textutils.largeFont)
-        self._draw_layers("Temperatures", self.temperatures, 500.0, tempRect)
+        self._draw_layers("Temperatures", self.temperatures, 300.0, tempRect)
         self._draw_layers("Neutron Flux", self.neutrons, 1.0, neutronRect)
-        textutils.drawTextInRect(self.screen, helpRect, self.helptext, font=textutils.smallFont)
+        textutils.drawTextInRect(self.screen, helpRect, self.helptext, background_color=self.background_color, font=textutils.smallFont)
 
+
+
+    def _draw_graph(self, title, graph, rect, label_color = white, label_font = textutils.largeFont):
+        # Create title and get remaining space
+        content = layout.make_titled_rect(self.screen, rect, title, label_color, self.background_color, label_font, 8, 4)
+
+        # Draw graph
+        graph.draw(self.screen, content)
 
 
     def _draw_views(self, title, views, rect, label_color = white, label_font = textutils.largeFont):
@@ -222,7 +314,7 @@ class reactor_listener(threading.Thread):
         # Layout the views
         num = len(views)
         view_separation = 6
-        height = sum(map(lambda v: v.height(), views))
+        height = sum(map(lambda v: v.height(), views)) + view_separation * (num - 1)
         if content.h > height: content.h = height
         view_rects = layout.split_rect(content, num, True, view_separation)
 
@@ -305,13 +397,14 @@ class reactor_listener(threading.Thread):
             if show_broken_cells and not self.operational[index]:
                 if draw_labels: self.screen.lock()
                 crossover_thickness = 2
-                pygame.draw.line(self.screen, black, (xpos,ypos), (xpos+w,ypos+h), crossover_thickness)
-                pygame.draw.line(self.screen, black, (xpos+w,ypos), (xpos,ypos+h), crossover_thickness)
+                pygame.draw.line(self.screen, black, (xpos,ypos), (xpos+w-1,ypos+h-1), crossover_thickness)
+                pygame.draw.line(self.screen, black, (xpos+w-1,ypos), (xpos,ypos+h-1), crossover_thickness)
                 if draw_labels: self.screen.unlock()
 
 
     def quit(self):
         self.running = False
+        self.loop.quit()
 
 
 
@@ -328,18 +421,23 @@ class reactor_listener(threading.Thread):
 
     def avg_pressure_report(self, pressure, sender):
         self.avg_pressure = pressure
+        self.avg_pressure_series.add_value(pressure)
 
     def max_pressure_report(self, pressure, sender):
         self.max_pressure = pressure
+        self.max_pressure_series.add_value(pressure)
 
     def avg_temperature_report(self, temperature, sender):
         self.avg_temperature = temperature
+        self.avg_temp_series.add_value(temperature)
 
     def max_temperature_report(self, temperature, sender):
         self.max_temperature = temperature
+        self.max_temp_series.add_value(temperature)
 
     def power_report(self, power, sender):
         self.power = power
+        self.power_series.add_value(power)
 
     def rod_position_report(self,  x, y, depth, velocity, sender):
         index = rod_index(x, y)
@@ -355,7 +453,7 @@ class reactor_listener(threading.Thread):
     def redalert_report(self, sender):
         self.red_alert = True
 
-    def cell_melter_report(self, x, y, z, sender):
+    def cell_melted_report(self, x, y, z, sender):
         self.operational[cell_index(x, y, z)] = False
 
 
@@ -371,7 +469,7 @@ if __name__ == '__main__':
 
     bus = dbus.SessionBus()
     loop = gobject.MainLoop()
-    listener = reactor_listener(bus)
+    listener = reactor_listener(bus, loop)
 
     # Run visualizer in own thread
     listener.start()

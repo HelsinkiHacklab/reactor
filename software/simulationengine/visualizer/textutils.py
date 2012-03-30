@@ -25,18 +25,19 @@ def font_height(font):
     w, h = font.size("X")
     return h
 
-def drawTextAtPos(surface, text, x, y, color = grey, background_color = black, font = largeFont):
+def drawTextAtPos(surface, text, x, y, color = grey, background_color = black, font = largeFont, justification_x = 0.5, justification_y = 0.5):
     """ Draw some text centered on the specified location on a surface, by default in grey on black """
 
     # Create texture pic
     textPic, textW, textH = createText(text, color, background_color, font)
 
     # Calculate position for the text
-    tx = x - textW / 2
-    ty = y - textH / 2
+    tx = int(x - justification_x * textW)
+    ty = int(y - justification_y * textH)
 
     # Draw the text picture to the middle of the surface
     surface.blit(textPic, (tx,ty))
+
 
 def drawTextInRect(surface, rect, text, color = grey, background_color = black, font = largeFont):
     """ Draw some text left justified in the specified rectangle, by default in grey on black """
