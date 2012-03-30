@@ -45,12 +45,16 @@ class rod(dbus.service.Object):
         print "%s initialized" % self.object_path
 
     def unload(self):
-        for i in range(len(self.cells)):
-            self.cells[i].unload()
-            del(self.cells[i])
+        for cell_i in self.cells:
+            cell_i.unload()
+        del(cell_i)
+        for i in range(len(self.cells)-1):
+            del(self.cells[0])
+
+        self.remove_from_connection()
 
     def config_reloaded(self):
-        for i in range(len(self.cells)):
+        for i in range(len(self.cells)-1):
             self.cells[i].config_reloaded()
 
     def tick(self, duration_seconds):

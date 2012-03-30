@@ -50,7 +50,7 @@ class cell(dbus.service.Object):
         self.neutron_hit()
 
     def unload(self):
-        pass
+        self.remove_from_connection()
 
     def config_reloaded(self):
         pass

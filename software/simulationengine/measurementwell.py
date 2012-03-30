@@ -25,7 +25,7 @@ class well(dbus.service.Object):
         print "%s initialized" % self.object_path
 
     def unload(self):
-        pass
+        self.remove_from_connection()
 
     def config_reloaded(self):
         pass

@@ -21,8 +21,8 @@ save_every_n_ticks = 50
 import reactor
 
 class simulation(service.baseclass):
-    def __init__(self, mainloop, bus, config, **kwargs):
-        super(simulation, self).__init__(mainloop, bus, config, **kwargs)
+    def __init__(self, config, launcher_instance, **kwargs):
+        super(simulation, self).__init__(config, launcher_instance, **kwargs)
 
         self.reactor = None
         self.reset()
@@ -50,6 +50,14 @@ class simulation(service.baseclass):
             return self.reactor.tick(duration_seconds)
 
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')
+    def quit(self):
+        return self.launcher_instance.quit()
+
+    @dbus.service.method('fi.hacklab.reactorsimulator.engine')
+    def reload(self):
+        return self.launcher_instance.reload()
+
+    @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def run(self):
         print "RUNNING"
         self.is_running = True
@@ -62,6 +70,8 @@ class simulation(service.baseclass):
         if self.reactor:
             self.reactor.unload()
             del(self.reactor)
+        else:
+            print "RESETTING"
         self.reactor = reactor.reactor(self, self.dbus_object_path)
         self.reactor.load_layout(reactor.default_layout, reactor.default_depth)
         self.tick_count = 0
@@ -83,4 +93,4 @@ class simulation(service.baseclass):
 
     def config_reloaded(self):
         self.reactor.config_reloaded()
-        pass
+        print "CONFIG RELOADED"
