@@ -51,6 +51,7 @@ class simulation(service.baseclass):
 
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def run(self):
+        print "RUNNING"
         self.is_running = True
         # Set the reactor to tick every N ms
         gobject.timeout_add(200, self.tick)
@@ -69,6 +70,7 @@ class simulation(service.baseclass):
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def pause(self):
         """Just sets an internal variable to control ticks"""
+        print "PAUSED"
         self.is_running = False
 
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')
@@ -80,5 +82,5 @@ class simulation(service.baseclass):
         pass
 
     def config_reloaded(self):
-        # TODO: pass this info down to all the other instances
+        self.reactor.config_reloaded()
         pass

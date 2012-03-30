@@ -137,6 +137,22 @@ class reactor(dbus.service.Object):
             self.layout.append(col)
         self.rod_count = len(self.rods)
 
+    def unload(self):
+        for i in range(len(self.rods)):
+            self.rods[i].unload()
+            del(self.rods[i])
+
+        for i in range(len(self.mwells)):
+            self.mwells[i].unload()
+            del(self.mwells[i])
+
+    def config_reloaded(self):
+        for i in range(len(self.rods)):
+            self.rods[i].config_reloaded()
+
+        for i in range(len(self.mwells)):
+            self.mwells[i].config_reloaded()
+
     def tick(self, duration_seconds):
         self.tick_count += 1
 

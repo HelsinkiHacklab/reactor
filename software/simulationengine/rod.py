@@ -44,6 +44,15 @@ class rod(dbus.service.Object):
         # Final debug statement
         print "%s initialized" % self.object_path
 
+    def unload(self):
+        for i in range(len(self.cells)):
+            self.cells[i].unload()
+            del(self.cells[i])
+
+    def config_reloaded(self):
+        for i in range(len(self.cells)):
+            self.cells[i].config_reloaded()
+
     def tick(self, duration_seconds):
         # Update rod pos
         if (self.current_velocity != 0):

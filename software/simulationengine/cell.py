@@ -49,6 +49,12 @@ class cell(dbus.service.Object):
             return
         self.neutron_hit()
 
+    def unload(self):
+        pass
+
+    def config_reloaded(self):
+        pass
+
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def cool(self, cool_by=None):
         """This is the time-based cooling, it will be called by a timer in the reactor"""
@@ -101,7 +107,7 @@ class cell(dbus.service.Object):
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def neutron_hit(self):
         """This is where most of the magic happens, whenever we have a split atom we generate heat and with some P trigger hits in neighbours"""
-        self.neutrons_seen += 1 # keep track of the flow in case we need it
+        self.neutrons_seen += 1 # keep track of the flow
 
         # If the moderator is past this point it will always absorb the hits, nothing will happen
         if (self.rod.moderator_depth >= self.depth):
