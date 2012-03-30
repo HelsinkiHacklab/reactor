@@ -1,6 +1,8 @@
 simulation:
     tick_interval: 200
     autosave_interval: 50
+    temperature_blend_weight: 0.1
+    blend_grid_size: 3 # 3 cells (always in 3 axes)
 reactor:
     max_temp: 1200.0
     power_output_factor: 1024

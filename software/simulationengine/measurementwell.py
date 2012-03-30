@@ -8,6 +8,7 @@ class well(dbus.service.Object):
     def __init__(self, reactor, x, y, depth):
         self.reactor = reactor
         self.simulation_instance = self.reactor.simulation_instance
+        self.simulation_config = self.simulation_instance.config['simulation']
         self.object_path = "%s/mwell/%d/%d" % (self.reactor.object_path, x, y)
         self.bus_name = dbus.service.BusName('fi.hacklab.reactorsimulator.engine', bus=self.simulation_instance.bus)
         dbus.service.Object.__init__(self, self.bus_name, self.object_path)
@@ -28,7 +29,7 @@ class well(dbus.service.Object):
         self.remove_from_connection()
 
     def config_reloaded(self):
-        pass
+        self.simulation_config = self.simulation_instance.config['simulation']
 
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def neutron_hit(self, depth):
@@ -42,9 +43,9 @@ class well(dbus.service.Object):
         self.blend_temperatures = [0.0 for i in range(self.depth)]
         for i in range(self.depth):
             cell_count = 0
-            for xdelta in range(cell.neutron_hit_size):
-                for ydelta in range(cell.neutron_hit_size):
-                    for zdelta in range(cell.neutron_hit_size):
+            for xdelta in range(self.simulation_config['blend_grid_size']):
+                for ydelta in range(self.simulation_config['blend_grid_size']):
+                    for zdelta in range(self.simulation_config['blend_grid_size']):
                         x = self.x + (xdelta - 1)
                         y = self.y + (ydelta - 1)
                         z = self.depth + (zdelta - 1)
@@ -69,7 +70,7 @@ class well(dbus.service.Object):
                 self.blend_temperatures[i] = self.temperatures[i]
                 continue
             self.blend_temperatures[i] /= cell_count # and average them
-            self.blend_temperatures[i] = (1.0 - cell.temperature_blend_weight) * self.temperatures[i]  + (cell.temperature_blend_weight * self.blend_temperatures[i])
+            self.blend_temperatures[i] = (1.0 - self.simulation_config['temperature_blend_weight']) * self.temperatures[i]  + (self.simulation_config['temperature_blend_weight'] * self.blend_temperatures[i])
         pass
 
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')
