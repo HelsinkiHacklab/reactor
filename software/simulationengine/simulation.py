@@ -12,6 +12,7 @@ try:
     import cpickle as pickle
 except ImportError:
     import pickle
+import time
 
 # TODO: move to YAML config
 save_every_n_ticks = 50
@@ -26,21 +27,34 @@ class simulation(service.baseclass):
         self.reactor = reactor.reactor(bus, self.mainloop, self.dbus_object_path, self)
         self.reactor.load_layout(reactor.default_layout, reactor.default_depth)
         self.tick_count = 0
+        self.last_tick_time = 0
         self.run()
 
     def tick(self):
         """Wrapper to reactors tick method to allow us to pause the simulation"""
         if not self.is_running:
+            self.last_tick_time = 0
             return False
-        self.tick_count += 1
-        if ((self.tick_count % save_every_n_ticks) == 1):
-            self.save_state()
-        return self.reactor.tick()
+        else:
+            # Save state regularly
+            self.tick_count += 1
+            if ((self.tick_count % save_every_n_ticks) == 1):
+                self.save_state()
+
+            # Calculate seconds since last tick
+            now = time.time()
+            duration_seconds = 0
+            if self.last_tick_time != 0:
+                duration_seconds = now - self.last_tick_time
+            self.last_tick_time = now
+
+            # Tick all subsystems
+            return self.reactor.tick(duration_seconds)
 
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def run(self):
         self.is_running = True
-        # Set the reactor to tick every 100ms
+        # Set the reactor to tick every N ms
         gobject.timeout_add(200, self.tick)
 
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')

@@ -3,6 +3,8 @@ import os,sys,math
 import dbus
 import dbus.service
 import cell
+import random
+import reactor as reactor_module
 
 default_max_speed = 1.0
 default_scram_speed = 2.0
@@ -10,7 +12,6 @@ default_water_flow = 0.5 # 1.0 being max
 water_flow_cf = 2.0 # Cooling factor
 stomp_temp_decrease = 50 # Drop temp of each cell by this when stomp if triggered
 steam_pressure_exponent = 3.5
-
 
 class rod(dbus.service.Object):
     def __init__(self, bus, mainloop, path_base, x, y, depth, reactor):
@@ -23,12 +24,12 @@ class rod(dbus.service.Object):
         self.x = x
         self.y = y
         self.well_depth = depth
-        self.set_depth(float(depth)*0.65) # This is float so we can keep track of progress in smaller steps, for simulation purposes it will be rounded to int
+        self.set_depth(float(depth)*random.uniform(0, 1)) # This is float so we can keep track of progress in smaller steps, for simulation purposes it will be rounded to int
         #self.set_depth(-2) # all-out
         self.current_max_speed = default_max_speed
         self.current_max_flow = 1.0
         self.current_water_flow = default_water_flow
-        self.current_velocity = 0.0 # at rest
+        self.current_velocity = random.uniform(-1, 1) # Rod movement.  Expressed in layers per second. Initialize to random speed
 
         self.water_level = 1.0 # This is basically percentage of the full depth 1.0 means full of water
         self.steam_pressure = 0.0 # In whatever unit we feel is most convinient
@@ -42,7 +43,13 @@ class rod(dbus.service.Object):
         # Final debug statement
         print "%s initialized" % self.object_path
 
-    def tick(self):
+    def tick(self, duration_seconds):
+        # Update rod pos
+        if (self.current_velocity != 0):
+            d = self.depth + self.current_velocity * duration_seconds
+            self.set_depth(d)
+
+        # Simulate
         self.cool()
         self.decay()
         for cell in self.cells:
@@ -78,6 +85,11 @@ class rod(dbus.service.Object):
 
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def set_depth(self, depth):
+        # Clamp range
+        if depth < reactor_module.rod_min_depth: depth = reactor_module.rod_min_depth
+        if depth > reactor_module.rod_max_depth: depth = reactor_module.rod_max_depth
+
+        # Update depth values
         self.depth = float(depth)
         self.moderator_depth = math.floor(self.depth)
         self.tip_depth = self.moderator_depth+1

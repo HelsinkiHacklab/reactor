@@ -2,7 +2,7 @@ import os,sys,math
 import dbus
 import dbus.service
 import threading
-import fast_visualizer
+from visualizer import reactor_visualizer
 
 
 if __name__ == '__main__':
@@ -13,7 +13,7 @@ if __name__ == '__main__':
     
     bus = dbus.SessionBus()
     loop = gobject.MainLoop()
-    listener = fast_visualizer.reactor_listener(bus)
+    listener = reactor_visualizer.reactor_listener(bus)
 
     # Run visualizer in own thread
     listener.start()

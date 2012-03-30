@@ -25,6 +25,8 @@ default_layout = [[' ', ' ', '*', '*', '*', ' ', ' '],
                   [' ', '*', '*', '*', '#', '*', ' '],
                   [' ', ' ', '*', '*', '*', ' ', ' ']] 
 
+
+
 # Depth of each rod well
 default_depth = 7
 max_temp = 1200.0 # This is used in visualizations etc, the max point temperature we are going to see while the reactor has not yet blown up
@@ -34,6 +36,37 @@ reactor_width = 7
 reactor_height = 7
 reactor_depth = default_depth
 reactor_cube_size = reactor_width * reactor_height * reactor_depth
+
+
+# Reactor rod labeling
+numbering_base = 4
+numbering_start = numbering_base
+numbering_digits = 2
+
+def cell_type(x, y):
+    """ Type of the specified cell """
+    return default_layout[y][x]
+
+def cell_name(x, y):
+    """ Label of the specified cell """
+    return "" + cell_row_name(y) + "-" + cell_column_name(x)
+
+def cell_column_name(x):
+    """ Label of the specified column """
+    return baseN(numbering_start + x, numbering_base).zfill(numbering_digits)
+
+def cell_row_name(y):
+    """ Label of the specified row """
+    return baseN(numbering_start + reactor_height - y - 1, numbering_base).zfill(numbering_digits)
+
+# Converts number to specified base, from the internets: http://stackoverflow.com/questions/2267362/convert-integer-to-a-string-in-a-given-numeric-base-in-python
+def baseN(num,b,numerals="0123456789abcdefghijklmnopqrstuvwxyz"):
+    return ((num == 0) and numerals[0]) or (baseN(num // b, b, numerals).lstrip(numerals[0]) + numerals[num % b])
+
+
+# Rod range
+rod_min_depth = -2
+rod_max_depth = reactor_depth
 
 # Power ouput factor
 power_output_factor = 1024
@@ -100,12 +133,12 @@ class reactor(dbus.service.Object):
             self.layout.append(col)
         self.rod_count = len(self.rods)
 
-    def tick(self):
+    def tick(self, duration_seconds):
         self.tick_count += 1
 
         # Call the decay methods on the rods
         for rod in self.rods:
-            rod.tick() # This method will update rod avg temp
+            rod.tick(duration_seconds) # This method will update rod avg temp
         
         # after tiher tick actions blend temperatures
         for rod in self.rods:
@@ -126,8 +159,9 @@ class reactor(dbus.service.Object):
         # Trigger reports at each tick
         self.report()
 
+        #print "Reactor tick #%d done" % self.tick_count
+
         # return true to keep ticking
-        print "Reactor tick #%d done" % self.tick_count
         return True
 
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')
