@@ -1,14 +1,6 @@
 #!/usr/bin/env python
 import os,sys,random
 import dbus, gobject
-import dbus.service
-
-# Initial inoform 3D probability of causing neutron_hit() in neighbour
-neutron_hit_size = 3 # Grid size, changin this is ill-adviced
-neutron_hit_p = [[[ 0.05 for val in range(neutron_hit_size)] for col in range(neutron_hit_size)] for row in range(neutron_hit_size)]
-neutron_hit_p[1][1][1] = 0.0 # We're in the center, easiest way is to set p to zero
-
-
 
 class cell(dbus.service.Object):
     def __init__(self, rod, depth):
@@ -21,8 +13,8 @@ class cell(dbus.service.Object):
         self.object_path = "%s/cell/%d" % (self.rod.object_path, self.depth)
         self.bus_name = dbus.service.BusName('fi.hacklab.reactorsimulator.engine', bus=self.simulation_instance.bus)
         dbus.service.Object.__init__(self, self.bus_name, self.object_path)
-        self.config = self.simulation_instance.config['cell']
-        self.simulation_config = self.simulation_instance.config['simulation']
+        
+        self.config_reloaded()
 
         self.rod = rod
         self.neutrons_seen = 0
@@ -48,6 +40,9 @@ class cell(dbus.service.Object):
     def config_reloaded(self):
         self.config = self.simulation_instance.config['cell']
         self.simulation_config = self.simulation_instance.config['simulation']
+        self.neutron_hit_p = [[[ self.config['neutron_hit_p'] for val in range(self.config['neutron_grid_size'])] for col in range(self.config['neutron_grid_size'])] for row in range(self.config['neutron_grid_size'])]
+        # TODO: Calculate center from the grid size
+        self.neutron_hit_p[1][1][1] = 0.0 # We're in the center, easiest way is to set p to zero
 
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def cool(self, cool_by=None):
@@ -64,9 +59,10 @@ class cell(dbus.service.Object):
         """Calculates next blend_temp"""
         self.blend_temp = 0.0
         cell_count = 0
-        for xdelta in range(neutron_hit_size):
-            for ydelta in range(neutron_hit_size):
-                for zdelta in range(neutron_hit_size):
+        for xdelta in range(self.simulation_config['blend_grid_size']):
+            for ydelta in range(self.simulation_config['blend_grid_size']):
+                for zdelta in range(self.simulation_config['blend_grid_size']):
+                    # TODO: Calculate center (the "1" contstant below) from the grid size
                     x = self.x + (xdelta - 1)
                     y = self.y + (ydelta - 1)
                     z = self.depth + (zdelta - 1)
@@ -111,15 +107,16 @@ class cell(dbus.service.Object):
 
         #print "DEBUG: %s neutron_hit(), temp %f" % (self.object_path, self.temp)
 
-        for xdelta in range(neutron_hit_size):
-            for ydelta in range(neutron_hit_size):
-                for zdelta in range(neutron_hit_size):
+        for xdelta in range(self.config['neutron_grid_size']):
+            for ydelta in range(self.config['neutron_grid_size']):
+                for zdelta in range(self.config['neutron_grid_size']):
+                    # TODO: Calculate center (the "1" contstant below) from the grid size
                     x = self.x + (xdelta - 1)
                     y = self.y + (ydelta - 1)
                     z = self.depth + (zdelta - 1)
                     if not self.reactor.in_grid(x,y,z):
                         continue
-                    hit_p = float(neutron_hit_p[xdelta][ydelta][zdelta])
+                    hit_p = float(self.neutron_hit_p[xdelta][ydelta][zdelta])
                     # The graphite tip is at our place, accelerate reaction
                     if (self.rod.tip_depth == z):
                         hit_p += self.config['tip_neutron_hit_p_increase']
