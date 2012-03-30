@@ -84,6 +84,7 @@ class simulation(service.baseclass):
         if not name:
             name = 'latest'
         path = os.path.join(os.path.dirname( os.path.realpath( __file__ ) ), "%s.state" % name)
+        # TODO: Figure out some handy way to serialize the reactor state (and if case someone forgot pickle won't work)
         #with open(path, 'w') as f:
         
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')
