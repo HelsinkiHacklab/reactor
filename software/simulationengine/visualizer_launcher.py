@@ -13,7 +13,7 @@ if __name__ == '__main__':
     
     bus = dbus.SessionBus()
     loop = gobject.MainLoop()
-    listener = reactor_visualizer.reactor_listener(bus)
+    listener = reactor_visualizer.reactor_listener(bus, loop)
 
     # Run visualizer in own thread
     listener.start()
