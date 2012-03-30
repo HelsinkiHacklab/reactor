@@ -8,11 +8,6 @@ if os.path.isdir(libs_dir):
 # Import our DBUS service module
 import service,dbus,gobject
 
-# Import pickle for saving states
-try:
-    import cpickle as pickle
-except ImportError:
-    import pickle
 import time
 
 # TODO: move to YAML config
@@ -89,19 +84,15 @@ class simulation(service.baseclass):
         if not name:
             name = 'latest'
         path = os.path.join(os.path.dirname( os.path.realpath( __file__ ) ), "%s.state" % name)
-        with open(path, 'w') as f:
-            pickle.dump(self.reactor, f, -1)
+        #with open(path, 'w') as f:
         
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def load_state(self, name=''):
         if not name:
             name = 'latest'
         path = os.path.join(os.path.dirname( os.path.realpath( __file__ ) ), "%s.state" % name)
-        with open(path) as f:
+        #with open(path) as f:
             # TODO: Do we need to unload first ?
-            self.reactor = pickle.load(f, -1)
-            self.tick_count = 0
-            self.last_tick_time = 0
 
     def config_reloaded(self):
         self.reactor.config_reloaded()
