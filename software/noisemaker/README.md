@@ -5,6 +5,14 @@ does not need to think about mixing.
 
 Currently should do everything we *actually* need.
 
+## Dependencies
+
+    apt-get install python-gst0.10 python-yaml python-dbus python-gobject
+
+## Running
+
+    python noisemaker_launcher.py &
+
 ## Wishlist
 
   - Autogenerate loop_id and respond with that, so that the callee does not need to do that themselves (first checking the active loops list)
