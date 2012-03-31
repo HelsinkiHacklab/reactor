@@ -155,7 +155,7 @@ class reactor_listener(threading.Thread):
 
         # TODO: Listen to DBUS quit and restart signals
 
-    def reset_state(self):
+    def reset_state(self, *args):
         """ Initializes or resets the visualized simulation state. Should be called when simulation is restarted. """
         # Create arrays used to keep track of the current reactor state
         reactor_floor_size = reactor.reactor_width * reactor.reactor_height
@@ -405,7 +405,7 @@ class reactor_listener(threading.Thread):
                 if draw_labels: self.screen.unlock()
 
 
-    def quit(self):
+    def quit(self, *args):
         self.running = False
         self.loop.quit()
 
@@ -463,22 +463,7 @@ class reactor_listener(threading.Thread):
 
 
 if __name__ == '__main__':
-#    print "Use visualizer_launcher.py"
-#    sys.exit(1)
-    import dbus.mainloop.glib, gobject
-    gobject.threads_init()
-    dbus.mainloop.glib.threads_init()
-    dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
-
-    bus = dbus.SessionBus()
-    loop = gobject.MainLoop()
-    listener = reactor_listener(bus, loop)
-
-    # Run visualizer in own thread
-    listener.start()
-
-    # TODO: Add some nicer way to exit than ctrl-c
-
-    loop.run()
+    print "Use visualizer_launcher.py"
+    sys.exit(1)
 
 

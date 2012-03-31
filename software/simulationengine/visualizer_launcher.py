@@ -1,7 +1,7 @@
 import os,sys,math
 import dbus
 import dbus.service
-import threading
+import threading,signal
 from visualizer import reactor_visualizer
 
 
@@ -14,6 +14,11 @@ if __name__ == '__main__':
     bus = dbus.SessionBus()
     loop = gobject.MainLoop()
     listener = reactor_visualizer.reactor_listener(bus, loop)
+
+
+    signal.signal(signal.SIGTERM, listener.quit)
+    signal.signal(signal.SIGQUIT, listener.quit)
+    signal.signal(signal.SIGHUP, listener.reset_state)
 
     # Run visualizer in own thread
     listener.start()
