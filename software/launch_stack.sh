@@ -6,5 +6,5 @@ do
     python $vh &
 done
 python noisemaker/noisemaker_launcher.py &
-sleep 5 # Give the others time to actually register on the bus before firing up the middleware that will throw a hissy fit if it doesn't seem them
+sleep 7 # Give the others time to actually register on the bus before firing up the middleware that will throw a hissy fit if it doesn't seem them
 python middleware/middleware_launcher.py &

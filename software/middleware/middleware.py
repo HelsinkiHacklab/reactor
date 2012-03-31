@@ -42,10 +42,6 @@ class middleware(service.baseclass):
         self.config_reloaded()
 
         self.load_nm()
-        self.ardu_rodservos = None
-        self.ardu_rodleds = None
-        self.load_servos()
-        self.load_leds()
 
         self.bus.add_signal_receiver(self.red_alert, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_redalert")
         self.bus.add_signal_receiver(self.red_alert_reset, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_redalert_reset")
@@ -55,6 +51,7 @@ class middleware(service.baseclass):
 
         self.bus.add_signal_receiver(self.depth_report, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_depth")
 
+        self.max_temp = 1200
         self.max_neutrons_seen = 0
         
         # Listen temp/neutrons only from the measurment wells (filtering done on the receiver end it seems we could not do wildcard path matching afterall [maybe I should rethink these interface spaces])
@@ -91,6 +88,8 @@ class middleware(service.baseclass):
             return
         rod_x,rod_y = self.config['stomp_map']['pins2rods'][pin]
         print "Stomped on rod %d,%d" % (rod_x,rod_y)
+
+        # TODO: We should cache these objects while keeping calling conventions this simple (with automatic try/catch fallback for changed numeric id)
         rod = self.bus.get_object('fi.hacklab.reactorsimulator.engine', "/fi/hacklab/reactorsimulator/engine/reactor/rod/%d/%d" % (rod_x,rod_y))
         rod.stomp()
 
@@ -113,15 +112,19 @@ class middleware(service.baseclass):
             ledno = start_led + 2*i
             if mapped_value > 255:
                 print "self.set_rod_leds(%d, %d, 255)" % (jbol_idx, ledno)
-                self.set_rod_leds(jbol_idx, ledno, 255)
+                # TODO: We should cache these objects while keeping calling conventions this simple (with automatic try/catch fallback for changed numeric id)
+                self.bus.get_object('fi.hacklab.ardubus', '/fi/hacklab/ardubus/arduino1').set_jbol_pwm(dbus.Byte(jbol_idx), dbus.Byte(ledno), dbus.Byte(255))
                 mapped_value -= 255
                 continue
             if mapped_value < 0:
                 print "self.set_rod_leds(%d, %d, 0)" % (jbol_idx, ledno)
-                self.set_rod_leds(jbol_idx, ledno, 0)
+                # TODO: We should cache these objects while keeping calling conventions this simple (with automatic try/catch fallback for changed numeric id)
+                self.bus.get_object('fi.hacklab.ardubus', '/fi/hacklab/ardubus/arduino1').set_jbol_pwm(dbus.Byte(jbol_idx), dbus.Byte(ledno), dbus.Byte(0))
                 continue
             print "self.set_rod_leds(%d, %d, %d)" % (jbol_idx, ledno, mapped_value)
-            self.set_rod_leds(jbol_idx, ledno, mapped_value)
+            
+            # TODO: We should cache these objects while keeping calling conventions this simple (with automatic try/catch fallback for changed numeric id)
+            self.bus.get_object('fi.hacklab.ardubus', '/fi/hacklab/ardubus/arduino1').set_jbol_pwm(dbus.Byte(jbol_idx), dbus.Byte(ledno), dbus.Byte(mapped_value))
             mapped_value -= 255
 
     def red_alert(self, *args):
@@ -142,16 +145,6 @@ class middleware(service.baseclass):
 
     def load_nm(self):
         self.nm = self.bus.get_object('fi.hacklab.noisemaker', '/fi/hacklab/noisemaker')
-
-    def load_servos(self):
-        if not self.ardu_rodservos:
-            self.ardu_rodservos = self.bus.get_object('fi.hacklab.ardubus', '/fi/hacklab/ardubus/arduino0')
-    	self.set_rod_servo = self.ardu_rodservos.get_dbus_method('set_servo', 'fi.hacklab.ardubus')
-
-    def load_leds(self):
-        if not self.ardu_rodleds:
-            self.ardu_rodleds = self.bus.get_object('fi.hacklab.ardubus', '/fi/hacklab/ardubus/arduino1')
-    	self.set_rod_leds = self.ardu_rodleds.get_dbus_method('set_jbol_pwm', 'fi.hacklab.ardubus')
 
     def neutron_report(self, x, y, neutrons, *args):
         if self.rod_servo_map[int(x)][int(y)]:
