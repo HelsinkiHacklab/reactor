@@ -1,1 +1,3 @@
 general: {foo: bar}
+rod_servo_map: # Keyed by servo index, value is rod coords (this way to make it slightly less painfull, we'll reverse the mapping in software)
+    1: [0,3]
