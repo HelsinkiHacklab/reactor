@@ -15,7 +15,7 @@ Each physical part of the reactor is a separate program, to start all (two of th
     python lid/lid.py &
     python rodcontrol/rodcontrol.py &
 
-To make these do anything else than output signals on the D-BUS see the middleware[1]
+To make these do anything else than output signals on the D-BUS see the [middleware][1]
 
 1: https://github.com/HelsinkiHacklab/reactor/tree/master/software/middleware
 
