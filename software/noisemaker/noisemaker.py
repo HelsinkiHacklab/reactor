@@ -24,14 +24,15 @@ class noisemaker(service.baseclass):
         # Track active loops/samples (ie threads...)
         self.active_loops = {}
         # Resolve the full sample path
-        self.samples_path = os.path.realpath(os.path.join(os.path.dirname( os.path.realpath( __file__ ) ),  self.config['general']['sample_dir']))
-        if not os.path.isdir(self.samples_path):
-            raise Exception("Configured sample path %s is invalid" % self.config['general']['sample_dir'])
+        self.config_reloaded()
 
         print "Initialized as dbus object %s, samples from %s" % (self.dbus_object_path, self.samples_path)
 
     def config_reloaded(self):
-        self.config = self.launcher_instance.config
+        self.samples_path = os.path.realpath(os.path.join(os.path.dirname( os.path.realpath( __file__ ) ),  self.config['general']['sample_dir']))
+        if not os.path.isdir(self.samples_path):
+            raise Exception("Configured sample path %s is invalid" % self.config['general']['sample_dir'])
+        print "config reloaded, samples from %s" % self.samples_path
 
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def quit(self):

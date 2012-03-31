@@ -8,8 +8,10 @@ nm = bus.get_object('fi.hacklab.noisemaker', '/fi/hacklab/noisemaker')
 
 #nm.start_sequence('features_test','features_test0')
 #nm.stop_sequence('features_test0')
-nm.start_sequence('loop_only','loop_only0')
+#nm.start_sequence('loop_only','loop_only0')
 print nm.list_loops()
 #nm.stop_sequence('loop_only0')
 #nm.start_sequence('startend_only','startend_only0')
 #nm.stop_sequence('startend_only0')
+
+print "when done call nm.quit()"
