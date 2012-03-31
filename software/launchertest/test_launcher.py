@@ -11,8 +11,8 @@ import launcher,dbus
 my_signature = 'fi.hacklab.launchertest'
 launcher_config = {
     'dbus_default_interface_name': my_signature,
-    'main_class_name': __file__.replace('_launcher.py', ''),
-    'config_file_path': __file__.replace('_launcher.py', '.yml'),
+    'main_class_name': os.path.basename(__file__).replace('_launcher.py', ''),
+    'config_file_path': os.path.realpath(__file__).replace('_launcher.py', '.yml'),
 }
 
 # Basic pass-through implementation

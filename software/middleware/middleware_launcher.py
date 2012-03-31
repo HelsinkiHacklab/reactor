@@ -12,8 +12,8 @@ my_signature = 'fi.hacklab.reactorsimulator.middleware'
 launcher_config = {
     'dbus_default_interface_name': my_signature,
     'dbus_object_path': '/fi/hacklab/reactorsimulator/middleware/bridge',
-    'main_class_name': __file__.replace('_launcher.py', ''), 
-    'config_file_path': __file__.replace('_launcher.py', '.yml'),
+    'main_class_name': os.path.basename(__file__).replace('_launcher.py', ''), 
+    'config_file_path': os.path.realpath(__file__).replace('_launcher.py', '.yml'),
 }
 
 # Basic pass-through implementation
