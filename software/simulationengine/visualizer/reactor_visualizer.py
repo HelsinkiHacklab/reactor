@@ -293,7 +293,7 @@ class reactor_listener(threading.Thread):
         self._draw_views("Status", self.status_views, statusRect)
         self._draw_graph("Graphs", self.graph, graphRect)
         self._draw_layer("Pressure", self.pressure, 0, 10.0, pressureRect, False, white, textutils.largeFont)
-        self._draw_layers("Temperatures", self.temperatures, 300.0, tempRect)
+        self._draw_layers("Temperature", self.temperatures, 300.0, tempRect)
         self._draw_layers("Neutron Flux", self.neutrons, 1.0, neutronRect)
         textutils.drawTextInRect(self.screen, helpRect, self.helptext, background_color=self.background_color, font=textutils.smallFont)
 
