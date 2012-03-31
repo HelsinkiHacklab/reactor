@@ -122,7 +122,7 @@ class middleware(service.baseclass):
         self.set_rod_servo(rod_id, int((255.0/9)*(depth+2)))
 
     def load_nm(self):
-        self.nm = self.bus.get_object('fi.hacklab.noisemaker', '/fi/hacklab/noisemaker/noisemaker0')
+        self.nm = self.bus.get_object('fi.hacklab.noisemaker', '/fi/hacklab/noisemaker')
 
     def load_servos(self):
         if not self.ardu_rodservos:

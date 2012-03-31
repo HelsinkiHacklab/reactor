@@ -1,9 +1,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import with_statement
+# Boilerplate to add ../pythonlibs (via full path resolution) to import paths
+import os,sys
+libs_dir = os.path.join(os.path.dirname( os.path.realpath( __file__ ) ),  '..', 'pythonlibs')
+if os.path.isdir(libs_dir):                                       
+    sys.path.append(libs_dir)
+
+# Import our DBUS service module
+import service,dbus
 import yaml
-import dbus
-import dbus.service
-import sys, os
 
 #import pygtk, gtk
 
@@ -12,25 +17,29 @@ pygst.require("0.10")
 import gst
 
 
-class noisemaker(dbus.service.Object):
-    def __init__(self, config, bus, object_name='noisemaker0'):
-        self.config = config
-        self.active_loops = {}
+class noisemaker(service.baseclass):
+    def __init__(self, config, launcher_instance, **kwargs):
+        super(noisemaker, self).__init__(config, launcher_instance, **kwargs)
 
+        # Track active loops/samples (ie threads...)
+        self.active_loops = {}
         # Resolve the full sample path
         self.samples_path = os.path.realpath(os.path.join(os.path.dirname( os.path.realpath( __file__ ) ),  self.config['general']['sample_dir']))
         if not os.path.isdir(self.samples_path):
             raise Exception("Configured sample path %s is invalid" % self.config['general']['sample_dir'])
 
-        self.bus = bus
-        
-        self.object_name = object_name
-        self.object_path = '/fi/hacklab/noisemaker/' + object_name
-        self.bus_name = dbus.service.BusName('fi.hacklab.noisemaker', bus=bus)
-        dbus.service.Object.__init__(self, self.bus_name, self.object_path)
-        
-        
-        print "Initialized as dbus object %s, samples from %s" % (self.object_path, self.samples_path)
+        print "Initialized as dbus object %s, samples from %s" % (self.dbus_object_path, self.samples_path)
+
+    def config_reloaded(self):
+        self.config = self.launcher_instance.config
+
+    @dbus.service.method('fi.hacklab.reactorsimulator.engine')
+    def quit(self):
+        return self.launcher_instance.quit()
+
+    @dbus.service.method('fi.hacklab.reactorsimulator.engine')
+    def reload(self):
+        return self.launcher_instance.reload()
 
     @dbus.service.method('fi.hacklab.noisemaker')
     def hello(self):

@@ -5,7 +5,7 @@ if os.path.isdir(libs_dir):
     sys.path.append(libs_dir)
 
 # Import our DBUS service module
-import service
+import service,dbus
 
 class test(service.baseclass):
     def __init__(self, config, launcher_instance, **kwargs):
