@@ -72,15 +72,15 @@ class middleware(service.baseclass):
         rod = self.bus.get_object('fi.hacklab.reactorsimulator.engine', "/fi/hacklab/reactorsimulator/engine/reactor/rod/%d/%d" % (rod_y,rod_x))
         rod.stomp()
 
-    @dbus.service.method('fi.hacklab.reactorsimulator.engine')
+    @dbus.service.method('fi.hacklab.reactorsimulator.middleware')
     def quit(self):
         return self.launcher_instance.quit()
 
-    @dbus.service.method('fi.hacklab.reactorsimulator.engine')
+    @dbus.service.method('fi.hacklab.reactorsimulator.middleware')
     def reload(self):
         return self.launcher_instance.reload()
 
-    @dbus.service.method('fi.hacklab.reactorsimulator.engine')
+    @dbus.service.method('fi.hacklab.reactorsimulator.middleware')
     def led_gauge(self, start_led, num_leds, value, map_max):
         jbol_idx = 0
         # interpolate
