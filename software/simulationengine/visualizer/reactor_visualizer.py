@@ -215,6 +215,9 @@ class reactor_listener(threading.Thread):
 
         # Start mainloop
         self.mainloop()
+        
+        # Stop the dbus/glib mainloop too
+        self.loop.quit()
 
 
     def mainloop(self):
