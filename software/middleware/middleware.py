@@ -51,7 +51,8 @@ class middleware(service.baseclass):
 
         self.bus.add_signal_receiver(self.blowout, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_blowout")
 
-        self.bus.add_signal_receiver(self.depth_report, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_depth")
+        # there is some bug here and I wish to debug stomping now
+        #self.bus.add_signal_receiver(self.depth_report, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_depth")
 
         self.max_neutrons_seen = 0
         # Listen temp/neutrons only from the measurment wells
@@ -63,13 +64,13 @@ class middleware(service.baseclass):
         self.bus.add_signal_receiver(self.stomp_received, dbus_interface = "fi.hacklab.ardubus", signal_name = "dio_change", path="/fi/hacklab/ardubus/arduino2")
 
     def stomp_received(self, pin, state, sender, *args):
-        print "Pin %d changed(index) to %s on %s" % (pin, state, sender)
-        if state:
+        print "Pin %d changed(index) to %s on %s" % (pin, repr(state), sender)
+        if bool(state):
             # high means pulled up, ie not switched
             return
-        rod_y,rod_x = self.config['stomp_map']['pins2rods'][pin]
-        print "Stomped on rod %d,%d" % (rod_y,rod_x)
-        rod = self.bus.get_object('fi.hacklab.reactorsimulator.engine', "/fi/hacklab/reactorsimulator/engine/reactor/rod/%d/%d" % (rod_y,rod_x))
+        rod_x,rod_y = self.config['stomp_map']['pins2rods'][pin]
+        print "Stomped on rod %d,%d" % (rod_x,rod_y)
+        rod = self.bus.get_object('fi.hacklab.reactorsimulator.engine', "/fi/hacklab/reactorsimulator/engine/reactor/rod/%d/%d" % (rod_x,rod_y))
         rod.stomp()
 
     @dbus.service.method('fi.hacklab.reactorsimulator.middleware')
