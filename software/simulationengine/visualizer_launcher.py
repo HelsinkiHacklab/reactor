@@ -18,8 +18,9 @@ if __name__ == '__main__':
     # Run visualizer in own thread
     listener.start()
 
-    # TODO: Add some nicer way to exit than ctrl-c
-
-    loop.run()
+    try:
+        loop.run()
+    except KeyboardInterrupt:
+        loop.quit()
 
 
