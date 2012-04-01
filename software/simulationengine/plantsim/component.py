@@ -8,7 +8,6 @@ class component():
         self.ports = {}
 
 
-
     def _add_port(self, port):
         self.ports[port.name] = port
 
@@ -18,3 +17,10 @@ class component():
 
 
     def connect_port(self, name, other_port):
+        """ Connect specified port to the other port.  Neither port should be connected anywhere before."""
+        self.port(name).connect(other_port)
+
+
+    def update(self, duration_s):
+        # TODO 
+
