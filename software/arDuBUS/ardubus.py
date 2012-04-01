@@ -12,8 +12,9 @@ class ardubus(dbus.service.Object):
     def __init__(self, bus, object_name, config):
         self.config = config
         self.object_name = object_name
+        self.bus = bus
         self.object_path = '/fi/hacklab/ardubus/' + object_name
-        self.bus_name = dbus.service.BusName('fi.hacklab.ardubus', bus=bus)
+        self.bus_name = dbus.service.BusName('fi.hacklab.ardubus.' + object_name, bus=bus)
         dbus.service.Object.__init__(self, self.bus_name, self.object_path)
         self.initialize_serial()
 
