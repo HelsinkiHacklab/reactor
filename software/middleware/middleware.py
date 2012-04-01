@@ -67,14 +67,23 @@ class middleware(service.baseclass):
     def depth_report(self, x, y, depth, *args):
         servo_position = int(np.interp(float(depth), [-2,reactor_square_side],[0,180]))
         #print "depth report for rod %d,%d, depth is %.3f corresponding to servo position %d" % (x,y,depth, servo_position)
+        try:
+            mapped = self.rod_servo_map[int(x)][int(y)]
+        except IndexError:
+            print "depth report for rod %d,%d, index out of range" % (x,y)
+            return
+        if not mapped:
+            print "depth report for rod %d,%d, No rod defined there" % (x,y)
+            # No rod there
+            return
             
-        servo_idx,board_name = self.rod_servo_map[int(x)][int(y)]
+        servo_idx,board_name = mapped
         
         # TODO: We should cache these objects while keeping calling conventions this simple (with automatic try/catch fallback for changed numeric id)
-        self.bus.get_object('fi.hacklab.ardubus', "/fi/hacklab/ardubus/%s" % board_name).set_servo(dbus.Byte(servo_idx), dbus.Byte(servo_position))
+        self.bus.get_object('fi.hacklab.ardubus.' + board_name, '/fi/hacklab/ardubus/' + board_name).set_servo(dbus.Byte(servo_idx), dbus.Byte(servo_position))
 
     def stomp_received(self, pin, state, sender, *args):
-        #print "Pin %d changed(index) to %s on %s" % (pin, repr(state), sender)
+        print "Pin %d changed to %s on %s" % (pin, repr(state), sender)
         if bool(state):
             # high means pulled up, ie not switched
             return
@@ -105,18 +114,18 @@ class middleware(service.baseclass):
             if mapped_value > 255:
                 print "self.set_rod_leds(%d, %d, 255)" % (jbol_idx, ledno)
                 # TODO: We should cache these objects while keeping calling conventions this simple (with automatic try/catch fallback for changed numeric id)
-                self.bus.get_object('fi.hacklab.ardubus', '/fi/hacklab/ardubus/arduino1').set_jbol_pwm(dbus.Byte(jbol_idx), dbus.Byte(ledno), dbus.Byte(255))
+                self.bus.get_object('fi.hacklab.ardubus.arduino1', '/fi/hacklab/ardubus/arduino1').set_jbol_pwm(dbus.Byte(jbol_idx), dbus.Byte(ledno), dbus.Byte(255))
                 mapped_value -= 255
                 continue
             if mapped_value < 0:
                 print "self.set_rod_leds(%d, %d, 0)" % (jbol_idx, ledno)
                 # TODO: We should cache these objects while keeping calling conventions this simple (with automatic try/catch fallback for changed numeric id)
-                self.bus.get_object('fi.hacklab.ardubus', '/fi/hacklab/ardubus/arduino1').set_jbol_pwm(dbus.Byte(jbol_idx), dbus.Byte(ledno), dbus.Byte(0))
+                self.bus.get_object('fi.hacklab.ardubus.arduino1', '/fi/hacklab/ardubus/arduino1').set_jbol_pwm(dbus.Byte(jbol_idx), dbus.Byte(ledno), dbus.Byte(0))
                 continue
             print "self.set_rod_leds(%d, %d, %d)" % (jbol_idx, ledno, mapped_value)
             
             # TODO: We should cache these objects while keeping calling conventions this simple (with automatic try/catch fallback for changed numeric id)
-            self.bus.get_object('fi.hacklab.ardubus', '/fi/hacklab/ardubus/arduino1').set_jbol_pwm(dbus.Byte(jbol_idx), dbus.Byte(ledno), dbus.Byte(mapped_value))
+            self.bus.get_object('fi.hacklab.ardubus.arduino1', '/fi/hacklab/ardubus/arduino1').set_jbol_pwm(dbus.Byte(jbol_idx), dbus.Byte(ledno), dbus.Byte(mapped_value))
             mapped_value -= 255
 
     def red_alert(self, *args):
