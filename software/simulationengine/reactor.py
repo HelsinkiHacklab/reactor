@@ -4,7 +4,7 @@ libs_dir = os.path.join(os.path.dirname( os.path.realpath( __file__ ) ),  '..', 
 if os.path.isdir(libs_dir):                                       
     sys.path.append(libs_dir)
 
-import dbus,gobject,threading
+import dbus,gobject
 
 import rod, measurementwell
 
@@ -170,27 +170,16 @@ class reactor(dbus.service.Object):
             rod.tick(duration_seconds) # This method will update rod avg temp
         
         # after tiher tick actions blend temperatures
-        tpool = []
         for rod in self.rods:
-            tpool.append(threading.Thread(target=rod.calc_blend_temp()))
-            tpool[-1].start()
+            rod.calc_blend_temp()
         for well in self.mwells:
-            tpool.append(threading.Thread(target=well.calc_blend_temp))
-            tpool[-1].start()
-        for t in tpool:
-            t.join()
-        del(tpool)
-        # after calculating sync the calculated values
-        tpool = []
+            well.calc_blend_temp()
+
+        # after tiher tick actions blend temperatures
         for rod in self.rods:
-            tpool.append(threading.Thread(target=rod.sync_blend_temp()))
-            tpool[-1].start()
+            rod.sync_blend_temp() # This method will update rod avg temp
         for well in self.mwells:
-            tpool.append(threading.Thread(target=well.sync_blend_temp))
-            tpool[-1].start()
-        for t in tpool:
-            t.join()
-        del(tpool)
+            well.sync_blend_temp()
 
         # Update the reactor average values
         self.calc_avg_temp()
@@ -210,17 +199,11 @@ class reactor(dbus.service.Object):
     def report(self):
         """This will trigger report methods for everything else, they will emit signals"""
 
-        # These reports can be handled in parallel threads
-        tpool = []
         for rod in self.rods:
-            tpool.append(threading.Thread(target=rod.report()))
-            tpool[-1].start()
+            rod.report()
+
         for well in self.mwells:
-            tpool.append(threading.Thread(target=well.report))
-            tpool[-1].start()
-        for t in tpool:
-            t.join()
-        del(tpool)
+            well.report()
 
         self.emit_avg_pressure(self.avg_pressure, self.object_path)
         self.emit_avg_temperature(self.avg_temp, self.object_path)
