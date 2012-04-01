@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import os,sys,math,random
 import dbus
+import threading
 
 import cell
 import reactor as reactor_module
@@ -60,8 +61,14 @@ class rod(dbus.service.Object):
         # Simulate
         self.cool()
         self.decay()
+        tpool = []
         for cell in self.cells:
-            cell.calc_blend_temp()
+            tpool.append(threading.Thread(target=cell.calc_blend_temp))
+            tpool[-1].start()
+        for t in tpool:
+            t.join()
+        del(tpool)
+        
         self.calc_avg_temp()
         self.calc_steam_pressure()
 
@@ -175,8 +182,13 @@ class rod(dbus.service.Object):
 
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def sync_blend_temp(self):
+        tpool = []
         for cell in self.cells:
-            cell.sync_blend_temp()
+            tpool.append(threading.Thread(target=cell.sync_blend_temp))
+            tpool[-1].start()
+        for t in tpool:
+            t.join()
+        del(tpool)
         self.calc_avg_temp()
 
     @dbus.service.signal('fi.hacklab.reactorsimulator.engine')

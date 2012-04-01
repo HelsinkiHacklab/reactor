@@ -4,7 +4,7 @@ libs_dir = os.path.join(os.path.dirname( os.path.realpath( __file__ ) ),  '..', 
 if os.path.isdir(libs_dir):                                       
     sys.path.append(libs_dir)
 
-import dbus,gobject
+import dbus,gobject,threading
 
 import rod, measurementwell
 
@@ -170,16 +170,27 @@ class reactor(dbus.service.Object):
             rod.tick(duration_seconds) # This method will update rod avg temp
         
         # after tiher tick actions blend temperatures
+        tpool = []
         for rod in self.rods:
-            rod.calc_blend_temp()
+            tpool.append(threading.Thread(target=rod.calc_blend_temp()))
+            tpool[-1].start()
         for well in self.mwells:
-            well.calc_blend_temp()
-
-        # after tiher tick actions blend temperatures
+            tpool.append(threading.Thread(target=well.calc_blend_temp))
+            tpool[-1].start()
+        for t in tpool:
+            t.join()
+        del(tpool)
+        # after calculating sync the calculated values
+        tpool = []
         for rod in self.rods:
-            rod.sync_blend_temp() # This method will update rod avg temp
+            tpool.append(threading.Thread(target=rod.sync_blend_temp()))
+            tpool[-1].start()
         for well in self.mwells:
-            well.sync_blend_temp()
+            tpool.append(threading.Thread(target=well.sync_blend_temp))
+            tpool[-1].start()
+        for t in tpool:
+            t.join()
+        del(tpool)
 
         # Update the reactor average values
         self.calc_avg_temp()
