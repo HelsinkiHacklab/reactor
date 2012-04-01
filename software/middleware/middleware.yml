@@ -1,3 +1,7 @@
+temp_gauge:
+    max_temp: 750
+neutron_gauge:
+    max_flux: 10
 stomp_map:
     board_name: 'arduino2' # Which board sends these signals so we can limit the path
     pins2rods: # Key is pin value is the rods coordinates (used to form the dbus name)
