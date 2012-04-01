@@ -20,7 +20,7 @@ class rod(dbus.service.Object):
         self.set_depth(float(depth)*random.uniform(0, 1)) # This is float so we can keep track of progress in smaller steps, for simulation purposes it will be rounded to int
         #self.set_depth(-2) # all-out
         self.current_max_speed = self.config['default_max_speed']
-        self.current_max_flow = 1.0
+        self.current_max_flow = self.config['default_max_flow']
         self.current_water_flow = self.config['default_water_flow']
         self.current_velocity = random.uniform(-1, 1) # Rod movement.  Expressed in layers per second. Initialize to random speed
 
@@ -28,6 +28,8 @@ class rod(dbus.service.Object):
         self.steam_pressure = 0.0 # In whatever unit we feel is most convinient
         self.avg_temp = 0.0
         self.max_temp = 0.0
+        # When scram is active other move commands are ignored
+        self.scram_active = False
 
         
         self.cells = []
@@ -80,6 +82,14 @@ class rod(dbus.service.Object):
         print "rod %d,%d stomped" % (self.x,self.y)
         for cell in self.cells:
             cell.temp -= self.config['stomp_temp_decrease']
+
+        # If the rod is jammed allow recovery
+        if self.current_max_speed < self.config['default_max_speed']:
+            self.current_max_speed += self.config['stomp_speed_recovery'] # we should probably increase the velocity here too ?
+
+        if self.current_max_flow < self.config['default_max_flow']:
+            self.current_max_flow += self.config['stomp_flow_recovery'] # We should probably increase the flow here too ? 
+
         self.calc_avg_temp()
 
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')
@@ -92,11 +102,55 @@ class rod(dbus.service.Object):
         """Return list of cell temperatures"""
         return map(lambda x: x.temp, self.cells)
 
+    @dbus.service.signal('fi.hacklab.reactorsimulator.engine')
+    def emit_movement_stop(self, sender):
+        pass
+
+    @dbus.service.signal('fi.hacklab.reactorsimulator.engine')
+    def emit_movement_start(self, sender):
+        pass
+
+    @dbus.service.method('fi.hacklab.reactorsimulator.engine')
+    def start_move(self, direction):
+        if self.scram_active:
+            return
+        if (   bool(direction) #True is up
+            and not (self.depth <= reactor_module.rod_min_depth)):
+            self.current_velocity = self.current_max_speed * -1
+            self.emit_movement_start(self.object_path)
+            return
+        # We return above so here we can just check if we can move
+        if (not (self.depth >= reactor_module.rod_max_depth)):
+            self.current_velocity = self.current_max_speed * 1
+            self.emit_movement_start(self.object_path)
+
+    @dbus.service.method('fi.hacklab.reactorsimulator.engine')
+    def stop_move(self, direction):
+        if self.scram_active:
+            return
+        self.current_velocity = 0.0
+        self.emit_movement_stop(self.object_path)
+
+    @dbus.service.method('fi.hacklab.reactorsimulator.engine')
+    def scram(self):
+        if self.current_max_speed < 0.1: # Allow at least this much when SCRAMming
+            self.current_max_speed = 0.1
+        self.current_velocity = self.current_max_speed * self.config['scram_factor']
+
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def set_depth(self, depth):
+        """While this is callable over DBUS for completeness sake one should always use the move method"""
         # Clamp range
-        if depth < reactor_module.rod_min_depth: depth = reactor_module.rod_min_depth
-        if depth > reactor_module.rod_max_depth: depth = reactor_module.rod_max_depth
+        if depth < reactor_module.rod_min_depth:
+            depth = reactor_module.rod_min_depth
+            self.current_velocity = 0.0
+            self.emit_movement_stop(self.object_path)
+            
+        if depth > reactor_module.rod_max_depth:
+            depth = reactor_module.rod_max_depth
+            self.current_velocity = 0.0
+            self.emit_movement_stop(self.object_path)
+            self.scram_active = False
 
         # Update depth values
         self.depth = float(depth)

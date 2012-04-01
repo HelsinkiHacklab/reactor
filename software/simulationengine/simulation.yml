@@ -10,11 +10,14 @@ reactor:
     blowout_safety_factor: 0.85
 rod:
     default_max_speed: 1.0 # under normal moving rods cannot move faster than this (layers per second)
-    default_scram_speed: 2.0 # if SCRAMmed then this speed is used
+    scram_factor: 3.0 # if SCRAMmed then this speed times max speed is how fast rods will start moving down
     default_water_flow: 0.5 # 1.0 being max
+    default_max_flow: 1.0
     water_flow_cf: 2.0 # Cooling factor, each cell is cooled by this amount times the water flow in the rod
     stomp_temp_decrease: 50 # Drop temp of each cell by this when stomp if triggered
     steam_pressure_exponent: 3.5
+    stomp_speed_recovery: 0.1 # recover 10% of max speed on stomp if below optimal
+    stomp_flow_recovery: 0.1 # recover 10% of max speed on stomp if below optimal
 cell:
     neutron_hit_p: 0.05 # Making this too high will break everything as all CPU time is spent firing neutrons around
     neutron_grid_size: 3 # 3 cells (always in 3 axes), changing this is ill-adviced
