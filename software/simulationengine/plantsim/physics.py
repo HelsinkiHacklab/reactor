@@ -17,6 +17,9 @@ def water_density(temperature_C):
     # TODO: Water density at 100 degrees is about 950, and at 300 degrees about 500, so we may need an approximate function
     return approximate_water_density
 
+def water_viscosity(temperature_C, pressure_pa)
+    # TODO: Find approximation
+
 def water_pressure(temperature_C, depth_m, surface_pressure_Pa = atmospheric_pressure_Pa):
     return  surface_pressure_Pa + water_density(temperature_C) * depth_m * earth_g
 
