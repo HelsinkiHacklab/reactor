@@ -62,6 +62,7 @@ class middleware(service.baseclass):
 
     def config_reloaded(self):
         # Transpose the rod servo map to something more usable
+        self.servo_position_cache = {}
         self.rod_servo_map = [[None for i in range(reactor_square_side)] for i in  range(reactor_square_side)]
         for board in self.config['rod_servo_map'].keys():
             for servo_idx in self.config['rod_servo_map'][board].keys():
@@ -95,8 +96,6 @@ class middleware(service.baseclass):
                 return self.call_cached(busname, buspath, method, *args)
 
     def depth_report(self, x, y, depth, *args):
-        servo_position = int(np.interp(float(depth), [-2,reactor_square_side],[0,180]))
-        #print "depth report for rod %d,%d, depth is %.3f corresponding to servo position %d" % (x,y,depth, servo_position)
         try:
             mapped = self.rod_servo_map[int(x)][int(y)]
         except KeyError:
@@ -108,8 +107,19 @@ class middleware(service.baseclass):
             return
             
         servo_idx,board_name = mapped
-        
+        servo_position = int(np.interp(float(depth), [-2,reactor_square_side],[0,180]))
+
+        cache_key = "%s:%s" % (board_name, servo_idx)
+        if not self.servo_position_cache.has_key(cache_key):
+            self.servo_position_cache[cache_key] = -1
+
+        if self.servo_position_cache[cache_key] == servo_position:
+            # TODO: At some intervall refresh this anyway
+            return
+
+        # Can we background this call somehow ?
         self.call_cached('fi.hacklab.ardubus.' + board_name, '/fi/hacklab/ardubus/' + board_name, 'set_servo', dbus.Byte(servo_idx), dbus.Byte(servo_position))
+        self.servo_position_cache[cache_key] = servo_position
 
     def stomp_received(self, pin, state, sender, *args):
         print "Pin %d changed to %s on %s" % (pin, repr(state), sender)
