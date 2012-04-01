@@ -210,11 +210,17 @@ class reactor(dbus.service.Object):
     def report(self):
         """This will trigger report methods for everything else, they will emit signals"""
 
+        # These reports can be handled in parallel threads
+        tpool = []
         for rod in self.rods:
-            rod.report()
-
+            tpool.append(threading.Thread(target=rod.report()))
+            tpool[-1].start()
         for well in self.mwells:
-            well.report()
+            tpool.append(threading.Thread(target=well.report))
+            tpool[-1].start()
+        for t in tpool:
+            t.join()
+        del(tpool)
 
         self.emit_avg_pressure(self.avg_pressure, self.object_path)
         self.emit_avg_temperature(self.avg_temp, self.object_path)
