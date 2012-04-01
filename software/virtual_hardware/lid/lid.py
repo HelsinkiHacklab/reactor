@@ -72,7 +72,7 @@ if __name__ == '__main__':
     proxy = QMLProxy(view.rootObject())
     view.show()
     
-    lid_arduino = ardubus.ardubus_qml(bus, 'lid', proxy)
+    lid_arduino = ardubus.ardubus_qml(bus, 'arduino2', proxy)
     ardubus_instances[lid_arduino.object_name] = lid_arduino
 
 

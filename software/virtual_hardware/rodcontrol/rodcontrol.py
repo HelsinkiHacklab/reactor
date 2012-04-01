@@ -78,9 +78,9 @@ if __name__ == '__main__':
     proxy = QMLProxy(view.rootObject())
     view.show()
     
-    servo_arduino = ardubus.ardubus_qml(bus, 'rodservos', proxy)
+    servo_arduino = ardubus.ardubus_qml(bus, 'arduino0', proxy)
     ardubus_instances[servo_arduino.object_name] = servo_arduino
-    switch_arduino = ardubus.ardubus_qml(bus, 'rodswitches', proxy)
+    switch_arduino = ardubus.ardubus_qml(bus, 'arduino1', proxy)
     ardubus_instances[switch_arduino.object_name] = switch_arduino
 
 
