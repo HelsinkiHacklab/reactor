@@ -10,7 +10,7 @@ class rod(dbus.service.Object):
         self.reactor = reactor
         self.simulation_instance = self.reactor.simulation_instance
         self.object_path = "%s/rod/%d/%d" % (self.reactor.object_path, x, y)
-        self.bus_name = dbus.service.BusName('fi.hacklab.reactorsimulator.engine', bus=self.simulation_instance.bus)
+        self.bus_name = dbus.service.BusName("fi.hacklab.reactorsimulator.engine.reactor.rod.x%d.y%d" % (x, y), bus=self.simulation_instance.bus)
         dbus.service.Object.__init__(self, self.bus_name, self.object_path)
         self.config = self.simulation_instance.config['rod']
 

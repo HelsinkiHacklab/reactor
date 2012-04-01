@@ -76,7 +76,7 @@ class reactor(dbus.service.Object):
         self.simulation_instance = simulation_instance
         self.object_path = path_base + '/reactor'
         self.bus = self.simulation_instance.bus
-        self.bus_name = dbus.service.BusName('fi.hacklab.reactorsimulator.engine', bus=self.bus)
+        self.bus_name = dbus.service.BusName('fi.hacklab.reactorsimulator.engine.reactor', bus=self.bus)
         dbus.service.Object.__init__(self, self.bus_name, self.object_path)
 
         global max_temp # Other modules might use this so if we get a new value from config try to override this
