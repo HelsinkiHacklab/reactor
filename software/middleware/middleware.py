@@ -65,7 +65,7 @@ class middleware(service.baseclass):
 
 
     def depth_report(self, x, y, depth, *args):
-        servo_position = int(np.interp(float(depth), [-2,reactor_square_side],[0,255]))
+        servo_position = int(np.interp(float(depth), [-2,reactor_square_side],[0,180]))
         #print "depth report for rod %d,%d, depth is %.3f corresponding to servo position %d" % (x,y,depth, servo_position)
             
         servo_idx,board_name = self.rod_servo_map[int(x)][int(y)]

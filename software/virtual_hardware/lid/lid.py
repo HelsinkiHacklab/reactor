@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""Rod control panel"""
+"""Reactor lid"""
 
 import sys, os
 
@@ -8,7 +8,7 @@ ardubus_module_dir = os.path.join(os.path.dirname( os.path.realpath( __file__ ) 
 if os.path.isdir(ardubus_module_dir):                                       
     sys.path.append(ardubus_module_dir)
 import ardubus_qml as ardubus
-import dbus
+import dbus, gobject
 import dbus.service
 import dbus.mainloop.glib
 
@@ -72,7 +72,7 @@ if __name__ == '__main__':
     proxy = QMLProxy(view.rootObject())
     view.show()
     
-    lid_arduino = ardubus.ardubus_qml(bus, 'arduino2', proxy)
+    lid_arduino = ardubus.ardubus_qml(bus, 'lid', proxy)
     ardubus_instances[lid_arduino.object_name] = lid_arduino
 
 
