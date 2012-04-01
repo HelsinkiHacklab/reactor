@@ -35,7 +35,10 @@ class middleware(service.baseclass):
 
         self.load_nm()
 
+        # TODO: Read the board names from config
         self.bus.add_signal_receiver(self.stomp_received, dbus_interface = "fi.hacklab.ardubus", signal_name = "dio_change", path="/fi/hacklab/ardubus/arduino2")
+        self.bus.add_signal_receiver(self.rod_switch_change, dbus_interface = "fi.hacklab.ardubus", signal_name = "dio_change", path="/fi/hacklab/ardubus/arduino1")
+
 
         self.bus.add_signal_receiver(self.red_alert, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_redalert")
         self.bus.add_signal_receiver(self.red_alert_reset, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_redalert_reset")
@@ -69,6 +72,22 @@ class middleware(service.baseclass):
                 rodx,rody = self.config['rod_servo_map'][board][servo_idx]
                 self.rod_servo_map[rodx][rody] = (servo_idx, board)
 
+
+    def rod_switch_change(self, pin, state, sender, *args):
+        print "Pin %d changed to %s on %s" % (pin, repr(state), sender)
+
+        # TODO: Read the board names from config
+        try:
+            rod_info = self.config['rod_control_map']['arduino1'][int(pin)]
+        except KeyError:
+            print "No rod defined for pin %d" % pin
+            return
+        
+        if bool(state):
+            # High means pulled up, ie not switched
+            self.call_cached('fi.hacklab.reactorsimulator.engine', "/fi/hacklab/reactorsimulator/engine/reactor/rod/%d/%d" % (rod_info[0],rod_info[1]), 'stop_move')
+            return
+        self.call_cached('fi.hacklab.reactorsimulator.engine', "/fi/hacklab/reactorsimulator/engine/reactor/rod/%d/%d" % (rod_info[0],rod_info[1]), 'start_move', rod_info[2])
 
     def call_cached(self, busname, buspath, method, *args):
         obj_cache_key = "%s@%s" % (busname, buspath)
@@ -119,8 +138,9 @@ class middleware(service.baseclass):
             return
 
         # Can we background this call somehow ?
-        #self.call_cached('fi.hacklab.ardubus.' + board_name, '/fi/hacklab/ardubus/' + board_name, 'set_servo', dbus.Byte(servo_idx), dbus.Byte(servo_position))
-        thread.start_new_thread(self.call_cached, ('fi.hacklab.ardubus.' + board_name, '/fi/hacklab/ardubus/' + board_name, 'set_servo', dbus.Byte(servo_idx), dbus.Byte(servo_position)))
+        self.call_cached('fi.hacklab.ardubus.' + board_name, '/fi/hacklab/ardubus/' + board_name, 'set_servo', dbus.Byte(servo_idx), dbus.Byte(servo_position))
+        # Seems we fats run out of threads...
+        #thread.start_new_thread(self.call_cached, ('fi.hacklab.ardubus.' + board_name, '/fi/hacklab/ardubus/' + board_name, 'set_servo', dbus.Byte(servo_idx), dbus.Byte(servo_position)))
 
         self.servo_position_cache[cache_key] = servo_position
 
@@ -136,7 +156,6 @@ class middleware(service.baseclass):
             return
         print "Stomped on rod %d,%d" % (rod_x,rod_y)
 
-        # TODO: We should cache these objects while keeping calling conventions this simple (with automatic try/catch fallback for changed numeric id)
         self.call_cached('fi.hacklab.reactorsimulator.engine', "/fi/hacklab/reactorsimulator/engine/reactor/rod/%d/%d" % (rod_x,rod_y), 'stomp')
 
     @dbus.service.method('fi.hacklab.reactorsimulator.middleware')

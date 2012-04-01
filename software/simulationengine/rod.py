@@ -125,7 +125,7 @@ class rod(dbus.service.Object):
             self.emit_movement_start(self.object_path)
 
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')
-    def stop_move(self, direction):
+    def stop_move(self):
         if self.scram_active:
             return
         self.current_velocity = 0.0
