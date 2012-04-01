@@ -35,6 +35,8 @@ class middleware(service.baseclass):
 
         self.load_nm()
 
+        self.bus.add_signal_receiver(self.stomp_received, dbus_interface = "fi.hacklab.ardubus", signal_name = "dio_change", path="/fi/hacklab/ardubus/arduino2")
+
         self.bus.add_signal_receiver(self.red_alert, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_redalert")
         self.bus.add_signal_receiver(self.red_alert_reset, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_redalert_reset")
         self.red_alert_active = False
@@ -42,10 +44,13 @@ class middleware(service.baseclass):
         self.bus.add_signal_receiver(self.blowout, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_blowout")
 
         # This seems to make us a bit slow (probably because now we do not cache the object...)
-        #self.bus.add_signal_receiver(self.depth_report, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_depth")
+        self.bus.add_signal_receiver(self.depth_report, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_depth")
 
         self.max_temp = 1200
         self.max_neutrons_seen = 0
+
+        self.dbus_cache = {}
+        self.dbus_cache_error_count = {}
         
         # Listen temp/neutrons only from the measurment wells (filtering done on the receiver end it seems we could not do wildcard path matching afterall [maybe I should rethink these interface spaces])
         #self.bus.add_signal_receiver(self.neutron_report, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_neutrons")
@@ -53,7 +58,6 @@ class middleware(service.baseclass):
         
         #self.bus.add_signal_receiver(self.temp_report, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_temp",)
 
-        self.bus.add_signal_receiver(self.stomp_received, dbus_interface = "fi.hacklab.ardubus", signal_name = "dio_change", path="/fi/hacklab/ardubus/arduino2")
 
 
     def config_reloaded(self):
@@ -65,12 +69,37 @@ class middleware(service.baseclass):
                 self.rod_servo_map[rodx][rody] = (servo_idx, board)
 
 
+    def call_cached(self, busname, buspath, method, *args):
+        obj_cache_key = "%s@%s" % (busname, buspath)
+        method_cache_key = "%s::%s" % (obj_cache_key, method)
+        if not self.dbus_cache.has_key(obj_cache_key):
+            self.dbus_cache[obj_cache_key] = self.bus.get_object(busname, buspath)
+        if not self.dbus_cache.has_key(method_cache_key):
+            self.dbus_cache[method_cache_key] = getattr(self.dbus_cache[obj_cache_key], method)
+
+        try:
+            ret = self.dbus_cache[method_cache_key](*args)
+            if self.dbus_cache_error_count.has_key(method_cache_key): # Zero the error count
+                self.dbus_cache_error_count[method_cache_key] = 0
+            return ret                
+        except dbus.exceptions.DBusException:
+            if not self.dbus_cache_error_count.has_key(method_cache_key):
+                self.dbus_cache_error_count[method_cache_key] = 0
+            self.dbus_cache_error_count[method_cache_key] += 1
+            # TODO Check that it's a method os object name exception first
+            # Remove stale keys
+            print "Removing stale keys for %s" % method_cache_key
+            del(self.dbus_cache[obj_cache_key])
+            del(self.dbus_cache[method_cache_key])
+            if self.dbus_cache_error_count[method_cache_key] < 4:
+                return self.call_cached(busname, buspath, method, *args)
+
     def depth_report(self, x, y, depth, *args):
         servo_position = int(np.interp(float(depth), [-2,reactor_square_side],[0,180]))
         #print "depth report for rod %d,%d, depth is %.3f corresponding to servo position %d" % (x,y,depth, servo_position)
         try:
             mapped = self.rod_servo_map[int(x)][int(y)]
-        except IndexError:
+        except KeyError:
             print "depth report for rod %d,%d, index out of range" % (x,y)
             return
         if not mapped:
@@ -80,20 +109,22 @@ class middleware(service.baseclass):
             
         servo_idx,board_name = mapped
         
-        # TODO: We should cache these objects while keeping calling conventions this simple (with automatic try/catch fallback for changed numeric id)
-        self.bus.get_object('fi.hacklab.ardubus.' + board_name, '/fi/hacklab/ardubus/' + board_name).set_servo(dbus.Byte(servo_idx), dbus.Byte(servo_position))
+        self.call_cached('fi.hacklab.ardubus.' + board_name, '/fi/hacklab/ardubus/' + board_name, 'set_servo', dbus.Byte(servo_idx), dbus.Byte(servo_position))
 
     def stomp_received(self, pin, state, sender, *args):
         print "Pin %d changed to %s on %s" % (pin, repr(state), sender)
         if bool(state):
             # high means pulled up, ie not switched
             return
-        rod_x,rod_y = self.config['stomp_map']['pins2rods'][pin]
+        try:
+            rod_x,rod_y = self.config['stomp_map']['pins2rods'][pin]
+        except KeyError:
+            print "No rod defined for pin %d" % pin
+            return
         print "Stomped on rod %d,%d" % (rod_x,rod_y)
 
         # TODO: We should cache these objects while keeping calling conventions this simple (with automatic try/catch fallback for changed numeric id)
-        rod = self.bus.get_object('fi.hacklab.reactorsimulator.engine', "/fi/hacklab/reactorsimulator/engine/reactor/rod/%d/%d" % (rod_x,rod_y))
-        rod.stomp()
+        self.call_cached('fi.hacklab.reactorsimulator.engine', "/fi/hacklab/reactorsimulator/engine/reactor/rod/%d/%d" % (rod_x,rod_y), 'stomp')
 
     @dbus.service.method('fi.hacklab.reactorsimulator.middleware')
     def quit(self):
