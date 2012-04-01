@@ -10,7 +10,7 @@ import service,dbus,gobject
 import dbus,time
 
 import numpy as np
-import thread
+
 
 
 # TODO move to config (but yml might not allow such nice formatting
@@ -107,7 +107,6 @@ class middleware(service.baseclass):
             return
             
         servo_idx,board_name = mapped
-        # interpolate (TODO: Is numpy fast here, at least it handles the negative depth correctly ?)
         servo_position = int(np.interp(float(depth), [-2,reactor_square_side],[0,180]))
 
         cache_key = "%s:%s" % (board_name, servo_idx)
@@ -119,9 +118,7 @@ class middleware(service.baseclass):
             return
 
         # Can we background this call somehow ?
-        #self.call_cached('fi.hacklab.ardubus.' + board_name, '/fi/hacklab/ardubus/' + board_name, 'set_servo', dbus.Byte(servo_idx), dbus.Byte(servo_position))
-        thread.start_new_thread(self.call_cached, ('fi.hacklab.ardubus.' + board_name, '/fi/hacklab/ardubus/' + board_name, 'set_servo', dbus.Byte(servo_idx), dbus.Byte(servo_position)))
-
+        self.call_cached('fi.hacklab.ardubus.' + board_name, '/fi/hacklab/ardubus/' + board_name, 'set_servo', dbus.Byte(servo_idx), dbus.Byte(servo_position))
         self.servo_position_cache[cache_key] = servo_position
 
     def stomp_received(self, pin, state, sender, *args):
@@ -150,7 +147,7 @@ class middleware(service.baseclass):
     @dbus.service.method('fi.hacklab.reactorsimulator.middleware')
     def led_gauge(self, start_led, num_leds, value, map_max):
         jbol_idx = 0
-        # interpolate (TODO: Is numpy fast here ?)
+        # interpolate
         mapped_value = int(np.interp(value, [0,map_max],[0,num_leds*255]))
         # and bin to leds
         for i in range(num_leds):
