@@ -41,6 +41,7 @@ class middleware(service.baseclass):
 
         self.bus.add_signal_receiver(self.blowout, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_blowout")
 
+        # This seems to make us a bit slow (probably because now we do not cache the object...)
         #self.bus.add_signal_receiver(self.depth_report, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_depth")
 
         self.max_temp = 1200
