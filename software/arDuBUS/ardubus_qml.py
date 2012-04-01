@@ -4,8 +4,6 @@
 
 import ardubus as ardubus_real
 import dbus
-import dbus.service
-import dbus.mainloop.glib
 
 class ardubus_qml(ardubus_real.ardubus):
     def __init__(self, bus, object_name, qml_proxy):
