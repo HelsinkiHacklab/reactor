@@ -8418,6 +8418,10 @@ type RDH, grid 15 mm</description>
 <sheets>
 <sheet>
 <plain>
+<text x="30.48" y="223.52" size="1.778" layer="91">I2C pull-up, optional</text>
+<text x="-7.62" y="134.62" size="1.778" layer="91">address solder jumpers, optional</text>
+<text x="-10.16" y="170.18" size="1.778" layer="91">address &amp; int- pullups</text>
+<text x="7.62" y="195.58" size="1.778" layer="91">bypass C</text>
 </plain>
 <instances>
 <instance part="IC1" gate="G$1" x="60.96" y="157.48"/>
