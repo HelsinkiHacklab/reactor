@@ -110,10 +110,13 @@
 <wire x1="28.301" y1="0" x2="28.301" y2="18.085" width="0" layer="20"/>
 <wire x1="28.301" y1="18.085" x2="0" y2="18.085" width="0" layer="20"/>
 <wire x1="0" y1="18.085" x2="0" y2="0" width="0" layer="20"/>
-<text x="26.797" y="12.827" size="1.143" layer="25" rot="R270">A2  A1  A0</text>
-<text x="25.908" y="3.302" size="0.8128" layer="25">PA7</text>
+<text x="26.289" y="12.573" size="0.8128" layer="25" rot="R270">AD0 AD1 AD2</text>
+<text x="25.908" y="3.302" size="0.8128" layer="25">A7</text>
 <text x="1.143" y="14.478" size="0.8128" layer="25">D    C</text>
 <text x="1.143" y="3.048" size="0.8128" layer="25">G   5V  INT</text>
+<text x="27.559" y="14.351" size="0.8128" layer="26" rot="MR0">B0   B1    B2   B3    B4    B5    B6    B7  ADR0 SCL SDA</text>
+<text x="26.162" y="14.097" size="0.8128" layer="25">B0</text>
+<text x="27.178" y="3.175" size="0.8128" layer="26" rot="MR0">A7   A6   A5    A4   A3    A2    A1    A0   INT   5V   GND</text>
 </plain>
 <libraries>
 <library name="micro-philips">
