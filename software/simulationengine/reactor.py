@@ -76,7 +76,7 @@ class reactor(dbus.service.Object):
         self.simulation_instance = simulation_instance
         self.object_path = path_base + '/reactor'
         self.bus = self.simulation_instance.bus
-        self.bus_name = dbus.service.BusName('fi.hacklab.reactorsimulator.engine', bus=self.bus)
+        self.bus_name = dbus.service.BusName('fi.hacklab.reactorsimulator.engine.reactor', bus=self.bus)
         dbus.service.Object.__init__(self, self.bus_name, self.object_path)
 
         global max_temp # Other modules might use this so if we get a new value from config try to override this
@@ -195,6 +195,20 @@ class reactor(dbus.service.Object):
         # return true to keep ticking
         return True
 
+
+    @dbus.service.method('fi.hacklab.reactorsimulator.engine')
+    def scram(self):
+        """Slams all rods down as fast as they will go"""
+        print "SCRAM!"
+        for rod in self.rods:
+            rod.scram()
+
+    @dbus.service.method('fi.hacklab.reactorsimulator.engine')
+    def turbo(self):
+        """Moves all control rods up, fun to play with"""
+        for rod in self.rods:
+            rod.start_move(True)
+
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def report(self):
         """This will trigger report methods for everything else, they will emit signals"""
@@ -270,6 +284,8 @@ class reactor(dbus.service.Object):
         self.avg_pressure = sum(self.get_rod_pressures()) / self.rod_count
         if self.avg_pressure > 1.0:
             self.power_output = self.avg_pressure * self.config['power_output_factor']
+        else:
+            self.power_output = 0.0
         return self.avg_pressure
 
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')

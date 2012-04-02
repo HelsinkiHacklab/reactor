@@ -155,7 +155,7 @@ class reactor_listener(threading.Thread):
 
         # TODO: Listen to DBUS quit and restart signals
 
-    def reset_state(self):
+    def reset_state(self, *args):
         """ Initializes or resets the visualized simulation state. Should be called when simulation is restarted. """
         # Create arrays used to keep track of the current reactor state
         reactor_floor_size = reactor.reactor_width * reactor.reactor_height
@@ -215,6 +215,9 @@ class reactor_listener(threading.Thread):
 
         # Start mainloop
         self.mainloop()
+        
+        # Stop the dbus/glib mainloop too
+        self.loop.quit()
 
 
     def mainloop(self):
@@ -293,7 +296,7 @@ class reactor_listener(threading.Thread):
         self._draw_views("Status", self.status_views, statusRect)
         self._draw_graph("Graphs", self.graph, graphRect)
         self._draw_layer("Pressure", self.pressure, 0, 10.0, pressureRect, False, white, textutils.largeFont)
-        self._draw_layers("Temperatures", self.temperatures, 300.0, tempRect)
+        self._draw_layers("Temperature", self.temperatures, 300.0, tempRect)
         self._draw_layers("Neutron Flux", self.neutrons, 1.0, neutronRect)
         textutils.drawTextInRect(self.screen, helpRect, self.helptext, background_color=self.background_color, font=textutils.smallFont)
 
@@ -402,7 +405,7 @@ class reactor_listener(threading.Thread):
                 if draw_labels: self.screen.unlock()
 
 
-    def quit(self):
+    def quit(self, *args):
         self.running = False
         self.loop.quit()
 
@@ -460,22 +463,7 @@ class reactor_listener(threading.Thread):
 
 
 if __name__ == '__main__':
-#    print "Use visualizer_launcher.py"
-#    sys.exit(1)
-    import dbus.mainloop.glib, gobject
-    gobject.threads_init()
-    dbus.mainloop.glib.threads_init()
-    dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
-
-    bus = dbus.SessionBus()
-    loop = gobject.MainLoop()
-    listener = reactor_listener(bus, loop)
-
-    # Run visualizer in own thread
-    listener.start()
-
-    # TODO: Add some nicer way to exit than ctrl-c
-
-    loop.run()
+    print "Use visualizer_launcher.py"
+    sys.exit(1)
 
 

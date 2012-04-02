@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""Rod control panel"""
+"""Reactor lid"""
 
 import sys, os
 
@@ -9,8 +9,6 @@ if os.path.isdir(ardubus_module_dir):
     sys.path.append(ardubus_module_dir)
 import ardubus_qml as ardubus
 import dbus
-import dbus.service
-import dbus.mainloop.glib
 
 # Use a global for storing these
 ardubus_instances = {}
@@ -51,9 +49,9 @@ class QMLProxy(QtCore.QObject):
         return self.qml_root.findChild(QtDeclarative.QDeclarativeItem, objectName)
 
 if __name__ == '__main__':
-    # not using threading yet, besided I think I should use QT threads anyway
-    #gobject.threads_init()
-    #dbus.mainloop.glib.threads_init()
+    import gobject,dbus.mainloop.glib
+    gobject.threads_init()
+    dbus.mainloop.glib.threads_init()
     dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
     bus = dbus.SessionBus()
 

@@ -5,10 +5,10 @@ if os.path.isdir(libs_dir):
     sys.path.append(libs_dir)
 
 # Import our DBUS service module
-import service
+import service,dbus
 
 class test(service.baseclass):
-    def __init__(self, mainloop, bus, config, **kwargs):
-        super(test, self).__init__(mainloop, bus, config, **kwargs)
-        #print "launcher test mainclass initialized as %s:%s with config %s" % (self.dbus_interface_name, self.dbus_object_path, repr(self.config))
+    def __init__(self, config, launcher_instance, **kwargs):
+        super(test, self).__init__(config, launcher_instance, **kwargs)
+        print "launcher test mainclass initialized as %s:%s with config %s" % (self.dbus_interface_name, self.dbus_object_path, repr(self.config))
 

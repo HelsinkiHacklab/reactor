@@ -11,7 +11,7 @@ class cell(dbus.service.Object):
         self.y = self.rod.y
         self.depth = depth
         self.object_path = "%s/cell/%d" % (self.rod.object_path, self.depth)
-        self.bus_name = dbus.service.BusName('fi.hacklab.reactorsimulator.engine', bus=self.simulation_instance.bus)
+        self.bus_name = dbus.service.BusName("fi.hacklab.reactorsimulator.engine.reactor.rod.x%d.y%d.cell.z%d" % (self.x, self.y, depth), bus=self.simulation_instance.bus)
         dbus.service.Object.__init__(self, self.bus_name, self.object_path)
         
         self.config_reloaded()

@@ -9,7 +9,7 @@ class well(dbus.service.Object):
         self.simulation_instance = self.reactor.simulation_instance
         self.simulation_config = self.simulation_instance.config['simulation']
         self.object_path = "%s/mwell/%d/%d" % (self.reactor.object_path, x, y)
-        self.bus_name = dbus.service.BusName('fi.hacklab.reactorsimulator.engine', bus=self.simulation_instance.bus)
+        self.bus_name = dbus.service.BusName("fi.hacklab.reactorsimulator.engine.reactor.mwell.x%d.y%d" % (x, y), bus=self.simulation_instance.bus)
         dbus.service.Object.__init__(self, self.bus_name, self.object_path)
 
         self.x = x
