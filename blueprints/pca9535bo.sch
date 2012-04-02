@@ -8413,6 +8413,7 @@ type RDH, grid 15 mm</description>
 <part name="J1" library="resistor" deviceset="R-EU_" device="R0603" value="0R"/>
 <part name="J2" library="resistor" deviceset="R-EU_" device="R0603" value="0R"/>
 <part name="J3" library="resistor" deviceset="R-EU_" device="R0603" value="0R"/>
+<part name="PU2" library="resistor-dil" deviceset="4R-N" device="CAY16" value="4.7k"/>
 </parts>
 <sheets>
 <sheet>
@@ -8433,6 +8434,10 @@ type RDH, grid 15 mm</description>
 <instance part="J1" gate="G$1" x="25.4" y="152.4"/>
 <instance part="J2" gate="G$1" x="25.4" y="147.32"/>
 <instance part="J3" gate="G$1" x="25.4" y="142.24"/>
+<instance part="PU2" gate="A" x="50.8" y="213.36" rot="R270"/>
+<instance part="PU2" gate="B" x="45.72" y="213.36" rot="R270"/>
+<instance part="PU2" gate="C" x="40.64" y="213.36" rot="R270"/>
+<instance part="PU2" gate="D" x="35.56" y="213.36" rot="R270"/>
 </instances>
 <busses>
 </busses>
@@ -8595,17 +8600,30 @@ type RDH, grid 15 mm</description>
 <wire x1="81.28" y1="121.92" x2="81.28" y2="132.08" width="0.1524" layer="91"/>
 <pinref part="PB" gate="G$1" pin="10"/>
 <wire x1="81.28" y1="132.08" x2="96.52" y2="132.08" width="0.1524" layer="91"/>
+<wire x1="43.18" y1="175.26" x2="43.18" y2="203.2" width="0.1524" layer="91"/>
+<pinref part="PU2" gate="C" pin="2"/>
+<wire x1="43.18" y1="203.2" x2="40.64" y2="203.2" width="0.1524" layer="91"/>
+<wire x1="40.64" y1="203.2" x2="40.64" y2="208.28" width="0.1524" layer="91"/>
+<pinref part="PU2" gate="D" pin="2"/>
+<wire x1="40.64" y1="208.28" x2="35.56" y2="208.28" width="0.1524" layer="91"/>
+<junction x="43.18" y="175.26"/>
 </segment>
 </net>
 <net name="SDA" class="0">
 <segment>
 <pinref part="IC1" gate="G$1" pin="SDA"/>
-<wire x1="48.26" y1="177.8" x2="40.64" y2="177.8" width="0.1524" layer="91"/>
+<wire x1="48.26" y1="177.8" x2="45.72" y2="177.8" width="0.1524" layer="91"/>
+<wire x1="45.72" y1="177.8" x2="40.64" y2="177.8" width="0.1524" layer="91"/>
 <wire x1="40.64" y1="177.8" x2="40.64" y2="119.38" width="0.1524" layer="91"/>
 <wire x1="40.64" y1="119.38" x2="83.82" y2="119.38" width="0.1524" layer="91"/>
 <wire x1="83.82" y1="119.38" x2="83.82" y2="129.54" width="0.1524" layer="91"/>
 <pinref part="PB" gate="G$1" pin="11"/>
 <wire x1="83.82" y1="129.54" x2="96.52" y2="129.54" width="0.1524" layer="91"/>
+<pinref part="PU2" gate="B" pin="2"/>
+<wire x1="45.72" y1="177.8" x2="45.72" y2="208.28" width="0.1524" layer="91"/>
+<pinref part="PU2" gate="A" pin="2"/>
+<wire x1="45.72" y1="208.28" x2="50.8" y2="208.28" width="0.1524" layer="91"/>
+<junction x="45.72" y="177.8"/>
 </segment>
 </net>
 <net name="5V" class="0">
@@ -8623,13 +8641,20 @@ type RDH, grid 15 mm</description>
 <junction x="20.32" y="172.72"/>
 <pinref part="PU" gate="C" pin="1"/>
 <junction x="20.32" y="167.64"/>
-<wire x1="73.66" y1="187.96" x2="20.32" y2="187.96" width="0.1524" layer="91"/>
+<wire x1="73.66" y1="187.96" x2="22.86" y2="187.96" width="0.1524" layer="91"/>
+<wire x1="22.86" y1="187.96" x2="20.32" y2="187.96" width="0.1524" layer="91"/>
 <wire x1="20.32" y1="187.96" x2="20.32" y2="177.8" width="0.1524" layer="91"/>
 <pinref part="U$1" gate="G$1" pin="5V"/>
 <junction x="20.32" y="187.96"/>
 <junction x="20.32" y="177.8"/>
 <junction x="73.66" y="182.88"/>
 <pinref part="C1" gate="G$1" pin="1"/>
+<pinref part="PU2" gate="A" pin="1"/>
+<pinref part="PU2" gate="D" pin="1"/>
+<wire x1="50.8" y1="218.44" x2="35.56" y2="218.44" width="0.1524" layer="91"/>
+<wire x1="35.56" y1="218.44" x2="22.86" y2="218.44" width="0.1524" layer="91"/>
+<wire x1="22.86" y1="218.44" x2="22.86" y2="187.96" width="0.1524" layer="91"/>
+<junction x="22.86" y="187.96"/>
 </segment>
 </net>
 <net name="GND" class="0">
