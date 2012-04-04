@@ -1,7 +1,7 @@
 
 
 
-class component():
+class component:
     """ A component in a plant. """
 
     def __init__(self):
@@ -10,6 +10,7 @@ class component():
 
     def _add_port(self, port):
         self.ports[port.name] = port
+        return port
 
 
     def port(self, name):
@@ -23,5 +24,5 @@ class component():
 
     def update(self, duration_s):
         # TODO 
-        # 
+        pass
 

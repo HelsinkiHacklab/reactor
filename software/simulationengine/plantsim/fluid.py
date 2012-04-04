@@ -1,7 +1,7 @@
 
 import physics
 
-class fluid():
+class fluid:
     """
      Represents the conditions of a body of fluid.
      For now, it is assumed the fluid is always water, either in liquid or gaseous (steam) form.

@@ -4,7 +4,7 @@ import sys
 
 class PortConnectionError(Exception): pass
 
-class port():
+class port:
     """
      A port of some component that can be connected to another one.
      Provides most recent calculated flow velocity (positive out, negative in),

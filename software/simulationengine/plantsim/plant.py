@@ -1,4 +1,4 @@
-class plant():
+class plant:
     """
       A plant, consisting of a set of components.
       Simulates component state with each tick, and sends update events for component changes.
@@ -7,9 +7,11 @@ class plant():
     def __init__(self):
         self.components = []
 
+    def add(self, component):
+        self.components.append(component)
+        return component
 
-
-    def tick(self, duration_seconds):
-        # Tick the components
+    def update(self, duration_seconds):
+        # Update the components
         for component in self.components:
-            component.tick(duration_seconds)
+            component.update(duration_seconds)
