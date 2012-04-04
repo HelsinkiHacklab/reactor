@@ -103,6 +103,7 @@ class data_series():
         self.name = name
         self.color = color
         self.darker_color = scale_color(color, 0.5)
+        self.max_len = max_len
         self._values = deque(maxlen= max_len)
         self.thickness = 2
         self.unit = unit
@@ -118,7 +119,7 @@ class data_series():
         self.value_lock.acquire()
         self._values.appendleft(value)
         self.unit.update_scaling(value)
-        if self.value_count < self._values.maxlen: self.value_count += 1
+        if self.value_count < self.max_len: self.value_count += 1
         self._latest_value = value
         self.value_lock.release()
 
