@@ -38,11 +38,11 @@ class reactor_plant(plant):
         river_valve2.in_port.connect(river_pump2.out_port)
 
         # Tank that combines inflows from river pumps
-        river_in_tank = self.add(tank(10))
+        river_in_tank = self.add(tank(10.0, 2.0, 1.0))
         river_in_tank.add_port("in1").connect(river_valve1.out_port)
         river_in_tank.add_port("in2").connect(river_valve2.out_port)
         river_tank_out_port = river_in_tank.add_port("out")
-        river_in_pipe = self.add(pipe(30, area_m2=physics.large_pipe_size_m2))
+        river_in_pipe = self.add(pipe(30.0, area_m2=physics.large_pipe_size_m2))
         river_in_pipe.in_port.connect(river_tank_out_port)
 
         # Steam condenser
@@ -51,7 +51,7 @@ class reactor_plant(plant):
 
         # River waste-water pipe
         river_out = self.add(river())
-        river_out_pipe = self.add(pipe(40, area_m2=physics.large_pipe_size_m2))
+        river_out_pipe = self.add(pipe(40.0, area_m2=physics.large_pipe_size_m2))
         river_out_pipe.in_port.connect(steam_condenser.a_out)
         river_out_pipe.out_port.connect(river_out.port)
 
@@ -66,3 +66,7 @@ class reactor_plant(plant):
 
         ## Electric power circuit:
 
+
+if __name__ == "__main__":
+    reactor = reactor_plant()
+    reactor.start()
