@@ -54,7 +54,7 @@ class port:
             other_pressure = self.connected_port.get_pressure_Pa()
             pressure_difference = own_pressure - other_pressure
             # TODO: Calculate flow based on pressure difference
-            self.flow_m3_per_s = pressure_difference
+            self.flow_m3_per_s = pressure_difference / 100
         else:
             self.flow_m3_per_s = 0.0
 
@@ -64,7 +64,7 @@ class port:
         if self.flow_m3_per_s > 0 and self.connected_port is not None:
             volume_m3 = self.flow_m3_per_s * duration_s
             self.connected_port.add_fluid(self.fluid_body.remove_fluid(volume_m3, self.height_m))
-            print("moving "+str(volume_m3)+"m3 from " + self.name + " to " + self.connected_port.name)
+            print("moving "+str(volume_m3)+"m3 from " + self.name + " to " + self.connected_port.name + " that now has " + str(self.connected_port.fluid_body.water_kg) + " kg water")
 
 
     def add_fluid(self, moved_fluid):
