@@ -13,7 +13,8 @@ class pipe(component):
         self.volume_m3 = area_m2 * length_m
         base_h = min(start_height_m, end_height_m)
         h      = max(start_height_m, end_height_m) - base_h
-        self.fluid = fluid(self.volume_m3, h, base_h)
+        # TODO: Better area for pipe, base on slope
+        self.fluid = fluid(self.area_m2, h, base_h)
 
         self.in_port  = self.fluid.add_port(port("in_port", self.fluid, area_m2, length_m/2.0, start_height_m))
         self.out_port = self.fluid.add_port(port("out_port",   self.fluid, area_m2, length_m/2.0, end_height_m))

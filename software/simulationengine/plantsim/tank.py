@@ -9,7 +9,7 @@ class tank(component):
 
     def __init__(self, volume_m3, height_m, base_height_m = 0, initial_fill_rate = 0.7):
         component.__init__(self)
-        self.fluid = fluid(volume_m3, height_m, base_height_m, initial_fill_rate)
+        self.fluid = fluid(volume_m3/height_m, height_m, base_height_m, initial_fill_rate)
 
     def fluids(self):
         return [fluid]

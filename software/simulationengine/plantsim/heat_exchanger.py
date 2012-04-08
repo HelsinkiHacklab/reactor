@@ -23,8 +23,8 @@ class heat_exchanger(component):
 
         self.a_volume_m3 = a_volume_m3
         self.b_volume_m3 = b_volume_m3
-        self.a_fluid = fluid(self.a_volume_m3, height_m, base_height_m) # Delivered with some initial fluid so as to not divide universe with zero
-        self.b_fluid = fluid(self.b_volume_m3, height_m, base_height_m) # Delivered with some initial fluid so as to not divide universe with zero
+        self.a_fluid = fluid(self.a_volume_m3 / (height_m/2), height_m, base_height_m) # Delivered with some initial fluid so as to not divide universe with zero
+        self.b_fluid = fluid(self.b_volume_m3 / (height_m/2), height_m, base_height_m) # Delivered with some initial fluid so as to not divide universe with zero
 
         self.a_in  = self.a_fluid.add_port(port("a_in",  self.a_fluid, a_pipe_size_m2, connector_lengths_m, height_m))
         self.a_out = self.a_fluid.add_port(port("a_out", self.a_fluid, a_pipe_size_m2, connector_lengths_m, height_m))
