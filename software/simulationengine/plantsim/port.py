@@ -12,12 +12,12 @@ class port:
     """
 
 
-    def __init__(self, name, fluid_body, area_m2, length_m, relative_height_m = 0):
+    def __init__(self, name, fluid_body, area_m2, length_m, height_m = 0):
         self.name = name
         self.fluid_body = fluid_body
         self.area_m2  = area_m2
         self.length_m = length_m
-        self.relative_height_m = relative_height_m
+        self.height_m = height_m
         self.connected_port = None
         self.flow_m3_per_s = 0.0
 
@@ -35,12 +35,19 @@ class port:
 
 
     def get_pressure_Pa(self):
-        vessel_pressure = self.fluid_body.pressure_at(self.relative_height_m)
+        vessel_pressure = self.fluid_body.pressure_at(self.height_m)
         # TODO: Calculate pressure drop over pipe based on flow
         return vessel_pressure
 
+    def get_other_pressure_Pa(self):
+        if self.connected_port is not None:
+            return self.connected_port.get_pressure_Pa()
+        else:
+            return 0.0
+
 
     def calculate_flow(self, duration_s):
+        # TODO: Don't try to fill with more liquid + gas than what own (and other incoming?) pressure(s) would allow
         if self.connected_port is not None:
             # Get pressure on both sides of the connection
             own_pressure   = self.get_pressure_Pa()
@@ -53,9 +60,10 @@ class port:
 
 
     def execute_flow(self, duration_s):
+        # TODO: Check that it is not overfilled (maintain incompressible liquid invariant)
         if self.flow_m3_per_s > 0 and self.connected_port is not None:
             volume_m3 = self.flow_m3_per_s * duration_s
-            self.connected_port.add_fluid(self.fluid_body.remove_fluid(volume_m3, self.relative_height_m))
+            self.connected_port.add_fluid(self.fluid_body.remove_fluid(volume_m3, self.height_m))
             print("moving "+str(volume_m3)+"m3 from " + self.name + " to " + self.connected_port.name)
 
 
