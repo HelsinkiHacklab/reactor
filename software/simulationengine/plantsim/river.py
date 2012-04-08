@@ -12,10 +12,8 @@ class river(component):
         component.__init__(self)
         self.height_m = height_m
 
-        self.river_water = river_fluid(river_temperature_C)
-
-        pressure_Pa = physics.water_pressure(river_temperature_C, height_m)
-        self.port = self._add_port(port("river", self.river_water, pipe_size_m2, pipe_length_m, height_m))
+        self.river_water = self._add_fluid(fluid(100, 10, -5, 0.5, True, True, river_temperature_C))
+        self.port = self.river_water.add_port(port("river", self.river_water, pipe_size_m2, pipe_length_m, height_m))
 
 
     def fluids(self):

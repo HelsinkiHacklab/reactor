@@ -8,7 +8,7 @@ class fluid:
      For now, it is assumed the fluid is always water, either in liquid or gaseous (steam) form.
     """
 
-    def __init__(self, area_m2, height_m, base_height_m = 0, fill_amount = 0.7):
+    def __init__(self, area_m2, height_m, base_height_m = 0, fill_amount = 0.7, open_roof = False, fixed_liquid_level=False, initial_temperature_C=physics.ambient_temperature_C):
         self.ports = {}
 
         self.base_height_m = base_height_m
@@ -16,15 +16,17 @@ class fluid:
         self.height_m      = height_m
         self.volume_m3     = area_m2 * height_m
 
-        self.temperature_C = physics.ambient_temperature_C
+        self.temperature_C = initial_temperature_C
 
         self.water_kg      = fill_amount * self.volume_m3 / physics.water_density(self.temperature_C)
         self.steam_kg      = 0.0
 
-        self.liquid_level_m = 0.0
+        self.liquid_level_m = fill_amount * self.height_m
         self.gas_pressure_Pa = physics.atmospheric_pressure_Pa
         self.surface_pressure_Pa = self.gas_pressure_Pa
         self.incoming_surface_pressure_Pa = 0.0
+        self.open_roof = open_roof
+        self.fixed_liquid_level = fixed_liquid_level
 
 
     def add_port(self, port):
@@ -42,31 +44,35 @@ class fluid:
 
 
     def calculate_gas_pressure_Pa(self):
-        gas_volume = self.gas_volume()
-        if gas_volume > 0:
-            temp_K     = physics.celcius_to_kelvin(self.temperature_C)
-            gas_moles  = self.steam_kg / (1000.0 * physics.molar_mass_water_g_per_mol)
-            R          = physics.ideal_gas_constant
-            return gas_moles * R * temp_K / gas_volume
+        if self.open_roof:
+            return physics.atmospheric_pressure_Pa
         else:
-            return 0.0
+            gas_volume = self.gas_volume()
+            if gas_volume > 0:
+                temp_K     = physics.celcius_to_kelvin(self.temperature_C)
+                gas_moles  = self.steam_kg / (1000.0 * physics.molar_mass_water_g_per_mol)
+                R          = physics.ideal_gas_constant
+                return gas_moles * R * temp_K / gas_volume
+            else:
+                return 0.0
 
 
     def update(self, duration_s):
         """ Update fluid body """
         self.gas_pressure_Pa = self.calculate_gas_pressure_Pa()
 
-        # Average incoming pressures, adjusted to the liquid surface
-        num_ports = 0
         self.incoming_surface_pressure_Pa = 0.0
-        for name, port in self.ports.iteritems():
-            depth = self.depth_at(port.height_m)
-            incoming_pressure = port.get_other_pressure_Pa()
-            adjusted_incoming_surface_pressure = incoming_pressure - depth * self.liquid_density() * physics.earth_g
-            self.incoming_surface_pressure_Pa += adjusted_incoming_surface_pressure
-            num_ports += 1
-        if num_ports > 0:
-            self.incoming_surface_pressure_Pa /= num_ports
+        if not self.open_roof:
+            # Average incoming pressures, adjusted to the liquid surface
+            num_ports = 0
+            for name, port in self.ports.iteritems():
+                depth = self.depth_at(port.height_m)
+                incoming_pressure = port.get_other_pressure_Pa()
+                adjusted_incoming_surface_pressure = incoming_pressure - depth * self.liquid_density() * physics.earth_g
+                self.incoming_surface_pressure_Pa += adjusted_incoming_surface_pressure
+                num_ports += 1
+            if num_ports > 0:
+                self.incoming_surface_pressure_Pa /= num_ports
 
 
         # Calculate surface pressure
@@ -101,11 +107,14 @@ class fluid:
         return physics.water_density(self.temperature_C)
 
     def gas_density(self):
-        gas_volume_m3 = self.gas_volume()
-        if gas_volume_m3 > 0:
-            return self.steam_kg / gas_volume_m3
+        if self.open_roof:
+            return physics.air_density
         else:
-            return 0.0
+            gas_volume_m3 = self.gas_volume()
+            if gas_volume_m3 > 0:
+                return self.steam_kg / gas_volume_m3
+            else:
+                return 0.0
 
     def mass_kg(self):
         return self.water_kg + self.steam_kg
@@ -134,20 +143,30 @@ class fluid:
         else:
             gas_portion = 1.0
 
-        moved_water_kg = clamp(liquid_portion * volume_m3 * self.liquid_density(), 0.0, self.water_kg)
-        moved_steam_kg = clamp(gas_portion    * volume_m3 * self.gas_density(),    0.0, self.steam_kg)
-        self.water_kg -= moved_water_kg
-        self.steam_kg -= moved_steam_kg
+        moved_water_kg = max(0.0, liquid_portion * volume_m3 * self.liquid_density())
+        moved_steam_kg = max(0.0, gas_portion    * volume_m3 * self.gas_density())
+
+        if not self.fixed_liquid_level:
+            moved_water_kg = min(moved_water_kg, self.water_kg)
+            self.water_kg -= moved_water_kg
+        if not self.open_roof:
+            moved_steam_kg = min(moved_steam_kg, self.steam_kg)
+            self.steam_kg -= moved_steam_kg
+
         return moved_water_kg, moved_steam_kg, self.temperature_C
 
     def add_fluid(self, added_fluid):
         added_water_kg, added_steam_kg, temperature_C = added_fluid
         total_added_mass_kg = added_water_kg + added_steam_kg
         if total_added_mass_kg > 0:
-            self.water_kg += added_water_kg
-            self.steam_kg += added_steam_kg
 
-            # TODO: Different temperature capacity?
-            portion = total_added_mass_kg / (total_added_mass_kg + self.mass_kg())
-            self.temperature_C = lerp(self.temperature_C, temperature_C, portion)
+            if not self.fixed_liquid_level:
+                self.water_kg += added_water_kg
+            if not self.open_roof:
+                self.steam_kg += added_steam_kg
+
+            if not self.open_roof and not self.fixed_liquid_level:
+                # TODO: Different temperature capacity?
+                portion = total_added_mass_kg / (total_added_mass_kg + self.mass_kg())
+                self.temperature_C = lerp(self.temperature_C, temperature_C, portion)
 

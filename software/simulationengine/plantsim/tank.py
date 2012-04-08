@@ -15,6 +15,6 @@ class tank(component):
         return [fluid]
 
     def add_port(self, name, area_m2 = 0.25, length_m = 0.5, relative_height_m = 0):
-        return self._add_port(port(name, self.fluid, area_m2, length_m, relative_height_m))
+        return self.fluid.add_port(port(name, self.fluid, area_m2, length_m, relative_height_m))
 
 

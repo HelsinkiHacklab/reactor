@@ -7,6 +7,7 @@ atmospheric_pressure_Pa = 101325.0 # Standard atmospheric pressure in Pascals
 approximate_water_density = 1000.0 # kg / m3
 
 ambient_temperature_C = 20.0
+air_density = 1.225 # At sea level
 
 # Some basic pipe sizes
 large_pipe_size_m2 = 1.0
