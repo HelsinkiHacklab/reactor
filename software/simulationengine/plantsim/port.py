@@ -64,7 +64,7 @@ class port:
         if self.flow_m3_per_s > 0 and self.connected_port is not None:
             volume_m3 = self.flow_m3_per_s * duration_s
             self.connected_port.add_fluid(self.fluid_body.remove_fluid(volume_m3, self.height_m))
-            print("moving "+str(volume_m3)+"m3 from " + self.name + " to " + self.connected_port.name + " that now has " + str(self.connected_port.fluid_body.water_kg) + " kg water")
+            #print("moving "+str(volume_m3)+"m3 from " + self.name + " to " + self.connected_port.name + " that now has " + str(self.connected_port.fluid_body.water_kg) + " kg water")
 
 
     def add_fluid(self, moved_fluid):

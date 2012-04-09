@@ -9,7 +9,7 @@ class plant:
     def __init__(self):
         self.components   = []
         self.stopped      = False
-        self.step_delay_s = 0.05
+        self.step_delay_s = 0.2
 
     def add(self, component):
         self.components.append(component)

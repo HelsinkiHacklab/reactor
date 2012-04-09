@@ -95,11 +95,13 @@ class fluid:
 
 
     def calculate_flow(self, duration_s):
+        print ("Water in " + self.name + ": " + str(self.water_kg) + "kg")
         for name, port in self.ports.iteritems():
             port.calculate_flow(duration_s)
 
 
     def execute_flow(self, duration_s):
+        print ("Stream in " + self.name + ": " + str(self.steam_kg) + "kg")
         for name, port in self.ports.iteritems():
             port.execute_flow(duration_s)
 
