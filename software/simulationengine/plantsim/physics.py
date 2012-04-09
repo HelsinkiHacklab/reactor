@@ -46,7 +46,7 @@ def water_pressure(temperature_C, depth_m, surface_pressure_Pa = atmospheric_pre
     return  surface_pressure_Pa + water_density(temperature_C) * depth_m * earth_g
 
 def celcius_to_kelvin(temperature_C):
-    return
+    return temperature_C + 273.15
 
 def mmHg_to_Pa(mmHg):
     return mmHg * 133.322

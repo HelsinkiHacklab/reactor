@@ -8,6 +8,7 @@ class heat_exchanger(component):
     # TODO: sensible parameters, find out typical values used in industry,
     # or maybe calculate manually based on shell and tube heat exchanger
     def __init__(self,
+                 name,
                  heat_transfer_coefficient = 1,
                  pressure_drop_Pa = 500,
                  a_volume_m3 = 10,
@@ -19,12 +20,12 @@ class heat_exchanger(component):
                  height_m=5.0,
                  base_height_m=0):
 
-        component.__init__(self)
+        component.__init__(self, name)
 
         self.a_volume_m3 = a_volume_m3
         self.b_volume_m3 = b_volume_m3
-        self.a_fluid = fluid(self.a_volume_m3 / (height_m/2), height_m, base_height_m) # Delivered with some initial fluid so as to not divide universe with zero
-        self.b_fluid = fluid(self.b_volume_m3 / (height_m/2), height_m, base_height_m) # Delivered with some initial fluid so as to not divide universe with zero
+        self.a_fluid = self._add_fluid(fluid(name+".a", self.a_volume_m3 / (height_m/2), height_m, base_height_m))
+        self.b_fluid = self._add_fluid(fluid(name+".b", self.b_volume_m3 / (height_m/2), height_m, base_height_m))
 
         self.a_in  = self.a_fluid.add_port(port("a_in",  self.a_fluid, a_pipe_size_m2, connector_lengths_m, height_m))
         self.a_out = self.a_fluid.add_port(port("a_out", self.a_fluid, a_pipe_size_m2, connector_lengths_m, height_m))

@@ -5,12 +5,12 @@ import physics
 
 class pump(component):
 
-    def __init__(self, max_pressure_Pa = physics.medium_pump_pressure_Pa, height_m = 1, base_height_m = 0, area_m2 = physics.medium_pipe_size_m2, pump_length_m = 2):
-        component.__init__(self)
+    def __init__(self, name, max_pressure_Pa = physics.medium_pump_pressure_Pa, height_m = 1, base_height_m = 0, area_m2 = physics.medium_pipe_size_m2, pump_length_m = 2):
+        component.__init__(self, name)
         self.length_m = pump_length_m
         self.area_m2 = area_m2
         self.volume_m3 = self.area_m2 * self.length_m
-        self.fluid = fluid(self.volume_m3, height_m, base_height_m)
+        self.fluid = self._add_fluid(fluid(name, self.volume_m3, height_m, base_height_m))
 
         self.in_port  = self.fluid.add_port(port("in",  self.fluid, area_m2, pump_length_m/2.0, height_m))
         self.out_port = self.fluid.add_port(port("out", self.fluid, area_m2, pump_length_m/2.0, height_m))

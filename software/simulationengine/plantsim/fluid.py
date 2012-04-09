@@ -8,8 +8,10 @@ class fluid:
      For now, it is assumed the fluid is always water, either in liquid or gaseous (steam) form.
     """
 
-    def __init__(self, area_m2, height_m, base_height_m = 0, fill_amount = 0.7, open_roof = False, fixed_liquid_level=False, initial_temperature_C=physics.ambient_temperature_C):
+    def __init__(self, name, area_m2, height_m, base_height_m = 0, fill_amount = 0.7, open_roof = False, fixed_liquid_level=False, initial_temperature_C=physics.ambient_temperature_C):
         self.ports = {}
+
+        self.name = name
 
         self.base_height_m = base_height_m
         self.area_m2       = area_m2
@@ -89,6 +91,8 @@ class fluid:
         # Evaporate or condense water to change water to steam or the other way
         # TODO
 
+        print ("Pressure in " + self.name + ": " + str(self.surface_pressure_Pa))
+
 
     def calculate_flow(self, duration_s):
         for name, port in self.ports.iteritems():
@@ -154,6 +158,7 @@ class fluid:
             self.steam_kg -= moved_steam_kg
 
         return moved_water_kg, moved_steam_kg, self.temperature_C
+
 
     def add_fluid(self, added_fluid):
         added_water_kg, added_steam_kg, temperature_C = added_fluid

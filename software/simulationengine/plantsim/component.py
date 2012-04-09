@@ -4,9 +4,9 @@
 class component:
     """ A component in a plant. """
 
-    def __init__(self):
+    def __init__(self, name):
         self.fluids = []
-
+        self.name = name
 
 
     def _add_fluid(self, fluid):
