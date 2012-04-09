@@ -11,8 +11,7 @@ class port:
      as well as pressure and material composition on the host component side.
     """
 
-
-    def __init__(self, name, fluid_body, area_m2, length_m, height_m = 0):
+    def __init__(self, name, fluid_body, area_m2, length_m, height_m = 0, pressure_offset_Pa = 0.0):
         self.name = name
         self.fluid_body = fluid_body
         self.area_m2  = area_m2
@@ -20,6 +19,7 @@ class port:
         self.height_m = height_m
         self.connected_port = None
         self.flow_m3_per_s = 0.0
+        self.pressure_offset_Pa = pressure_offset_Pa
 
     def connect(self, other_port):
         """ Connect this port to the other port.  The ports should not already be connected. """
@@ -33,11 +33,13 @@ class port:
         self.connected_port = other_port
         other_port.connected_port = self
 
+    def set_pressure_offset(self, pressure_offset_Pa):
+        self.pressure_offset_Pa = pressure_offset_Pa
 
     def get_pressure_Pa(self):
         vessel_pressure = self.fluid_body.pressure_at(self.height_m)
         # TODO: Calculate pressure drop over pipe based on flow
-        return vessel_pressure
+        return vessel_pressure + self.pressure_offset_Pa
 
     def get_other_pressure_Pa(self):
         if self.connected_port is not None:
@@ -64,7 +66,7 @@ class port:
         if self.flow_m3_per_s > 0 and self.connected_port is not None:
             volume_m3 = self.flow_m3_per_s * duration_s
             self.connected_port.add_fluid(self.fluid_body.remove_fluid(volume_m3, self.height_m))
-            #print("moving "+str(volume_m3)+"m3 from " + self.name + " to " + self.connected_port.name + " that now has " + str(self.connected_port.fluid_body.water_kg) + " kg water")
+            print("moving "+str(volume_m3)+"m3 from '" + self.fluid_body.name + "." + self.name + "' to '" + self.connected_port.fluid_body.name + "." + self.connected_port.name+ "'")
 
 
     def add_fluid(self, moved_fluid):

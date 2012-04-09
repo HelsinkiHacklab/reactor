@@ -26,14 +26,14 @@ class reactor_plant(plant):
         river_intake2 = self.add(river("River water intake 2"))
 
         # River pumps
-        river_pump1 = self.add(pump("River Pump 1", physics.large_pump_pressure_Pa))
-        river_pump2 = self.add(pump("River Pump 2", physics.large_pump_pressure_Pa))
+        river_pump1 = self.add(pump("River Pump 1", physics.large_pump_pressure_Pa, base_height_m=-4.0))
+        river_pump2 = self.add(pump("River Pump 2", physics.large_pump_pressure_Pa, base_height_m=-4.0))
         river_pump1.in_port.connect(river_intake1.port)
         river_pump2.in_port.connect(river_intake2.port)
 
         # Backflow valves for pumps
-        river_valve1 = self.add(valve("River Backflow Valve 1"))
-        river_valve2 = self.add(valve("River Backflow Valve 2"))
+        river_valve1 = self.add(valve("River Backflow Valve 1", height_m=-4.0))
+        river_valve2 = self.add(valve("River Backflow Valve 2", height_m=-4.0))
         river_valve1.in_port.connect(river_pump1.out_port)
         river_valve2.in_port.connect(river_pump2.out_port)
 

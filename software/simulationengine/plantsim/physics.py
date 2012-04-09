@@ -14,9 +14,9 @@ large_pipe_size_m2 = 1.0
 medium_pipe_size_m2 = 0.5
 
 # Some basic pump pressures
-small_pump_pressure_Pa  =  5000.0
-medium_pump_pressure_Pa = 10000.0
-large_pump_pressure_Pa  = 50000.0
+small_pump_pressure_Pa  =  10.0 * bar_Pa
+medium_pump_pressure_Pa = 50.0 * bar_Pa
+large_pump_pressure_Pa  = 200.0 * bar_Pa
 
 small_heat_exchanger_area_m2 = 10.0
 medium_heat_exchanger_area_m2 = 50.0

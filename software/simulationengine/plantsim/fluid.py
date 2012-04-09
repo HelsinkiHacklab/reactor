@@ -91,8 +91,11 @@ class fluid:
         # Evaporate or condense water to change water to steam or the other way
         # TODO
 
-        print ("Pressure in " + self.name + ": " + str(self.surface_pressure_Pa))
+        print ("Bottom pressure in " + self.name + ": " + str(self.bottom_pressure_Pa() / physics.bar_Pa) + " bar, gas pressure: " + str(self.gas_pressure_Pa / physics.bar_Pa) + " bar, surface: "+str(self.surface_pressure_Pa / physics.bar_Pa) + " bar" )
 
+
+    def bottom_pressure_Pa(self):
+        return self.pressure_at(self.base_height_m)
 
     def calculate_flow(self, duration_s):
         print ("Water in " + self.name + ": " + str(self.water_kg) + "kg")

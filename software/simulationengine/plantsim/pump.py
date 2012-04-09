@@ -16,10 +16,13 @@ class pump(component):
         self.out_port = self.fluid.add_port(port("out", self.fluid, area_m2, pump_length_m/2.0, height_m))
 
         self.max_pressure_Pa = max_pressure_Pa
-        self.activation = 0.5
+
+        self.adjust_power(0.5)
+
 
     def adjust_power(self, activation):
         self.activation = activation
         if self.activation > 1.0: self.activation = 1.0
         if self.activation < 0.0: self.activation = 0.0
 
+        self.out_port.set_pressure_offset(self.max_pressure_Pa * self.activation)
