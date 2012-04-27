@@ -6,7 +6,7 @@
 #define ARDUBUS_SPI74XX595_INITVALUE 0x0
 #endif
 
-#define ARDUBUS_SPI74XX595_LATCHPIN 10
+#define ARDUBUS_SPI74XX595_LATCHPIN 10 //SPI default SS according to http://arduino.cc/en/Reference/SPI
 
 byte ardubus_spi74XX595_values[ARDUBUS_SPI74XX595_REGISTER_COUNT];
 
@@ -43,11 +43,15 @@ inline void ardubus_spi74XX595_setup()
     SPI.begin();
     SPI.setDataMode(SPI_MODE0);
     SPI.setBitOrder(LSBFIRST);
-    SPI.setClockDivider(SPI_CLOCK_DIV4); // This should still work with messy cables
+    SPI.setClockDivider(SPI_CLOCK_DIV64); // This should still work with messy cables
     for (byte i=0; i<ARDUBUS_SPI74XX595_REGISTER_COUNT; i++)
     {
         ardubus_spi74XX595_values[(ARDUBUS_SPI74XX595_REGISTER_COUNT-1)-i] = ARDUBUS_SPI74XX595_INITVALUE;
     }
+    pinMode(ARDUBUS_SPI74XX595_LATCHPIN, OUTPUT);
+#ifdef ARDUBUS_SPI74XX595_RESETPIN
+    pinMode(ARDUBUS_SPI74XX595_RESETPIN, OUTPUT);
+#endif
     ardubus_spi74XX595_write();
 }
 
@@ -87,7 +91,7 @@ inline void ardubus_spi74XX595_process_command(char *incoming_command)
             Serial.print("B");
             Serial.print(incoming_command[1]);
             Serial.print(incoming_command[2]);
-            Serial.println(0x6, BYTE); // ACK
+            //Serial.println(0x6, BYTE); // ACK
             break;
         }
         case 0x57: // ASCII "W" (B<indexbyte><valuehex>) //Note that the indexbyte is index of register, value is two hex chars
@@ -99,7 +103,7 @@ inline void ardubus_spi74XX595_process_command(char *incoming_command)
             Serial.print(incoming_command[1]);
             Serial.print(incoming_command[2]);
             Serial.print(incoming_command[3]);
-            Serial.println(0x6, BYTE); // ACK
+            //Serial.println(0x6, BYTE); // ACK
             break;
         }
     }
