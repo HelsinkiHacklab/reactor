@@ -2,11 +2,23 @@
 #define ardubus_spi74XX595_h
 #include <Arduino.h> 
 #include <SPI.h>
+#ifndef ARDUBUS_SPI74XX595_SPICLOCKDIV
+#define ARDUBUS_SPI74XX595_SPICLOCKDIV SPI_CLOCK_DIV8
+#endif
 #ifndef ARDUBUS_SPI74XX595_INITVALUE
 #define ARDUBUS_SPI74XX595_INITVALUE 0x0
 #endif
 
+/**
+ * Reminder
+ * SS = 10 (aka CS aka latch) we could use another one but there are caveats
+ * MOSI = 11 (aka serial out)
+ * MISO = 12 (not used)
+ * SCLK = 13
+ */
+#ifndef ARDUBUS_SPI74XX595_LATCHPIN
 #define ARDUBUS_SPI74XX595_LATCHPIN 10 //SPI default SS according to http://arduino.cc/en/Reference/SPI
+#endif
 
 byte ardubus_spi74XX595_values[ARDUBUS_SPI74XX595_REGISTER_COUNT];
 
@@ -41,16 +53,26 @@ inline void ardubus_spi74XX595_write()
 inline void ardubus_spi74XX595_setup()
 {
     SPI.begin();
-    SPI.setDataMode(SPI_MODE0);
+    // Expirementing with modes, I got this working with bus pirate using SPI at 1Mhz for now it somehow fails ??
+    //SPI.setDataMode(SPI_MODE0);
+    SPI.setDataMode(SPI_MODE1);
+    //SPI.setDataMode(SPI_MODE2);
+    //SPI.setDataMode(SPI_MODE3);
     SPI.setBitOrder(LSBFIRST);
-    SPI.setClockDivider(SPI_CLOCK_DIV64); // This should still work with messy cables
+    SPI.setClockDivider(ARDUBUS_SPI74XX595_SPICLOCKDIV); // This should still work with messy cables
     for (byte i=0; i<ARDUBUS_SPI74XX595_REGISTER_COUNT; i++)
     {
         ardubus_spi74XX595_values[(ARDUBUS_SPI74XX595_REGISTER_COUNT-1)-i] = ARDUBUS_SPI74XX595_INITVALUE;
     }
+    if (ARDUBUS_SPI74XX595_LATCHPIN != 10)
+    {
+        pinMode(10, OUTPUT); // The SS pin *must* be output in any case!! see http://arduino.cc/en/Reference/SPI
+    }
     pinMode(ARDUBUS_SPI74XX595_LATCHPIN, OUTPUT);
+    digitalWrite(ARDUBUS_SPI74XX595_LATCHPIN, HIGH);
 #ifdef ARDUBUS_SPI74XX595_RESETPIN
     pinMode(ARDUBUS_SPI74XX595_RESETPIN, OUTPUT);
+    digitalWrite(ARDUBUS_SPI74XX595_RESETPIN, HIGH);
 #endif
     ardubus_spi74XX595_write();
 }
