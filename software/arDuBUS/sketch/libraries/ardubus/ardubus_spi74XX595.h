@@ -3,7 +3,7 @@
 #include <Arduino.h> 
 #include <SPI.h>
 #ifndef ARDUBUS_SPI74XX595_SPICLOCKDIV
-#define ARDUBUS_SPI74XX595_SPICLOCKDIV SPI_CLOCK_DIV8
+#define ARDUBUS_SPI74XX595_SPICLOCKDIV SPI_CLOCK_DIV16
 #endif
 #ifndef ARDUBUS_SPI74XX595_INITVALUE
 #define ARDUBUS_SPI74XX595_INITVALUE 0x0
@@ -54,11 +54,12 @@ inline void ardubus_spi74XX595_setup()
 {
     SPI.begin();
     // Expirementing with modes, I got this working with bus pirate using SPI at 1Mhz for now it somehow fails ??
-    //SPI.setDataMode(SPI_MODE0);
-    SPI.setDataMode(SPI_MODE1);
+    SPI.setDataMode(SPI_MODE0);
+    //SPI.setDataMode(SPI_MODE1);
     //SPI.setDataMode(SPI_MODE2);
     //SPI.setDataMode(SPI_MODE3);
-    SPI.setBitOrder(LSBFIRST);
+    //SPI.setBitOrder(LSBFIRST);
+    SPI.setBitOrder(MSBFIRST);
     SPI.setClockDivider(ARDUBUS_SPI74XX595_SPICLOCKDIV); // This should still work with messy cables
     for (byte i=0; i<ARDUBUS_SPI74XX595_REGISTER_COUNT; i++)
     {
