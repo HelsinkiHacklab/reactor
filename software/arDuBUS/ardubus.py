@@ -84,7 +84,17 @@ class ardubus(dbus.service.Object):
         pass
 
     @dbus.service.signal('fi.hacklab.ardubus')
+    def pca9535_change(self, p_index, state, sender):
+        #print "SIGNALLING: Pin(index) %d changed to %d on %s" % (p_index, state, sender)
+        pass
+
+    @dbus.service.signal('fi.hacklab.ardubus')
     def dio_report(self, p_index, state, time, sender):
+        #print "SIGNALLING: Pin(index) %d has been %d for %dms on %s" % (p_index, state, time, sender)
+        pass
+
+    @dbus.service.signal('fi.hacklab.ardubus')
+    def pca9535_report(self, p_index, state, time, sender):
         #print "SIGNALLING: Pin(index) %d has been %d for %dms on %s" % (p_index, state, time, sender)
         pass
 
@@ -122,8 +132,15 @@ class ardubus(dbus.service.Object):
                 # State change
                 self.dio_change(ord(input_buffer[2]), bool(int(input_buffer[3])), self.object_name)
                 return
+            if (self.input_buffer[:2] == 'CP'):
+                # State change
+                self.pca9535_change(ord(input_buffer[2]), bool(int(input_buffer[3])), self.object_name)
+                return
             if (self.input_buffer[:2] == 'RD'):
                 self.dio_report(ord(input_buffer[2]), bool(int(input_buffer[3])), int(input_buffer[4:12], 16), self.object_name)
+                pass
+            if (self.input_buffer[:2] == 'RP'):
+                self.pca9535_report(ord(input_buffer[2]), bool(int(input_buffer[3])), int(input_buffer[4:12], 16), self.object_name)
                 pass
             if (self.input_buffer[:2] == 'CA'):
                 self.aio_change(ord(input_buffer[2]), int(input_buffer[3:7], 16), self.object_name)
