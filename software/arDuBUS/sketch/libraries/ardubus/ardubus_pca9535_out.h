@@ -11,11 +11,9 @@ inline void ardubus_pca9535_out_setup()
 {
     for (byte i=0; i < sizeof(ardubus_pca9535_out_pins); i++)
     {
+        // PONDER: Is it worth the trouble calculating these for as few as possible register writes ??
         ardubus_pca9535s[ardubus_pca9535_pin2board_idx(ardubus_pca9535_in_pins[i])].pinMode((ardubus_pca9535_out_pins[i] % 16), OUTPUT);
-        /**
-         * This is the default and doing N writes is not exactly optimal even if we do it only once
         ardubus_pca9535s[ardubus_pca9535_pin2board_idx(ardubus_pca9535_in_pins[i])].digitalWrite((ardubus_pca9535_in_pins[i] % 16), LOW);
-         */
     }
 }
 
