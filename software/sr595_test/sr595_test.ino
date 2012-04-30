@@ -11,7 +11,8 @@
 #include <SPI.h> // For some weird reason including this in the relevant .h file does not work
 #define ARDUBUS_SPI74XX595_INITVALUE 0xff // Initial value to set to registers on setup 
 #define ARDUBUS_SPI74XX595_REGISTER_COUNT 9 // How many 595 registers do you have
-#define ARDUBUS_SPI74XX595_RESETPIN 9 // Use this pin for reset, optional but recommended
+//#define ARDUBUS_SPI74XX595_RESETPIN 9 // Use this pin for reset, optional but recommended
+#define ARDUBUS_SPI74XX595_SPICLOCKDIV SPI_CLOCK_DIV64
 #include <ardubus.h>
 void setup()
 {
@@ -31,7 +32,6 @@ void setup()
     Serial.println(ardubus_hex2byte(0x41, 0x35), DEC); // A5
      */
     ardubus_setup();
-    SPI.setClockDivider(SPI_CLOCK_DIV128); // This should still work with messy cables
     Serial.println("Booted");
 }
 
