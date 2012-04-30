@@ -78,6 +78,13 @@ class ardubus(dbus.service.Object):
         else:
             self.send_serial_command("D%s0" % self.p2b(digital_index))
 
+    @dbus.service.method('fi.hacklab.ardubus', in_signature='yb') # "y" is the signature for a byte
+    def set_pca9535_bit(self, digital_index, state):
+        if state:
+            self.send_serial_command("E%s1" % self.p2b(digital_index))
+        else:
+            self.send_serial_command("E%s0" % self.p2b(digital_index))
+
     @dbus.service.signal('fi.hacklab.ardubus')
     def dio_change(self, p_index, state, sender):
         #print "SIGNALLING: Pin(index) %d changed to %d on %s" % (p_index, state, sender)

@@ -1,5 +1,6 @@
 
-#define ARDUBUS_PCA9535_INPUTS { 7 }
+#define ARDUBUS_PCA9535_INPUTS { 7, 15 }
+#define ARDUBUS_PCA9535_OUTPUTS { 14 }
 #define ARDUBUS_PCA9535_BOARDS { 0 }
 #define PCA9535_ENABLE_BOUNCE
 #define PCA9535_BOUNCE_OPTIMIZEDREADS // Do not use the naive methods that will always read the device, handy when you have multiple pins to debounce, OTOH you must remember to call the read_data() method yourself
