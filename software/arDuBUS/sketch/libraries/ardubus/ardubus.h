@@ -95,6 +95,9 @@ inline void ardubus_print_int_as_4hex(int input)
 #ifdef ARDUBUS_SPI74XX595_REGISTER_COUNT
 #include "ardubus_spi74XX595.h"
 #endif
+#ifdef ARDUBUS_PCA9535_BOARDS
+#include "ardubus_pca9535_common.h"
+#endif
 #ifdef ARDUBUS_PCA9535_INPUTS
 #include "ardubus_pca9535_in.h"
 #endif
@@ -125,6 +128,9 @@ void ardubus_setup()
 #endif
 #ifdef ARDUBUS_SPI74XX595_REGISTER_COUNT
     ardubus_spi74XX595_setup();
+#endif
+#ifdef ARDUBUS_PCA9535_BOARDS
+    ardubus_pca9535_common_setup();
 #endif
 #ifdef ARDUBUS_PCA9535_INPUTS
     ardubus_pca9535_in_setup();

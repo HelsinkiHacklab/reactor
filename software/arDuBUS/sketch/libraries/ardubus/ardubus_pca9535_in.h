@@ -3,6 +3,7 @@
 #include <Arduino.h> 
 #define PCA9535_ENABLE_BOUNCE
 #define PCA9535_BOUNCE_OPTIMIZEDREADS // Do not use the naive methods that will always read the device, handy when you have multiple pins to debounce, OTOH you must remember to call the read_data() method yourself
+#include "ardubus_pca9535_common.h"
 #include <pca9535.h>
 #ifndef ARDUBUS_PCA9535_IN_DEBOUNCE_TIME
 #define ARDUBUS_PCA9535_IN_DEBOUNCE_TIME 20 // milliseconds, see Bounce library
@@ -11,29 +12,13 @@
 #define ARDUBUS_PCA9535_IN_DEBOUNCE_UPDATE_TIME 5 // Milliseconds, how often to call update() on the deardubus_pca9535_in_bouncers, see Bounce library
 #endif
 
-
-
-// Enumerate the input pins from the preprocessor (from 0 to N, will run across the ARDUBUS_PCA9535_BOARDS array [so pin 16 is portA pin 0 on index 1 of ardubus_pca9535_boards])
+// Enumerate the input pins from the preprocessor (from pin numbers 0 to N, will run across the ARDUBUS_PCA9535_BOARDS array [so pin 16 is portA pin 0 on index 1 of ardubus_pca9535_boards])
 const byte ardubus_pca9535_in_pins[] = ARDUBUS_PCA9535_INPUTS; 
 // Declare and fake-initialize a debouncer for each
 pca9535bounce ardubus_pca9535_in_bouncers[sizeof(ardubus_pca9535_in_pins)];
 
-const byte ardubus_pca9535_boards[] = ARDUBUS_PCA9535_BOARDS;
-// Declare a Servo object for each
-pca9535 ardubus_pca9535s[sizeof(ardubus_pca9535_boards)];
-
-inline byte ardubus_pca9535_pin2board_idx(byte pin)
-{
-    return pin/16;
-}
-
 inline void ardubus_pca9535_in_setup()
 {
-    // Setup the boards
-    for (byte i=0; i < sizeof(ardubus_pca9535_boards); i++)
-    {
-        ardubus_pca9535s[i].begin(ardubus_pca9535_boards[i], false);
-    }
     // Setup the debouncers
     for (byte i=0; i < sizeof(ardubus_pca9535_in_pins); i++)
     {
