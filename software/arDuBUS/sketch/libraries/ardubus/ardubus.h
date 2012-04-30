@@ -40,6 +40,14 @@ inline int ardubus_hex2int(byte hexchar0, byte hexchar1, byte hexchar2, byte hex
     return ardubus_hex2byte(hexchar0, hexchar1) << 8 | ardubus_hex2byte(hexchar2, hexchar3);
 }
 
+/**
+ * The new arduino does not support the BYTE keyword and in any case this allows for easier change of the ACK sequence
+ */
+inline void ardubus_ack()
+{
+    Serial.write(0x6);
+    Serial.println("");
+}
 
 // Utility functions for outputting fixed lenght nex encoded numbers
 inline void ardubus_print_byte_as_2hex(byte input)
