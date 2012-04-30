@@ -95,6 +95,10 @@ inline void ardubus_print_int_as_4hex(int input)
 #ifdef ARDUBUS_SPI74XX595_REGISTER_COUNT
 #include "ardubus_spi74XX595.h"
 #endif
+#ifdef ARDUBUS_PCA9535_INPUTS
+#include "ardubus_pca9535_in.h"
+#endif
+
 
 /**
  * Setups up all enabled submodules
@@ -121,6 +125,9 @@ void ardubus_setup()
 #endif
 #ifdef ARDUBUS_SPI74XX595_REGISTER_COUNT
     ardubus_spi74XX595_setup();
+#endif
+#ifdef ARDUBUS_PCA9535_INPUTS
+    ardubus_pca9535_in_setup();
 #endif
 }
 
@@ -149,6 +156,9 @@ void ardubus_report()
 #endif
 #ifdef ARDUBUS_SPI74XX595_REGISTER_COUNT
     ardubus_spi74XX595_report();
+#endif
+#ifdef ARDUBUS_PCA9535_INPUTS
+    ardubus_pca9535_in_report();
 #endif
     ardubus_last_report_time = millis();
 }
@@ -188,6 +198,9 @@ void ardubus_process_command()
 #endif
 #ifdef ARDUBUS_SPI74XX595_REGISTER_COUNT
     ardubus_spi74XX595_process_command(ardubus_incoming_command);
+#endif
+#ifdef ARDUBUS_PCA9535_INPUTS
+    ardubus_pca9535_in_process_command(ardubus_incoming_command);
 #endif
 }
 
@@ -257,6 +270,9 @@ void ardubus_update()
 #endif
 #ifdef ARDUBUS_SPI74XX595_REGISTER_COUNT
     ardubus_spi74XX595_update();
+#endif
+#ifdef ARDUBUS_PCA9535_INPUTS
+    ardubus_pca9535_in_update();
 #endif
     ardubus_check_report();
 }
