@@ -4,8 +4,10 @@
  * analog 0 is floating to be used as random source.
  */
 
-#define OPIN 2
-#define PWMPIN 10
+#define ANA0 3
+#define ANA1 4
+#define OPIN 1
+#define PWMPIN 0
 #define MIN_ACTIVITITY 15
 // The P-channel needs to be driven this way or there will be a lot of heat
 #define DRIVE_HI LOW
@@ -15,7 +17,6 @@ int activity;
 
 void setup()
 {
-    Serial.begin(115200);
     randomSeed(analogRead(0));
     pinMode(OPIN, OUTPUT);
     digitalWrite(OPIN, DRIVE_LO);
@@ -23,7 +24,6 @@ void setup()
 
 void pulse()
 {
-    Serial.println("pulse");
     digitalWrite(OPIN, DRIVE_HI);
     //delay(1);
     delayMicroseconds(400);
@@ -53,19 +53,15 @@ void loop()
     // Reseed every ~16k loops
     if (loop_i == 0)
     {
-        randomSeed(analogRead(0));
+        randomSeed(analogRead(ANA0));
     }
-    activity = activity_adj(analogRead(1));
+    activity = activity_adj(analogRead(ANA1));
     if (activity < MIN_ACTIVITITY)
     {
         activity = MIN_ACTIVITITY;
     }
     byte pwm = pwm_adj(activity); // PWM outputs are adjusted on 0-255 scale and mde to wobble a bit
     analogWrite(PWMPIN, pwm); 
-    Serial.print("activity: ");
-    Serial.println(activity, DEC);
-    Serial.print("pwm: ");
-    Serial.println(pwm, DEC);
     if (random(0, 2048) < activity) // even at 100% only pulse on 50% of cyles to get more random sound
     {
         pulse();

@@ -15,18 +15,20 @@
 #include <pca9635RGBJBOL.h>
 #include <Bounce.h>
 
+#define SWITCHPIN A0
+
 // Container for the device
 pca9635RGBJBOL driverboard;
 
 
-Bounce bouncer = Bounce(8, 50); 
+Bounce bouncer = Bounce(SWITCHPIN, 250); 
 
 void setup()
 {
     Serial.begin(115200);
     
-    pinMode(8, INPUT);
-    digitalWrite(8, HIGH); // pull-up
+    pinMode(SWITCHPIN, INPUT);          
+    digitalWrite(SWITCHPIN, HIGH); // pull-up
     
     
     I2c.begin();
