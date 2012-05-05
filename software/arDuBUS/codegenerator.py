@@ -57,6 +57,8 @@ class codegen:
         self.bounce_included = False
         self.i2c_included = False
         self.i2c_device_included = False
+        self.setup_pca9635_opencollector = False
+        self.setup_wake_pca9635 = False
         
         # Defines
         if self.config.has_key('digital_in_pins'):
@@ -70,7 +72,6 @@ class codegen:
             self.setup_i2c_init = True
             ret = self.add_i2c_include(ret)
             ret = self.add_i2c_device_include(ret)
-            ret += """#include <pca9535.h> // For some weird reason including this in the relevant .h file does not work\n"""
             ret += """#define ARDUBUS_PCA9535_BOARDS { %s }\n""" % ", ".join(map(str, self.config['pca9535_boards']))
    
             # Only check for I/O if boards are defined...
@@ -79,19 +80,60 @@ class codegen:
                 ret += """#define PCA9535_ENABLE_BOUNCE\n""" # This we might want to leave out to conserve memory...
                 ret += """#define PCA9535_BOUNCE_OPTIMIZEDREADS\n"""
                 ret += """#define ARDUBUS_PCA9535_INPUTS { %s }\n""" % ", ".join(map(str, self.parse_pin_numbers(self.config['pca9535_inputs'])))
-                
-            # Only check for I/O if boards are defined...
+
             if self.config.has_key('pca9535_outputs'):
                 ret += """#define ARDUBUS_PCA9535_OUTPUTS { %s }\n""" % ", ".join(map(str, self.parse_pin_numbers(self.config['pca9535_outputs'])))
-        
 
+            # This need to be included *after* the possible define of PCA9535_ENABLE_BOUNCE
+            ret += """#include <pca9535.h> // For some weird reason including this in the relevant .h file does not work\n"""
+        
+        if self.config.has_key('pca9635RGBJBOL_boards'):
+            self.setup_wake_pca9635 = True
+            self.setup_pca9635_opencollector = True
+            self.setup_i2c_init = True
+            ret = self.add_i2c_include(ret)
+            ret = self.add_i2c_device_include(ret)
+            ret += """#include <pca9635.h> // For some weird reason including this in the relevant .h file does not work
+#include <pca9635RGB.h> // For some weird reason including this in the relevant .h file does not work
+#include <pca9635RGBJBOL.h> // For some weird reason including this in the relevant .h file does not work\n"""
+            ret += """#define ARDUBUS_PCA9635RGBJBOL_BOARDS { %s }\n""" % ", ".join(map(str, self.config['pca9635RGBJBOL_boards']))
+
+        ret += """\n#include <ardubus.h>
+void setup()
+{
+    Serial.begin(%s);\n""" % self.config['_speed']
+
+        if self.setup_i2c_init:
+            ret += """    
+    I2c.timeOut(500); // 500ms timeout to avoid lockups
+    I2c.pullup(false); //Disable internal pull-ups
+    I2c.setSpeed(true); // Fast-mode support\n"""
+
+        # Call ardubus setup
+        ret += """    ardubus_setup();\n"""
+        
+        # post-setup operations
+        if self.setup_pca9635_opencollector:
+            ret += """    PCA9635.set_driver_mode(0x0);\n"""
+        if self.setup_wake_pca9635:
+            ret += """    PCA9635.set_sleep(0x0);\n"""
+            
+ 
+        # Setup done, output board name and define the loop
+        ret += """    Serial.println("Board: %s ready");
+}
+
+void loop()
+{
+    ardubus_update();
+}\n""" % self.name
  
         return ret        
 
-
     def generate_sketch(self):
         self.prepare_sketch_file()
-        print self.generate_code()
+        with open(self.sketch_path, 'w') as f:
+            f.write(self.generate_code())
         return True
 
 if __name__ == '__main__':
