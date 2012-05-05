@@ -1,5 +1,5 @@
 rod_control_panel: # The board identifier
-    pca9635RGBJBOL_boards: [0, 1] # Board addresses (aka ARDUBUS_PCA9635RGBJBOL_BOARDS)
+    pca9635RGBJBOL_boards: [ 0, 1 ] # Board addresses (aka ARDUBUS_PCA9635RGBJBOL_BOARDS)
     pca9635RGBJBOL_maps:
         0: # board address, upper "rod" leds
             0: 22 # key is the requested index, value is the real index to send to the Arduino
@@ -79,8 +79,9 @@ rod_control_panel: # The board identifier
         - pin: 1
         - pin: 2
         - pin: 3
-    # If the interrupt pin is connected make sure that there are *no* floating inputs, easy way is to define them as outputs
-    pca9535_outputs: [ 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15] # pins passed to ARDUBUS_PCA9535_OUTPUTS
+        - pin: 4
+    # Make sure that there are *no* floating inputs, easy way is to define them as outputs
+    pca9535_outputs: [  5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 ] # pins passed to ARDUBUS_PCA9535_OUTPUTS
     digital_in_pins: # pins passed to ARDUBUS_DIGITAL_INPUTS
         - pin: 2
           alias: foo
@@ -101,8 +102,6 @@ rod_control_panel: # The board identifier
         - pin: 18
         - pin: 19
         - pin: 20
-        - pin: 21
-        - pin: 22
         - pin: 23
         - pin: 24
         - pin: 25
