@@ -1,21 +1,23 @@
 #!/usr/bin/env python
 # The real deal, this will talk with an arduino and pass signals/method calls back and forth
-PIN_OFFSET=32 # We need to offset the pin numbers to CR and LF which are control characters to us (NOTE: this *must* be same in sketch)
-
+from __future__ import with_statement
+# Boilerplate to add ../pythonlibs (via full path resolution) to import paths
 import os,sys
-import binascii
-import dbus
-import dbus.service
+libs_dir = os.path.join(os.path.dirname( os.path.realpath( __file__ ) ),  '..', 'pythonlibs')
+if os.path.isdir(libs_dir):                                       
+    sys.path.append(libs_dir)
 
+# Import our DBUS service module
+import service,dbus,binascii,time
 
-class ardubus(dbus.service.Object):
-    def __init__(self, bus, object_name, config):
-        self.config = config
-        self.object_name = object_name
-        self.bus = bus
-        self.object_path = '/fi/hacklab/ardubus/' + object_name
-        self.bus_name = dbus.service.BusName('fi.hacklab.ardubus.' + object_name, bus=bus)
-        dbus.service.Object.__init__(self, self.bus_name, self.object_path)
+# We need to offset the pin numbers to CR and LF which are control characters to us (NOTE: this *must* be same as in ardubus.h)
+PIN_OFFSET=32 
+
+class ardubus(service.baseclass):
+    def __init__(self, config, launcher_instance, **kwargs):
+        super(ardubus, self).__init__(config, launcher_instance, **kwargs)
+        self.serial_device = kwargs['serial_device']
+        self.serial_speed = kwargs['serial_speed']
         self.initialize_serial()
 
     def send_serial_command(self, command):
@@ -36,7 +38,7 @@ class ardubus(dbus.service.Object):
         """Closes the serial port and unloads from DBUS"""
         self.serial_port.close()
         self.receiver_thread.join()
-        # TODO: unload from dbus
+        self.remove_from_connection()
 
     @dbus.service.method('fi.hacklab.ardubus')
     def hello(self):
@@ -127,17 +129,11 @@ class ardubus(dbus.service.Object):
         import threading, serial
         print "initialize_serial called"
         self.input_buffer = ""
-        serial_device = None
-        #consoles have different configuration file structure
-        if self.config.has_section('board'):
-            serial_device = self.config.get('board', 'device')
-        else:
-            serial_device = self.config.get(self.object_name, 'device')
-        self.serial_port = serial.Serial(serial_device, 115200, xonxoff=False, timeout=0.00001)
+        self.serial_port = serial.Serial(self.serial_device, self.serial_speed, xonxoff=False, timeout=0.00001)
         self.receiver_thread = threading.Thread(target=self.serial_reader)
         self.receiver_thread.setDaemon(1)
         self.receiver_thread.start()
-        print "thread started"
+        print "%s serial thread started" % self.dbus_object_path
 
     def message_received(self, input_buffer):
         #print "message_received called with buffer %s" % repr(input_buffer)

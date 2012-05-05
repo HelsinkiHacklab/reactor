@@ -33,8 +33,15 @@ class my_launcher(launcher.baseclass):
             self.devices_config = yaml.load(f)
         return True
 
+    def unload_device(self, device_name):
+        self.device_objects[device_name].quit()
+        del(self.device_objects[device_name])
+        
+
     @dbus.service.method(my_signature + '.launcher')
     def quit(self):
+        for device_name in self.device_objects.keys():
+            self.unload_device(device_name)
         launcher.baseclass.quit(self)
 
     @dbus.service.method(my_signature + '.launcher')
@@ -68,23 +75,20 @@ class my_launcher(launcher.baseclass):
                 # Got a match, continue by setting up a new service object
                 port.close() # Free the port...
                 device_name = m.group(1)
-                if not self.devices.has_key(device_name):
+                if not self.devices_config.has_key(device_name):
                     print "Found device %s in port %s but there is no config in devices.yml" % (device_name, serial_device)
                     return False
-                # Create device specific config
-                device_config = self.devices[device_name]
-                # PONDER: we probably want to pass these to constructor to simplify config reloading
-                device_config['_speed'] = self.config['speed']
-                device_config['_port'] = self.config['serial_device']
-                
-                
-
-            
+                if self.device_objects.has_key(device_name):
+                    print "Found device %s in port %s but it's already initialized as service" % (device_name, serial_device)
+                    return False
+                print "Found board %s in %f seconds" % (device_name, time.time() - started)
+                self.device_objects[device_name] = ardubus(self.devices_config[device_name], self, dbus_object_path=self.dbus_object_path.replace('/launcher', "/%s" % device_name), serial_device=serial_device, serial_speed=self.config['speed'])
+                return True
         except serial.SerialException, e:
             # Problem with port
             return False
-        
-        pass
+        # Something weird happened, we should not drop this far
+        print False
 
     @dbus.service.method(my_signature + '.launcher')
     def scan(self):
@@ -95,8 +99,8 @@ class my_launcher(launcher.baseclass):
     @dbus.service.method(my_signature + '.launcher')
     def rescan(self):
         """Quits all active devices and then scans serial devices again"""
-        for device in self.device_objects:
-            device.quit()
+        for device_name in self.device_objects.keys():
+            self.unload_device(device_name)
         self.scan()
 
 # Another small bit of boilerplate
