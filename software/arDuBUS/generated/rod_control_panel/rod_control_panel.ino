@@ -17,6 +17,7 @@
 void setup()
 {
     Serial.begin(115200);
+    Serial.println("Board: rod_control_panel initializing");
     
     I2c.timeOut(500); // 500ms timeout to avoid lockups
     I2c.pullup(false); //Disable internal pull-ups

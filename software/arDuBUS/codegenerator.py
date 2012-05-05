@@ -101,7 +101,8 @@ class codegen:
         ret += """\n#include <ardubus.h>
 void setup()
 {
-    Serial.begin(%s);\n""" % self.config['_speed']
+    Serial.begin(%s);
+    Serial.println("Board: %s initializing");\n""" % (self.config['_speed'], self.name)
 
         if self.setup_i2c_init:
             ret += """    
