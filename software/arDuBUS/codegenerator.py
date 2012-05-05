@@ -13,7 +13,11 @@ class codegen:
     def parse_pin_numbers(self, numbers_and_aliases):
         ret = []
         for info in numbers_and_aliases:
-            ret.append(info['pin'])
+            # Check if it's a dict defining pin and alias or just list of pins
+            if type(info) == dict:
+                ret.append(info['pin'])
+            else:
+                ret.append(info)
         return ret
 
     def prepare_sketch_file(self):
@@ -49,7 +53,7 @@ class codegen:
         ret = ""
         
         # Some state tracking
-        self.add_i2c_init =  False
+        self.setup_i2c_init =  False
         self.bounce_included = False
         self.i2c_included = False
         self.i2c_device_included = False
@@ -63,10 +67,23 @@ class codegen:
         if self.config.has_key('digital_pwmout_pins'):
             ret += """#define ARDUBUS_PWM_OUTPUTS { %s }\n""" % ", ".join(map(str, self.parse_pin_numbers(self.config['digital_pwmout_pins'])))
         if self.config.has_key('pca9535_boards'):
+            self.setup_i2c_init = True
             ret = self.add_i2c_include(ret)
             ret = self.add_i2c_device_include(ret)
             ret += """#include <pca9535.h> // For some weird reason including this in the relevant .h file does not work\n"""
             ret += """#define ARDUBUS_PCA9535_BOARDS { %s }\n""" % ", ".join(map(str, self.config['pca9535_boards']))
+   
+            # Only check for I/O if boards are defined...
+            if self.config.has_key('pca9535_inputs'):
+                ret = self.add_bounce_include(ret)
+                ret += """#define PCA9535_ENABLE_BOUNCE\n""" # This we might want to leave out to conserve memory...
+                ret += """#define PCA9535_BOUNCE_OPTIMIZEDREADS\n"""
+                ret += """#define ARDUBUS_PCA9535_INPUTS { %s }\n""" % ", ".join(map(str, self.parse_pin_numbers(self.config['pca9535_inputs'])))
+                
+            # Only check for I/O if boards are defined...
+            if self.config.has_key('pca9535_outputs'):
+                ret += """#define ARDUBUS_PCA9535_OUTPUTS { %s }\n""" % ", ".join(map(str, self.parse_pin_numbers(self.config['pca9535_outputs'])))
+        
 
  
         return ret        
