@@ -200,11 +200,11 @@ class ardubus(service.baseclass):
                     self.message_received(self.input_buffer[:-2])
                     self.input_buffer = ""
 
-        except serial.SerialException, e:
+        except (IOError, serial.SerialException), e:
             print "Got exception %s" % e
             self.serial_alive = False
-
-
+            # It seems we cannot really call this from here, how to detect the problem in main thread ??
+            #self.launcher_instance.unload_device(self.object_name)
 
 if __name__ == '__main__':
     print "Use ardbus_launcher.py"

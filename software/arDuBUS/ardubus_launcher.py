@@ -37,6 +37,7 @@ class my_launcher(launcher.baseclass):
             self.devices_config = yaml.load(f)
         return True
 
+    @dbus.service.method(my_signature + '.launcher')
     def unload_device(self, device_name):
         self.device_objects[device_name].quit()
         del(self.device_objects[device_name])
