@@ -1,4 +1,3 @@
-#define I2C_DEVICE_DEBUG
 #include <Bounce.h> // For some weird reason including this in the relevant .h file does not work
 #define ARDUBUS_DIGITAL_INPUTS { 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18, 19, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15 }
 #include <I2C.h> // For some weird reason including this in the relevant .h file does not work
@@ -18,15 +17,10 @@
 void setup()
 {
     Serial.begin(115200);
-
     
     I2c.timeOut(500); // 500ms timeout to avoid lockups
     I2c.pullup(false); //Disable internal pull-ups
     I2c.setSpeed(true); // Fast-mode support
-
-    I2c.scan();
-
-
     ardubus_setup();
     PCA9635.set_driver_mode(0x0);
     PCA9635.set_sleep(0x0);

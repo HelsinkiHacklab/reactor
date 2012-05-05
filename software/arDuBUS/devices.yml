@@ -101,7 +101,7 @@ rod_control_panel: # The board identifier
         - pin: 17
         - pin: 18
         - pin: 19
-        - pin: 20
+        - pin: 22
         - pin: 23
         - pin: 24
         - pin: 25
