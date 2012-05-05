@@ -16,6 +16,7 @@ PIN_OFFSET=32
 class ardubus(service.baseclass):
     def __init__(self, config, launcher_instance, **kwargs):
         super(ardubus, self).__init__(config, launcher_instance, **kwargs)
+        self.object_name = kwargs['device_name']
         self.serial_device = kwargs['serial_device']
         self.serial_speed = kwargs['serial_speed']
         self.initialize_serial()
@@ -33,11 +34,15 @@ class ardubus(service.baseclass):
         """Convert pin number integer to a byte to be sent to the sketch"""
         return chr(pin+PIN_OFFSET)
 
+    def stop_serial(self):
+        self.serial_alive = False
+        self.receiver_thread.join()
+        self.serial_port.close()
+
     @dbus.service.method('fi.hacklab.ardubus')
     def quit(self):
         """Closes the serial port and unloads from DBUS"""
-        self.serial_port.close()
-        self.receiver_thread.join()
+        self.stop_serial()
         self.remove_from_connection()
 
     @dbus.service.method('fi.hacklab.ardubus')
@@ -167,9 +172,9 @@ class ardubus(service.baseclass):
     def serial_reader(self):
         import string,binascii
         import serial # We need the exceptions from here
-        alive = True
+        self.serial_alive = True
         try:
-            while alive:
+            while self.serial_alive:
                 if not self.serial_port.inWaiting():
                     # Don't try to read if there is no data.
                     continue
@@ -197,7 +202,7 @@ class ardubus(service.baseclass):
 
         except serial.SerialException, e:
             print "Got exception %s" % e
-            self.alive = False
+            self.serial_alive = False
 
 
 

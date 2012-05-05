@@ -5,7 +5,7 @@ libs_dir = os.path.join(os.path.dirname( os.path.realpath( __file__ ) ),  '..', 
 if os.path.isdir(libs_dir):                                       
     sys.path.append(libs_dir)
 # Import the launcher and other needed modules
-import launcher,dbus,serial,time,re
+import launcher,dbus,serial,time,re,yaml
 # Import the ardbubus main class to be used directly
 from ardubus import ardubus
 
@@ -44,7 +44,10 @@ class my_launcher(launcher.baseclass):
     @dbus.service.method(my_signature + '.launcher')
     def list_boards(self):
         """Lists the currently known boards"""
-        return self.device_objects.keys()
+        ret = self.device_objects.keys()
+        if len(ret) == 0:
+            return None
+        return ret
 
     @dbus.service.method(my_signature + '.launcher')
     def quit(self):
@@ -66,8 +69,7 @@ class my_launcher(launcher.baseclass):
         if self.device_objects.has_key(device_name):
             print "Found device %s in port %s but it's already initialized as service" % (device_name, serial_device)
             return False
-        print "Found board %s in %f seconds" % (device_name, time.time() - started)
-        self.device_objects[device_name] = ardubus(self.devices_config[device_name], self, dbus_object_path=self.dbus_object_path.replace('/launcher', "/%s" % device_name), serial_device=serial_device, serial_speed=self.config['speed'])
+        self.device_objects[device_name] = ardubus(self.devices_config[device_name], self, device_name=device_name, dbus_object_path=self.dbus_object_path.replace('/launcher', "/%s" % device_name), serial_device=serial_device, serial_speed=self.config['speed'], dbus_interface_name='fi.hacklab.ardubus')
         return True
 
     def test_port(self, serial_device):
@@ -75,9 +77,9 @@ class my_launcher(launcher.baseclass):
         try:
             port = serial.Serial(serial_device, self.config['speed'], xonxoff=False, timeout=0.01)
             # PONDER: are these the right way around...
-            port.setDTR(True) # Reset the arduino by driving DTR for a moment (RS323 signals are active-low)
+            port.setDTR(False) # Reset the arduino by driving DTR for a moment (RS323 signals are active-low)
             time.sleep(0.050)
-            port.setDTR(False)
+            port.setDTR(True)
             in_buffer = ""
             started = time.time()
             while True:
@@ -87,16 +89,23 @@ class my_launcher(launcher.baseclass):
                 if not match:
                     # Timeout, abort
                     if ((time.time() - started) > self.board_ident_timeout):
+                        print "Could not find board in %s in %d seconds" % (serial_device, self.board_ident_timeout)
+                        print "buffer: %s" % repr(in_buffer)
                         port.close()
                         return False
                     # Otherwise go back to reading data
                     continue
                 # Got a match, continue by setting up a new service object
                 port.close() # Free the port
-                device_name = m.group(1)
-                self.start_board(serial_device, device_name)
+                device_name = match.group(1)
+                if (self.start_board(serial_device, device_name)):
+                    print "Found board %s in %f seconds" % (device_name, time.time() - started)
+                    return True
+                #otherwise init failed
+                return False
         except serial.SerialException, e:
             # Problem with port
+            print "Got an exception from port %s: %s" % (serial_device, repr(e))
             return False
         # Something weird happened, we should not drop this far
         print False
