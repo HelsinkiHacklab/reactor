@@ -20,9 +20,13 @@ launcher_config = {
 class my_launcher(launcher.baseclass):
     def __init__(self, mainloop, bus, **kwargs):
         super(my_launcher, self).__init__(mainloop, bus, **kwargs)
-        print "launcher initialized as %s:%s with config %s" % (self.dbus_interface_name, self.dbus_object_path, repr(self.config))
+
+        self.board_ident_timeout = 2
+        self.board_ident_regex = re.compile(r"\r\nBoard: (\w+) initializing\r\n")
         self.device_objects = {}
         self.scan()
+
+        print "launcher initialized as %s:%s with config %s" % (self.dbus_interface_name, self.dbus_object_path, repr(self.config))
 
     # Override this method to load device configs too
     def load_config(self):
@@ -37,6 +41,10 @@ class my_launcher(launcher.baseclass):
         self.device_objects[device_name].quit()
         del(self.device_objects[device_name])
         
+    @dbus.service.method(my_signature + '.launcher')
+    def list_boards(self):
+        """Lists the currently known boards"""
+        return self.device_objects.keys()
 
     @dbus.service.method(my_signature + '.launcher')
     def quit(self):
@@ -49,10 +57,21 @@ class my_launcher(launcher.baseclass):
         """Reloads device configs but *does not* rescan serial devices"""
         launcher.baseclass.reload(self)
 
+    @dbus.service.method(my_signature + '.launcher')
+    def start_board(self, serial_device, device_name):
+        """Spins up an interface object for given board"""
+        if not self.devices_config.has_key(device_name):
+            print "Found device %s in port %s but there is no config in devices.yml" % (device_name, serial_device)
+            return False
+        if self.device_objects.has_key(device_name):
+            print "Found device %s in port %s but it's already initialized as service" % (device_name, serial_device)
+            return False
+        print "Found board %s in %f seconds" % (device_name, time.time() - started)
+        self.device_objects[device_name] = ardubus(self.devices_config[device_name], self, dbus_object_path=self.dbus_object_path.replace('/launcher', "/%s" % device_name), serial_device=serial_device, serial_speed=self.config['speed'])
+        return True
+
     def test_port(self, serial_device):
         """Tests a given device for a board and if found will spin off a service object for it"""
-        ident_timeout = 2
-        board_regex = re.compile(r"\r\nBoard: (\w+) initializing\r\n")
         try:
             port = serial.Serial(serial_device, self.config['speed'], xonxoff=False, timeout=0.01)
             # PONDER: are these the right way around...
@@ -64,26 +83,18 @@ class my_launcher(launcher.baseclass):
             while True:
                 data = port.read(1)
                 in_buffer += data
-                match = board_regex.search(in_buffer)
+                match = self.board_ident_regex.search(in_buffer)
                 if not match:
                     # Timeout, abort
-                    if ((time.time() - started) > ident_timeout):
+                    if ((time.time() - started) > self.board_ident_timeout):
                         port.close()
                         return False
                     # Otherwise go back to reading data
                     continue
                 # Got a match, continue by setting up a new service object
-                port.close() # Free the port...
+                port.close() # Free the port
                 device_name = m.group(1)
-                if not self.devices_config.has_key(device_name):
-                    print "Found device %s in port %s but there is no config in devices.yml" % (device_name, serial_device)
-                    return False
-                if self.device_objects.has_key(device_name):
-                    print "Found device %s in port %s but it's already initialized as service" % (device_name, serial_device)
-                    return False
-                print "Found board %s in %f seconds" % (device_name, time.time() - started)
-                self.device_objects[device_name] = ardubus(self.devices_config[device_name], self, dbus_object_path=self.dbus_object_path.replace('/launcher', "/%s" % device_name), serial_device=serial_device, serial_speed=self.config['speed'])
-                return True
+                self.start_board(serial_device, device_name)
         except serial.SerialException, e:
             # Problem with port
             return False
