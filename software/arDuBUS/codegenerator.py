@@ -102,6 +102,7 @@ class codegen:
 void setup()
 {
     Serial.begin(%s);
+    Serial.println("");
     Serial.println("Board: %s initializing");\n""" % (self.config['_speed'], self.name)
 
         if self.setup_i2c_init:

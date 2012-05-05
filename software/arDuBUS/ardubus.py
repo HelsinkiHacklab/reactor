@@ -32,6 +32,13 @@ class ardubus(dbus.service.Object):
         return chr(pin+PIN_OFFSET)
 
     @dbus.service.method('fi.hacklab.ardubus')
+    def quit(self):
+        """Closes the serial port and unloads from DBUS"""
+        self.serial_port.close()
+        self.receiver_thread.join()
+        # TODO: unload from dbus
+
+    @dbus.service.method('fi.hacklab.ardubus')
     def hello(self):
         return "Hello,World! My name is " + self.object_name
 
