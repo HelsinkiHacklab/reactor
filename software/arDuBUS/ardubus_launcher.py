@@ -49,8 +49,8 @@ class my_launcher(launcher.baseclass):
         try:
             port = serial.Serial(serial_device, self.config['speed'], xonxoff=False, timeout=0.01)
             # PONDER: are these the right way around...
-            port.setDTR(True)
-            time.sleep(0.1)
+            port.setDTR(True) # Reset the arduino by driving DTR for a moment (RS323 signals are active-low)
+            time.sleep(0.050)
             port.setDTR(False)
             in_buffer = ""
             started = time.time()
