@@ -82,13 +82,13 @@ class middleware(service.baseclass):
     def aliased_signal_received(self, alias, state, sender):
         rodcontrol_match = rodcontrol_regex.match(alias)
         if rodcontrol_match:
-            coords = (rodcontrol_match.group(1), rodcontrol_match.group(2))
+            coords = (int(rodcontrol_match.group(1)), int(rodcontrol_match.group(2)))
             rod_busname = "fi.hacklab.reactorsimulator.engine.reactor.rod.x%d.y%d" % coords
             rod_path = "/fi/hacklab/reactorsimulator/engine/reactor/rod/%d/%d" % coords
             if state: # high means switched off due to pull-ups
                 return self.call_cached(rod_busname, rod_path, 'stop_move')
             direction = rodcontrol_match.group(3)
-            if direction == 'up':
+            if direction == "up":
                 return self.call_cached(rod_busname, rod_path, 'start_move', True)
             # The other possible match for the regex is "down"
             return self.call_cached(rod_busname, rod_path, 'start_move', False)
