@@ -11,20 +11,24 @@ import dbus,time
 
 import numpy as np
 import thread
+import re
+
+rodcontrol_regex = re.compile("rod_(\d)_(\d)_(down|up)")
 
 
 # TODO move to config (but yml might not allow such nice formatting
 gauges8leds_map = [[' ', ' ', '*', '*', '*', ' ', ' '],
-                  [' ', '*', '0', '*', '*', '*', ' '],
-                  ['*', '*', '*', '*', '*', '1', '*'],
-                  ['*', '*', '*', '*', '*', '*', '*'],
-                  ['*', '2', '*', '*', '*', '*', '*'],
-                  [' ', '*', '*', '*', '3', '*', ' '],
-                  [' ', ' ', '*', '*', '*', ' ', ' ']] 
+                   [' ', '*', '0', '*', '*', '*', ' '],
+                   ['*', '*', '*', '*', '*', '1', '*'],
+                   ['*', '*', '*', '*', '*', '*', '*'],
+                   ['*', '2', '*', '*', '*', '*', '*'],
+                   [' ', '*', '*', '*', '3', '*', ' '],
+                   [' ', ' ', '*', '*', '*', ' ', ' ']] 
 
 
 max_temp = 800
 
+measurement_well_coords = [(1,2),(2,5),(4,1),(5,4)]
 
 reactor_square_side = 7
 
@@ -36,9 +40,10 @@ class middleware(service.baseclass):
         self.load_nm()
 
         # TODO: Read the board names from config
-        self.bus.add_signal_receiver(self.stomp_received, dbus_interface = "fi.hacklab.ardubus", signal_name = "dio_change", path="/fi/hacklab/ardubus/arduino2")
-        self.bus.add_signal_receiver(self.rod_switch_change, dbus_interface = "fi.hacklab.ardubus", signal_name = "dio_change", path="/fi/hacklab/ardubus/arduino1")
+#        self.bus.add_signal_receiver(self.stomp_received, dbus_interface = "fi.hacklab.ardubus", signal_name = "dio_change", path="/fi/hacklab/ardubus/arduino2")
+#        self.bus.add_signal_receiver(self.rod_switch_change, dbus_interface = "fi.hacklab.ardubus", signal_name = "dio_change", path="/fi/hacklab/ardubus/arduino1")
 
+        self.bus.add_signal_receiver(self.aliased_signal_received, dbus_interface = "fi.hacklab.ardubus", signal_name = "alias_change", )
 
         self.bus.add_signal_receiver(self.red_alert, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_redalert")
         self.bus.add_signal_receiver(self.red_alert_reset, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_redalert_reset")
@@ -55,9 +60,12 @@ class middleware(service.baseclass):
         self.dbus_cache_error_count = {}
         
         # Listen temp/neutrons only from the measurment wells (filtering done on the receiver end it seems we could not do wildcard path matching afterall [maybe I should rethink these interface spaces])
-        # TODO: enumerate the well paths to limit the torrent of signals we need to process
-        self.bus.add_signal_receiver(self.neutron_report, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_neutrons")
-        self.bus.add_signal_receiver(self.temp_report, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_temp",)
+        # Enumerate the well paths to limit the torrent of signals we need to process
+        for coords in measurement_well_coords:
+            well_busname = "fi.hacklab.reactorsimulator.engine.reactor.mwell.x%d.y%d" % coords
+            well_path = "/fi/hacklab/reactorsimulator/engine/reactor/mwell/%d/%d" % coords
+            self.bus.add_signal_receiver(self.neutron_report, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_neutrons", path=well_path)
+            self.bus.add_signal_receiver(self.temp_report, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_temp", path=well_path)
 
 
 
@@ -69,6 +77,21 @@ class middleware(service.baseclass):
             for servo_idx in self.config['rod_servo_map'][board].keys():
                 rodx,rody = self.config['rod_servo_map'][board][servo_idx]
                 self.rod_servo_map[rodx][rody] = (servo_idx, board)
+
+
+    def aliased_signal_received(self, alias, state, sender):
+        rodcontrol_match = rodcontrol_regex.match(alias)
+        if rodcontrol_match:
+            coords = (rodcontrol_match.group(1), rodcontrol_match.group(2))
+            rod_busname = "fi.hacklab.reactorsimulator.engine.reactor.rod.x%d.y%d" % coords
+            rod_path = "/fi/hacklab/reactorsimulator/engine/reactor/rod/%d/%d" % coords
+            if state: # high means switched off due to pull-ups
+                return self.call_cached(rod_busname, rod_path, 'stop_move')
+            direction = rodcontrol_match.group(3)
+            if direction == 'up':
+                return self.call_cached(rod_busname, rod_path, 'start_move', True)
+            # The other possible match for the regex is "down"
+            return self.call_cached(rod_busname, rod_path, 'start_move', False)
 
 
     def rod_switch_change(self, pin, state, sender, *args):
