@@ -2,6 +2,39 @@ temp_gauge:
     max_temp: 750
 neutron_gauge:
     max_flux: 10
+led_gauge_map: #keys are well coordinates, values define the led locations
+    well_1_2_neutrons:
+        board: rod_control_panel
+        jbol_idx: 1
+        leds: [ 8, 9, 10, 11 ]
+    well_1_2_temp:
+        board: rod_control_panel
+        jbol_idx: 1
+        leds: [ 12, 13, 14, 15 ]
+    well_2_5_neutrons:
+        board: rod_control_panel
+        jbol_idx: 1
+        leds: [ 24, 25, 26, 27 ]
+    well_2_5_temp:
+        board: rod_control_panel
+        jbol_idx: 1
+        leds: [ 28, 29, 30, 31 ]
+    well_4_1_neutrons:
+        board: rod_control_panel
+        jbol_idx: 1
+        leds: [ 0, 1, 2, 3 ]
+    well_4_1_temp:
+        board: rod_control_panel
+        jbol_idx: 1
+        leds: [ 4, 5, 6, 7 ]
+    well_5_4_neutrons:
+        board: rod_control_panel
+        jbol_idx: 1
+        leds: [ 16, 17, 18, 19 ]
+    well_5_4_temp:
+        board: rod_control_panel
+        jbol_idx: 1
+        leds: [ 20, 21, 22, 23 ]
 stomp_map:
     board_name: 'arduino2' # Which board sends these signals so we can limit the path
     pins2rods: # Key is pin value is the rods coordinates (used to form the dbus name)

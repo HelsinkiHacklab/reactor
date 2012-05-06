@@ -21,6 +21,7 @@ class ardubus(service.baseclass):
         self.serial_speed = kwargs['serial_speed']
         self.config_reloaded() # Triggers all config normalizations and mapping rebuilds
         self.initialize_serial()
+        print "Board initialized as %s:%s with config %s" % (self.dbus_interface_name, self.dbus_object_path, repr(self.config))
 
     def send_serial_command(self, command):
         command = command + "\n"

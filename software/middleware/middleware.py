@@ -136,6 +136,8 @@ class middleware(service.baseclass):
                 return self.call_cached(busname, buspath, method, *args)
 
     def depth_report(self, x, y, depth, *args):
+        # Right now skip this
+        return
         try:
             mapped = self.rod_servo_map[int(x)][int(y)]
         except KeyError:
@@ -187,29 +189,50 @@ class middleware(service.baseclass):
     def reload(self):
         return self.launcher_instance.reload()
 
-    @dbus.service.method('fi.hacklab.reactorsimulator.middleware')
-    def led_gauge(self, start_led, num_leds, value, map_max):
-        jbol_idx = 0
-        # interpolate (TODO: Is numpy fast here ?)
+# OLD code for reference
+#    @dbus.service.method('fi.hacklab.reactorsimulator.middleware')
+#    def led_gauge(self, start_led, num_leds, value, map_max):
+#        jbol_idx = 0
+#        # interpolate (TODO: Is numpy fast here ?)
+#        mapped_value = int(np.interp(value, [0,map_max],[0,num_leds*255]))
+#        # and bin to leds
+#        for i in range(num_leds):
+#            #print "i=%d, mapped_value=%d" % (i, mapped_value)
+#            ledno = start_led + 2*(num_leds-1) - 2*i
+#            if mapped_value > 255:
+#                #print "self.set_rod_leds(%d, %d, 255)" % (jbol_idx, ledno)
+#                #self.bus.get_object('fi.hacklab.ardubus.arduino1', '/fi/hacklab/ardubus/arduino1').set_jbol_pwm(dbus.Byte(jbol_idx), dbus.Byte(ledno), dbus.Byte(255))
+#                self.call_cached('fi.hacklab.ardubus.arduino1', '/fi/hacklab/ardubus/arduino1', 'set_jbol_pwm', dbus.Byte(jbol_idx), dbus.Byte(ledno), dbus.Byte(255))
+#                mapped_value -= 255
+#                continue
+#            if mapped_value < 0:
+#                #print "self.set_rod_leds(%d, %d, 0)" % (jbol_idx, ledno)
+#                #self.bus.get_object('fi.hacklab.ardubus.arduino1', '/fi/hacklab/ardubus/arduino1').set_jbol_pwm(dbus.Byte(jbol_idx), dbus.Byte(ledno), dbus.Byte(0))
+#                self.call_cached('fi.hacklab.ardubus.arduino1', '/fi/hacklab/ardubus/arduino1', 'set_jbol_pwm', dbus.Byte(jbol_idx), dbus.Byte(ledno), dbus.Byte(0))
+#                continue
+#            #print "self.set_rod_leds(%d, %d, %d)" % (jbol_idx, ledno, mapped_value)
+#            #self.bus.get_object('fi.hacklab.ardubus.arduino1', '/fi/hacklab/ardubus/arduino1').set_jbol_pwm(dbus.Byte(jbol_idx), dbus.Byte(ledno), dbus.Byte(mapped_value))
+#            self.call_cached('fi.hacklab.ardubus.arduino1', '/fi/hacklab/ardubus/arduino1', 'set_jbol_pwm', dbus.Byte(jbol_idx), dbus.Byte(ledno), dbus.Byte(mapped_value))
+#            mapped_value -= 255
+
+    def led_gauge(self, gauge_id, value, map_max):
+        gauge_config = self.config['led_gauge_map'][gauge_id]
+        num_leds = len(gauge_config['leds'])
+        board_busname = 'fi.hacklab.ardubus.' + gauge_config['board']
+        board_path = '/fi/hacklab/ardubus/' + gauge_config['board']
+        jbol_idx = gauge_config['jbol_idx']
+        # Interpolate with numpy
         mapped_value = int(np.interp(value, [0,map_max],[0,num_leds*255]))
-        # and bin to leds
-        for i in range(num_leds):
-            #print "i=%d, mapped_value=%d" % (i, mapped_value)
-            ledno = start_led + 2*(num_leds-1) - 2*i
+        # And bin to the leds
+        for ledno in gauge_config['leds']:
             if mapped_value > 255:
-                #print "self.set_rod_leds(%d, %d, 255)" % (jbol_idx, ledno)
-                #self.bus.get_object('fi.hacklab.ardubus.arduino1', '/fi/hacklab/ardubus/arduino1').set_jbol_pwm(dbus.Byte(jbol_idx), dbus.Byte(ledno), dbus.Byte(255))
-                self.call_cached('fi.hacklab.ardubus.arduino1', '/fi/hacklab/ardubus/arduino1', 'set_jbol_pwm', dbus.Byte(jbol_idx), dbus.Byte(ledno), dbus.Byte(255))
+                self.call_cached(board_busname, board_path, 'set_jbol_pwm', dbus.Byte(jbol_idx), dbus.Byte(ledno), dbus.Byte(255))
                 mapped_value -= 255
                 continue
             if mapped_value < 0:
-                #print "self.set_rod_leds(%d, %d, 0)" % (jbol_idx, ledno)
-                #self.bus.get_object('fi.hacklab.ardubus.arduino1', '/fi/hacklab/ardubus/arduino1').set_jbol_pwm(dbus.Byte(jbol_idx), dbus.Byte(ledno), dbus.Byte(0))
-                self.call_cached('fi.hacklab.ardubus.arduino1', '/fi/hacklab/ardubus/arduino1', 'set_jbol_pwm', dbus.Byte(jbol_idx), dbus.Byte(ledno), dbus.Byte(0))
+                self.call_cached(board_busname, board_path, 'set_jbol_pwm', dbus.Byte(jbol_idx), dbus.Byte(ledno), dbus.Byte(0))
                 continue
-            #print "self.set_rod_leds(%d, %d, %d)" % (jbol_idx, ledno, mapped_value)
-            #self.bus.get_object('fi.hacklab.ardubus.arduino1', '/fi/hacklab/ardubus/arduino1').set_jbol_pwm(dbus.Byte(jbol_idx), dbus.Byte(ledno), dbus.Byte(mapped_value))
-            self.call_cached('fi.hacklab.ardubus.arduino1', '/fi/hacklab/ardubus/arduino1', 'set_jbol_pwm', dbus.Byte(jbol_idx), dbus.Byte(ledno), dbus.Byte(mapped_value))
+            self.call_cached(board_busname, board_path, 'set_jbol_pwm', dbus.Byte(jbol_idx), dbus.Byte(ledno), dbus.Byte(mapped_value))
             mapped_value -= 255
 
     def red_alert(self, *args):
@@ -244,9 +267,10 @@ class middleware(service.baseclass):
         current_max = max(neutrons)
         if current_max > self.max_neutrons_seen:
             self.max_neutrons_seen = current_max
-        led_base_index = (int(gauges8leds_map[x][y])*8)
         neutron_avg = sum(neutrons)/len(neutrons)
-        self.led_gauge(led_base_index, 4, neutron_avg, self.config['neutron_gauge']['max_flux'])
+        #led_base_index = (int(gauges8leds_map[x][y])*8)
+        #self.led_gauge(led_base_index, 4, neutron_avg, self.config['neutron_gauge']['max_flux'])
+        self.led_gauge("well_%d_%d_neutrons" % (x,y), neutron_avg, self.config['neutron_gauge']['max_flux'])
 
     def temp_report(self, x, y, temps, *args):
         x = int(x)
@@ -258,8 +282,10 @@ class middleware(service.baseclass):
             print "somehow %d,%d was passed in as a well" % (x,y)
             return
         #print "temperatures for %d,%d,%s" % (x,y,temps)
-        led_base_index = (int(gauges8leds_map[x][y])*8)+1
         temp_avg = sum(temps)/len(temps)
-        self.led_gauge(led_base_index, 4, temp_avg, self.config['temp_gauge']['max_temp'])
+        #led_base_index = (int(gauges8leds_map[x][y])*8)+1
+        #self.led_gauge(led_base_index, 4, temp_avg, self.config['temp_gauge']['max_temp'])
+        self.led_gauge("well_%d_%d_temp" % (x,y), temp_avg, self.config['temp_gauge']['max_temp'])
+
 
 

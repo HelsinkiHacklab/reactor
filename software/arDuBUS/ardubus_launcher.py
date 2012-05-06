@@ -76,7 +76,7 @@ class my_launcher(launcher.baseclass):
         if self.device_objects.has_key(device_name):
             print "Found device %s in port %s but it's already initialized as service" % (device_name, serial_device)
             return False
-        self.device_objects[device_name] = ardubus(self.devices_config[device_name], self, device_name=device_name, dbus_object_path=self.dbus_object_path.replace('/launcher', "/%s" % device_name), serial_device=serial_device, serial_speed=self.config['speed'], dbus_interface_name='fi.hacklab.ardubus')
+        self.device_objects[device_name] = ardubus(self.devices_config[device_name], self, device_name=device_name, dbus_object_path=self.dbus_object_path.replace('/launcher', "/%s" % device_name), serial_device=serial_device, serial_speed=self.config['speed'], dbus_interface_name="fi.hacklab.ardubus.%s" % device_name)
         return True
 
     def test_port(self, serial_device):
