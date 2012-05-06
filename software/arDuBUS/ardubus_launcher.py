@@ -60,7 +60,7 @@ class my_launcher(launcher.baseclass):
     def reload(self):
         """Reloads device configs but *does not* rescan serial devices"""
         launcher.baseclass.reload(self)
-        for device_name in self.device_objects.keys:
+        for device_name in self.device_objects.keys():
             if  not self.devices_config.has_key(device_name):
                 print "We no longer have config for active device %s, skipping it" % device_name
                 continue

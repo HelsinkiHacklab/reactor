@@ -2,13 +2,13 @@
 aliases_test_board:
     digital_in_pins: # pins passed to ARDUBUS_DIGITAL_INPUTS
         - pin: 2
-          alias: foo
+          alias: moo
         - pin: 3
-          alias: bar
+          alias: pai
         - pin: 4
-          alias: baz
+          alias: laa-laa
         - pin: 5
-          alias: plonk
+          alias: Matrix reloaded
         - pin: 6
         - pin: 7
     pca9535_inputs: [  5, 6, 7, 8, 9, 10 ] # defined just to test the normalizing

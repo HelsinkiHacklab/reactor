@@ -153,8 +153,6 @@ class ardubus(service.baseclass):
 
     @dbus.service.signal('fi.hacklab.ardubus')
     def dio_change(self, p_index, state, sender):
-        print "SIGNALLING: Pin(index) %d changed to %d on %s" % (p_index, state, sender)
-        print self.config['digital_in_pins']
         if self.config['digital_in_pins'][p_index]['alias']:
             self.alias_change(self.config['digital_in_pins'][p_index]['alias'], state, sender)
         pass

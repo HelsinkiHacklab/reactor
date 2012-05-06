@@ -5,4 +5,4 @@ bus = dbus.SessionBus()
 launcher = bus.get_object('fi.hacklab.ardubus.launcher', '/fi/hacklab/ardubus/launcher')
 print launcher.list_boards()
 
-p = bus.get_object('fi.hacklab.ardubus.launcher', '/fi/hacklab/ardubus/rod_control_panel')
+p = bus.get_object('fi.hacklab.ardubus.launcher', '/fi/hacklab/ardubus/aliases_test_board')
