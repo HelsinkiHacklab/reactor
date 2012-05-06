@@ -43,7 +43,7 @@ inline void ardubus_pca9535_in_update_bouncers()
         {
             // State changed
             Serial.print("CP"); // CD<index_byte><state_byte>
-            Serial.print(i);
+            Serial.write(i);
             Serial.println(ardubus_pca9535_in_bouncers[i].read());
         }
     }
@@ -63,7 +63,7 @@ inline void ardubus_pca9535_in_report()
     for (byte i=0; i < sizeof(ardubus_pca9535_in_pins); i++)
     {
         Serial.print("RP"); // RD<index_byte><state_byte><time_long_as_hex>
-        Serial.print(i);
+        Serial.write(i);
         Serial.print(ardubus_pca9535_in_bouncers[i].read());
         ardubus_print_ulong_as_8hex(ardubus_pca9535_in_bouncers[i].duration());
         Serial.println("");

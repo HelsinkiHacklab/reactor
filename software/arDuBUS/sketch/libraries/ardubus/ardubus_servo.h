@@ -29,7 +29,7 @@ inline void ardubus_servo_report()
     for (byte i=0; i < sizeof(ardubus_servo_output_pins); i++)
     {
         Serial.print("RS"); // RS<index_byte><value in hex>
-        Serial.print(i);
+        Serial.write(i);
         ardubus_print_byte_as_2hex(ardubus_servos[i].read());
         Serial.println("");
         // TODO: Keep track of duration ??

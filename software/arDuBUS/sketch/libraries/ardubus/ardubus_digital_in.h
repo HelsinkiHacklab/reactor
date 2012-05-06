@@ -44,7 +44,7 @@ inline void ardubus_digital_in_update_bouncers()
         {
             // State changed
             Serial.print("CD"); // CD<index_byte><state_byte>
-            Serial.print(i);
+            Serial.write(i);
             Serial.println(ardubus_digital_in_bouncers[i].read());
         }
     }
@@ -64,7 +64,7 @@ inline void ardubus_digital_in_report()
     for (byte i=0; i < sizeof(ardubus_digital_in_pins); i++)
     {
         Serial.print("RD"); // RD<index_byte><state_byte><time_long_as_hex>
-        Serial.print(i);
+        Serial.write(i);
         Serial.print(ardubus_digital_in_bouncers[i].read());
         ardubus_print_ulong_as_8hex(ardubus_digital_in_bouncers[i].duration());
         Serial.println("");
