@@ -239,7 +239,8 @@ class ardubus(service.baseclass):
         try:
             while self.serial_alive:
                 if not self.serial_port.inWaiting():
-                    # Don't try to read if there is no data.
+                    # Don't try to read if there is no data, instead sleep (yield) a bit
+                    time.sleep(0.01)
                     continue
                 data = self.serial_port.read(1)
                 if len(data) == 0:
