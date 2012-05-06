@@ -19,7 +19,7 @@ import rod, measurementwell
 
 
 
-# Layout of the generator, '*' is a rod place, '#' is automatic whatever place, ' ' is nothing
+# Layout of the generator, '*' is a rod place, '#' is measurement well place, ' ' is nothing
 default_layout = [[' ', ' ', '*', '*', '*', ' ', ' '],
                   [' ', '*', '#', '*', '*', '*', ' '],
                   ['*', '*', '*', '*', '*', '#', '*'],

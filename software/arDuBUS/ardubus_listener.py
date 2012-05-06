@@ -24,10 +24,12 @@ class ardubus_listener():
         print "Got kwargs: %s" % repr(kwargs)
 
     def switch_changed(self, pin, state, sender):
-        print "Pin %d changed(index) to %d on %s" % (pin, state, sender)
+        #print "Pin %d changed(index) to %d on %s" % (pin, state, sender)
+        pass
 
     def pca9535_changed(self, pin, state, sender):
-        print "PCA9535 Pin %d changed(index) to %d on %s" % (pin, state, sender)
+        #print "PCA9535 Pin %d changed(index) to %d on %s" % (pin, state, sender)
+        pass
 
     def alias_changed(self, alias, state, sender):
         print "Pin '%s' changed to %d on %s" % (alias, state, sender)
