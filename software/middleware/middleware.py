@@ -15,7 +15,6 @@ import re
 
 rodcontrol_regex = re.compile("rod_(\d)_(\d)_(down|up)")
 
-
 # TODO move to config (but yml might not allow such nice formatting
 gauges8leds_map = [[' ', ' ', '*', '*', '*', ' ', ' '],
                    [' ', '*', '0', '*', '*', '*', ' '],
@@ -92,6 +91,10 @@ class middleware(service.baseclass):
                 return self.call_cached(rod_busname, rod_path, 'start_move', True)
             # The other possible match for the regex is "down"
             return self.call_cached(rod_busname, rod_path, 'start_move', False)
+        if alias == "SCRAM" and not state:
+            return self.call_cached('fi.hacklab.reactorsimulator.engine.reactor', '/fi/hacklab/reactorsimulator/engine/reactor', 'scram')
+        if alias == "TURBO" and not state:
+            return self.call_cached('fi.hacklab.reactorsimulator.engine.reactor', '/fi/hacklab/reactorsimulator/engine/reactor', 'turbo')
 
 
     def rod_switch_change(self, pin, state, sender, *args):

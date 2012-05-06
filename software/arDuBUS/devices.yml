@@ -89,9 +89,9 @@ rod_control_panel: # The board identifier
     pca9535_boards: [ 0 ] # list of board addresses  (aka ARDUBUS_PCA9535_BOARDS)
     pca9535_inputs: # pins passed to ARDUBUS_PCA9535_INPUTS
         - pin: 0
-          alias: rodcontrol_turnswitch
+          alias: SCRAM
         - pin: 1
-          alias: rodcontrol_key
+          alias: TURBO
         - pin: 2
           alias: rod_6_2_up
         - pin: 3
