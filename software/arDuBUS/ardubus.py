@@ -19,6 +19,7 @@ class ardubus(service.baseclass):
         self.object_name = kwargs['device_name']
         self.serial_device = kwargs['serial_device']
         self.serial_speed = kwargs['serial_speed']
+        self.config_reloaded() # Triggers all config normalizations and mapping rebuilds
         self.initialize_serial()
 
     def send_serial_command(self, command):
@@ -33,6 +34,44 @@ class ardubus(service.baseclass):
     def p2b(self, pin):
         """Convert pin number integer to a byte to be sent to the sketch"""
         return chr(pin+PIN_OFFSET)
+
+    def normalize_pins(self, config_section):
+        """Normalizes a pin config to dict with pin ans alias keys"""
+        #print "normalize_pins: BEFORE %s" % config_section
+        if type(config_section) == list:
+            keys = range(len(config_section))
+        if type(config_section) == dict:
+            keys = config_section.keys
+        for k in keys:
+            item = config_section[k]
+            if type(item) != dict:
+                item = { 'pin': item }
+            # Make sure this key exists
+            if not item.has_key('alias'):
+                item['alias'] = None
+            config_section[k] = item
+        #print "normalize_pins: AFTER %s" % config_section
+        return config_section
+
+    def normalize_config(self):
+        if self.config.has_key('digital_in_pins'):
+            self.config['digital_in_pins'] = self.normalize_pins(self.config['digital_in_pins'])
+        if self.config.has_key('pca9535_inputs'):
+            self.config['pca9535_inputs'] = self.normalize_pins(self.config['pca9535_inputs'])
+        # reminder to support output aliasing in the future, somehow...
+        #if self.config.has_key('pca9535_outputs'):
+        #    self.config['pca9535_outputs'] = self.normalize_pins(self.config['pca9535_outputs'])
+        
+        pass
+
+    def rebuild_alias_maps(self):
+        # When we support aliasing of output pins we need to map the aliases to correct io methods somehow...
+        pass
+
+    def config_reloaded(self):
+        """Recalculates all config mappings etc"""
+        self.normalize_config()
+        self.rebuild_alias_maps()
 
     def stop_serial(self):
         self.serial_alive = False
@@ -99,14 +138,32 @@ class ardubus(service.baseclass):
         else:
             self.send_serial_command("E%s0" % self.p2b(digital_index))
 
+    @dbus.service.method('fi.hacklab.ardubus', in_signature='yy') # "y" is the signature for a byte
+    def set_pca9535_byte(self, reg_index, state):
+        return False
+        # TODO: implement
+        # example from 595
+        #self.send_serial_command("W%s%s" % (self.p2b(reg_index), binascii.hexlify(str(state)).upper()))
+
+    @dbus.service.signal('fi.hacklab.ardubus')
+    def alias_change(self, alias, state, sender):
+        """Aliased pin has changed state"""
+        #print "SIGNALLING: %s changed to %d on %s" % (alias, state, sender)
+        pass
+
     @dbus.service.signal('fi.hacklab.ardubus')
     def dio_change(self, p_index, state, sender):
-        #print "SIGNALLING: Pin(index) %d changed to %d on %s" % (p_index, state, sender)
+        print "SIGNALLING: Pin(index) %d changed to %d on %s" % (p_index, state, sender)
+        print self.config['digital_in_pins']
+        if self.config['digital_in_pins'][p_index]['alias']:
+            self.alias_change(self.config['digital_in_pins'][p_index]['alias'], state, sender)
         pass
 
     @dbus.service.signal('fi.hacklab.ardubus')
     def pca9535_change(self, p_index, state, sender):
         #print "SIGNALLING: Pin(index) %d changed to %d on %s" % (p_index, state, sender)
+        if self.config['pca9535_inputs'][p_index]['alias']:
+            self.alias_change(self.config['pca9535_inputs'][p_index]['alias'], state, sender)
         pass
 
     @dbus.service.signal('fi.hacklab.ardubus')

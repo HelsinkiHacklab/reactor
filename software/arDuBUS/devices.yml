@@ -1,3 +1,17 @@
+# Note: Changing pin numbers or order of pins requires a sketch re(generate,compile,upload), changing aliases needs only reload of arDuBUS
+aliases_test_board:
+    digital_in_pins: # pins passed to ARDUBUS_DIGITAL_INPUTS
+        - pin: 2
+          alias: foo
+        - pin: 3
+          alias: bar
+        - pin: 4
+          alias: baz
+        - pin: 5
+          alias: plonk
+        - pin: 6
+        - pin: 7
+    pca9535_inputs: [  5, 6, 7, 8, 9, 10 ] # defined just to test the normalizing
 rod_control_panel: # The board identifier
     pca9635RGBJBOL_boards: [ 0, 1 ] # Board addresses (aka ARDUBUS_PCA9635RGBJBOL_BOARDS)
     pca9635RGBJBOL_maps:

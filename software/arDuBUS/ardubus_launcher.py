@@ -21,7 +21,7 @@ class my_launcher(launcher.baseclass):
     def __init__(self, mainloop, bus, **kwargs):
         super(my_launcher, self).__init__(mainloop, bus, **kwargs)
 
-        self.board_ident_timeout = 2
+        self.board_ident_timeout = 4
         self.board_ident_regex = re.compile(r"\r\nBoard: (\w+) initializing\r\n")
         self.device_objects = {}
         self.scan()
@@ -60,6 +60,12 @@ class my_launcher(launcher.baseclass):
     def reload(self):
         """Reloads device configs but *does not* rescan serial devices"""
         launcher.baseclass.reload(self)
+        for device_name in self.device_objects.keys:
+            if  not self.devices_config.has_key(device_name):
+                print "We no longer have config for active device %s, skipping it" % device_name
+                continue
+            self.device_objects[device_name].config = self.devices_config[device_name]
+            self.device_objects[device_name].config_reloaded()
 
     @dbus.service.method(my_signature + '.launcher')
     def start_board(self, serial_device, device_name):
