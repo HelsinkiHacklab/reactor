@@ -2,3 +2,4 @@
 speed: 115200 #TODO: switch to a (nonstandard) speed that matches arduino clock more closely, also we should probably slow down a bit to avoid flooding the USBus
 search_ports: # Ports to search, NOTE: Will drive DTR to reset the device for identification!
     - /dev/ttyUSB0
+    - /dev/ttyUSB1

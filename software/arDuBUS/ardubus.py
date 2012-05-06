@@ -152,6 +152,12 @@ class ardubus(service.baseclass):
         pass
 
     @dbus.service.signal('fi.hacklab.ardubus')
+    def alias_report(self, alias, state, time, sender):
+        """Aliased state report"""
+        #print "SIGNALLING: %s changed to %d on %s" % (alias, state, sender)
+        pass
+
+    @dbus.service.signal('fi.hacklab.ardubus')
     def dio_change(self, p_index, state, sender):
         if self.config['digital_in_pins'][p_index]['alias']:
             self.alias_change(self.config['digital_in_pins'][p_index]['alias'], state, sender)
@@ -167,6 +173,8 @@ class ardubus(service.baseclass):
     @dbus.service.signal('fi.hacklab.ardubus')
     def dio_report(self, p_index, state, time, sender):
         #print "SIGNALLING: Pin(index) %d has been %d for %dms on %s" % (p_index, state, time, sender)
+        if self.config['digital_in_pins'][p_index]['alias']:
+            self.alias_report(self.config['digital_in_pins'][p_index]['alias'], state, time, sender)
         pass
 
     @dbus.service.signal('fi.hacklab.ardubus')
