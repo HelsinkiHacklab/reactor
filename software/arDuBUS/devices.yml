@@ -148,7 +148,7 @@ rod_control_panel: # The board identifier
         - pin: 27
           alias: rod_6_3_up
         - pin: 28
-          alias: rod_3_6_up # Suddenly gives no output, did the switch break just now ??
+          alias: rod_3_6_up # Suddenly gives no output, did the switch break just now ?? (yes, works intermittedly)
         - pin: 29
           alias: rod_3_5_up
         - pin: 30
@@ -156,7 +156,7 @@ rod_control_panel: # The board identifier
         - pin: 31
           alias: rod_4_6_up
         - pin: 32
-          alias: rod_3_3_down # SHORT CIRCUIT WITH rod_4_5_up
+          alias: rod_4_5_up
         - pin: 33
           alias: rod_5_2_up
         - pin: 34
@@ -188,7 +188,7 @@ rod_control_panel: # The board identifier
         - pin: 47
           alias: rod_2_6_down
         - pin: 48
-          alias: rod_4_5_up # SHORT CIRCUIT WITH rod_3_3_down
+          alias: rod_3_3_down
         - pin: 49
           alias: rod_2_4_down
         - pin: 50
