@@ -54,7 +54,7 @@ class middleware(service.baseclass):
         # This seems to make us a bit slow (probably because now we do not cache the object...)
         self.bus.add_signal_receiver(self.depth_report, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_depth")
 
-        self.max_neutrons_seen = 0
+        self.max_neutron_avg = 0.0
 
         self.dbus_cache = {}
         self.dbus_cache_error_count = {}
@@ -215,6 +215,7 @@ class middleware(service.baseclass):
 #            self.call_cached('fi.hacklab.ardubus.arduino1', '/fi/hacklab/ardubus/arduino1', 'set_jbol_pwm', dbus.Byte(jbol_idx), dbus.Byte(ledno), dbus.Byte(mapped_value))
 #            mapped_value -= 255
 
+    @dbus.service.method('fi.hacklab.reactorsimulator.middleware')
     def led_gauge(self, gauge_id, value, map_max):
         gauge_config = self.config['led_gauge_map'][gauge_id]
         num_leds = len(gauge_config['leds'])
@@ -264,13 +265,12 @@ class middleware(service.baseclass):
             print "somehow %d,%d was passed in as a well" % (x,y)
             return
 
-        current_max = max(neutrons)
-        if current_max > self.max_neutrons_seen:
-            self.max_neutrons_seen = current_max
-        neutron_avg = sum(neutrons)/len(neutrons)
-        #led_base_index = (int(gauges8leds_map[x][y])*8)
-        #self.led_gauge(led_base_index, 4, neutron_avg, self.config['neutron_gauge']['max_flux'])
-        self.led_gauge("well_%d_%d_neutrons" % (x,y), neutron_avg, self.config['neutron_gauge']['max_flux'])
+        neutron_avg = float(sum(neutrons))/float(len(neutrons))
+        #print "neutron_report: neutron_avg=%f" % neutron_avg
+        if neutron_avg > self.max_neutron_avg:
+            self.max_neutron_avg = neutron_avg
+            print "neutron_report: self.max_neutron_avg updated to %f" % self.max_neutron_avg 
+        self.led_gauge("well_%d_%d_neutrons" % (x,y), neutron_avg, self.max_neutron_avg)
 
     def temp_report(self, x, y, temps, *args):
         x = int(x)
@@ -282,9 +282,7 @@ class middleware(service.baseclass):
             print "somehow %d,%d was passed in as a well" % (x,y)
             return
         #print "temperatures for %d,%d,%s" % (x,y,temps)
-        temp_avg = sum(temps)/len(temps)
-        #led_base_index = (int(gauges8leds_map[x][y])*8)+1
-        #self.led_gauge(led_base_index, 4, temp_avg, self.config['temp_gauge']['max_temp'])
+        temp_avg = float(sum(temps))/float(len(temps))
         self.led_gauge("well_%d_%d_temp" % (x,y), temp_avg, self.config['temp_gauge']['max_temp'])
 
 
