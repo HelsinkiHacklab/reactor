@@ -29,7 +29,9 @@ class middleware(service.baseclass):
         self.load_nm()
 
         # Just about all signals we expect to get from the Arduinos will come in as aliased signals since those are so much more easier to map.
-        self.bus.add_signal_receiver(self.aliased_signal_received, dbus_interface = "fi.hacklab.ardubus", signal_name = "alias_change", )
+        self.bus.add_signal_receiver(self.aliased_signal_received, dbus_interface = "fi.hacklab.ardubus", signal_name = "alias_change")
+        self.bus.add_signal_receiver(self.aliased_report_received, dbus_interface = "fi.hacklab.ardubus", signal_name = "alias_report")
+        self.alias_state_cache = {}
 
         # Red-Alert state handling
         self.bus.add_signal_receiver(self.red_alert, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_redalert")
@@ -66,8 +68,17 @@ class middleware(service.baseclass):
                 rodx,rody = self.config['rod_servo_map'][board][servo_idx]
                 self.rod_servo_map[rodx][rody] = (servo_idx, board)
 
+    def aliased_report_received(self, alias, state, time, sender):
+        """If we seem to have missed a state change signal trigger one based on the report (better late than never...)"""
+        if (   not self.self.alias_state_cache.has_key(alias)
+            or self.self.alias_state_cache[alias] != state):
+            return self.aliased_signal_received(alias, state, sender)
+        return
+
     def aliased_signal_received(self, alias, state, sender):
         """The main meat of the Arduino->simulation communication, aliased signals are matched using whatever rules and converted to commands passed on to the simulation"""
+        # Update state cache
+        self.alias_state_cache[alias] = state
         
         # Rod movement switches
         rodcontrol_match = rodcontrol_regex.match(alias)
