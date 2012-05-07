@@ -1,2 +1,10 @@
-Here will be arduino sketches and simple communication program for the PC end to to reading/writing the ports via DBUS method calls.
-Also if there is a pin change there will be a signal emitted to the bus.
+# arDuBUS: Arduino <-> DBUS bridge
+
+To control your arduino via the "real" computer and vice versa
+
+Includes sketch generator and a bunch of code, also some support for virtualized hardware (for testing the stuff running on the computer without having to wire everything up every time)
+
+# TODO
+
+  - Refactoring
+  - Separate to own repo (the code is general even if the "example" configs aren't)
