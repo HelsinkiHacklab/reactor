@@ -224,8 +224,8 @@ class reactor_listener(threading.Thread):
         clock = pygame.time.Clock()
 
         while (self.running):
-            # Run at 40 frames per second
-            frameDurationSeconds = clock.tick(40) * 0.001 # Returns milliseconds since last call, convert to seconds
+            # Run at 20 frames per second (adjusting FPS will also adjust the CPU usage)
+            frameDurationSeconds = clock.tick(20) * 0.001 # Returns milliseconds since last call, convert to seconds
 
             # Check if ESC was pressed or window closed
             for event in pygame.event.get():
