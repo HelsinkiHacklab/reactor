@@ -10,23 +10,12 @@ import service,dbus,gobject
 import dbus,time
 
 import numpy as np
-import thread
 import re
 
 rodcontrol_regex = re.compile("rod_(\d)_(\d)_(down|up)")
+rodstomp_regex = re.compile("rod_(\d)_(\d)_stomp")
 
-# TODO move to config (but yml might not allow such nice formatting
-gauges8leds_map = [[' ', ' ', '*', '*', '*', ' ', ' '],
-                   [' ', '*', '0', '*', '*', '*', ' '],
-                   ['*', '*', '*', '*', '*', '1', '*'],
-                   ['*', '*', '*', '*', '*', '*', '*'],
-                   ['*', '2', '*', '*', '*', '*', '*'],
-                   [' ', '*', '*', '*', '3', '*', ' '],
-                   [' ', ' ', '*', '*', '*', ' ', ' ']] 
-
-
-max_temp = 800
-
+# Define where the measurement wells are, used to limit amount of incoming signals
 measurement_well_coords = [(1,2),(2,5),(4,1),(5,4)]
 
 reactor_square_side = 7
@@ -36,25 +25,25 @@ class middleware(service.baseclass):
         super(middleware, self).__init__(config, launcher_instance, **kwargs)
         self.config_reloaded()
 
+        # Will be removed, see method for details
         self.load_nm()
 
-        # TODO: Read the board names from config
-#        self.bus.add_signal_receiver(self.stomp_received, dbus_interface = "fi.hacklab.ardubus", signal_name = "dio_change", path="/fi/hacklab/ardubus/arduino2")
-#        self.bus.add_signal_receiver(self.rod_switch_change, dbus_interface = "fi.hacklab.ardubus", signal_name = "dio_change", path="/fi/hacklab/ardubus/arduino1")
-
+        # Just about all signals we expect to get from the Arduinos will come in as aliased signals since those are so much more easier to map.
         self.bus.add_signal_receiver(self.aliased_signal_received, dbus_interface = "fi.hacklab.ardubus", signal_name = "alias_change", )
 
+        # Red-Alert state handling
         self.bus.add_signal_receiver(self.red_alert, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_redalert")
         self.bus.add_signal_receiver(self.red_alert_reset, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_redalert_reset")
         self.red_alert_active = False
 
+        # Blowout signal
         self.bus.add_signal_receiver(self.blowout, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_blowout")
 
-        # This seems to make us a bit slow (probably because now we do not cache the object...)
+        # Rod depts, will be passed to the gauges
         self.bus.add_signal_receiver(self.depth_report, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_depth")
 
-        self.max_neutron_avg = 0.0
 
+        # Used to keep track of the cached dbus proxy-objects
         self.dbus_cache = {}
         self.dbus_cache_error_count = {}
         
@@ -65,8 +54,8 @@ class middleware(service.baseclass):
             well_path = "/fi/hacklab/reactorsimulator/engine/reactor/mwell/%d/%d" % coords
             self.bus.add_signal_receiver(self.neutron_report, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_neutrons", path=well_path)
             self.bus.add_signal_receiver(self.temp_report, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_temp", path=well_path)
-
-
+        # This is used for autoranging the neutron flux meters
+        self.max_neutron_avg = 0.0
 
     def config_reloaded(self):
         # Transpose the rod servo map to something more usable
@@ -77,8 +66,10 @@ class middleware(service.baseclass):
                 rodx,rody = self.config['rod_servo_map'][board][servo_idx]
                 self.rod_servo_map[rodx][rody] = (servo_idx, board)
 
-
     def aliased_signal_received(self, alias, state, sender):
+        """The main meat of the Arduino->simulation communication, aliased signals are matched using whatever rules and converted to commands passed on to the simulation"""
+        
+        # Rod movement switches
         rodcontrol_match = rodcontrol_regex.match(alias)
         if rodcontrol_match:
             coords = (int(rodcontrol_match.group(1)), int(rodcontrol_match.group(2)))
@@ -91,29 +82,23 @@ class middleware(service.baseclass):
                 return self.call_cached(rod_busname, rod_path, 'start_move', True)
             # The other possible match for the regex is "down"
             return self.call_cached(rod_busname, rod_path, 'start_move', False)
+
+        # Simple and self-explained switches
         if alias == "SCRAM" and not state:
             return self.call_cached('fi.hacklab.reactorsimulator.engine.reactor', '/fi/hacklab/reactorsimulator/engine/reactor', 'scram')
         if alias == "TURBO" and not state:
             return self.call_cached('fi.hacklab.reactorsimulator.engine.reactor', '/fi/hacklab/reactorsimulator/engine/reactor', 'turbo')
 
-
-    def rod_switch_change(self, pin, state, sender, *args):
-        print "Pin %d changed to %s on %s" % (pin, repr(state), sender)
-
-        # TODO: Read the board names from config
-        try:
-            rod_info = self.config['rod_control_map']['arduino1'][int(pin)]
-        except KeyError:
-            print "No rod defined for pin %d" % pin
-            return
-        
-        if bool(state):
-            # High means pulled up, ie not switched
-            self.call_cached('fi.hacklab.reactorsimulator.engine', "/fi/hacklab/reactorsimulator/engine/reactor/rod/%d/%d" % (rod_info[0],rod_info[1]), 'stop_move')
-            return
-        self.call_cached('fi.hacklab.reactorsimulator.engine', "/fi/hacklab/reactorsimulator/engine/reactor/rod/%d/%d" % (rod_info[0],rod_info[1]), 'start_move', rod_info[2])
+        # Stomping switches
+        rodstomp_match = rodstomp_regex.match(alias)
+        if rodstomp_match and not state: # High is idle, active-low is the way we roll (mainly because the ATMega has internal pull-ups)
+            coords = (int(rodstomp_match.group(1)), int(rodstomp_match.group(2)))
+            rod_busname = "fi.hacklab.reactorsimulator.engine.reactor.rod.x%d.y%d" % coords
+            rod_path = "/fi/hacklab/reactorsimulator/engine/reactor/rod/%d/%d" % coords
+            return self.call_cached(rod_busname, rod_path, 'stomp')
 
     def call_cached(self, busname, buspath, method, *args):
+        """Maintains a cache of DBUS proxy objects and calls the given objects method. If the proxy object is stale tries to refresh"""
         obj_cache_key = "%s@%s" % (busname, buspath)
         method_cache_key = "%s::%s" % (obj_cache_key, method)
         if not self.dbus_cache.has_key(obj_cache_key):
@@ -141,6 +126,7 @@ class middleware(service.baseclass):
     def depth_report(self, x, y, depth, *args):
         # Right now skip this
         return
+
         try:
             mapped = self.rod_servo_map[int(x)][int(y)]
         except KeyError:
@@ -165,7 +151,7 @@ class middleware(service.baseclass):
 
         # Can we background this call somehow ?
         self.call_cached('fi.hacklab.ardubus.' + board_name, '/fi/hacklab/ardubus/' + board_name, 'set_servo', dbus.Byte(servo_idx), dbus.Byte(servo_position))
-        # Seems we fats run out of threads...
+        # Seems we fats run out of threads... (also those threads should probably have been .join():ed at some time, if this need arises looks at the multiprocessing module that has threadpools
         #thread.start_new_thread(self.call_cached, ('fi.hacklab.ardubus.' + board_name, '/fi/hacklab/ardubus/' + board_name, 'set_servo', dbus.Byte(servo_idx), dbus.Byte(servo_position)))
 
         self.servo_position_cache[cache_key] = servo_position
@@ -192,34 +178,9 @@ class middleware(service.baseclass):
     def reload(self):
         return self.launcher_instance.reload()
 
-# OLD code for reference
-#    @dbus.service.method('fi.hacklab.reactorsimulator.middleware')
-#    def led_gauge(self, start_led, num_leds, value, map_max):
-#        jbol_idx = 0
-#        # interpolate (TODO: Is numpy fast here ?)
-#        mapped_value = int(np.interp(value, [0,map_max],[0,num_leds*255]))
-#        # and bin to leds
-#        for i in range(num_leds):
-#            #print "i=%d, mapped_value=%d" % (i, mapped_value)
-#            ledno = start_led + 2*(num_leds-1) - 2*i
-#            if mapped_value > 255:
-#                #print "self.set_rod_leds(%d, %d, 255)" % (jbol_idx, ledno)
-#                #self.bus.get_object('fi.hacklab.ardubus.arduino1', '/fi/hacklab/ardubus/arduino1').set_jbol_pwm(dbus.Byte(jbol_idx), dbus.Byte(ledno), dbus.Byte(255))
-#                self.call_cached('fi.hacklab.ardubus.arduino1', '/fi/hacklab/ardubus/arduino1', 'set_jbol_pwm', dbus.Byte(jbol_idx), dbus.Byte(ledno), dbus.Byte(255))
-#                mapped_value -= 255
-#                continue
-#            if mapped_value < 0:
-#                #print "self.set_rod_leds(%d, %d, 0)" % (jbol_idx, ledno)
-#                #self.bus.get_object('fi.hacklab.ardubus.arduino1', '/fi/hacklab/ardubus/arduino1').set_jbol_pwm(dbus.Byte(jbol_idx), dbus.Byte(ledno), dbus.Byte(0))
-#                self.call_cached('fi.hacklab.ardubus.arduino1', '/fi/hacklab/ardubus/arduino1', 'set_jbol_pwm', dbus.Byte(jbol_idx), dbus.Byte(ledno), dbus.Byte(0))
-#                continue
-#            #print "self.set_rod_leds(%d, %d, %d)" % (jbol_idx, ledno, mapped_value)
-#            #self.bus.get_object('fi.hacklab.ardubus.arduino1', '/fi/hacklab/ardubus/arduino1').set_jbol_pwm(dbus.Byte(jbol_idx), dbus.Byte(ledno), dbus.Byte(mapped_value))
-#            self.call_cached('fi.hacklab.ardubus.arduino1', '/fi/hacklab/ardubus/arduino1', 'set_jbol_pwm', dbus.Byte(jbol_idx), dbus.Byte(ledno), dbus.Byte(mapped_value))
-#            mapped_value -= 255
-
     @dbus.service.method('fi.hacklab.reactorsimulator.middleware')
     def led_gauge(self, gauge_id, value, map_max):
+        """Renders a value mapped from 0 to map_max into led gauge of N leds (see config)"""
         gauge_config = self.config['led_gauge_map'][gauge_id]
         num_leds = len(gauge_config['leds'])
         board_busname = 'fi.hacklab.ardubus.' + gauge_config['board']
@@ -239,35 +200,10 @@ class middleware(service.baseclass):
             self.call_cached(board_busname, board_path, 'set_jbol_pwm', dbus.Byte(jbol_idx), dbus.Byte(ledno), dbus.Byte(mapped_value))
             mapped_value -= 255
 
-    def red_alert(self, *args):
-        if self.red_alert_active:
-            return
-        self.red_alert_active = True
-        # TODO: make these configurable
-        self.nm.play_sample('alarm.wav')
-
-    def red_alert_reset(self, *args):
-        self.red_alert_active = False
-        # TODO: if the alert is loop remove it
-
-    def blowout(self, *args):
-        # TODO: make these configurable
-        self.nm.play_sample('steam_release.wav')
-
-
-    def load_nm(self):
-        self.nm = self.bus.get_object('fi.hacklab.noisemaker', '/fi/hacklab/noisemaker')
-
     def neutron_report(self, x, y, neutrons, *args):
+        """Maintains the highest seen (average across the well) neutron flux and passes that and the current (average across the well) level to the led gauges"""
         x = int(x)
         y = int(y)
-        if self.rod_servo_map[x][y] <> None:
-            # This is an actual rod (the measurement wells have "None" here
-            return
-        if gauges8leds_map[x][y] == '*':
-            print "somehow %d,%d was passed in as a well" % (x,y)
-            return
-
         neutron_avg = float(sum(neutrons))/float(len(neutrons))
         #print "neutron_report: neutron_avg=%f" % neutron_avg
         if neutron_avg > self.max_neutron_avg:
@@ -276,17 +212,33 @@ class middleware(service.baseclass):
         self.led_gauge("well_%d_%d_neutrons" % (x,y), neutron_avg, self.max_neutron_avg)
 
     def temp_report(self, x, y, temps, *args):
+        """Calculates the average temp of the well and passes that to the corresponding led-gauge, max level comes from config"""
         x = int(x)
         y = int(y)
-        if self.rod_servo_map[x][y] <> None:
-            # This is an actual rod (the measurement wells have "None" here
-            return
-        if gauges8leds_map[x][y] == '*':
-            print "somehow %d,%d was passed in as a well" % (x,y)
-            return
         #print "temperatures for %d,%d,%s" % (x,y,temps)
         temp_avg = float(sum(temps))/float(len(temps))
         self.led_gauge("well_%d_%d_temp" % (x,y), temp_avg, self.config['temp_gauge']['max_temp'])
+
+    def red_alert(self, *args):
+        if self.red_alert_active:
+            return
+        self.red_alert_active = True
+        # TODO: make these configurable
+        # TODO: switch to call_cached
+        self.nm.play_sample('alarm.wav')
+
+    def red_alert_reset(self, *args):
+        self.red_alert_active = False
+        # TODO: if the alert is loop remove it (and use call_cached)
+
+    def blowout(self, *args):
+        # TODO: make these configurable
+        # TODO: switch to call_cached
+        self.nm.play_sample('steam_release.wav')
+
+    def load_nm(self):
+        # TODO: switch to call_cached and remove this whole method
+        self.nm = self.bus.get_object('fi.hacklab.noisemaker', '/fi/hacklab/noisemaker')
 
 
 
