@@ -13,3 +13,6 @@
 [submodule "software/arDuBUS/sketch/libraries/I2C"]
 	path = software/arDuBUS/sketch/libraries/I2C
 	url = git://github.com/rambo/I2C.git
+[submodule "software/arDuBUS/sketch/libraries/pca9535"]
+	path = software/arDuBUS/sketch/libraries/pca9535
+	url = git://github.com/rambo/pca9535.git
