@@ -12,6 +12,76 @@ aliases_test_board:
         - pin: 6
         - pin: 7
     pca9535_inputs: [  5, 6, 7, 8, 9, 10 ] # defined just to test the normalizing
+reactor_lid:
+    digital_in_pins: # Rod stomp inputs (used as digital inputs)
+        - pin: 22
+          alias: pin_22
+        - pin: 23
+          alias: pin_23
+        - pin: 24
+          alias: pin_24
+        - pin: 25
+          alias: pin_25
+        - pin: 26
+          alias: pin_26
+        - pin: 27
+          alias: pin_27
+        - pin: 28
+          alias: pin_28
+        - pin: 29
+          alias: pin_29
+        - pin: 30
+          alias: pin_30
+        - pin: 31
+          alias: pin_31
+        - pin: 32
+          alias: pin_32
+        - pin: 33
+          alias: pin_33
+        - pin: 34
+          alias: pin_34
+        - pin: 35
+          alias: pin_35
+        - pin: 36
+          alias: pin_36
+        - pin: 37
+          alias: pin_37
+        - pin: 38
+          alias: pin_38
+        - pin: 39
+          alias: pin_39
+        - pin: 40
+          alias: pin_40
+        - pin: 41
+          alias: pin_41
+        - pin: 42
+          alias: pin_42
+        - pin: 43
+          alias: pin_43
+        - pin: 44
+          alias: pin_44
+        - pin: 45
+          alias: pin_45
+        - pin: 46
+          alias: pin_46
+        - pin: 47
+          alias: pin_47
+        - pin: 48
+          alias: pin_48
+        - pin: 49
+          alias: pin_49
+        - pin: 50
+          alias: pin_50
+        - pin: 51
+          alias: pin_51
+        - pin: 52
+          alias: pin_52
+        - pin: A15
+          alias: pin_A15
+        - pin: A14
+          alias: pin_A14
+    pwm_out_pins:
+        - [ 13, 12, 11, 10, 9 ] # Controls for smoke machine and 4 fans
 rod_control_panel: # The board identifier
     pca9635RGBJBOL_boards: [ 0, 1 ] # Board addresses (aka ARDUBUS_PCA9635RGBJBOL_BOARDS)
     pca9635RGBJBOL_maps:
