@@ -25,9 +25,6 @@ class middleware(service.baseclass):
         super(middleware, self).__init__(config, launcher_instance, **kwargs)
         self.config_reloaded()
 
-        # Will be removed, see method for details
-        self.load_nm()
-
         # Just about all signals we expect to get from the Arduinos will come in as aliased signals since those are so much more easier to map.
         self.bus.add_signal_receiver(self.aliased_signal_received, dbus_interface = "fi.hacklab.ardubus", signal_name = "alias_change")
         self.bus.add_signal_receiver(self.aliased_report_received, dbus_interface = "fi.hacklab.ardubus", signal_name = "alias_report")
@@ -235,8 +232,7 @@ class middleware(service.baseclass):
             return
         self.red_alert_active = True
         # TODO: make these configurable
-        # TODO: switch to call_cached
-        self.nm.play_sample('alarm.wav')
+        self.call_cached('fi.hacklab.noisemaker', '/fi/hacklab/noisemaker', 'play_sample', 'alarm.wav')
 
     def red_alert_reset(self, *args):
         self.red_alert_active = False
@@ -244,12 +240,5 @@ class middleware(service.baseclass):
 
     def blowout(self, *args):
         # TODO: make these configurable
-        # TODO: switch to call_cached
-        self.nm.play_sample('steam_release.wav')
-
-    def load_nm(self):
-        # TODO: switch to call_cached and remove this whole method
-        self.nm = self.bus.get_object('fi.hacklab.noisemaker', '/fi/hacklab/noisemaker')
-
-
+        self.call_cached('fi.hacklab.noisemaker', '/fi/hacklab/noisemaker', 'play_sample', 'steam_release.wav')
 
