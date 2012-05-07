@@ -4,3 +4,15 @@
 [submodule "software/arDuBUS/sketch/libraries/pca9535"]
 	path = software/arDuBUS/sketch/libraries/pca9535
 	url = git://github.com/rambo/pca9535.git
+[submodule "software/arDuBUS/sketch/libraries/i2c_device"]
+	path = software/arDuBUS/sketch/libraries/i2c_device
+	url = git://github.com/rambo/i2c_device.git
+[submodule "software/arDuBUS/sketch/libraries/pca9635"]
+	path = software/arDuBUS/sketch/libraries/pca9635
+	url = git://github.com/rambo/pca9635.git
+[submodule "software/arDuBUS/sketch/libraries/pca9635RGB"]
+	path = software/arDuBUS/sketch/libraries/pca9635RGB
+	url = git://github.com/rambo/pca9635RGB.git
+[submodule "software/arDuBUS/sketch/libraries/pca9635RGBJBOL"]
+	path = software/arDuBUS/sketch/libraries/pca9635RGBJBOL
+	url = git://github.com/rambo/pca9635RGBJBOL.git
