@@ -15,89 +15,91 @@ aliases_test_board:
 reactor_lid:
     digital_in_pins: # Rod stomp inputs (used as digital inputs)
         - pin: 22
-          alias: pin_22
+          alias: stomp_4_3
         - pin: 23
-          alias: pin_23
+          alias: stomp_2_1
         - pin: 24
-          alias: pin_24
+          alias: stomp_3_3
         - pin: 25
           alias: pin_25
         - pin: 26
-          alias: pin_26
+          alias: stomp_5_3
         - pin: 27
-          alias: pin_27
+          alias: stomp_3_2
         - pin: 28
-          alias: pin_28
+          alias: stomp_3_0
         - pin: 29
           alias: pin_29
         - pin: 30
-          alias: pin_30
+          alias: stomp_2_2
         - pin: 31
-          alias: pin_31
+          alias: stomp_3_5
         - pin: 32
-          alias: pin_32
+          alias: stomp_2_4
         - pin: 33
           alias: pin_33
         - pin: 34
-          alias: pin_34
+          alias: stomp_6_2
         - pin: 35
           alias: pin_35
         - pin: 36
-          alias: pin_36
+          alias: stomp_2_0
         - pin: 37
           alias: pin_37
         - pin: 38
-          alias: pin_38
+          alias: stomp_3_1
         - pin: 39
           alias: pin_39
         - pin: 40
-          alias: pin_40
+          alias: stomp_1_3
         - pin: 41
           alias: pin_41
         - pin: 42
-          alias: pin_42
+          alias: stomp_4_2
         - pin: 43
           alias: pin_43
         - pin: 44
-          alias: pin_44
+          alias: stomp_5_1
         - pin: 45
-          alias: pin_45
+          alias: stomp_2_3
         - pin: 46
-          alias: pin_46
+          alias: stomp_5_2
         - pin: 47
           alias: pin_47
         - pin: 48
-          alias: pin_48
+          alias: stomp_3_4
         - pin: 49
-          alias: pin_49
+          alias: stomp_3_6
         - pin: 50
-          alias: pin_50
+          alias: stomp_4_0
         - pin: 51
           alias: pin_51
         - pin: 52
-          alias: pin_52
+          alias: stomp_4_4
         - pin: A15
-          alias: pin_A15
+          alias: stomp_0_2
         - pin: A14
-          alias: pin_A14
+          alias: stomp_1_1
         - pin: A13
-          alias: pin_A13
+          alias: stomp_1_4
         - pin: A12
-          alias: pin_A12
+          alias: stomp_6_4
         - pin: A11
-          alias: pin_A11
+          alias: stomp_0_3
         - pin: A10
-          alias: pin_A10
+          alias: stomp_4_6
         - pin: A9
-          alias: pin_A9
+          alias: stomp_0_4
         - pin: A8
-          alias: pin_A8
+          alias: stomp_1_5
         - pin: A7
-          alias: pin_A7
+          alias: stomp_5_5
         - pin: A6
-          alias: pin_A6
+          alias: stomp_4_5
         - pin: A5
-          alias: pin_A5
+          alias: stomp_6_3
+        - pin: A4
+          alias: pin_A4
     digital_pwmout_pins: [ 13, 12, 11, 10, 9 ] # Controls for smoke machine and 4 fans
 rod_control_panel: # The board identifier
     pca9635RGBJBOL_boards: [ 0, 1 ] # Board addresses (aka ARDUBUS_PCA9635RGBJBOL_BOARDS)
