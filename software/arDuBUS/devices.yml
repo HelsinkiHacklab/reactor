@@ -53,7 +53,7 @@ reactor_lid:
         - pin: 40
           alias: stomp_1_3
         - pin: 41
-          alias: pin_41
+          alias: stomp_2_6
         - pin: 42
           alias: stomp_4_2
         - pin: 43
