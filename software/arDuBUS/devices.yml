@@ -80,6 +80,24 @@ reactor_lid:
           alias: pin_A15
         - pin: A14
           alias: pin_A14
+        - pin: A13
+          alias: pin_A13
+        - pin: A12
+          alias: pin_A12
+        - pin: A11
+          alias: pin_A11
+        - pin: A10
+          alias: pin_A10
+        - pin: A9
+          alias: pin_A9
+        - pin: A8
+          alias: pin_A8
+        - pin: A7
+          alias: pin_A7
+        - pin: A6
+          alias: pin_A6
+        - pin: A5
+          alias: pin_A5
     digital_pwmout_pins: [ 13, 12, 11, 10, 9 ] # Controls for smoke machine and 4 fans
 rod_control_panel: # The board identifier
     pca9635RGBJBOL_boards: [ 0, 1 ] # Board addresses (aka ARDUBUS_PCA9635RGBJBOL_BOARDS)
