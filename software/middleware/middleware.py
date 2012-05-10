@@ -357,10 +357,15 @@ class middleware(service.baseclass):
 
     def red_alert_reset(self, *args):
         self.red_alert_active = False
-        # TODO: if the alert is loop remove it (and use call_cached)
         self.nm('stop_sequence', 'red_alert0')
 
     def blowout(self, *args):
+        # TODO: make these configurable
+        self.play_sample('steam_release.wav')
+
+        # Give pending signals some time to arrive
+        time.sleep(0.5)
+
         # Cancel the other alarms
         self.nm('stop_sequence', 'cell_melt_alarm0')
         self.nm('stop_sequence', 'red_alert0')
@@ -369,8 +374,6 @@ class middleware(service.baseclass):
         self.reset_led_gauges()
         self.reset_topleds()
 
-        # TODO: make these configurable
-        return self.play_sample('steam_release.wav')
 
     def play_sample(self, sample_name):
         """Simple sample player via noisemaker"""
