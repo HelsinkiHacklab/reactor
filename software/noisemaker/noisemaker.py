@@ -57,14 +57,20 @@ class noisemaker(service.baseclass):
     def start_sequence(self, sequence_name, loop_id):
         """Will play the configured start sample of sequnce and then start looping the loop, caller must provide also the identifier that will be used for stopping the sequence"""
         sequence = self.config['sequences'][sequence_name]
+        if self.active_loops.has_key(loop_id):
+            # loop already active
+            return False
         self.active_loops[loop_id] = noisemaker_sequence(sequence, self, loop_id)
-        self.active_loops[loop_id].start()
+        return self.active_loops[loop_id].start()
 
     @dbus.service.method('fi.hacklab.noisemaker', in_signature='s')
     def stop_sequence(self, loop_id):
         """Will stop playing the loop identified with loop_id and then play the end sample of the corresponding sequence"""
+        if not self.active_loops.has_key(loop_id):
+            # loop no longer active
+            return True
         self.active_loops[loop_id].stop_at_next()
-        # Note that the sequence object will handle unloading since it can finish the loop by itself as well
+        # Note that the sequence object will handle unloading from active_loops since it can finish the loop by itself as well
 
     @dbus.service.method('fi.hacklab.noisemaker')
     def list_loops(self):

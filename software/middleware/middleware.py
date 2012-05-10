@@ -76,7 +76,7 @@ class middleware(service.baseclass):
                 self.rod_servo_map[rodx][rody] = (servo_idx, board)
 
 
-    def simulation_reset(self):
+    def simulation_reset(self, sender):
         """Simulation has been reset, reset our state too"""
         # Remove all active loops
         loops = self.nm('list_loops')
@@ -120,8 +120,8 @@ class middleware(service.baseclass):
 
     def aliased_report_received(self, alias, state, time, sender):
         """If we seem to have missed a state change signal trigger one based on the report (better late than never...)"""
-        if (   not self.self.alias_state_cache.has_key(alias)
-            or self.self.alias_state_cache[alias] != state):
+        if (   not self.alias_state_cache.has_key(alias)
+            or self.alias_state_cache[alias] != state):
             return self.aliased_signal_received(alias, state, sender)
         return
 
