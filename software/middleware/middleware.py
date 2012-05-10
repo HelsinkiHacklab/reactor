@@ -86,6 +86,9 @@ class middleware(service.baseclass):
                 self.nm('stop_sequence', loop_instance_name)
 
         # TODO reset warning leds
+        for ledid in blink_states.keys():
+            self.stop_blink(ledid)
+        
 
         # Reset all simulation related state variables
         self.active_melt_warnings = {}
@@ -99,7 +102,8 @@ class middleware(service.baseclass):
             # No alarms left, remove the loop
             self.nm('stop_sequence', 'cell_melt_alarm0')
 
-        # TODO: Remove blink-effect from the led corresponding to the rod
+        ledid = "rod_%d_%d" % (x,y)
+        self.stop_blink(ledid)
 
     @dbus.service.method('fi.hacklab.reactorsimulator.middleware')
     def start_blink(self, ledid, interval=250, maxpwm=255):
@@ -148,7 +152,8 @@ class middleware(service.baseclass):
             self.nm('start_sequence', 'cell_melt_alarm', 'cell_melt_alarm0') # The latter is the loop instance identifier
              
         self.active_melt_warnings[sender] = True
-        # TODO: Activate led effects
+        ledid = "rod_%d_%d" % (x,y)
+        self.start_blink(ledid)
         pass
 
     def cell_melted(self, x, y, z, sender):
