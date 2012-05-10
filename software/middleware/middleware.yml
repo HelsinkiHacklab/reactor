@@ -1,5 +1,7 @@
 temp_gauge:
     max_temp: 950
+neutron_gauge:
+    max_avgflux: 3.5
 led_gauge_map: #keys are well coordinates, values define the led locations
     well_1_2_neutrons:
         board: rod_control_panel
