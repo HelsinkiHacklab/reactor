@@ -63,8 +63,6 @@ class middleware(service.baseclass):
             well_path = "/fi/hacklab/reactorsimulator/engine/reactor/mwell/%d/%d" % coords
             self.bus.add_signal_receiver(self.neutron_report, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_neutrons", path=well_path)
             self.bus.add_signal_receiver(self.temp_report, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_temp", path=well_path)
-        # This is used for autoranging the neutron flux meters
-        self.max_neutron_avg = 0.0
 
     def config_reloaded(self):
         # Transpose the rod servo map to something more usable
@@ -267,10 +265,10 @@ class middleware(service.baseclass):
         y = int(y)
         neutron_avg = float(sum(neutrons))/float(len(neutrons))
         #print "neutron_report: neutron_avg=%f" % neutron_avg
-        if neutron_avg > self.max_neutron_avg:
-            self.max_neutron_avg = neutron_avg
-            print "neutron_report: self.max_neutron_avg updated to %f" % self.max_neutron_avg 
-        self.led_gauge("well_%d_%d_neutrons" % (x,y), neutron_avg, self.max_neutron_avg)
+#        if neutron_avg > self.max_neutron_avg:
+#            self.max_neutron_avg = neutron_avg
+#            print "neutron_report: self.max_neutron_avg updated to %f" % self.max_neutron_avg 
+        self.led_gauge("well_%d_%d_neutrons" % (x,y), neutron_avg, self.config['neutron_gauge']['max_avgflux'])
 
     def temp_report(self, x, y, temps, *args):
         """Calculates the average temp of the well and passes that to the corresponding led-gauge, max level comes from config"""
@@ -292,6 +290,8 @@ class middleware(service.baseclass):
         self.nm('stop_sequence', 'red_alert0')
 
     def blowout(self, *args):
+        # Cancel the other alarms
+        self.nm('stop_sequence', 'cell_melt_alarm0')
         self.nm('stop_sequence', 'red_alert0')
         # TODO: make these configurable
         return self.play_sample('steam_release.wav')
