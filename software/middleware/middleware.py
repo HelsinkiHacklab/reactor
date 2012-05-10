@@ -42,6 +42,12 @@ class middleware(service.baseclass):
         self.bus.add_signal_receiver(self.depth_report, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_depth")
 
 
+        # Cell warning signals
+        self.bus.add_signal_receiver(self.cell_melt_warning, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_cell_melt_warning")
+        self.bus.add_signal_receiver(self.cell_melt_warning_reset, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_cell_melt_warning_reset")
+        self.bus.add_signal_receiver(self.cell_melted, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_cell_melted")
+        
+
         # Used to keep track of the cached dbus proxy-objects
         self.dbus_cache = {}
         self.dbus_cache_error_count = {}
@@ -64,6 +70,15 @@ class middleware(service.baseclass):
             for servo_idx in self.config['rod_servo_map'][board].keys():
                 rodx,rody = self.config['rod_servo_map'][board][servo_idx]
                 self.rod_servo_map[rodx][rody] = (servo_idx, board)
+
+    def cell_melt_warning_reset(self, x, y, z, sender):
+        pass
+
+    def cell_melt_warning(self, x, y, z, sender):
+        pass
+
+    def cell_melted(self, x, y, z, sender):
+        pass
 
     def aliased_report_received(self, alias, state, time, sender):
         """If we seem to have missed a state change signal trigger one based on the report (better late than never...)"""

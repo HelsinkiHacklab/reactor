@@ -206,6 +206,18 @@ class rod(dbus.service.Object):
     def check_cell_melt(self):
         """Checks if any cell has melted"""
         for cell_instance in self.cells:
+            # Check if a warning needs to be reset
+            if (    cell_instance.temp < cell_instance.config['cell_melt_warning']
+                and cell_instance.melt_warning_active):
+                self.emit_cell_melt_warning_reset(self.x, self.y, cell_instance.depth, self.object_path)
+
+            # Check if a warning needs to be given (not sent if already past melt)                
+            if (    cell_instance.temp >= cell_instance.config['cell_melt_warning']
+                and cell_instance.temp < cell_instance.config['cell_melt_temp']):
+                self.emit_cell_melt_warning(self.x, self.y, cell_instance.depth, self.object_path)
+                continue
+
+            # Not melting, no need to emit signals or do weird things
             if cell_instance.temp < cell_instance.config['cell_melt_temp']:
                 continue
             self.emit_cell_melted(self.x, self.y, cell_instance.depth, self.object_path)
@@ -214,8 +226,26 @@ class rod(dbus.service.Object):
         return
 
     @dbus.service.signal('fi.hacklab.reactorsimulator.engine')
+    def emit_cell_melt_warning_reset(self, x, y, z, sender):
+        """Resets a warning on a cell"""
+        if not self.cells[z].melt_warning_active:
+            return
+        self.cells[z].melt_warning_active =  False
+        print "Cell %d,%d,%d no longer faces imminent desctruction" % (x,y,z)
+        pass
+
+    @dbus.service.signal('fi.hacklab.reactorsimulator.engine')
+    def emit_cell_melt_warning(self, x, y, z, sender):
+        """Emitted when a cell in a rod is about to melt, emitted only once per activation"""
+        if self.cells[z].melt_warning_active:
+            return
+        self.cells[z].melt_warning_active =  True
+        print "Cell %d,%d,%d will soon melt!" % (x,y,z)
+        pass
+
+    @dbus.service.signal('fi.hacklab.reactorsimulator.engine')
     def emit_cell_melted(self, x, y, z, sender):
-        """Emitted when a cell in a rod melts"""
+        """Emitted when a cell in a rod melts, emitted only once per cell"""
         if self.cells[z].melted:
             return
         self.cells[z].melted =  True
