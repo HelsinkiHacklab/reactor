@@ -10,39 +10,39 @@ top_led_map:
         rod_0_3: 1
         rod_0_4: 2
         rod_1_1: 3
-        well_1_2: -1
-        rod_1_3: 4
-        rod_1_4: 5
-        rod_1_5: 6
-        rod_2_0: 7
-        rod_2_1: 8
-        rod_2_2: 9
-        rod_2_3: 10
-        rod_2_4: 11
-        well_2_5: -1
-        rod_2_6: 12
-        rod_3_0: 13
-        rod_3_1: 14
-        rod_3_2: 15
-        rod_3_3: 16
-        rod_3_4: 17
-        rod_3_5: 18
-        rod_3_6: 19
-        rod_4_0: 20
-        rod_4_1: 21
-        well_4_1: -1
-        rod_4_3: 22
-        rod_4_4: 23
-        rod_4_5: 24
-        rod_4_6: 25
-        rod_5_1: 26
-        rod_5_2: 27
-        rod_5_3: 28
-        well_5_4: -1
-        rod_5_5: 29
-        rod_6_2: 30
-        rod_6_3: 31
-        rod_6_4: 32
+        well_1_2: 4
+        rod_1_3: 5
+        rod_1_4: 6
+        rod_1_5: 7
+        rod_2_0: 8
+        rod_2_1: 9
+        rod_2_2: 10
+        rod_2_3: 11
+        rod_2_4: 12
+        well_2_5: 13
+        rod_2_6: 14
+        rod_3_0: 15
+        rod_3_1: 16
+        rod_3_2: 17
+        rod_3_3: 18
+        rod_3_4: 19
+        rod_3_5: 20
+        rod_3_6: 21
+        rod_4_0: 22
+        rod_4_1: 23
+        well_4_1: 24
+        rod_4_3: 25
+        rod_4_4: 26
+        rod_4_5: 27
+        rod_4_6: 28
+        rod_5_1: 29
+        rod_5_2: 30
+        rod_5_3: 31
+        well_5_4: 32
+        rod_5_5: 33
+        rod_6_2: 34
+        rod_6_3: 35
+        rod_6_4: 36
 led_gauge_map: #keys are well coordinates, values define the led locations
     well_1_2_neutrons:
         board: rod_control_panel
