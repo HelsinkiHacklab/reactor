@@ -11,3 +11,9 @@ sequences:
     startend_only:
         start: 'extrapora.wav'
         end: 'steam_release.wav'
+    general_alarm:
+        loop: 'general_alarm_single.wav'
+    cell_melt_alarm:
+        loop: 'general_alarm_single.wav'
+    red_alert:
+        loop: 'klaxon_single.wav'

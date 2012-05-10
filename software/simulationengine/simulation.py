@@ -69,6 +69,13 @@ class simulation(service.baseclass):
         self.reactor.load_layout(reactor.default_layout, reactor.default_depth)
         self.tick_count = 0
         self.last_tick_time = 0
+        
+        # Finally emit the reset signal
+        self.emit_simulation_reset(self.dbus_object_path)
+
+    @dbus.service.signal('fi.hacklab.reactorsimulator.engine')
+    def emit_simulation_reset(self, sender):
+        pass
 
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def pause(self):

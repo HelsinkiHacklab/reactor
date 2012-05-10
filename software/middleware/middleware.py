@@ -25,6 +25,9 @@ class middleware(service.baseclass):
         super(middleware, self).__init__(config, launcher_instance, **kwargs)
         self.config_reloaded()
 
+        # Simulation reset
+        self.bus.add_signal_receiver(self.simulation_reset, dbus_interface = "fi.hacklab.reactorsimulator.engine", signal_name = "emit_simulation_reset")
+
         # Just about all signals we expect to get from the Arduinos will come in as aliased signals since those are so much more easier to map.
         self.bus.add_signal_receiver(self.aliased_signal_received, dbus_interface = "fi.hacklab.ardubus", signal_name = "alias_change")
         self.bus.add_signal_receiver(self.aliased_report_received, dbus_interface = "fi.hacklab.ardubus", signal_name = "alias_report")
@@ -46,6 +49,7 @@ class middleware(service.baseclass):
         self.bus.add_signal_receiver(self.cell_melt_warning, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_cell_melt_warning")
         self.bus.add_signal_receiver(self.cell_melt_warning_reset, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_cell_melt_warning_reset")
         self.bus.add_signal_receiver(self.cell_melted, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_cell_melted")
+        self.active_melt_warnings = {} # keyed by sender (rod)
         
 
         # Used to keep track of the cached dbus proxy-objects
@@ -71,13 +75,47 @@ class middleware(service.baseclass):
                 rodx,rody = self.config['rod_servo_map'][board][servo_idx]
                 self.rod_servo_map[rodx][rody] = (servo_idx, board)
 
+
+    def simulation_reset(self):
+        """Simulation has been reset, reset our state too"""
+        # Remove all active loops
+        loops = self.nm('list_loops')
+        if loops:
+            for loop_instance_name in loops:
+                self.nm('stop_sequence', loop_instance_name)
+
+        # TODO reset warning leds
+
+        # Reset all simulation related state variables
+        self.active_melt_warnings = {}
+        self.red_alert_active = False
+
     def cell_melt_warning_reset(self, x, y, z, sender):
-        pass
+        if not self.active_melt_warnings.has_key(sender):
+            return
+        del(self.active_melt_warnings[sender])
+        if len(self.active_melt_warnings) == 0:
+            # No alarms left, remove the loop
+            self.nm('stop_sequence', 'cell_melt_alarm0')
+
+        # TODO: Remove blink-effect from the led corresponding to the rod
+
 
     def cell_melt_warning(self, x, y, z, sender):
+        if len(self.active_melt_warnings) == 0:
+            # First cell melt warning, activate the loop
+            self.nm('start_sequence', 'cell_melt_alarm', 'cell_melt_alarm0') # The latter is the loop instance identifier
+             
+        self.active_melt_warnings[sender] = True
+        # TODO: Activate led effects
         pass
 
     def cell_melted(self, x, y, z, sender):
+        if self.active_melt_warnings.has_key(sender):
+            # First reset the warning
+            self.cell_melt_warning_reset(x, y, z, sender)
+
+        # Then go on to do whatever we do when a cell melts
         pass
 
     def aliased_report_received(self, alias, state, time, sender):
@@ -246,14 +284,22 @@ class middleware(service.baseclass):
         if self.red_alert_active:
             return
         self.red_alert_active = True
-        # TODO: make these configurable
-        self.call_cached('fi.hacklab.noisemaker', '/fi/hacklab/noisemaker', 'play_sample', 'alarm.wav')
+        self.nm('start_sequence', 'red_alert', 'red_alert0') # The latter is the loop instance identifier
 
     def red_alert_reset(self, *args):
         self.red_alert_active = False
         # TODO: if the alert is loop remove it (and use call_cached)
+        self.nm('stop_sequence', 'red_alert0')
 
     def blowout(self, *args):
+        self.nm('stop_sequence', 'red_alert0')
         # TODO: make these configurable
-        self.call_cached('fi.hacklab.noisemaker', '/fi/hacklab/noisemaker', 'play_sample', 'steam_release.wav')
+        return self.play_sample('steam_release.wav')
 
+    def play_sample(self, sample_name):
+        """Simple sample player via noisemaker"""
+        return self.call_cached('fi.hacklab.noisemaker', '/fi/hacklab/noisemaker', 'play_sample', sample_name)
+
+    def nm(self, method, *args):
+        """Passthrough to noisemaker via call_cached"""
+        return self.call_cached('fi.hacklab.noisemaker', '/fi/hacklab/noisemaker', method, *args)
