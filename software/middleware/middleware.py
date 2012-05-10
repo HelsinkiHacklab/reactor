@@ -107,9 +107,10 @@ class middleware(service.baseclass):
 
     @dbus.service.method('fi.hacklab.reactorsimulator.middleware')
     def start_blink(self, ledid, interval=250, maxpwm=255):
+        if self.blink_states.has_key(ledid):
+            return False
         self.blink_states[ledid] = { 'laststate': False, 'maxpwm': maxpwm, 'loop': True }
         gobject.timeout_add(interval, self.blink_loop, ledid)
-        pass
 
     @dbus.service.method('fi.hacklab.reactorsimulator.middleware')
     def stop_blink(self, ledid):
