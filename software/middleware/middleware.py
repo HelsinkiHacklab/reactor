@@ -90,6 +90,9 @@ class middleware(service.baseclass):
         for ledid in self.blink_states.keys():
             self.stop_blink(ledid)
 
+        self.reset_led_gauges()
+        self.reset_topleds()
+
         # Reset all simulation related state variables
         self.active_melt_warnings = {}
         self.red_alert_active = False
@@ -285,6 +288,20 @@ class middleware(service.baseclass):
     @dbus.service.method('fi.hacklab.reactorsimulator.middleware')
     def reload(self):
         return self.launcher_instance.reload()
+
+    @dbus.service.method('fi.hacklab.reactorsimulator.middleware')
+    def reset_topleds(self):
+        led_config = self.config['top_led_map']
+        board_busname = 'fi.hacklab.ardubus.' + led_config['board']
+        board_path = '/fi/hacklab/ardubus/' + led_config['board']
+        jbol_idx = led_config['jbol_idx']
+        for ledno in led_config['led_ids'].values():
+            self.call_cached(board_busname, board_path, 'set_jbol_pwm', dbus.Byte(jbol_idx), dbus.Byte(ledno), dbus.Byte(0))
+
+    @dbus.service.method('fi.hacklab.reactorsimulator.middleware')
+    def reset_led_gauges(self):
+        for gauge_id in self.config['led_gauge_map'].keys():
+            self.led_gauge(gauge_id, 0, len(self.config['led_gauge_map'][gauge_id]))
 
     @dbus.service.method('fi.hacklab.reactorsimulator.middleware')
     def led_gauge(self, gauge_id, value, map_max):
