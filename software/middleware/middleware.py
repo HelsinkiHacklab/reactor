@@ -64,6 +64,9 @@ class middleware(service.baseclass):
             self.bus.add_signal_receiver(self.neutron_report, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_neutrons", path=well_path)
             self.bus.add_signal_receiver(self.temp_report, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_temp", path=well_path)
 
+        self.blink_states = {} 
+
+
     def config_reloaded(self):
         # Transpose the rod servo map to something more usable
         self.servo_position_cache = {}
@@ -97,6 +100,46 @@ class middleware(service.baseclass):
             self.nm('stop_sequence', 'cell_melt_alarm0')
 
         # TODO: Remove blink-effect from the led corresponding to the rod
+
+    @dbus.service.method('fi.hacklab.reactorsimulator.middleware')
+    def start_blink(self, ledid, interval=750, maxpwm=255):
+        self.blink_states[ledid] = { 'laststate': False, 'maxpwm': maxpwm, 'loop': True }
+        gobject.timeout_add(interval, self.blink_loop, ledid)
+        pass
+
+    @dbus.service.method('fi.hacklab.reactorsimulator.middleware')
+    def stop_blink(self, ledid):
+        if not self.blink_states.has_key(ledid):
+            return False
+        # Rig the blinking to stop at next loop iteration
+        self.blink_states[ledid]['laststate'] = True
+        self.blink_states[ledid]['loop'] = False
+        return True
+
+    def blink_loop(self, ledid):
+        if not self.blink_states.has_key(ledid):
+            return False
+        if self.blink_states[ledid]['laststate']:
+            pwm = 0
+            self.blink_states[ledid]['laststate'] = False
+        else:
+            pwm = self.blink_states[ledid]['maxpwm']
+            self.blink_states[ledid]['laststate'] = True
+
+        led_config = self.config['top_led_map']
+        board_busname = 'fi.hacklab.ardubus.' + led_config['board']
+        board_path = '/fi/hacklab/ardubus/' + led_config['board']
+        jbol_idx = led_config['jbol_idx']
+        ledno = led_config['led_ids'][ledid]
+
+        self.call_cached(board_busname, board_path, 'set_jbol_pwm', dbus.Byte(jbol_idx), dbus.Byte(ledno), dbus.Byte(pwm))
+        
+        # Must return true to keep the timer ticking
+        if self.blink_states[ledid]['loop']:
+            return True
+        else:
+            del(self.blink_states[ledid])
+            return False
 
 
     def cell_melt_warning(self, x, y, z, sender):
