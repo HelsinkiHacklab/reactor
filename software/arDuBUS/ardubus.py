@@ -199,6 +199,11 @@ class ardubus(service.baseclass):
         #print "SIGNALLING: Analog-pin(index) %d has been %d for %dms on %s" % (p_index, value, time, sender)
         pass
 
+    @dbus.service.method('fi.hacklab.ardubus')
+    def reset(self):
+        self.serial_port.setDTR(False) # Reset the arduino by driving DTR for a moment (RS323 signals are active-low)
+        time.sleep(0.050)
+        self.serial_port.setDTR(True)
 
     def initialize_serial(self):
         import threading, serial

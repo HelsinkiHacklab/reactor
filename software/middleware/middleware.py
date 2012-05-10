@@ -79,6 +79,7 @@ class middleware(service.baseclass):
 
     def simulation_reset(self, sender):
         """Simulation has been reset, reset our state too"""
+        print "Simulation reset!"
         # Remove all active loops
         loops = self.nm('list_loops')
         if loops:
@@ -86,9 +87,8 @@ class middleware(service.baseclass):
                 self.nm('stop_sequence', loop_instance_name)
 
         # TODO reset warning leds
-        for ledid in blink_states.keys():
+        for ledid in self.blink_states.keys():
             self.stop_blink(ledid)
-        
 
         # Reset all simulation related state variables
         self.active_melt_warnings = {}
