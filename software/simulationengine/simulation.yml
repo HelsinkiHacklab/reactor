@@ -28,5 +28,6 @@ cell:
     decay_p: 0.5 # P of causing neutron_hit when decay is called
     cell_melt_temp: 1100
     cell_melt_warning: 950 # If cell temp is higher than this emit a warning signal.
+    cell_melt_warning_reset: 900 # reset the cell temp warning below this temp
     
 

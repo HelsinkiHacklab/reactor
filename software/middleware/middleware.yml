@@ -1,5 +1,5 @@
 temp_gauge:
-    max_temp: 950
+    max_temp: 1050
 neutron_gauge:
     max_avgflux: 3.5
 top_led_map:

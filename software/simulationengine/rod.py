@@ -207,7 +207,7 @@ class rod(dbus.service.Object):
         """Checks if any cell has melted"""
         for cell_instance in self.cells:
             # Check if a warning needs to be reset
-            if (    cell_instance.temp < cell_instance.config['cell_melt_warning']
+            if (    cell_instance.temp < cell_instance.config['cell_melt_warning_reset']
                 and cell_instance.melt_warning_active):
                 self.emit_cell_melt_warning_reset(self.x, self.y, cell_instance.depth, self.object_path)
 

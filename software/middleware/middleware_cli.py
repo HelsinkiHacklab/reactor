@@ -9,4 +9,5 @@ def reset_wells():
         mw.led_gauge("well_%d_%d_temp" % coords, 0, 800)
         mw.led_gauge("well_%d_%d_neutrons" % coords, 0, 800)
 
-reset_wells()
+#reset_wells()
+

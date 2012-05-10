@@ -153,7 +153,12 @@ class reactor_listener(threading.Thread):
         self.bus.add_signal_receiver(self.redalert_reset_report, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_redalert_reset")
         self.bus.add_signal_receiver(self.cell_melted_report, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_cell_melted")
 
+        self.bus.add_signal_receiver(self.simulation_reset, dbus_interface = "fi.hacklab.reactorsimulator.engine", signal_name = "emit_simulation_reset")
+
         # TODO: Listen to DBUS quit and restart signals
+
+    def simulation_reset(self, *args):
+        self.reset_state()
 
     def reset_state(self, *args):
         """ Initializes or resets the visualized simulation state. Should be called when simulation is restarted. """

@@ -83,13 +83,15 @@ class middleware(service.baseclass):
         # Remove all active loops
         loops = self.nm('list_loops')
         if loops:
-            for loop_instance_name in loops:
+            for loop_instance_data in loops:
+                loop_instance_name = loop_instance_data[0]
                 self.nm('stop_sequence', loop_instance_name)
 
         # TODO reset warning leds
         for ledid in self.blink_states.keys():
             self.stop_blink(ledid)
 
+        time.sleep(0.5)
         self.reset_led_gauges()
         self.reset_topleds()
 
@@ -110,10 +112,13 @@ class middleware(service.baseclass):
 
     @dbus.service.method('fi.hacklab.reactorsimulator.middleware')
     def start_blink(self, ledid, interval=250, maxpwm=255):
+        if not self.config['top_led_map'].has_key(ledid):
+            return False
         if self.blink_states.has_key(ledid):
             return False
         self.blink_states[ledid] = { 'laststate': False, 'maxpwm': maxpwm, 'loop': True }
         gobject.timeout_add(interval, self.blink_loop, ledid)
+        return True
 
     @dbus.service.method('fi.hacklab.reactorsimulator.middleware')
     def stop_blink(self, ledid):
@@ -359,6 +364,11 @@ class middleware(service.baseclass):
         # Cancel the other alarms
         self.nm('stop_sequence', 'cell_melt_alarm0')
         self.nm('stop_sequence', 'red_alert0')
+
+        # turn off the leds
+        self.reset_led_gauges()
+        self.reset_topleds()
+
         # TODO: make these configurable
         return self.play_sample('steam_release.wav')
 
