@@ -2,27 +2,35 @@
  * IRF9610 gate (pin 1) connected to OPIN, drain (pin 2) to speaker +, source (pin 3) to +5V (2A supply) and speaker - goes to ground.
  * Generic potentiometer to analog 1
  * analog 0 is floating to be used as random source.
+ *
+
+    ATtiny Pin 2 to Arduino Pin 13 (or SCK of another programmer)
+    ATtiny Pin 1 to Arduino Pin 12 (or MISO of another programmer)
+    ATtiny Pin 0 to Arduino Pin 11 (or MOSI of another programmer)
+    ATtiny Reset Pin to Arduino Pin 10 (or RESET of another programmer)
+
  */
 
-#define ANA0 3
-#define ANA1 4
-#define OPIN 1
-#define PWMPIN 0
+#define ANA0 A1
+#define ANA1 A2
+#define OPIN 3
+#define PWMPIN 1
 #define MIN_ACTIVITITY 15
-// The P-channel needs to be driven this way or there will be a lot of heat
-#define DRIVE_HI LOW
-#define DRIVE_LO HIGH
+// The P-channel needs to be driven this way or there will be a lot of heat (switched to NPN BJT)
+#define DRIVE_HI HIGH
+#define DRIVE_LO LOW
 
 int activity;
 
 void setup()
 {
-    randomSeed(analogRead(0));
+    randomSeed(analogRead(ANA0));
+    pinMode(PWMPIN, OUTPUT);
     pinMode(OPIN, OUTPUT);
     digitalWrite(OPIN, DRIVE_LO);
 }
 
-void pulse()
+inline void pulse()
 {
     digitalWrite(OPIN, DRIVE_HI);
     //delay(1);
@@ -30,14 +38,16 @@ void pulse()
     digitalWrite(OPIN, DRIVE_LO);
 }
 
-int activity_adj(int activity)
+inline int activity_adj(int activity)
 {
+    return activity;
     return (activity - 512) * 2;
 }
 
-byte pwm_adj(int activity)
+inline byte pwm_adj(int activity)
 {
     byte pwm = activity / 4;
+    return pwm;
     byte randb = random(0,10);
     if (pwm + randb < 255)
     {
