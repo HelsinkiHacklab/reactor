@@ -22,7 +22,7 @@ void setup()
     
     I2c.timeOut(500); // 500ms timeout to avoid lockups
     I2c.pullup(false); //Disable internal pull-ups
-    I2c.setSpeed(true); // Fast-mode support
+    I2c.setSpeed(false); // Fast-mode support disabled
     ardubus_setup();
     PCA9635.set_driver_mode(0x0);
     PCA9635.set_sleep(0x0);

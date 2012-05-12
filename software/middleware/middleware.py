@@ -112,7 +112,7 @@ class middleware(service.baseclass):
 
     @dbus.service.method('fi.hacklab.reactorsimulator.middleware')
     def start_blink(self, ledid, interval=250, maxpwm=255):
-        if not self.config['top_led_map'].has_key(ledid):
+        if not self.config['top_led_map']['led_ids'].has_key(ledid):
             return False
         if self.blink_states.has_key(ledid):
             return False
