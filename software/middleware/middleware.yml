@@ -76,6 +76,19 @@ led_gauge_map: #keys are well coordinates, values define the led locations
         board: rod_control_panel
         jbol_idx: 1
         leds: [ 23, 22, 21, 20 ]
+rod_aircore_map:
+    rod_1_4:
+        motor: 0
+        board: 0
+    rod_2_1:
+        motor: 1
+        board: 0
+    rod_4_5:
+        motor: 2
+        board: 0
+    rod_5_2:
+        motor: 3
+        board: 0
 rod_servo_map: # Keyed first by board_name, then by servo index, value is rod coords (this way to make it slightly less painfull to write these, we'll reverse the mapping in software to something usable with the signals)
     arduino0:
         1: [0,2] # Should probably have started from zero...

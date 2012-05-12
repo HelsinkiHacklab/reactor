@@ -243,6 +243,17 @@ class middleware(service.baseclass):
         # Right now skip this
         return
 
+        rod_key = "rod_%d_%d" % (x,y)
+        if self.config['rod_aircore_map'].has_key(rod_key):
+            return
+        
+        rod_config = self.config['rod_aircore_map'][rod_key]
+        
+        board_name = "rod_control_panel" # FIXME remove hard-coded param
+        board_idx = rod_config['board']
+        motor_idx = rod_config['motor']
+
+
         try:
             mapped = self.rod_servo_map[int(x)][int(y)]
         except KeyError:
@@ -255,9 +266,9 @@ class middleware(service.baseclass):
             
         servo_idx,board_name = mapped
         # interpolate (TODO: Is numpy fast here, at least it handles the negative depth correctly ?)
-        servo_position = int(np.interp(float(depth), [-2,reactor_square_side],[0,180]))
+        servo_position = int(np.interp(float(depth), [-2,reactor_square_side],[0,255]))
 
-        cache_key = "%s:%s" % (board_name, servo_idx)
+        cache_key = "%s:%s:%s" % (board_name, board_idx, servo_idx)
         if not self.servo_position_cache.has_key(cache_key):
             self.servo_position_cache[cache_key] = -1
 
@@ -266,7 +277,7 @@ class middleware(service.baseclass):
             return
 
         # Can we background this call somehow ?
-        self.call_cached('fi.hacklab.ardubus.' + board_name, '/fi/hacklab/ardubus/' + board_name, 'set_servo', dbus.Byte(servo_idx), dbus.Byte(servo_position))
+        self.call_cached('fi.hacklab.ardubus.' + board_name, '/fi/hacklab/ardubus/' + board_name, 'set_aircore_position', dbus.Byte(board_idx), dbus.Byte(motor_idx), dbus.Byte(servo_position))
         # Seems we fats run out of threads... (also those threads should probably have been .join():ed at some time, if this need arises looks at the multiprocessing module that has threadpools
         #thread.start_new_thread(self.call_cached, ('fi.hacklab.ardubus.' + board_name, '/fi/hacklab/ardubus/' + board_name, 'set_servo', dbus.Byte(servo_idx), dbus.Byte(servo_position)))
 
