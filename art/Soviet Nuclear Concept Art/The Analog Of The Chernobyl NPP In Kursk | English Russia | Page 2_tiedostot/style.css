@@ -1,0 +1,172 @@
+/*
+Theme Name: English Russia
+Theme URI: http://wordpress.org/
+Description: New wordpress theme
+Version: 1.0
+Author: Miruvingel
+Author URI: http://englishrussia.com/
+*/
+
+html,
+body { height: 100%; width: 100%; margin: 0; padding: 0; font-size: 13px; font-family: Tahoma; background: #FFF; color: #565658; }
+a { text-decoration: underline; color: #777777; font-size: 12px; outline: 0; }
+a:hover { text-decoration: none }
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 { margin: 0; padding: 0; color: #5A5A5A; }
+h1,
+h2,
+h3 { font-size: 17px }
+p { margin: 4px 0 5px; padding: 0; }
+.post { width: 766px!important; margin: 0 auto; position: relative; clear: both; padding: 30px 0; background: url(images/post--.png) no-repeat bottom center; }
+.page-link { width: 766px; clear: both; padding: 5px 0; font-weight: bold; }
+.page-link a { color: #b63b34 }
+.entry-content { width: 766px!important; margin: 0 auto; }
+.entry-content p { color: #000002; line-height: 17px!important; width: 766px!important; }
+img { border: 0; margin: 0; padding: 0; }
+ul,
+ol { margin: 0; padding: 0; }
+li { margin: 0; padding: 0; line-height: normal; list-style-type: none; }
+h1 { font-size: 23px }
+/*разметка колонок */
+#wrapper { width: 1250px; margin: 0 auto; background: url(images/top-backgraund.jpg) no-repeat 0 233px; position: relative; }
+#container { width: 1232px; margin: 0 auto; background: #DBD7CC; min-height: 300px; background: url(images/mboard_l.gif) repeat-y  #DBD7CC 798px 0; }
+#content { width: 1232px; float: left; }
+#text { margin: -33px 433px 0 0; padding: 0 0 10px; text-align: center; }
+.height_loop { height: 20px; width: 100%; clear: both; }
+.fix_lr_box { float: left; width: 432px; margin-left: -432px; background: url(images/mboard_r.gif) repeat-y 128px 0; }
+#left { float: left; width: 128px; padding: 15px 0 10px; background: url(images/top_left_m.gif) no-repeat 47% top; }
+#right { float: left; width: 303px; padding: 0 0 10px; }
+.clear { clear: both }
+.fl_l { float: left }
+.fl_r { float: right }
+.commentlist #respond { margin: 10px 0 20px!important }
+.twtr-doc { border-radius: 0!important }
+.banner_box { height: 90px; width: 728px; margin: 3px auto 4px; text-align: center; }
+#header_box { height: 139px; width: 1250px; position: relative; background: url(images/header_bg.jpg) no-repeat; }
+.shadow_l { background: url(images/shadow-l.png) repeat-y left }
+.shadow_r { background: url(images/shadow-r.png) repeat-y right }
+.top_menu { background: url(images/header-menu.png) repeat-x; height: 25px; width: 1232px; font-family: Tahoma; }
+.top_menu ul { float: left; width: 80%; margin-top: 1px; position: relative; z-index: 1; }
+.top_menu li { display: inline; float: left; padding: 3px 45px; font-size: 12px; border-right: 1px solid #6b1d35; }
+.top_menu li a { color: #e1d0a4; text-decoration: none; font-size: 12px; }
+.top_menu li a:hover { color: #f8d94a }
+.header_first_box { width: 173px; height: 127px; position: relative; left: 0; top: 12px; float: left; }
+.edition { padding: 0 0 12px; color: #f6e45a; text-align: center; font-size: 9px; font-family: Tahoma; background: url(images/header-o-.png) no-repeat bottom center; line-height: 11px; }
+.edition a { font-size: 9px; color: #f6e45a; text-decoration: none; }
+.edition a:hover { text-decoration: underline }
+.edition span { font-size: 14px; font-weight: bold; font-style: italic; letter-spacing: 3px; font-family: Georgia, "Times New Roman", Times, serif; display: block; padding-bottom: 3px; }
+.second_box { margin-left: 5px }
+.second_box .edition span { font-size: 11px; letter-spacing: normal; }
+.header-star { background: url(images/header-star.png) no-repeat; width: 130px; height: 137px; float: left; position: relative; }
+.txt_logo_box { width: 443px; height: 134px; text-align: center; float: left; display: inline; margin: 6px 5px 0; }
+.txt_logo_box img { margin: 5px 0 }
+.inform_box { width: 300px; height: 139px; float: left; }
+#footer { width: 1250px; height: 88px; }
+.dels { height: 18px; width: 1200px; background: #DBD7CC; margin: 0 auto; }
+.two_leep_box { margin: 0 10px; padding: 25px 0 20px 10px; background: url(images/line.gif) no-repeat 0 15px #DBD7CC; width: 412px; text-align: center; }
+.sbox { float: left; height: 23px; margin-top: 3px; background: url(images/searh-left.png) no-repeat; padding-left: 5px; }
+#s { width: 180px; border: none; color: #dacda0; margin: 0; padding: 0; float: left; background: url(images/searh-m.png) repeat-x; padding: 3px 0; height: 15px; font-size: 11px; }
+#searchsubmit { width: 21px; height: 18px; float: left; cursor: pointer; }
+.copyright { text-align: left; font-size: 10px; background: none; line-height: 13px; padding: 12px 0 0 35px; }
+.fix_menu { padding: 0 6px 15px 5px; text-align: center; font-family: tahoma; }
+.mline { background: url(images/mline.gif) no-repeat center bottom; padding-bottom: 10px; margin: 7px 0 4px; }
+.fix_menu .cat { text-align: left; margin-bottom: 15px; }
+.fix_menu .cat li { border-top: 1px solid #646464; padding: 4px 0 4px 1px; font-size: 11px; color: #333132; }
+.fix_menu .cat .cat-item:first-child { border: none }
+.fix_menu .cat a { color: #333132; font-size: 13px; text-decoration: none; }
+.fix_menu .cat a:hover { color: #C43D27 }
+.arch li { padding: 2px 0; font-family: "Times New Roman", Times, serif; font-size: 15px; }
+.arch a { color: #3C6592; font-size: 15px; font-weight: normal; text-decoration: none; }
+.arch a:hover { color: #c53b1f }
+.social_w_box { margin: 0 0 3px 11px }
+.social_w_box .wrapp_sc { width: 285px; margin-bottom: 10px; background: #FFF; }
+.widget_twitter h3 { padding: 3px 55px 7px 15px; background: #9c9da1; line-height: 16px; }
+.widget_twitter ul { padding: 10px 15px 15px }
+.widget_twitter li { padding: 4px 0; color: #000000; font-size: 11px; }
+.widget_twitter li a { color: #42629b; text-decoration: none; }
+.widget_twitter li a:hover { text-decoration: underline }
+.widget_twitter li span { display: block; font-size: 10px; font-weight: bold; }
+.wrapp_sc h3 a { font-size: 15px; font-weight: bold; text-decoration: none; color: #fff; }
+.fshadow { height: 100%; width: 100%; background: url(images/footer_shadow.png) repeat-x top; }
+.adb { width: 300px; margin: 0 auto; text-align: center; background: url(images/sidebar.png) no-repeat center top; padding: 23px 0 5px; margin: 15px 0 0 2px; }
+.adb img,
+.adb object { width: 286px!important }
+.adb #google_ads_div_ER160x600_ad_container img,
+.adb #google_ads_div_ER160x600_ad_container object { width: 160px!important }
+.adb .twtr-doc img { width: auto!important }
+.mst_popular { width: 285px; margin: 0 auto; font-family: tahoma; }
+.mst_popular .mline { text-align: center; background-repeat: repeat-x; }
+.mst_popular ul { padding: 5px 10px; font-family: "Times New Roman", Times, serif; }
+.mst_popular li { padding: 1px 0; font-size: 15px; }
+.mst_popular a { color: #3C6592; font-size: 15px; font-weight: normal; text-decoration: none; }
+.two_leep_box a { font-size: 13px; font-weight: bold; }
+.mst_popular a:hover { color: #c53b1f; text-decoration: underline; }
+#text img { max-width: 766px }
+/* контент */
+.title_post { padding: 5px 0 10px; position: relative; }
+.title_post h1,
+.title_post h2,
+.title_post h3 { color: #3b3b3d; width: 80%; margin: 0 auto; }
+.title_post h2 a { font-size: 11px; color: #3b3b3d; text-decoration: none; }
+.comment_box_ttl { background: url(images/post-comments.png) no-repeat; width: 58px; height: 29px; position: absolute; left: 0; top: -29px; padding: 10px 2px 0; }
+.comment_box_ttl a { font-size: 16px; font-weight: bold; color: #E2B95C; text-decoration: none; }
+.st_sharethis_button { width: 90px; height: 18px; position: absolute; right: 0; top: 10px; }
+.linest { background: url(images/tline.gif) repeat-x 0 10px; padding: 0 50px; position: relative; }
+.entry-utility .white { background: #DBD7CC; padding: 0 10px; display: inline-block; }
+.box_tsl { padding: 0 10px 0 0; float: left; font-size: 20px; line-height: 17px; font-weight: bold; color: #5a3113; }
+.box_tsl span { font-size: 10px; font-weight: normal; }
+.top_social_plugins { padding: 6px 0 0 25px }
+.control_image { width: 100px; margin: 0 auto; padding: 10px 0 0; }
+.control_image img { width: 20px; height: 20px; }
+#time_center { text-align: center; color: #fdd655; font-size: 11px; font-family: georgia; padding: 6px 0 0; }
+#time_center p { font-size: 12px; margin: 1px 0; font-weight: bold; }
+.cat-links { color: #000000; font-size: 12px; }
+.cat-links a { color: #000000; font-size: 12px; text-decoration: none; }
+.edit-link a { color: #FF0000; font-weight: bold; }
+.more-link { color: #b63b34; float: right; font-size: 12px; font-weight: bold; padding-right: 5px; }
+.wp-pagenavi { padding: 25px 0 15px }
+.inform_block { padding: 13px 13px 0; width: 740px; margin: 0 auto; color: #000; font-size: 13px; font-weight: bold; border-top: 3px solid #000000; margin: 20px 0 0; }
+.inform_block a { color: #c03b2a; font-size: 13px; }
+.stButton .chicklets { background: url(images/share-icon-16x16.png) no-repeat!important }
+#nav-above { width: 100%; padding: 10px 0; }
+#nav-above div { margin: 5px 0 }
+#nav-above a { color: #000000; font-size: 13px; font-weight: bold; }
+.commentlist { width: 766px; margin: 0 auto; text-align: left; }
+h3#comments { color: #000000; font-size: 14px; font-weight: bold; text-align: left; margin-left: 16px; margin-bottom: 5px; }
+.comment-body img { width: 15px!important; height:15px; }
+.comment-body { position: relative; background: url(images/r_commline.jpg) repeat-x 0 -7px; width: 100%; float: left; padding: 2px 0; margin: 0 0 10px; }
+.block-carma { padding: 1px 7px 0 0; float: right; }
+.block-carma div {float:left; margin:0 45px 0 0; font-size:11px;}
+.comment-author { color: #FFFFFF; float: left; margin: 0 7px; }
+.comment-body .fn a { color: #FFF; font-style: normal; text-decoration: none; }
+.comment-body .commentmetadata { float: left }
+.comment-body .commentmetadata a { color: #c9cace; font-size: 11px; text-decoration: none; }
+.comment-body p { margin: -1px 0 5px; padding: 5px 2%; color: #030303; clear: both; }
+.hentry { padding: 30px 0; width: 766px; margin: 0 auto; }
+.comment-body .reply { position: absolute; right: 73px; top: 1.5px; }
+.comment-body .reply a { color: #030408; text-decoration: none; font-size: 11px; }
+.fix_text { float: left; width: 100%; background: url(images/mboard_r.gif) repeat-y 50% 50%; text-align: justify; margin: 10px 0; }
+.fix_text .l_column { float: left; width: 47%; }
+.fix_text .r_column { float: right; width: 47%; }
+.twl_content { width: 766px; margin: 0 auto 10px; padding-bottom: 1px; border-bottom: 3px solid #545456; }
+.children { float: left; width: 100%; background: url(images/child.png) no-repeat #DBD7CC 4% 2px; }
+.children .comment-body { margin-left: 7%; width: 93%; }
+.children #respond { width: 100%; margin: 0 16px; }
+.simpost a { color: #b63f27 }
+#respond { float: left; text-align: left; position: relative; min-height: 100px; text-align: left; width: 766px; margin: 10px 16px 20px 16px; padding-bottom: 3px; border-bottom: 1px solid #818181; }
+#respond h3 { float: left; font-size: 13px; width: 100%; color: #000; }
+#respond textarea { position: absolute; right: 0; top: 21px; width: 55%; height: 72px; background: #dfdfe1; border: 1px solid #c8c8ca; }
+#respond input { background: #dfdfe1; border: 1px solid #c8c8ca; width: 120px; }
+#commentform a { color: #FF0000 }
+#commentform #submit { background: url(images/submit-comment.png) no-repeat; width: 110px; border: none; height: 23px; line-height: 21px; padding-bottom: 4px; color: #FFFFFF; font-size: 12px; cursor: pointer; position: absolute; right: 40.9%; top: 0; }
+.fix_simg { position: relative; top: 29px; left: 22px; }
+#w_footer { background: url(images/footer_bg.jpg) no-repeat bottom center }
+#text .stButton .stButton_gradient { border: 1px solid #202020!important; background: none!important; }
+.twtr-hd { background: url(images/twFb-back.png) no-repeat; padding: 6px!important; }
+.twtr-ft { background: url(images/twFb-back.png) no-repeat }
+.twtr-doc { border: 2px solid #42403b!important }
+.comment-body br { display: none }

@@ -6,7 +6,7 @@
 // Enumerate the aircore pins from the preprocessor
 const byte ardubus_aircore_boards[] = ARDUBUS_AIRCORE_BOARDS;
 // Declare a Servo object for each
-aircore ardubus_aircores[sizeof(ardubus_aircore_boards)] = i2c_device();
+i2c_device ardubus_aircores[sizeof(ardubus_aircore_boards)];
 
 inline void ardubus_aircore_setup()
 {
