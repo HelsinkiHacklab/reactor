@@ -12,6 +12,7 @@
 #include <pca9635RGB.h> // For some weird reason including this in the relevant .h file does not work
 #include <pca9635RGBJBOL.h> // For some weird reason including this in the relevant .h file does not work
 #define ARDUBUS_PCA9635RGBJBOL_BOARDS { 0, 1 }
+#define ARDUBUS_AIRCORE_BOARDS { 4 }
 
 #include <ardubus.h>
 void setup()
@@ -22,7 +23,7 @@ void setup()
     
     I2c.timeOut(500); // 500ms timeout to avoid lockups
     I2c.pullup(false); //Disable internal pull-ups
-    I2c.setSpeed(false); // Fast-mode support disabled
+    I2c.setSpeed(false); // Fast-mode support
     ardubus_setup();
     PCA9635.set_driver_mode(0x0);
     PCA9635.set_sleep(0x0);
