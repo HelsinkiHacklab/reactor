@@ -104,6 +104,9 @@ inline void ardubus_print_int_as_4hex(int input)
 #ifdef ARDUBUS_PCA9535_OUTPUTS
 #include "ardubus_pca9535_out.h"
 #endif
+#ifdef ARDUBUS_AIRCORE_BOARDS
+#include "ardubus_aircore.h"
+#endif
 
 
 /**
@@ -141,6 +144,9 @@ void ardubus_setup()
 #ifdef ARDUBUS_PCA9535_OUTPUTS
     ardubus_pca9535_out_setup();
 #endif
+#ifdef ARDUBUS_AIRCORE_BOARDS
+    ardubus_aircore_setup();
+#endif
 }
 
 
@@ -174,6 +180,9 @@ void ardubus_report()
 #endif
 #ifdef ARDUBUS_PCA9535_OUTPUTS
     ardubus_pca9535_out_report();
+#endif
+#ifdef ARDUBUS_AIRCORE_BOARDS
+    ardubus_aircore_report();
 #endif
     ardubus_last_report_time = millis();
 }
@@ -219,6 +228,9 @@ void ardubus_process_command()
 #endif
 #ifdef ARDUBUS_PCA9535_OUTPUTS
     ardubus_pca9535_out_process_command(ardubus_incoming_command);
+#endif
+#ifdef ARDUBUS_AIRCORE_BOARDS
+    ardubus_aircore_process_command(ardubus_incoming_command);
 #endif
 }
 
@@ -294,6 +306,9 @@ void ardubus_update()
 #endif
 #ifdef ARDUBUS_PCA9535_OUTPUTS
     ardubus_pca9535_out_update();
+#endif
+#ifdef ARDUBUS_AIRCORE_BOARDS
+    ardubus_aircore_update();
 #endif
     ardubus_check_report();
 }
