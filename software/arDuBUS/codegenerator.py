@@ -98,6 +98,12 @@ class codegen:
 #include <pca9635RGBJBOL.h> // For some weird reason including this in the relevant .h file does not work\n"""
             ret += """#define ARDUBUS_PCA9635RGBJBOL_BOARDS { %s }\n""" % ", ".join(map(str, self.config['pca9635RGBJBOL_boards']))
 
+        if self.config.has_key('aircore_boards'):
+            self.setup_i2c_init = True
+            ret = self.add_i2c_include(ret)
+            ret = self.add_i2c_device_include(ret)
+            ret += """#define ARDUBUS_AIRCORE_BOARDS { %s }\n""" % ", ".join(map(str, self.config['aircore_boards']))
+
         ret += """\n#include <ardubus.h>
 void setup()
 {
@@ -109,7 +115,7 @@ void setup()
             ret += """    
     I2c.timeOut(500); // 500ms timeout to avoid lockups
     I2c.pullup(false); //Disable internal pull-ups
-    I2c.setSpeed(true); // Fast-mode support\n"""
+    I2c.setSpeed(false); // Fast-mode support\n"""
 
         # Call ardubus setup
         ret += """    ardubus_setup();\n"""

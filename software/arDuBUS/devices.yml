@@ -102,6 +102,7 @@ reactor_lid:
           alias: pin_A4
     digital_pwmout_pins: [ 13, 12, 11, 10, 9 ] # Controls for smoke machine and 4 fans
 rod_control_panel: # The board identifier
+    aircore_boards: [ 4 ]
     pca9635RGBJBOL_boards: [ 0, 1 ] # Board addresses (aka ARDUBUS_PCA9635RGBJBOL_BOARDS)
     pca9635RGBJBOL_maps:
         0: # board address, upper "rod" leds
