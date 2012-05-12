@@ -96,6 +96,18 @@ class ardubus(service.baseclass):
         self.send_serial_command("P%s%s" % (self.p2b(pwm_index), chr(cycle)))
 
     @dbus.service.method('fi.hacklab.ardubus', in_signature='yyy') # "y" is the signature for a byte
+    def set_aircore_position(self, board_index, motorno, cycle):
+#        try:
+#            ledno = self.config['pca9635RGBJBOL_maps'][int(jbol_index)][int(ledno)]
+#        except Exception,e:
+#            print "set_jbol_pwm: got exception %s" % e
+#            pass
+            
+        if cycle in [ 13, 10]: #Offset values that map to CR or LF by one
+            cycle += 1
+        self.send_serial_command("A%s%s%s" % (self.p2b(board_index), self.p2b(motorno), chr(cycle)))
+
+    @dbus.service.method('fi.hacklab.ardubus', in_signature='yyy') # "y" is the signature for a byte
     def set_jbol_pwm(self, jbol_index, ledno, cycle):
         try:
             ledno = self.config['pca9635RGBJBOL_maps'][int(jbol_index)][int(ledno)]
