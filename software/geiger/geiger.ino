@@ -34,20 +34,20 @@ inline void pulse()
 {
     digitalWrite(OPIN, DRIVE_HI);
     //delay(1);
-    delayMicroseconds(400);
+    delayMicroseconds(300);
     digitalWrite(OPIN, DRIVE_LO);
 }
 
 inline int activity_adj(int activity)
 {
-    return activity;
+    //return activity;
     return (activity - 512) * 2;
 }
 
 inline byte pwm_adj(int activity)
 {
     byte pwm = activity / 4;
-    return pwm;
+    //return pwm;
     byte randb = random(0,10);
     if (pwm + randb < 255)
     {
@@ -77,5 +77,5 @@ void loop()
         pulse();
     }
     // This adjusts the general pulse rate (ie how fast 100% activity is, everything else is related to that)
-    delay(30);
+    delay(15);
 }
