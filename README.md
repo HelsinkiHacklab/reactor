@@ -12,6 +12,10 @@ NOTE: now uses submodules, remember "git submodule init" "git submodule update"
 
 We didn't quite finish everything in time but still got very nice feedback, photos at http://www.hacklab.fi/2011/10/alt-party-ohi-helsinki-yha-olemassa/
 
-## Camp Pixelache 2012 (planned)
+## Camp Pixelache 2012
 
-We're planning on finalizing at least the pieces that almost worked at ALT party and maybe add something extra.
+The game was playable and we made a lot of alarm noises, the dials indicating control rod positions were missing though (we didn't have enough time to re-do them as most of the servos used at ALT party were dead).
+
+## ???
+
+Where to next ? We'll continue by finishing the dials and tuning the gameplay.
