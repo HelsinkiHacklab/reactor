@@ -69,12 +69,7 @@ class middleware(service.baseclass):
 
     def config_reloaded(self):
         # Transpose the rod servo map to something more usable
-        self.servo_position_cache = {}
-        self.rod_servo_map = [[None for i in range(reactor_square_side)] for i in  range(reactor_square_side)]
-        for board in self.config['rod_servo_map'].keys():
-            for servo_idx in self.config['rod_servo_map'][board].keys():
-                rodx,rody = self.config['rod_servo_map'][board][servo_idx]
-                self.rod_servo_map[rodx][rody] = (servo_idx, board)
+        self.dial_position_cache = {}
 
 
     def simulation_reset(self, sender):
@@ -253,35 +248,20 @@ class middleware(service.baseclass):
         board_idx = rod_config['board']
         motor_idx = rod_config['motor']
 
-
-        try:
-            mapped = self.rod_servo_map[int(x)][int(y)]
-        except KeyError:
-            print "depth report for rod %d,%d, index out of range" % (x,y)
-            return
-        if not mapped:
-            print "depth report for rod %d,%d, No rod defined there" % (x,y)
-            # No rod there
-            return
-            
-        servo_idx,board_name = mapped
         # interpolate (TODO: Is numpy fast here, at least it handles the negative depth correctly ?)
         servo_position = int(np.interp(float(depth), [-2,reactor_square_side],[0,255]))
 
-        cache_key = "%s:%s:%s" % (board_name, board_idx, servo_idx)
-        if not self.servo_position_cache.has_key(cache_key):
-            self.servo_position_cache[cache_key] = -1
+        if not self.dial_position_cache.has_key(rod_key):
+            self.dial_position_cache[rod_key] = -1
 
-        if self.servo_position_cache[cache_key] == servo_position:
+        if self.dial_position_cache[rod_key] == servo_position:
             # TODO: At some intervall refresh this anyway
             return
 
         # Can we background this call somehow ?
         self.call_cached('fi.hacklab.ardubus.' + board_name, '/fi/hacklab/ardubus/' + board_name, 'set_aircore_position', dbus.Byte(board_idx), dbus.Byte(motor_idx), dbus.Byte(servo_position))
-        # Seems we fats run out of threads... (also those threads should probably have been .join():ed at some time, if this need arises looks at the multiprocessing module that has threadpools
-        #thread.start_new_thread(self.call_cached, ('fi.hacklab.ardubus.' + board_name, '/fi/hacklab/ardubus/' + board_name, 'set_servo', dbus.Byte(servo_idx), dbus.Byte(servo_position)))
 
-        self.servo_position_cache[cache_key] = servo_position
+        self.dial_position_cache[rod_key] = servo_position
 
     def stomp_received(self, pin, state, sender, *args):
         print "Pin %d changed to %s on %s" % (pin, repr(state), sender)
