@@ -97,12 +97,16 @@ class ardubus(service.baseclass):
 
     @dbus.service.method('fi.hacklab.ardubus', in_signature='yyy') # "y" is the signature for a byte
     def set_aircore_position(self, board_index, motorno, cycle):
-#        try:
-#            ledno = self.config['pca9635RGBJBOL_maps'][int(jbol_index)][int(ledno)]
-#        except Exception,e:
-#            print "set_jbol_pwm: got exception %s" % e
-#            pass
-            
+        correction = 0
+        print "correction=%d"%self.config['aircore_correction_values'][board_index][motorno]
+
+        if (    self.config.has_key('aircore_correction_values')
+            and self.config['aircore_correction_values'].has_key(board_index)
+            and self.config['aircore_correction_values'][board_index].has_key(motorno)):
+            correction = self.config['aircore_correction_values'][board_index][motorno]
+
+        
+        cycle=(cycle+correction) % 255
         if cycle in [ 13, 10]: #Offset values that map to CR or LF by one
             cycle += 1
         self.send_serial_command("A%s%s%s" % (self.p2b(board_index), self.p2b(motorno), chr(cycle)))
