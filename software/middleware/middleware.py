@@ -235,11 +235,9 @@ class middleware(service.baseclass):
                 return self.call_cached(busname, buspath, method, *args)
 
     def depth_report(self, x, y, depth, *args):
-        # Right now skip this
-        return
 
         rod_key = "rod_%d_%d" % (x,y)
-        if self.config['rod_aircore_map'].has_key(rod_key):
+        if not self.config['rod_aircore_map'].has_key(rod_key):
             return
         
         rod_config = self.config['rod_aircore_map'][rod_key]
@@ -249,7 +247,7 @@ class middleware(service.baseclass):
         motor_idx = rod_config['motor']
 
         # interpolate (TODO: Is numpy fast here, at least it handles the negative depth correctly ?)
-        servo_position = int(np.interp(float(depth), [-2,reactor_square_side],[0,255]))
+        servo_position = int(np.interp(float(depth), [-2.0,float(reactor_square_side)],[0,self.config['rod_aircore_maxpwm']]))
 
         if not self.dial_position_cache.has_key(rod_key):
             self.dial_position_cache[rod_key] = -1
