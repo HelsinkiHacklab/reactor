@@ -16,6 +16,10 @@ We didn't quite finish everything in time but still got very nice feedback, phot
 
 The game was playable and we made a lot of alarm noises, the dials indicating control rod positions were missing though (we didn't have enough time to re-do them as most of the servos used at ALT party were dead).
 
+Some photos from the event and late nights preceding it can be seen in this [article][1] (text in Finnish)
+
+[1]: http://www.mbnet.fi/artikkeli/blogit/mblabra/hacklabin_reaktoripeli_kotitekoinen_t_ernobyl
+
 ## ???
 
 Where to next ? We'll continue by finishing the dials and tuning the gameplay.
