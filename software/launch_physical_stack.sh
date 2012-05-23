@@ -1,4 +1,6 @@
 #!/bin/bash -ex
+# Change the working dir to the directory of this file
+cd `dirname $0`
 # The visualizer does not have any use for a terminal
 python simulationengine/visualizer_launcher.py &
 # For others it's usefull for debugging

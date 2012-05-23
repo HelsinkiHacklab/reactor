@@ -1,4 +1,6 @@
 #!/bin/bash -ex
+# Change the working dir to the directory of this file
+cd `dirname $0`
 for vh in $( find virtual_hardware/ -name '*.py' | grep -v '\._' )
 do
     python $vh &
