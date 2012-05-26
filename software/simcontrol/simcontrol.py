@@ -9,6 +9,11 @@ if os.path.isdir(libs_dir):
 import service,dbus,gobject,dbus_utilities
 import dbus,time
 
+from PySide import QtCore
+from PySide import QtGui
+from PySide import QtDeclarative
+
+
 class simcontrol(service.baseclass):
     def __init__(self, config, launcher_instance, **kwargs):
         super(simcontrol, self).__init__(config, launcher_instance, **kwargs)
