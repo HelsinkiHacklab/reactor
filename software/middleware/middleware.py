@@ -6,7 +6,7 @@ if os.path.isdir(libs_dir):
     sys.path.append(libs_dir)
 
 # Import our DBUS service module
-import service,dbus,gobject
+import service,dbus,gobject,dbus_utilities
 import dbus,time
 
 import numpy as np
@@ -210,29 +210,7 @@ class middleware(service.baseclass):
 
     def call_cached(self, busname, buspath, method, *args):
         """Maintains a cache of DBUS proxy objects and calls the given objects method. If the proxy object is stale tries to refresh"""
-        obj_cache_key = "%s@%s" % (busname, buspath)
-        method_cache_key = "%s::%s" % (obj_cache_key, method)
-        if not self.dbus_cache.has_key(obj_cache_key):
-            self.dbus_cache[obj_cache_key] = self.bus.get_object(busname, buspath)
-        if not self.dbus_cache.has_key(method_cache_key):
-            self.dbus_cache[method_cache_key] = getattr(self.dbus_cache[obj_cache_key], method)
-
-        try:
-            ret = self.dbus_cache[method_cache_key](*args)
-            if self.dbus_cache_error_count.has_key(method_cache_key): # Zero the error count
-                self.dbus_cache_error_count[method_cache_key] = 0
-            return ret                
-        except dbus.exceptions.DBusException:
-            if not self.dbus_cache_error_count.has_key(method_cache_key):
-                self.dbus_cache_error_count[method_cache_key] = 0
-            self.dbus_cache_error_count[method_cache_key] += 1
-            # TODO Check that it's a method os object name exception first
-            # Remove stale keys
-            print "Removing stale keys for %s" % method_cache_key
-            del(self.dbus_cache[obj_cache_key])
-            del(self.dbus_cache[method_cache_key])
-            if self.dbus_cache_error_count[method_cache_key] < 4:
-                return self.call_cached(busname, buspath, method, *args)
+        return dbus_utilities.call_cached(buspath, method, *args, busname=busname)
 
     def depth_report(self, x, y, depth, *args):
 
