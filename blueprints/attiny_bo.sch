@@ -4738,6 +4738,8 @@ Standard schematic elements and footprints for 5mm, 3mm, 1206, and 0603 sized LE
 <wire x1="43.18" y1="96.52" x2="63.5" y2="96.52" width="0.1524" layer="91"/>
 <pinref part="C2" gate="G$1" pin="2"/>
 <wire x1="43.18" y1="106.68" x2="43.18" y2="96.52" width="0.1524" layer="91"/>
+<junction x="43.18" y="96.52"/>
+<junction x="50.8" y="83.82"/>
 </segment>
 <segment>
 <pinref part="J1" gate="G$1" pin="6"/>
@@ -4755,6 +4757,9 @@ Standard schematic elements and footprints for 5mm, 3mm, 1206, and 0603 sized LE
 <wire x1="137.16" y1="81.28" x2="137.16" y2="73.66" width="0.1524" layer="91"/>
 <pinref part="JP1" gate="A" pin="8"/>
 <wire x1="137.16" y1="73.66" x2="124.46" y2="73.66" width="0.1524" layer="91"/>
+<junction x="119.38" y="88.9"/>
+<junction x="76.2" y="104.14"/>
+<junction x="124.46" y="81.28"/>
 </segment>
 <segment>
 <pinref part="H2" gate="G$1" pin="MOUNT"/>
@@ -4779,6 +4784,8 @@ Standard schematic elements and footprints for 5mm, 3mm, 1206, and 0603 sized LE
 <junction x="66.04" y="76.2"/>
 <pinref part="C2" gate="G$1" pin="1"/>
 <wire x1="35.56" y1="96.52" x2="35.56" y2="106.68" width="0.1524" layer="91"/>
+<junction x="50.8" y="66.04"/>
+<junction x="35.56" y="96.52"/>
 </segment>
 <segment>
 <pinref part="J1" gate="G$1" pin="2"/>
@@ -4803,6 +4810,7 @@ Standard schematic elements and footprints for 5mm, 3mm, 1206, and 0603 sized LE
 <wire x1="83.82" y1="106.68" x2="76.2" y2="106.68" width="0.1524" layer="91"/>
 <pinref part="JP1" gate="A" pin="3"/>
 <wire x1="116.84" y1="78.74" x2="83.82" y2="78.74" width="0.1524" layer="91"/>
+<junction x="83.82" y="78.74"/>
 </segment>
 </net>
 <net name="PB5" class="0">
@@ -4837,6 +4845,7 @@ Standard schematic elements and footprints for 5mm, 3mm, 1206, and 0603 sized LE
 <pinref part="JP1" gate="A" pin="9"/>
 <wire x1="58.42" y1="58.42" x2="116.84" y2="58.42" width="0.1524" layer="91"/>
 <wire x1="116.84" y1="58.42" x2="116.84" y2="71.12" width="0.1524" layer="91"/>
+<junction x="58.42" y="76.2"/>
 </segment>
 </net>
 <net name="PB4" class="0">
@@ -4851,6 +4860,13 @@ Standard schematic elements and footprints for 5mm, 3mm, 1206, and 0603 sized LE
 </nets>
 </sheet>
 </sheets>
+<errors>
+<approved hash="104,1,50.8,66.04,IC1,VCC,+5V,,,"/>
+<approved hash="115,1,39.37,98.1995,C1,,,,,"/>
+<approved hash="115,1,62.23,75.8783,LED1,,,,,"/>
+<approved hash="115,1,120.608,77.6012,JP1,,,,,"/>
+<approved hash="115,1,39.37,108.359,C2,,,,,"/>
+</errors>
 </schematic>
 </drawing>
 </eagle>
