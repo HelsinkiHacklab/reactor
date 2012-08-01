@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="yes"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="5" unitdist="mil" unit="mil" style="lines" multiple="1" display="yes" altdistance="5" altunitdist="mm" altunit="mm"/>
+<grid distance="5" unitdist="mil" unit="mm" style="lines" multiple="1" display="yes" altdistance="5" altunitdist="mm" altunit="mm"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -109,10 +109,10 @@
 </layers>
 <board>
 <plain>
-<wire x1="0" y1="19.99" x2="0" y2="0" width="0" layer="20"/>
-<wire x1="0" y1="0" x2="35.794" y2="0" width="0" layer="20"/>
-<wire x1="35.794" y1="0" x2="35.794" y2="19.99" width="0" layer="20"/>
-<wire x1="35.794" y1="19.99" x2="0" y2="19.99" width="0" layer="20"/>
+<wire x1="10" y1="20" x2="10" y2="0" width="0" layer="20" curve="180"/>
+<wire x1="10" y1="0" x2="26" y2="0" width="0" layer="20"/>
+<wire x1="26" y1="0" x2="26" y2="20" width="0" layer="20" curve="180"/>
+<wire x1="26" y1="20" x2="10" y2="20" width="0" layer="20"/>
 </plain>
 <libraries>
 <library name="atmel">
