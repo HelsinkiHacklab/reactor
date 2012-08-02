@@ -5824,10 +5824,10 @@ Source: 008-0260-0_E.pdf</description>
 <part name="GND2" library="supply1" deviceset="GND" device=""/>
 <part name="P+1" library="supply1" deviceset="+5V" device=""/>
 <part name="P+2" library="supply1" deviceset="+5V" device=""/>
-<part name="Q1" library="crystal" deviceset="CRYSTAL" device="SM49"/>
-<part name="C3" library="rcl" deviceset="C-EU" device="C0603"/>
-<part name="C4" library="rcl" deviceset="C-EU" device="C0603"/>
+<part name="CX0" library="rcl" deviceset="C-EU" device="C0603" value="22pF"/>
+<part name="CX1" library="rcl" deviceset="C-EU" device="C0603" value="22pF"/>
 <part name="GND4" library="supply1" deviceset="GND" device=""/>
+<part name="XTAL" library="crystal" deviceset="CRYSTAL" device="CTS406" value="16Mhz"/>
 </parts>
 <sheets>
 <sheet>
@@ -5850,10 +5850,10 @@ Source: 008-0260-0_E.pdf</description>
 <instance part="GND2" gate="1" x="91.44" y="109.22"/>
 <instance part="P+1" gate="1" x="116.84" y="83.82"/>
 <instance part="P+2" gate="1" x="124.46" y="68.58" rot="R180"/>
-<instance part="Q1" gate="G$1" x="25.4" y="101.6" rot="R90"/>
-<instance part="C3" gate="G$1" x="20.32" y="104.14" rot="R90"/>
-<instance part="C4" gate="G$1" x="20.32" y="99.06" rot="R90"/>
+<instance part="CX0" gate="G$1" x="20.32" y="104.14" rot="R90"/>
+<instance part="CX1" gate="G$1" x="20.32" y="99.06" rot="R90"/>
 <instance part="GND4" gate="1" x="17.78" y="96.52"/>
+<instance part="XTAL" gate="G$1" x="25.4" y="101.6" rot="R90"/>
 </instances>
 <busses>
 </busses>
@@ -5915,9 +5915,9 @@ Source: 008-0260-0_E.pdf</description>
 <pinref part="GND2" gate="1" pin="GND"/>
 </segment>
 <segment>
-<pinref part="C4" gate="G$1" pin="1"/>
+<pinref part="CX1" gate="G$1" pin="1"/>
 <pinref part="GND4" gate="1" pin="GND"/>
-<pinref part="C3" gate="G$1" pin="1"/>
+<pinref part="CX0" gate="G$1" pin="1"/>
 <wire x1="17.78" y1="104.14" x2="17.78" y2="99.06" width="0.1524" layer="91"/>
 <junction x="17.78" y="99.06"/>
 </segment>
@@ -5998,10 +5998,10 @@ Source: 008-0260-0_E.pdf</description>
 <wire x1="58.42" y1="58.42" x2="116.84" y2="58.42" width="0.1524" layer="91"/>
 <wire x1="116.84" y1="58.42" x2="116.84" y2="71.12" width="0.1524" layer="91"/>
 <junction x="58.42" y="76.2"/>
-<pinref part="Q1" gate="G$1" pin="1"/>
-<pinref part="C4" gate="G$1" pin="2"/>
+<pinref part="CX1" gate="G$1" pin="2"/>
 <wire x1="58.42" y1="58.42" x2="25.4" y2="58.42" width="0.1524" layer="91"/>
 <wire x1="25.4" y1="58.42" x2="25.4" y2="99.06" width="0.1524" layer="91"/>
+<pinref part="XTAL" gate="G$1" pin="1"/>
 <junction x="25.4" y="99.06"/>
 </segment>
 </net>
@@ -6015,11 +6015,11 @@ Source: 008-0260-0_E.pdf</description>
 <wire x1="71.12" y1="78.74" x2="71.12" y2="88.9" width="0.1524" layer="91"/>
 <wire x1="71.12" y1="88.9" x2="27.94" y2="88.9" width="0.1524" layer="91"/>
 <wire x1="27.94" y1="88.9" x2="27.94" y2="106.68" width="0.1524" layer="91"/>
-<pinref part="Q1" gate="G$1" pin="2"/>
-<pinref part="C3" gate="G$1" pin="2"/>
+<pinref part="CX0" gate="G$1" pin="2"/>
 <wire x1="27.94" y1="106.68" x2="25.4" y2="106.68" width="0.1524" layer="91"/>
 <wire x1="25.4" y1="106.68" x2="25.4" y2="104.14" width="0.1524" layer="91"/>
 <junction x="71.12" y="78.74"/>
+<pinref part="XTAL" gate="G$1" pin="2"/>
 <junction x="25.4" y="104.14"/>
 </segment>
 </net>
