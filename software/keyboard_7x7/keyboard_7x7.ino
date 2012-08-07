@@ -5,6 +5,9 @@
 #include <mcp23017.h>
 // Container for the device
 mcp23017 expander;
+// "debounce" the keys, actually we probably read them so slowly it doesn't matter but this offers key repeats as well
+#include <dummybounce.h>
+dummybounce dummybouncers[49];
 
 void setup()
 {
@@ -34,10 +37,23 @@ void setup()
 
 byte scan_matrix_column(byte col)
 {
+    expander.data[0] = (expander.data[0] & B10000000) | (0x1 << col);
+    expander.sync();
+    
+    Serial.print("expander.data[0] B");
+    Serial.println(expander.data[0], BIN);
+    Serial.print("expander.data[1] B");
+    Serial.println(expander.data[1], BIN);
+    
+    byte rowdata = expander.data[1] >> 1;
     
 }
 
 void loop()
 {
-
+    for (byte i=0; i < 7; i++)
+    {
+        scan_matrix_column(i);
+    }
+    delay(500);
 }
