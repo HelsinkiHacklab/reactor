@@ -12,6 +12,106 @@ aliases_test_board:
         - pin: 6
         - pin: 7
     pca9535_inputs: [  5, 6, 7, 8, 9, 10 ] # defined just to test the normalizing
+fake_reactor_lid: # This is not an actual ardubus board but one with matrix keyboard and code to emulate plain inputs
+    digital_in_pins: 
+        - pin: 0
+          alias: rod_0_0_stomp
+        - pin: 1
+          alias: rod_0_1_stomp
+        - pin: 2
+          alias: rod_0_2_stomp
+        - pin: 3
+          alias: rod_0_3_stomp
+        - pin: 4
+          alias: rod_0_4_stomp
+        - pin: 5
+          alias: rod_0_5_stomp
+        - pin: 6
+          alias: rod_0_6_stomp
+        - pin: 7
+          alias: rod_1_0_stomp
+        - pin: 8
+          alias: rod_1_1_stomp
+        - pin: 9
+          alias: rod_1_2_stomp
+        - pin: 10
+          alias: rod_1_3_stomp
+        - pin: 11
+          alias: rod_1_4_stomp
+        - pin: 12
+          alias: rod_1_5_stomp
+        - pin: 13
+          alias: rod_1_6_stomp
+        - pin: 14
+          alias: rod_2_0_stomp
+        - pin: 15
+          alias: rod_2_1_stomp
+        - pin: 16
+          alias: rod_2_2_stomp
+        - pin: 17
+          alias: rod_2_3_stomp
+        - pin: 18
+          alias: rod_2_4_stomp
+        - pin: 19
+          alias: rod_2_5_stomp
+        - pin: 20
+          alias: rod_2_6_stomp
+        - pin: 21
+          alias: rod_3_0_stomp
+        - pin: 22
+          alias: rod_3_1_stomp
+        - pin: 23
+          alias: rod_3_2_stomp
+        - pin: 24
+          alias: rod_3_3_stomp
+        - pin: 25
+          alias: rod_3_4_stomp
+        - pin: 26
+          alias: rod_3_5_stomp
+        - pin: 27
+          alias: rod_3_6_stomp
+        - pin: 28
+          alias: rod_4_0_stomp
+        - pin: 29
+          alias: rod_4_1_stomp
+        - pin: 30
+          alias: rod_4_2_stomp
+        - pin: 31
+          alias: rod_4_3_stomp
+        - pin: 32
+          alias: rod_4_4_stomp
+        - pin: 33
+          alias: rod_4_5_stomp
+        - pin: 34
+          alias: rod_4_6_stomp
+        - pin: 35
+          alias: rod_5_0_stomp
+        - pin: 36
+          alias: rod_5_1_stomp
+        - pin: 37
+          alias: rod_5_2_stomp
+        - pin: 38
+          alias: rod_5_3_stomp
+        - pin: 39
+          alias: rod_5_4_stomp
+        - pin: 40
+          alias: rod_5_5_stomp
+        - pin: 41
+          alias: rod_5_6_stomp
+        - pin: 42
+          alias: rod_6_0_stomp
+        - pin: 43
+          alias: rod_6_1_stomp
+        - pin: 44
+          alias: rod_6_2_stomp
+        - pin: 45
+          alias: rod_6_3_stomp
+        - pin: 46
+          alias: rod_6_4_stomp
+        - pin: 47
+          alias: rod_6_5_stomp
+        - pin: 48
+          alias: rod_6_6_stomp
 reactor_lid:
     digital_in_pins: # Rod stomp inputs (used as digital inputs)
         - pin: 22
