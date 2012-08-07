@@ -11,7 +11,10 @@ mcp23017 expander;
 #define DUMMY_BNC_DEBOUNCE_TIME 20
 #define DUMMY_BNC_DEBOUNCE_UPDATE_TIME 5
 dummybounce dummybouncers[DUMMY_BNC_COUNT];
+#include <ardubus.h>
 #define REPORT_INTERVAL 5000
+unsigned long last_debounce_time;
+unsigned long last_report_time;
 
 void setup()
 {
@@ -103,14 +106,13 @@ inline void reports()
     {
         Serial.print("RD"); // RD<index_byte><state_byte><time_long_as_hex>
         Serial.write(i);
-        Serial.print(ardubus_digital_in_bouncers[i].read());
-        ardubus_print_ulong_as_8hex(ardubus_digital_in_bouncers[i].duration());
+        Serial.print(dummybouncers[i].read());
+        ardubus_print_ulong_as_8hex(dummybouncers[i].duration());
         Serial.println("");
     }
+    last_report_time = millis();
 }
 
-unsigned long last_debounce_time;
-unsigned long last_report_time;
 void loop()
 {
     scan_matrix();
@@ -120,6 +122,6 @@ void loop()
     }
     if ((millis() - last_report_time) > REPORT_INTERVAL)
     {
-        ardubus_report();
+        reports();
     }
 }
