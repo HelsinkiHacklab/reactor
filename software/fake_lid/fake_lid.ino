@@ -95,7 +95,7 @@ inline void updates()
             // State changed
             Serial.print("CD"); // CD<index_byte><state_byte>
             Serial.write(i);
-            Serial.println(dummybouncers[i].read());
+            Serial.println(!dummybouncers[i].read());
         }
     }
 }
@@ -106,7 +106,7 @@ inline void reports()
     {
         Serial.print("RD"); // RD<index_byte><state_byte><time_long_as_hex>
         Serial.write(i);
-        Serial.print(dummybouncers[i].read());
+        Serial.print(!dummybouncers[i].read());
         ardubus_print_ulong_as_8hex(dummybouncers[i].duration());
         Serial.println("");
     }
