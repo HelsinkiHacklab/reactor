@@ -7,11 +7,19 @@
 mcp23017 expander;
 // "debounce" the keys, actually we probably read them so slowly it doesn't matter but this offers key repeats as well
 #include <dummybounce.h>
-dummybounce dummybouncers[49];
+#define DUMMY_BNC_COUNT 49
+#define DUMMY_BNC_DEBOUNCE_TIME 20
+dummybounce dummybouncers[DUMMY_BNC_COUNT];
 
 void setup()
 {
     Serial.begin(115200);
+
+    // Initialize the bouncers
+    for (byte i=0; i < DUMMY_BNC_COUNT; i++)
+    {
+        dummybouncers[i].begin(DUMMY_BNC_DEBOUNCE_TIME);
+    }
 
     // Initialize I2C library manually
     I2c.begin();
@@ -35,25 +43,54 @@ void setup()
     Serial.println("Booted");
 }
 
-byte scan_matrix_column(byte col)
-{
-    expander.data[0] = (expander.data[0] & B10000000) | (0x1 << col);
-    expander.sync();
-    
-    Serial.print("expander.data[0] B");
-    Serial.println(expander.data[0], BIN);
-    Serial.print("expander.data[1] B");
-    Serial.println(expander.data[1], BIN);
-    
-    byte rowdata = expander.data[1] >> 1;
-    
-}
-
-void loop()
+void scan_matrix()
 {
     for (byte i=0; i < 7; i++)
     {
         scan_matrix_column(i);
     }
-    delay(500);
+}
+
+void scan_matrix_column(byte col)
+{
+    expander.data[0] = (expander.data[0] & B10000000) | (0x1 << col);
+    expander.sync();
+    
+    /*
+    Serial.print("expander.data[0] B");
+    Serial.println(expander.data[0], BIN);
+    Serial.print("expander.data[1] B");
+    Serial.println(expander.data[1], BIN);
+    */
+    
+    byte rowdata = expander.data[1] >> 1;
+    for (byte row=0; row < 7; row++)
+    {
+        byte idx = (row*7)+col;
+        if (_BV(row) & rowdata)
+        {
+            dummybouncers[idx].dummystate = HIGH;
+        }
+        else
+        {
+            dummybouncers[idx].dummystate = LOW;
+        }
+    }
+
+}
+
+void loop()
+{
+    scan_matrix();
+    for (byte i=0; i < DUMMY_BNC_COUNT; i++)
+    {
+        if (dummybouncers[i].update())
+        {
+            // State changed
+            Serial.print("Bouncer #"); // CD<index_byte><state_byte>
+            Serial.print(i, DEC);
+            Serial.print(" state is ");
+            Serial.println(dummybouncers[i].read(), DEC);
+        }
+    }
 }
