@@ -8319,6 +8319,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <sheets>
 <sheet>
 <plain>
+<text x="33.02" y="96.52" size="1.778" layer="91">one could add a smoothing cap to the 5V output</text>
 </plain>
 <instances>
 <instance part="BRAINS" gate="G$1" x="50.8" y="50.8"/>
