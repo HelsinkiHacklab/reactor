@@ -8332,7 +8332,10 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <instance part="GND2" gate="1" x="10.16" y="93.98" rot="R270"/>
 <instance part="U$2" gate="G$1" x="48.26" y="83.82"/>
 <instance part="P+1" gate="1" x="10.16" y="96.52" rot="R90"/>
-<instance part="SPKDRV" gate="G$1" x="99.06" y="48.26"/>
+<instance part="SPKDRV" gate="G$1" x="99.06" y="48.26" smashed="yes">
+<attribute name="NAME" x="91.44" y="43.18" size="1.778" layer="95"/>
+<attribute name="VALUE" x="91.44" y="40.64" size="1.778" layer="96"/>
+</instance>
 <instance part="C1" gate="G$1" x="101.6" y="30.48" rot="R180"/>
 </instances>
 <busses>
