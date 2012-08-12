@@ -1,7 +1,7 @@
 /**
  * IRF740 gate (pin 1) connected to OPIN, drain (pin 2) to speaker -, source (pin 3) to GND  and speaker + goes to supply voltage.
- * Generic potentiometer to analog 1
- * analog 0 is floating to be used as random source.
+ * Generic potentiometer to ANA1 (see defines below)
+ * ANA0 is floating to be used as random source.
  */
 
 /**
