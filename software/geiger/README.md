@@ -8,7 +8,7 @@ Adjust radiation level from a potentiometer.
     * Alternatively wire up the programming header and bypass cap to your board)
   * Small speaker
   * Potentiometer (preferably a slide one)
-  * LM7505 or other 5V regulator (adjust wiring if pinout differs)
+  * LM7805 or other 5V regulator (adjust wiring if pinout differs)
   * IRF740 N-channel MOSFET (or similar, a smaller one will probably be enough depending on your speaker)
   * 9V+ battery (more voltage -> more noise)
   * Generic parts (resistors, capacitators, wires, pin headers)
