@@ -108,8 +108,8 @@ class codegen:
 void setup()
 {
     Serial.begin(%s);
-    Serial.println("");
-    Serial.println("Board: %s initializing");\n""" % (self.config['_speed'], self.name)
+    Serial.println(F(""));
+    Serial.println(F("Board: %s initializing"));\n""" % (self.config['_speed'], self.name)
 
         if self.setup_i2c_init:
             ret += """    
@@ -128,7 +128,7 @@ void setup()
             
  
         # Setup done, output board name and define the loop
-        ret += """    Serial.println("Board: %s ready");
+        ret += """    Serial.println(F("Board: %s ready"));
 }
 
 void loop()
