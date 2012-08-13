@@ -32,15 +32,15 @@ void loop()
     if (time > 5000)
     {
         last_report = millis();
-        Serial.print("time=");
+        Serial.print(F("time="));
         Serial.println(time, DEC);
         for (byte i=0; i < sizeof(i2c_reg_values); i++)
         {
-            Serial.print("i2c_reg_values[");
+            Serial.print(F("i2c_reg_values["));
             Serial.print(i, DEC);
-            Serial.print("]\t0x");
+            Serial.print(F("]\t0x"));
             Serial.print(i2c_reg_values[i], HEX);
-            Serial.print("\tB");
+            Serial.print(F("\tB"));
             Serial.println(i2c_reg_values[i], BIN);
         }
     }
@@ -51,9 +51,9 @@ void loop()
 // this function is registered as an event, see setup()
 void receiveEvent(int howMany)
 {
-    Serial.print("receiveEvent(");
+    Serial.print(F("receiveEvent("));
     Serial.print(howMany, DEC);
-    Serial.println(")");
+    Serial.println(F(")"));
 
     byte reg_addr = Wire.read();
     byte max_reg = reg_addr + howMany - 1;
@@ -63,7 +63,7 @@ void receiveEvent(int howMany)
         i2c_reg_values[i] = Wire.read();
     }
 
-    Serial.print("Complete");
+    Serial.print(F("Complete"));
   /*
   while(1 < Wire.available()) // loop through all but the last
   {

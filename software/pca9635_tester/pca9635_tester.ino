@@ -37,7 +37,7 @@ void setup()
     I2c.setSpeed(true); // Fast-mode support
 
     // Set device address and call I2c.begin()
-    Serial.println("Initializing led drivers");
+    Serial.println(F("Initializing led drivers"));
     driverboard.begin(0);
 
     // Dump the driver mode registers to check they're correct
@@ -51,7 +51,7 @@ void setup()
 
 
 
-    Serial.println("Booted");
+    Serial.println(F("Booted"));
 }
 
 const byte test_leds_max = 16*3;
@@ -62,18 +62,18 @@ void loop()
     if (bouncer.update())
     {
         bstate = bouncer.read();
-        Serial.print("State ");
+        Serial.print(F("State "));
         Serial.println(bstate, DEC);
         if (bstate)
         {
-            Serial.print("Turning OFF led ");
+            Serial.print(F("Turning OFF led "));
             Serial.println(ledno, DEC);
             driverboard.set_led_pwm(ledno, 0);
     
             ledno++;
             ledno = ledno % test_leds_max;
     
-            Serial.print("Turning ON led ");
+            Serial.print(F("Turning ON led "));
             Serial.println(ledno, DEC);
             driverboard.set_led_pwm(ledno, 255);
             
@@ -83,12 +83,12 @@ void loop()
     /*
     for (byte ledno = 0; ledno < test_leds_max; ledno++)
     {
-        Serial.print("Turning on led ");
+        Serial.print(F("Turning on led "));
         Serial.println(ledno, DEC);
         //driverboard.set_led_mode(ledno, 1);
         driverboard.set_led_pwm(ledno, 255);
         delay(250);
-        Serial.print("Turning off led ");
+        Serial.print(F("Turning off led "));
         Serial.println(ledno, DEC);
         driverboard.set_led_pwm(ledno, 0);
         //driverboard.set_led_mode(ledno, 0);

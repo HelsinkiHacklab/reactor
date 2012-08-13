@@ -40,7 +40,7 @@ void setup()
     expander.data[1] = 0x0; 
     expander.write_data();
 
-    Serial.println("Booted");
+    Serial.println(F("Booted"));
 }
 
 void scan_matrix()
@@ -57,9 +57,9 @@ void scan_matrix_column(byte col)
     expander.sync();
     
     /*
-    Serial.print("expander.data[0] B");
+    Serial.print(F("expander.data[0] B"));
     Serial.println(expander.data[0], BIN);
-    Serial.print("expander.data[1] B");
+    Serial.print(F("expander.data[1] B"));
     Serial.println(expander.data[1], BIN);
     */
     
@@ -87,9 +87,9 @@ void loop()
         if (dummybouncers[i].update())
         {
             // State changed
-            Serial.print("Bouncer #"); // CD<index_byte><state_byte>
+            Serial.print(F("Bouncer #")); // CD<index_byte><state_byte>
             Serial.print(i, DEC);
-            Serial.print(" state is ");
+            Serial.print(F(" state is "));
             Serial.println(dummybouncers[i].read(), DEC);
         }
     }

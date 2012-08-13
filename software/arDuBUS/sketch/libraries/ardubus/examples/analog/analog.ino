@@ -8,7 +8,7 @@ void setup()
 {
     Serial.begin(115200);
     ardubus_setup();
-    Serial.println("Booted");
+    Serial.println(F("Booted"));
 }
 
 void loop()

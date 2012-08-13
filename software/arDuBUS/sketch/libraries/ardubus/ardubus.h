@@ -46,7 +46,7 @@ inline int ardubus_hex2int(byte hexchar0, byte hexchar1, byte hexchar2, byte hex
 inline void ardubus_ack()
 {
     Serial.write(0x6);
-    Serial.println("");
+    Serial.println(F(""));
 }
 
 // Utility functions for outputting fixed lenght nex encoded numbers
@@ -54,7 +54,7 @@ inline void ardubus_print_byte_as_2hex(byte input)
 {
     if (input < 0x10)
     {
-        Serial.print("0");
+        Serial.print(F("0"));
     }
     Serial.print(input, HEX);
 }
@@ -264,9 +264,9 @@ inline void ardubus_read_command_bytes()
         if (ardubus_incoming_position > ARDUBUS_COMMAND_STRING_SIZE+2)
         {
             Serial.println(0x15); // NACK
-            Serial.print("PANIC: No end-of-line seen and ardubus_incoming_position=");
+            Serial.print(F("PANIC: No end-of-line seen and ardubus_incoming_position="));
             Serial.print(ardubus_incoming_position, DEC);
-            Serial.println(" clearing buffers");
+            Serial.println(F(" clearing buffers"));
             
             memset(&ardubus_incoming_command, 0, ARDUBUS_COMMAND_STRING_SIZE+2);
             ardubus_incoming_position = 0;

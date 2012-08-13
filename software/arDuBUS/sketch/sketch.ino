@@ -38,7 +38,7 @@ void setup()
     I2c.pullup(false); //Disable internal pull-ups
     I2c.setSpeed(true); // Fast-mode support
     ardubus_setup();
-    Serial.println("Booted");
+    Serial.println(F("Booted"));
 }
 
 void loop()

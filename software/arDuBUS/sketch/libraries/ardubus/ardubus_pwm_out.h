@@ -29,7 +29,7 @@ inline void ardubus_pwm_out_process_command(char *incoming_command)
         case 0x50: // ASCII "P" (P<pinbyte><cyclebyte>) //The pin must have been declared in ardubus_pwm_out_pins or unexpected things will happen (and must support HW PWM)
             byte pin = ardubus_pwm_out_pins[incoming_command[1]-ARDUBUS_INDEX_OFFSET];
             analogWrite(pin, incoming_command[2]);
-            Serial.print("P");
+            Serial.print(F("P"));
             Serial.print(incoming_command[1]);
             Serial.print(incoming_command[2]);
             ardubus_ack();

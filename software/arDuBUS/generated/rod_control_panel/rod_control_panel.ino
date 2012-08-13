@@ -18,8 +18,8 @@
 void setup()
 {
     Serial.begin(115200);
-    Serial.println("");
-    Serial.println("Board: rod_control_panel initializing");
+    Serial.println(F(""));
+    Serial.println(F("Board: rod_control_panel initializing"));
     
     I2c.timeOut(500); // 500ms timeout to avoid lockups
     I2c.pullup(false); //Disable internal pull-ups
@@ -27,7 +27,7 @@ void setup()
     ardubus_setup();
     PCA9635.set_driver_mode(0x0);
     PCA9635.set_sleep(0x0);
-    Serial.println("Board: rod_control_panel ready");
+    Serial.println(F("Board: rod_control_panel ready"));
 }
 
 void loop()

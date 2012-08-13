@@ -31,7 +31,7 @@ void setup()
     Serial.println(ardubus_hex2byte(0x41, 0x35), DEC); // A5
      */
     ardubus_setup();
-    Serial.println("Booted");
+    Serial.println(F("Booted"));
 }
 
 void set_bit(byte bit_index, boolean bit_dir)

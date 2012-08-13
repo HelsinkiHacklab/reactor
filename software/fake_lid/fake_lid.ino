@@ -19,8 +19,8 @@ unsigned long last_report_time;
 void setup()
 {
     Serial.begin(115200);
-    Serial.println("");
-    Serial.println("Board: fake_reactor_lid initializing");
+    Serial.println(F(""));
+    Serial.println(F("Board: fake_reactor_lid initializing"));
 
     // Initialize the bouncers
     for (byte i=0; i < DUMMY_BNC_COUNT; i++)
@@ -47,7 +47,7 @@ void setup()
     expander.data[1] = 0x0; 
     expander.write_data();
 
-    Serial.println("Board: fake_reactor_lid ready");
+    Serial.println(F("Board: fake_reactor_lid ready"));
 }
 
 inline void scan_matrix()
@@ -64,9 +64,9 @@ void scan_matrix_column(byte col)
     expander.sync();
     
     /*
-    Serial.print("expander.data[0] B");
+    Serial.print(F("expander.data[0] B"));
     Serial.println(expander.data[0], BIN);
-    Serial.print("expander.data[1] B");
+    Serial.print(F("expander.data[1] B"));
     Serial.println(expander.data[1], BIN);
     */
     
@@ -93,7 +93,7 @@ inline void updates()
         if (dummybouncers[i].update())
         {
             // State changed
-            Serial.print("CD"); // CD<index_byte><state_byte>
+            Serial.print(F("CD")); // CD<index_byte><state_byte>
             Serial.write(i);
             Serial.println(!dummybouncers[i].read());
         }
@@ -104,11 +104,11 @@ inline void reports()
 {
     for (byte i=0; i < DUMMY_BNC_COUNT; i++)
     {
-        Serial.print("RD"); // RD<index_byte><state_byte><time_long_as_hex>
+        Serial.print(F("RD")); // RD<index_byte><state_byte><time_long_as_hex>
         Serial.write(i);
         Serial.print(!dummybouncers[i].read());
         ardubus_print_ulong_as_8hex(dummybouncers[i].duration());
-        Serial.println("");
+        Serial.println(F(""));
     }
     last_report_time = millis();
 }

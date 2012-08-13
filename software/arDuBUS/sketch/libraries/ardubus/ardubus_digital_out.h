@@ -36,7 +36,7 @@ inline void ardubus_digital_out_process_command(char *incoming_command)
             {
                 digitalWrite(pin, LOW);
             }
-            Serial.print("D");
+            Serial.print(F("D"));
             Serial.print(incoming_command[1]);
             Serial.print(incoming_command[2]);
             ardubus_ack();

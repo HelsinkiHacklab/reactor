@@ -6,10 +6,10 @@
 void setup()
 {
     Serial.begin(115200);
-    Serial.println("");
-    Serial.println("Board: reactor_lid initializing");
+    Serial.println(F(""));
+    Serial.println(F("Board: reactor_lid initializing"));
     ardubus_setup();
-    Serial.println("Board: reactor_lid ready");
+    Serial.println(F("Board: reactor_lid ready"));
 }
 
 void loop()

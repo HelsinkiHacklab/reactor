@@ -40,9 +40,9 @@ inline void ardubus_spi74XX595_write()
         byte reg = (ARDUBUS_SPI74XX595_REGISTER_COUNT-1)-i;
         SPI.transfer(ardubus_spi74XX595_values[reg]);
         /*
-        Serial.print("DEBUG: wrote ardubus_spi74XX595_values[");
+        Serial.print(F("DEBUG: wrote ardubus_spi74XX595_values["));
         Serial.print(reg, DEC);
-        Serial.print("] value B");
+        Serial.print(F("] value B"));
         Serial.println(ardubus_spi74XX595_values[reg], BIN);
         */
     }
@@ -111,7 +111,7 @@ inline void ardubus_spi74XX595_process_command(char *incoming_command)
             // Set only the given bit in the correct register
             ardubus_spi74XX595_values[reg_index] = (ardubus_spi74XX595_values[reg_index] & mask) | bit_value;
             ardubus_spi74XX595_write();
-            Serial.print("B");
+            Serial.print(F("B"));
             Serial.print(incoming_command[1]);
             Serial.print(incoming_command[2]);
             ardubus_ack();
@@ -122,7 +122,7 @@ inline void ardubus_spi74XX595_process_command(char *incoming_command)
             byte reg_index = incoming_command[1]-ARDUBUS_INDEX_OFFSET;
             ardubus_spi74XX595_values[reg_index] = ardubus_hex2byte(incoming_command[2], incoming_command[3]);
             ardubus_spi74XX595_write();
-            Serial.print("W");
+            Serial.print(F("W"));
             Serial.print(incoming_command[1]);
             Serial.print(incoming_command[2]);
             Serial.print(incoming_command[3]);

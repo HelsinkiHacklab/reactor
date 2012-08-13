@@ -41,7 +41,7 @@ inline void ardubus_pca9535_out_process_command(char *incoming_command)
             {
                 ardubus_pca9535s[ardubus_pca9535_pin2board_idx(pin)].digitalWrite((pin % 16), LOW);
             }
-            Serial.print("E");
+            Serial.print(F("E"));
             Serial.print(incoming_command[1]);
             Serial.print(incoming_command[2]);
             ardubus_ack();

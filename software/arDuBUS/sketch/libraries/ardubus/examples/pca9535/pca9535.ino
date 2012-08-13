@@ -23,7 +23,7 @@ void setup()
     I2c.pullup(true);
 
     ardubus_setup();
-    Serial.println("Booted");
+    Serial.println(F("Booted"));
 }
 
 void loop()

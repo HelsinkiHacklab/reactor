@@ -32,10 +32,10 @@ inline void ardubus_analog_in_read_inputs()
         {
             ardubus_analog_in_lastvals[i] = tmp;
             ardubus_analog_in_timestamps[i] = millis();
-            Serial.print("CA"); // CA<index_byte><value in hex>
+            Serial.print(F("CA")); // CA<index_byte><value in hex>
             Serial.write(i);
             ardubus_print_int_as_4hex(ardubus_analog_in_lastvals[i]);
-            Serial.println("");
+            Serial.println(F(""));
         }
     }
     ardubus_digital_in_last_read_time = millis();
@@ -53,11 +53,11 @@ inline void ardubus_analog_in_report()
 {
     for (byte i=0; i < sizeof(ardubus_analog_in_pins); i++)
     {
-        Serial.print("RA"); // RA<index_byte><value in hex>
+        Serial.print(F("RA")); // RA<index_byte><value in hex>
         Serial.write(i);
         ardubus_print_int_as_4hex(ardubus_analog_in_lastvals[i]);
         ardubus_print_ulong_as_8hex(millis()-ardubus_analog_in_timestamps[i]);
-        Serial.println("");
+        Serial.println(F(""));
     }
 }
 

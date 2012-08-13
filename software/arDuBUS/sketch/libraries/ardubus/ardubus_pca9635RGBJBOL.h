@@ -33,7 +33,7 @@ inline void ardubus_pca9635RGBJBOL_process_command(char *incoming_command)
     {
         case 0x4A: // ASCII "J" (J<indexbyte><ledbyte><value>) //Note that the indexbyte is index of the pca9635RGBJBOLs-array, not pin number, ledbyte is the number of the led on the board
             ardubus_pca9635RGBJBOLs[incoming_command[1]-ARDUBUS_INDEX_OFFSET].set_led_pwm(incoming_command[2]-ARDUBUS_INDEX_OFFSET, incoming_command[3]);
-            Serial.print("J");
+            Serial.print(F("J"));
             Serial.print(incoming_command[1]);
             Serial.print(incoming_command[2]);
             Serial.print(incoming_command[3]);
