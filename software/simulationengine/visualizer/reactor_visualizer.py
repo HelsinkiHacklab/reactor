@@ -377,6 +377,8 @@ class reactor_listener(threading.Thread):
     def _draw_cell(self, data_cube, x, y, z, scale, xpos, ypos, w, h, draw_labels, show_broken_cells = True):
         if reactor.cell_type(x, y) != ' ':
             index = cell_index(x, y, z)
+            cx = xpos + w/2
+            cy = ypos + h/2
 
             # Get temperature
             t = data_cube[index]
@@ -397,17 +399,29 @@ class reactor_listener(threading.Thread):
             # Draw label, if there is room for it
             if draw_labels:
                 label = reactor.cell_name(x, y)
-                cx = xpos + w/2
-                cy = ypos + h/2
                 textutils.drawTextAtPos(self.screen, label, cx, cy, black, color, textutils.tinyFont)
+
+            if draw_labels: self.screen.lock()
+
+            # Draw rod, if it crosses the cell (change size by how much it overlaps the cell).
+            rodPos = 1.0 * self.rod_position[rod_index(x, y)]
+            rodCover = min(0.0, max(1.0 * rodPos - z, 1.0))
+            if rodCover > 0.0:
+                rodx = int(xpos + (1.0 - rodCover*0.5) * w)
+                rody = int(ypos + (1.0 - rodCover*0.5) * h)
+                rodw = int(w * rodCover)
+                rodh = int(h * rodCover)
+                # TODO: Doesn't seem to draw the ellipse for some reason :/
+                elipseRect = Rect(rodx, rody, rodx + rodw, rody + rodh)                 
+                pygame.draw.ellipse(self.screen, black, elipseRect, 0)
 
             # Cross over if melted
             if show_broken_cells and not self.operational[index]:
-                if draw_labels: self.screen.lock()
                 crossover_thickness = 2
                 pygame.draw.line(self.screen, black, (xpos,ypos), (xpos+w-1,ypos+h-1), crossover_thickness)
                 pygame.draw.line(self.screen, black, (xpos+w-1,ypos), (xpos,ypos+h-1), crossover_thickness)
-                if draw_labels: self.screen.unlock()
+
+            if draw_labels: self.screen.unlock()
 
 
     def quit(self, *args):
