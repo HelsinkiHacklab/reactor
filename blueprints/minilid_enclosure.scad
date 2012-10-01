@@ -11,6 +11,7 @@ pcb_y = 15*10;
 main_x = pcb_x+10; // 5mm over both sides
 main_y = pcb_y+10;
 
+// Helper
 module roundedsq(x,y,r)
 {
     $fa=0.1;
@@ -53,4 +54,19 @@ module roundedsq(x,y,r)
     }
 }
 
-roundedsq(main_x, main_y, 5);
+
+
+module bottom()
+{
+    roundedsq(main_x, main_y, 5);
+}
+
+module top()
+{
+    difference()
+    {
+        roundedsq(main_x, main_y, 5);
+    }
+}
+
+top();
