@@ -54,11 +54,13 @@ module button_holes()
             {
                 translate([xi*button_distance, yi*button_distance, 0])
                 {
+                    // Button position marker
                     translate([1,1,0])
                     {
                         %square(button_distance-2);
                     }
-                    assign(ymap=hole_map[yi])
+                    // Make holes only for those buttons that have a rod
+                    assign(ymap=hole_map[yi]) // Need to assign this to temp variable since openscad does not support multidimensional array access
                     {
                         if (ymap[xi])
                         {
@@ -80,12 +82,24 @@ module bottom()
     roundedsq(main_x, main_y, 5);
 }
 
+module ic_et_connector_holes()
+{
+    ox = (main_x - pcb_x) / 2;
+    oy = (main_y - pcb_y) / 2;
+    // Get us to the PCB edge
+    translate([ox,oy,0])
+    {
+        square([34,15*10]);
+    }
+}
+
 module top()
 {
     difference()
     {
         roundedsq(main_x, main_y, 5);
         button_holes();
+        ic_et_connector_holes();
     }
 }
 
