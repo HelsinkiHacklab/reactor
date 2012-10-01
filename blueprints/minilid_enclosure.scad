@@ -21,9 +21,19 @@ module roundedsq(x,y,r)
     {
         minkowski()
         {
-            square([x-r,y-r]);
+            square([x-(2*r),y-(2*r)]);
             circle(r, center=true);
         }
+    }
+}
+
+module pcb()
+{
+    ox = (main_x - pcb_x) / 2;
+    oy = (main_y - pcb_y) / 2;
+    translate([ox,oy,0])
+    {
+        %square([pcb_x, pcb_y]);
     }
 }
 
@@ -66,6 +76,8 @@ module top()
     }
 }
 
+
+pcb();
 
 //button_holes();
 top();
