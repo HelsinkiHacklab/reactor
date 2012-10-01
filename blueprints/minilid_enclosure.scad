@@ -89,7 +89,10 @@ module ic_et_connector_holes()
     // Get us to the PCB edge
     translate([ox,oy,0])
     {
-        square([34,15*10]);
+        translate([-1,16,0])
+        {
+            square([34,pcb_y-16-8]);
+        }
     }
 }
 
