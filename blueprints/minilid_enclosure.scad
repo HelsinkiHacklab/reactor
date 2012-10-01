@@ -16,40 +16,12 @@ module roundedsq(x,y,r)
 {
     $fa=0.1;
     $fs=0.05;
-    union()
+    translate([r,r,0])
     {
-        difference()
+        minkowski()
         {
-            square([x,y]);
-            square(r+epsilon);
-            translate([x-r,0,0])
-            {
-                square(r+epsilon);
-                translate([0,y-r,0])
-                {
-                    square(r+epsilon);
-                }
-            }
-            translate([0,y-r,0])
-            {
-                square(r+epsilon);
-            }
-        }
-        translate([r,r,0])
-        {
+            square([x-r,y-r]);
             circle(r);
-        }
-        translate([r,y-r,0])
-        {
-            circle(r);
-        }
-        translate([x-r,r,0])
-        {
-            circle(r);
-            translate([0,y-2*r,0])
-            {
-                circle(r);
-            }
         }
     }
 }
@@ -66,7 +38,13 @@ module top()
     difference()
     {
         roundedsq(main_x, main_y, 5);
+        botton_holes();
     }
+}
+
+module button_holes()
+{
+    
 }
 
 top();
