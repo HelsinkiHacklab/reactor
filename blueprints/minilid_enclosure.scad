@@ -1,5 +1,5 @@
 epsilon = 0.001;
-buttons_area_xoffset = 52;
+buttons_area_xoffset = 60;
 buttons_area_yoffset = 10;
 buttons_area_x = 0;
 buttons_area_y = 0;
@@ -51,7 +51,7 @@ module button_holes()
                     {
                         %square(button_distance-2);
                     }
-                    translate([button_hole_side/4, button_hole_side/4, 0])
+                    translate([(button_distance/2)-(button_hole_side/2), (button_distance/2)-(button_hole_side/2), 0])
                     {
                         roundedsq(button_hole_side, button_hole_side, button_hole_r);
                     }
