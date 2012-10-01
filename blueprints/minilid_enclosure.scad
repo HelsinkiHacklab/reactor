@@ -112,5 +112,5 @@ module top()
 // Visualize PCB placement
 %pcb();
 
-//top();
-bottom();
+top();
+//bottom();
