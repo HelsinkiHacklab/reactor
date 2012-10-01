@@ -33,7 +33,7 @@ module pcb()
     oy = (main_y - pcb_y) / 2;
     translate([ox,oy,0])
     {
-        %square([pcb_x, pcb_y]);
+        square([pcb_x, pcb_y]);
     }
 }
 
@@ -54,7 +54,7 @@ module button_holes()
             {
                 translate([xi*button_distance, yi*button_distance, 0])
                 {
-                    // Button position marker
+                    // Button position/area marker
                     translate([1,1,0])
                     {
                         %square(button_distance-2);
@@ -76,7 +76,7 @@ module button_holes()
     }
 }
 
-
+// So far this is a trivial plate
 module bottom()
 {
     roundedsq(main_x, main_y, 5);
@@ -106,8 +106,7 @@ module top()
     }
 }
 
+// Visualize PCB placement
+%pcb();
 
-pcb();
-
-//button_holes();
 top();
