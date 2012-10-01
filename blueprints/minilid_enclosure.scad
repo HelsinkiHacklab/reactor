@@ -39,6 +39,13 @@ module pcb()
 
 module button_holes()
 {
+    hole_map = [[ 0,0,1,1,1,0,0 ],
+                [ 0,1,1,1,1,1,0 ],
+                [ 1,1,1,1,1,1,1 ],
+                [ 1,1,1,1,1,1,1 ],
+                [ 1,1,1,1,1,1,1 ],
+                [ 0,1,1,1,1,1,0 ],
+                [ 0,0,1,1,1,0,0 ]];
     translate([buttons_area_xoffset, buttons_area_yoffset,0])
     {
         for(xi=[0:6])
@@ -51,9 +58,15 @@ module button_holes()
                     {
                         %square(button_distance-2);
                     }
-                    translate([(button_distance/2)-(button_hole_side/2), (button_distance/2)-(button_hole_side/2), 0])
+                    assign(ymap=hole_map[yi])
                     {
-                        roundedsq(button_hole_side, button_hole_side, button_hole_r);
+                        if (ymap[xi])
+                        {
+                            translate([(button_distance/2)-(button_hole_side/2), (button_distance/2)-(button_hole_side/2), 0])
+                            {
+                                roundedsq(button_hole_side, button_hole_side, button_hole_r);
+                            }
+                        }
                     }
                 }
             }
