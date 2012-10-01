@@ -1,9 +1,10 @@
 epsilon = 0.001;
-buttons_area_xoffset = 0;
-buttons_area_yoffset = 0;
+buttons_area_xoffset = 52;
+buttons_area_yoffset = 10;
 buttons_area_x = 0;
 buttons_area_y = 0;
 button_hole_side = 12; // square holes with rounded corners
+button_hole_r = 2;
 button_distance = 20; // Center-to-center
 
 pcb_x = 20*10;
@@ -21,11 +22,34 @@ module roundedsq(x,y,r)
         minkowski()
         {
             square([x-r,y-r]);
-            circle(r);
+            circle(r, center=true);
         }
     }
 }
 
+module button_holes()
+{
+    translate([buttons_area_xoffset, buttons_area_yoffset,0])
+    {
+        for(xi=[0:6])
+        {
+            for(yi=[0:6])
+            {
+                translate([xi*button_distance, yi*button_distance, 0])
+                {
+                    translate([1,1,0])
+                    {
+                        %square(button_distance-2);
+                    }
+                    translate([button_hole_side/4, button_hole_side/4, 0])
+                    {
+                        roundedsq(button_hole_side, button_hole_side, button_hole_r);
+                    }
+                }
+            }
+        }
+    }
+}
 
 
 module bottom()
@@ -38,13 +62,10 @@ module top()
     difference()
     {
         roundedsq(main_x, main_y, 5);
-        botton_holes();
+        button_holes();
     }
 }
 
-module button_holes()
-{
-    
-}
 
+//button_holes();
 top();
