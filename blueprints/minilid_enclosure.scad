@@ -17,12 +17,15 @@ module roundedsq(x,y,r)
 {
     $fa=0.1;
     $fs=0.05;
-    translate([r,r,0])
+    render()
     {
-        minkowski()
+        translate([r,r,0])
         {
-            square([x-(2*r),y-(2*r)]);
-            circle(r, center=true);
+            minkowski()
+            {
+                square([x-(2*r),y-(2*r)]);
+                circle(r, center=true);
+            }
         }
     }
 }
