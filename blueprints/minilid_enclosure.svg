@@ -14,7 +14,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.1 r9760"
-   sodipodi:docname="miniled_enclosure.svg">
+   sodipodi:docname="minilid_enclosure.svg">
   <defs
      id="defs4">
     <marker
@@ -38,7 +38,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.98994949"
-     inkscape:cx="294.9271"
+     inkscape:cx="172.69864"
      inkscape:cy="337.28103"
      inkscape:document-units="mm"
      inkscape:current-layer="layer5"
@@ -48,7 +48,7 @@
      inkscape:window-height="1002"
      inkscape:window-x="0"
      inkscape:window-y="0"
-     inkscape:window-maximized="0" />
+     inkscape:window-maximized="1" />
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -61,15 +61,10 @@
     </rdf:RDF>
   </metadata>
   <g
-     inkscape:label="Layer 1"
-     inkscape:groupmode="layer"
-     id="layer1"
-     transform="translate(0,-478.34644)"
-     style="display:inline" />
-  <g
      inkscape:groupmode="layer"
      id="layer5"
-     inkscape:label="outline">
+     inkscape:label="outline"
+     style="display:inline">
     <g
        transform="translate(0,-478.34644)"
        id="g68197">
