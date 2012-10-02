@@ -79,10 +79,46 @@ module button_holes()
     }
 }
 
+module screw_holes(d=4)
+{
+    $fa=0.1;
+    $fs=0.05;
+    r=d/2;
+    ox = (main_x - pcb_x) / 2;
+    oy = (main_y - pcb_y) / 2;
+    // Get us to the PCB edge
+    render()
+    {
+        translate([ox,oy,0])
+        {
+            translate([r+r/2, r+r/2, 0])
+            {
+                circle(r);
+            }
+            translate([r+r/2, pcb_y-(r+r/2), 0])
+            {
+                circle(r);
+            }
+            translate([pcb_x-(r+r/2), pcb_y-(r+r/2), 0])
+            {
+                circle(r);
+            }
+            translate([pcb_x-(r+r/2), r+r/2, 0])
+            {
+                circle(r);
+            }
+        }
+    }
+}
+
 // So far this is a trivial plate
 module bottom()
 {
-    roundedsq(main_x, main_y, 5);
+    difference()
+    {
+        roundedsq(main_x, main_y, 5);
+        screw_holes();
+    }
 }
 
 module ic_et_connector_holes()
@@ -106,6 +142,7 @@ module top()
         roundedsq(main_x, main_y, 5);
         button_holes();
         ic_et_connector_holes();
+        screw_holes();
     }
 }
 
