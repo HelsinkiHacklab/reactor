@@ -5,7 +5,7 @@ buttons_area_x = 0;
 buttons_area_y = 0;
 button_hole_side = 12; // square holes with rounded corners
 button_hole_r = 2;
-button_distance = 20; // Center-to-center
+button_distance = 19.8; // Center-to-center
 
 pcb_x = 20*10;
 pcb_y = 15*10;
