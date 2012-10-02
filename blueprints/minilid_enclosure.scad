@@ -43,11 +43,11 @@ module pcb()
 module button_holes()
 {
     hole_map = [[ 0,0,1,1,1,0,0 ],
-                [ 0,1,1,1,1,1,0 ],
+                [ 0,1,0,1,1,1,0 ],
+                [ 1,1,1,1,1,0,1 ],
                 [ 1,1,1,1,1,1,1 ],
-                [ 1,1,1,1,1,1,1 ],
-                [ 1,1,1,1,1,1,1 ],
-                [ 0,1,1,1,1,1,0 ],
+                [ 1,0,1,1,1,1,1 ],
+                [ 0,1,1,1,0,1,0 ],
                 [ 0,0,1,1,1,0,0 ]];
     translate([buttons_area_xoffset, buttons_area_yoffset,0])
     {
@@ -63,9 +63,9 @@ module button_holes()
                         %square(button_distance-2);
                     }
                     // Make holes only for those buttons that have a rod
-                    assign(ymap=hole_map[yi]) // Need to assign this to temp variable since openscad does not support multidimensional array access
+                    assign(ymap=hole_map[xi]) // Need to assign this to temp variable since openscad does not support multidimensional array access
                     {
-                        if (ymap[xi])
+                        if (ymap[yi])
                         {
                             translate([(button_distance/2)-(button_hole_side/2), (button_distance/2)-(button_hole_side/2), 0])
                             {
