@@ -14,7 +14,10 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.1 r9760"
-   sodipodi:docname="New document 1">
+   sodipodi:docname="minilid_enclosure.svg"
+   inkscape:export-filename="/Users/rambo/devel/arduino/reactor/blueprints/minilid_enclosure_outline.png"
+   inkscape:export-xdpi="1000"
+   inkscape:export-ydpi="1000">
   <defs
      id="defs4">
     <marker
@@ -37,16 +40,16 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.4"
-     inkscape:cx="387.8404"
-     inkscape:cy="407.84229"
+     inkscape:cx="301.41183"
+     inkscape:cy="293.55658"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
      units="mm"
      inkscape:window-width="1628"
      inkscape:window-height="986"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
+     inkscape:window-x="14"
+     inkscape:window-y="10"
      inkscape:window-maximized="0" />
   <metadata
      id="metadata7">
@@ -64,7 +67,8 @@
      inkscape:label="outline"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(0,-481.88975)">
+     transform="translate(0,-481.88975)"
+     style="display:inline">
     <g
        id="g67891"
        transform="translate(-0.3228346,0.67717392)">
