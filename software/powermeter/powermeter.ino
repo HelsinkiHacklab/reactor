@@ -12,7 +12,7 @@
 LiquidCrystalFast lcd(0, 1, 2, 7, 8, 9, 10); // LiquidCrystalFast lcd(RS, RW, Enable, D4, D5, D6, D7) 
 
 // Convert the sensor reading from millivolts to milliamps
-uint16_t acs71x_5v_mv2ma(uint16_t mv)
+uint16_t acs715_mv2ma(uint16_t mv)
 {
     // 133 mV/A starting at 500 mV (actually vcc/100), 1.5% error
     if (mv <= ACS715_ZERO)
@@ -27,7 +27,7 @@ uint16_t acs71x_5v_mv2ma(uint16_t mv)
 }
 
 // Get the sign of the corresponding reading
-inline int8_t acs71x_3v3_mv2ma_sign(uint16_t mv)
+inline int8_t acs714_mv2ma_sign(uint16_t mv)
 {
     if (mv < ACS714_ZERO)
     {
@@ -37,7 +37,7 @@ inline int8_t acs71x_3v3_mv2ma_sign(uint16_t mv)
 }
 
 // Convert the sensor reading from millivolts to milliamps
-uint16_t acs71x_3v3_mv2ma(uint16_t mv)
+uint16_t acs714_mv2ma(uint16_t mv)
 {
     // 66mV/A centered on 2500mv, 1.5% error
     // For now I'll just care about the positive side.
