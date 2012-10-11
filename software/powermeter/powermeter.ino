@@ -70,37 +70,39 @@ void setup() {
   // set up the LCD's number of rows and columns: 
   lcd.begin(16, 2);
   // Print a message to the LCD.
-  lcd.print("hello, world!");
+//  lcd.print("hello, world!");
+/**
+ * Theyäre inputs by default...
   pinMode(A4, INPUT);
   pinMode(A5, INPUT);
   pinMode(A6, INPUT);
   pinMode(A7, INPUT);
+*/
   delay(500);
-  lcd.clear();
+//  lcd.clear();
 }
 
-void loop() {
-  acs714_mv = analogRead(A4) * MV_PER_LSB;
-  acs715_mv = analogRead(A5) * MV_PER_LSB;
-  sense5v_mv = analogRead(A6) * MV_PER_LSB;
-  sense3v3_mv = analogRead(A7) * MV_PER_LSB;
-
+void loop()
+{
+    acs714_mv = analogRead(A4) * MV_PER_LSB;
+    acs715_mv = analogRead(A5) * MV_PER_LSB;
+    sense5v_mv = analogRead(A6) * MV_PER_LSB;
+    sense3v3_mv = analogRead(A7) * MV_PER_LSB;
   
-
-  //sprintf(lcdline1, "%04d | %04d", sense5v_mv, acs714_mv);
-  lcd.setCursor(0, 0);
-  lcd.print(format_mx2x(sense5v_mv));
-  lcd.print("V");
-  lcd.setCursor(7, 0);
-  lcd.print(format_mx2x(acs714_mv));
-  lcd.print("A");
+    //sprintf(lcdline1, "%04d | %04d", sense5v_mv, acs714_mv);
+    lcd.setCursor(0, 0);
+    lcd.print(format_mx2x(sense5v_mv));
+    lcd.print("V");
+    lcd.setCursor(7, 0);
+    lcd.print(format_mx2x(acs714_mv));
+    lcd.print("A");
+    
+    lcd.setCursor(0, 1);
+    lcd.print(format_mx2x(sense3v3_mv));
+    lcd.print("V");
+    lcd.setCursor(7, 1);
+    lcd.print(format_mx2x(acs715_mv));
+    lcd.print("A");
   
-  lcd.setCursor(0, 1);
-  lcd.print(format_mx2x(sense3v3_mv));
-  lcd.print("V");
-  lcd.setCursor(7, 1);
-//  lcd.print(format_mx2x(acs715_mv));
-//  lcd.print("A");
-
-  delay(50);
+    delay(50);
 }
