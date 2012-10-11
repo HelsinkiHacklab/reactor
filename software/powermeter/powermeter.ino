@@ -91,17 +91,17 @@ void loop()
   
     //sprintf(lcdline1, "%04d | %04d", sense5v_mv, acs714_mv);
     lcd.setCursor(0, 0);
-    lcd.print(format_mx2x(sense5v_mv));
-    lcd.print("V");
-    lcd.setCursor(7, 0);
-    lcd.print(format_mx2x(acs714_mv));
-    lcd.print("A");
-    
-    lcd.setCursor(0, 1);
     lcd.print(format_mx2x(sense3v3_mv));
     lcd.print("V");
-    lcd.setCursor(7, 1);
+    lcd.setCursor(11, 0);
+    lcd.print(format_mx2x(sense5v_mv));
+    lcd.print("V");
+    
+    lcd.setCursor(0, 1);
     lcd.print(format_mx2x(acs715_mv));
+    lcd.print("A");
+    lcd.setCursor(11, 1);
+    lcd.print(format_mx2x(acs714_mv));
     lcd.print("A");
   
     delay(50);
