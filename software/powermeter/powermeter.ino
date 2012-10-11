@@ -1,6 +1,9 @@
 
 /**
  * REMINDER: disconnect the current sensors from the board or uploading with ISP will get fsckd
+ *
+ * NOTE: You must replace your Arduino linker, see  http://code.google.com/p/arduino-tiny/issues/detail?id=58
+ *
  */
 #define VCC_MV (5200) // I'm using 5.2V supply
 #define MV_PER_LSB ((uint8_t)(VCC_MV/1024)) // I sure hope the complier will optimize these results to a constant
@@ -58,26 +61,12 @@ inline char num2ascii(uint8_t input)
 }
 
 // Formatter for the voltages an amperages, returns a char-pointer so can be called directly from lcd.print
-char format_mx2x_buffer[5]; // space for "x.xx" and null)
+char format_mx2x_buffer[6]; // space for "x.xx" and null)
 char* format_mx2x(uint16_t mv)
 {
     uint8_t x = mv / 1000;
     uint8_t cx = (mv - (x*1000)) / 100;
-    // TODO: Due to the bug #58 this could be implemented inline and not including sprintf would probably save a lot of code size.
-    //sprintf(format_mx2x_buffer, "%d.%02d", x, cx);
-    format_mx2x_buffer[0] = num2ascii(x);
-    format_mx2x_buffer[1] = 0x2e; // ASCII "."
-    if (cx < 10)
-    {
-        format_mx2x_buffer[2] = 0x30; // ASCII "0";
-        format_mx2x_buffer[3] = num2ascii(cx);
-    }
-    else
-    {
-        format_mx2x_buffer[2] = num2ascii(cx/10);
-        format_mx2x_buffer[3] = num2ascii((cx-(format_mx2x_buffer[2]*10)));
-    }
-    format_mx2x_buffer[4] = 0x0;
+    sprintf(format_mx2x_buffer, "%02d.%02d", x, cx);
     return format_mx2x_buffer;
 }
 
@@ -92,8 +81,8 @@ void setup()
     // set up the LCD's number of rows and columns: 
     lcd.begin(16, 2);
     //Print a boot message to the LCD.
-    //lcd.print("Hello, world!");
-    //delay(500);
+    lcd.print(F("Hello, world!"));
+    delay(500);
     // And clear it
     lcd.clear();
 }
@@ -110,17 +99,17 @@ void loop()
     lcd.setCursor(0, 0);
     lcd.print(format_mx2x(sense5v_mv));
     lcd.print("V");
-    lcd.setCursor(11, 0);
+    lcd.setCursor(10, 0);
     lcd.print(format_mx2x(sense3v3_mv));
     lcd.print("V");
     lcd.setCursor(0, 1);
     lcd.print(format_mx2x(acs715_mv2ma(acs71x_5v_mv)));
     lcd.print("A");
-    lcd.setCursor(11, 1);
+    lcd.setCursor(10, 1);
     lcd.print(format_mx2x(acs714_mv2ma(acs71x_3v3_mv)));
     lcd.print("A");
 
-    // We have 2*4 characters of space in the middle we could use if we can get around the codesize issue http://code.google.com/p/arduino-tiny/issues/detail?id=58
+    // We have 2*2 characters of space in the middle we could use (or 2*4 if we're carefull not to make the main point unreadable)
 
     delay(50);
 }
