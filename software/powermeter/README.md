@@ -6,6 +6,8 @@ Standard hitachi-style 2x16 LCD module, two Pololu current sensors (due to avail
 
 This is wired up on stripboard, I'll draw a schematic when I get around to it.
 
+The ACS714 (red X) goes to right-side connectors, ACS715 (black X) to left, remember that the measurement return pin is on that side of the connector too.
+
 [1]: http://www.pololu.com/catalog/product/1187
 [2]: http://www.pololu.com/catalog/product/1186
 
