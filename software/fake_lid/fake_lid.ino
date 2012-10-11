@@ -1,3 +1,5 @@
+// TODO: the reading is rotated 90degrees, so row & column are mixed
+
 #define I2C_DEVICE_DEBUG
 // Get this from https://github.com/rambo/I2C
 #include <I2C.h> // For some weird reason including this in the relevant .h file does not work
