@@ -50,12 +50,12 @@ uint16_t acs714_mv2ma(uint16_t mv)
     return (amps*1000) + (desiamps * 100);
 }
 
-char format_mv2v_buffer[5]; // space for "x.xx" and null)
+char format_mv2v_buffer[6]; // space for "x.xx" and null)
 void format_mv2v(uint16_t mv)
 {
     uint8_t v = mv / 1000;
     uint8_t cv = (mv - (v*1000)) / 100;
-    sprintf(format_mv2v_buffer, "%d.%02d", v, cv);
+    sprintf(format_mv2v_buffer, "%d.%02dV", v, cv);
 }
 
 
@@ -86,16 +86,11 @@ void loop() {
   sense5v_mv = analogRead(A6) * MV_PER_LSB;
   sense3v3_mv = analogRead(A7) * MV_PER_LSB;
 
-  //format_mv2v(sense5v_mv);
-  // inlining above:
-    uint8_t v = sense5v_mv / 1000;
-    uint8_t cv = (sense5v_mv - (v*1000)) / 100;
-    sprintf(format_mv2v_buffer, "%dV%02d", v, cv);
-
+  format_mv2v(sense5v_mv);
 
   //sprintf(lcdline1, "%04d | %04d", sense5v_mv, acs714_mv);
   lcd.setCursor(0, 0);
-  lcd.print(lcdline1);
+  lcd.print(format_mv2v_buffer);
   //sprintf(lcdline2, "%04d | %04d", sense3v3_mv, acs715_mv);
   lcd.setCursor(0, 1);
   lcd.print(lcdline2);
