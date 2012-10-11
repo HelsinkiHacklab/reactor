@@ -1,5 +1,4 @@
 #include <LiquidCrystalFast.h>
-
 /*
 LiquidCrystalFast lcd(RS, RW, Enable, D4, D5, D6, D7) 
 */
@@ -51,6 +50,15 @@ uint16_t acs714_mv2ma(uint16_t mv)
     return (amps*1000) + (desiamps * 100);
 }
 
+char format_mv2v_buffer[5]; // space for "x.xx" and null)
+void format_mv2v(uint16_t mv)
+{
+    uint8_t v = mv / 1000;
+    uint8_t cv = (mv - (v*1000)) / 100;
+    sprintf(format_mv2v_buffer, "%d.%02d", v, cv);
+}
+
+
 uint16_t acs714_mv; //5V side current sensor (A4)
 uint16_t acs715_mv; // 3.3V side current sensor (A5)
 uint16_t sense5v_mv; // 5V side voltage monitor (A6)
@@ -78,6 +86,7 @@ void loop() {
   sense5v_mv = analogRead(A6) * MV_PER_LSB;
   sense3v3_mv = analogRead(A7) * MV_PER_LSB;
 
+  format_mv2v(sense5v_mv);
   sprintf(lcdline1, "%04d | %04d", sense5v_mv, acs714_mv);
   lcd.setCursor(0, 0);
   lcd.print(lcdline1);
