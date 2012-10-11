@@ -51,10 +51,10 @@ uint16_t acs714_mv2ma(uint16_t mv)
     return (amps*1000) + (desiamps * 100);
 }
 
-uint16_t pa4;
-uint16_t pa5;
-uint16_t pa6;
-uint16_t pa7;
+uint16_t acs714_mv; //5V side current sensor (A4)
+uint16_t acs715_mv; // 3.3V side current sensor (A5)
+uint16_t sense5v_mv; // 5V side voltage monitor (A6)
+uint16_t sense3v3_mv; // 3.3V side voltage monitor (A7)
 
 char lcdline1[17];
 char lcdline2[17];
@@ -73,15 +73,15 @@ void setup() {
 }
 
 void loop() {
-  pa4 = analogRead(A4);
-  pa5 = analogRead(A5);
-  pa6 = analogRead(A6);
-  pa7 = analogRead(A7);
+  acs714_mv = analogRead(A4) * MV_PER_LSB;
+  acs715_mv = analogRead(A5) * MV_PER_LSB;
+  sense5v_mv = analogRead(A6) * MV_PER_LSB;
+  sense3v3_mv = analogRead(A7) * MV_PER_LSB;
 
-  sprintf(lcdline1, "%04d | %04d", pa4, pa5);
+  sprintf(lcdline1, "%04d | %04d", sense5v_mv, acs714_mv);
   lcd.setCursor(0, 0);
   lcd.print(lcdline1);
-  sprintf(lcdline2, "%04d | %04d", pa6, pa7);
+  sprintf(lcdline2, "%04d | %04d", sense3v3_mv, acs715_mv);
   lcd.setCursor(0, 1);
   lcd.print(lcdline2);
 
