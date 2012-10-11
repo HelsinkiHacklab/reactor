@@ -86,11 +86,17 @@ void loop() {
   sense5v_mv = analogRead(A6) * MV_PER_LSB;
   sense3v3_mv = analogRead(A7) * MV_PER_LSB;
 
-  format_mv2v(sense5v_mv);
-  sprintf(lcdline1, "%04d | %04d", sense5v_mv, acs714_mv);
+  //format_mv2v(sense5v_mv);
+  // inlining above:
+    uint8_t v = sense5v_mv / 1000;
+    uint8_t cv = (sense5v_mv - (v*1000)) / 100;
+    sprintf(format_mv2v_buffer, "%dV%02d", v, cv);
+
+
+  //sprintf(lcdline1, "%04d | %04d", sense5v_mv, acs714_mv);
   lcd.setCursor(0, 0);
   lcd.print(lcdline1);
-  sprintf(lcdline2, "%04d | %04d", sense3v3_mv, acs715_mv);
+  //sprintf(lcdline2, "%04d | %04d", sense3v3_mv, acs715_mv);
   lcd.setCursor(0, 1);
   lcd.print(lcdline2);
 
