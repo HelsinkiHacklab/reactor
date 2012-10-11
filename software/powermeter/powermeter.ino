@@ -50,23 +50,21 @@ uint16_t acs714_mv2ma(uint16_t mv)
     return (amps*1000) + (desiamps * 100);
 }
 
-char format_mv2v_buffer[6]; // space for "x.xx" and null)
-char* format_mv2v(uint16_t mv)
+char format_mx2x_buffer[6]; // space for "x.xx" and null)
+char* format_mx2x(uint16_t mv)
 {
-    uint8_t v = mv / 1000;
-    uint8_t cv = (mv - (v*1000)) / 100;
-    sprintf(format_mv2v_buffer, "%d.%02dV", v, cv);
-    return format_mv2v_buffer;
+    uint8_t x = mv / 1000;
+    uint8_t xv = (mv - (x*1000)) / 100;
+    sprintf(format_mx2x_buffer, "%d.%02d", x, xv);
+    return format_mx2x_buffer;
 }
+
 
 
 uint16_t acs714_mv; //5V side current sensor (A4)
 uint16_t acs715_mv; // 3.3V side current sensor (A5)
 uint16_t sense5v_mv; // 5V side voltage monitor (A6)
 uint16_t sense3v3_mv; // 3.3V side voltage monitor (A7)
-
-char lcdline1[17];
-char lcdline2[17];
 
 void setup() {
   // set up the LCD's number of rows and columns: 
@@ -91,21 +89,18 @@ void loop() {
 
   //sprintf(lcdline1, "%04d | %04d", sense5v_mv, acs714_mv);
   lcd.setCursor(0, 0);
-  lcd.print(format_mv2v(sense5v_mv));
-  //sprintf(lcdline2, "%04d | %04d", sense3v3_mv, acs715_mv);
+  lcd.print(format_mx2x(sense5v_mv));
+  lcd.print("V");
+  lcd.setCursor(7, 0);
+  lcd.print(format_mx2x(acs714_mv));
+  lcd.print("A");
+  
   lcd.setCursor(0, 1);
-  lcd.print(lcdline2);
+  lcd.print(format_mx2x(sense3v3_mv));
+  lcd.print("V");
+  lcd.setCursor(7, 1);
+//  lcd.print(format_mx2x(acs715_mv));
+//  lcd.print("A");
 
-  /*
-  lcd.clear();
-  lcd.print(pa4, DEC);
-  lcd.print("|");
-  lcd.print(pa5, DEC);
-
-  lcd.setCursor(0, 1);
-  lcd.print(pa5, DEC);
-  lcd.print("|");
-  lcd.print(pa6, DEC);
-  */
   delay(50);
 }
