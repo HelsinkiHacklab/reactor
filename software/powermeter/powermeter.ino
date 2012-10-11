@@ -1,16 +1,14 @@
-#include <LiquidCrystalFast.h>
-/*
-LiquidCrystalFast lcd(RS, RW, Enable, D4, D5, D6, D7) 
-*/
 
 #define VCC_MV (5200) // I'm using 5.2V supply
-#define MV_PER_LSB ((uint8_t)(VCC_MV/1024)) // I sure hope the complier will optimize this result to a constant
+#define MV_PER_LSB ((uint8_t)(VCC_MV/1024)) // I sure hope the complier will optimize these results to a constant
 #define ACS715_ZERO ((uint16_t)(VCC_MV/10))
 #define ACS714_ZERO ((uint16_t)(VCC_MV/2))
 
 
-LiquidCrystalFast lcd(0, 1, 2, 7, 8, 9, 10);
+#include <LiquidCrystalFast.h>
+LiquidCrystalFast lcd(0, 1, 2, 7, 8, 9, 10); // LiquidCrystalFast lcd(RS, RW, Enable, D4, D5, D6, D7) 
 
+// Convert the sensor reading from millivolts to milliamps
 uint16_t acs715_mv2ma(uint16_t mv)
 {
     // 133 mV/A starting at 500 mV (actually vcc/100), 1.5% error
@@ -25,6 +23,7 @@ uint16_t acs715_mv2ma(uint16_t mv)
     return (amps*1000) + (desiamps * 100) + (centiamps * 10);
 }
 
+// Get the sign of the corresponding reading
 inline int8_t acs714_mv2ma_sign(uint16_t mv)
 {
     if (mv < ACS714_ZERO)
@@ -34,11 +33,10 @@ inline int8_t acs714_mv2ma_sign(uint16_t mv)
     return 1;
 }
 
+// Convert the sensor reading from millivolts to milliamps
 uint16_t acs714_mv2ma(uint16_t mv)
 {
-    // TODO: check if the 2500mv center point applies on 5.2V supply
     // 66mV/A centered on 2500mv, 1.5% error
-    
     // For now I'll just care about the positive side.
     if (mv <= ACS714_ZERO)
     {
@@ -50,6 +48,7 @@ uint16_t acs714_mv2ma(uint16_t mv)
     return (amps*1000) + (desiamps * 100);
 }
 
+// Formatter for the voltages an amperages, returns a char-pointer so can be called directly from lcd.print
 char format_mx2x_buffer[6]; // space for "x.xx" and null)
 char* format_mx2x(uint16_t mv)
 {
@@ -59,50 +58,46 @@ char* format_mx2x(uint16_t mv)
     return format_mx2x_buffer;
 }
 
-
-
+// Variables for holding our sensor data, this set is already converted to mV based on the factors calculated earlier
 uint16_t acs714_mv; //5V side current sensor (A4)
 uint16_t acs715_mv; // 3.3V side current sensor (A5)
 uint16_t sense5v_mv; // 5V side voltage monitor (A6)
 uint16_t sense3v3_mv; // 3.3V side voltage monitor (A7)
 
-void setup() {
-  // set up the LCD's number of rows and columns: 
-  lcd.begin(16, 2);
-  // Print a message to the LCD.
-//  lcd.print("hello, world!");
-/**
- * Theyäre inputs by default...
-  pinMode(A4, INPUT);
-  pinMode(A5, INPUT);
-  pinMode(A6, INPUT);
-  pinMode(A7, INPUT);
-*/
-  delay(500);
-//  lcd.clear();
+void setup()
+{
+    // set up the LCD's number of rows and columns: 
+    lcd.begin(16, 2);
+    //Print a boot message to the LCD.
+    //lcd.print("Hello, world!");
+    //delay(500);
+    // And clear it
+    lcd.clear();
 }
 
 void loop()
 {
+    // Read the sensors and apply mV factor
     acs714_mv = analogRead(A4) * MV_PER_LSB;
     acs715_mv = analogRead(A5) * MV_PER_LSB;
     sense5v_mv = analogRead(A6) * MV_PER_LSB;
     sense3v3_mv = analogRead(A7) * MV_PER_LSB;
-  
-    //sprintf(lcdline1, "%04d | %04d", sense5v_mv, acs714_mv);
+
+    // This will print the sensed data
     lcd.setCursor(0, 0);
     lcd.print(format_mx2x(sense3v3_mv));
     lcd.print("V");
     lcd.setCursor(11, 0);
     lcd.print(format_mx2x(sense5v_mv));
     lcd.print("V");
-    
     lcd.setCursor(0, 1);
     lcd.print(format_mx2x(acs715_mv));
     lcd.print("A");
     lcd.setCursor(11, 1);
     lcd.print(format_mx2x(acs714_mv));
     lcd.print("A");
-  
+
+    // We have 2*4 characters of space in the middle we could use if we can get around the codesize issue http://code.google.com/p/arduino-tiny/issues/detail?id=58
+
     delay(50);
 }
