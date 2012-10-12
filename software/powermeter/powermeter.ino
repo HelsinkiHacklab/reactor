@@ -6,16 +6,18 @@
  *
  */
 #define VCC_MV (5200) // I'm using 5.2V supply
-#define MV_PER_LSB ((uint8_t)(VCC_MV/1024)) // I sure hope the complier will optimize these results to a constant
 #define ACS715_ZERO ((uint16_t)(VCC_MV/10))
 #define ACS714_ZERO ((uint16_t)(VCC_MV/2))
+
+const float MV_PER_LSB = (float)VCC_MV/1024.0;
+
 
 // Initialized the LCD library
 #include <LiquidCrystalFast.h>
 LiquidCrystalFast lcd(0, 1, 2, 7, 8, 9, 10); // LiquidCrystalFast lcd(RS, RW, Enable, D4, D5, D6, D7) 
 
 // Convert the sensor reading from millivolts to milliamps
-uint16_t acs715_mv2ma(uint16_t mv)
+uint16_t acs715_mv2ma2(uint16_t mv)
 {
     // 133 mV/A starting at 500 mV (actually vcc/100), 1.5% error
     if (mv <= ACS715_ZERO)
@@ -29,6 +31,19 @@ uint16_t acs715_mv2ma(uint16_t mv)
     return (amps*1000) + (desiamps * 100) + (centiamps * 10);
 }
 
+uint16_t acs715_mv2ma(float mv)
+{
+    // 133 mV/A starting at 500 mV (actually vcc/100), 1.5% error
+    if (mv <= ACS715_ZERO)
+    {
+        return 0;
+    }
+    mv = mv - ACS715_ZERO; // Zero
+    float amps = mv / 133.0;
+    return (uint16_t)(amps*1000);
+}
+
+
 // Get the sign of the corresponding reading
 inline int8_t acs714_mv2ma_sign(uint16_t mv)
 {
@@ -40,7 +55,7 @@ inline int8_t acs714_mv2ma_sign(uint16_t mv)
 }
 
 // Convert the sensor reading from millivolts to milliamps
-uint16_t acs714_mv2ma(uint16_t mv)
+uint16_t acs714_mv2ma2(uint16_t mv)
 {
     // 66mV/A centered on 2500mv, 1.5% error
     // For now I'll just care about the positive side.
@@ -54,18 +69,26 @@ uint16_t acs714_mv2ma(uint16_t mv)
     return (amps*1000) + (desiamps * 100);
 }
 
-// Converts a binary number (smaller than 10) to corresponding ASCII character
-inline char num2ascii(uint8_t input)
+uint16_t acs714_mv2ma(float mv)
 {
-    return input + 0x30;
+    // 66mV/A centered on 2500mv, 1.5% error
+    // For now I'll just care about the positive side.
+    if (mv <= ACS714_ZERO)
+    {
+        return 0;
+    }
+    mv = mv - ACS714_ZERO;
+    float amps = mv / 66;
+    return (uint16_t)(amps*1000);
 }
+
 
 // Formatter for the voltages an amperages, returns a char-pointer so can be called directly from lcd.print
 char format_mx2x_buffer[6]; // space for "x.xx" and null)
 char* format_mx2x(uint16_t mv)
 {
     uint8_t x = mv / 1000;
-    uint8_t cx = (mv - (x*1000)) / 100;
+    uint8_t cx = mv % 1000;
     sprintf(format_mx2x_buffer, "%02d.%02d", x, cx);
     return format_mx2x_buffer;
 }
