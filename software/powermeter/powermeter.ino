@@ -88,7 +88,7 @@ char format_mx2x_buffer[6]; // space for "x.xx" and null)
 char* format_mx2x(uint16_t mv)
 {
     uint8_t x = mv / 1000;
-    uint8_t cx = mv % 1000;
+    uint8_t cx = (mv % 1000) / 10;
     sprintf(format_mx2x_buffer, "%02d.%02d", x, cx);
     return format_mx2x_buffer;
 }
@@ -112,6 +112,7 @@ void setup()
 
 void loop()
 {
+    /*
     // Read the sensors and apply mV factor
     acs71x_3v3_mv = analogRead(A4) * MV_PER_LSB;
     acs71x_5v_mv = analogRead(A5) * MV_PER_LSB;
@@ -131,8 +132,23 @@ void loop()
     lcd.setCursor(10, 1);
     lcd.print(format_mx2x(acs714_mv2ma(acs71x_3v3_mv)));
     lcd.print("A");
+    */
+
+    // Print just the analogRead data
+    lcd.setCursor(0, 0);
+    sprintf(format_mx2x_buffer, "%04d", analogRead(A7));
+    lcd.print(format_mx2x_buffer);
+    lcd.setCursor(10, 0);
+    sprintf(format_mx2x_buffer, "%04d", analogRead(A6));
+    lcd.print(format_mx2x_buffer);
+    lcd.setCursor(0, 1);
+    sprintf(format_mx2x_buffer, "%04d", analogRead(A5));
+    lcd.print(format_mx2x_buffer);
+    lcd.setCursor(10, 1);
+    sprintf(format_mx2x_buffer, "%04d", analogRead(A4));
+    lcd.print(format_mx2x_buffer);
 
     // We have 2*2 characters of space in the middle we could use (or 2*4 if we're carefull not to make the main point unreadable)
 
-    delay(50);
+    delay(250);
 }
