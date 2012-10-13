@@ -2,6 +2,7 @@
 /**
  * REMINDER: disconnect the current sensors from the board or uploading with ISP will get fsckd
  *
+ * NOTE: Written for ATTiny84, you need to arduino-tiny cores: http://code.google.com/p/arduino-tiny/
  * NOTE: You must replace your Arduino linker, see  http://code.google.com/p/arduino-tiny/issues/detail?id=58
  *
  */
