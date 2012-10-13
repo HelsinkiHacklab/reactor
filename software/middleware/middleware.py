@@ -199,6 +199,8 @@ class middleware(service.baseclass):
             return self.call_cached('fi.hacklab.reactorsimulator.engine.reactor', '/fi/hacklab/reactorsimulator/engine/reactor', 'scram')
         if alias == "TURBO" and not state:
             return self.call_cached('fi.hacklab.reactorsimulator.engine.reactor', '/fi/hacklab/reactorsimulator/engine/reactor', 'turbo')
+        if alias == "RESET" and not state:
+            return self.call_cached('fi.hacklab.reactorsimulator.engine', '/fi/hacklab/reactorsimulator/engine', 'reset')
 
         # Stomping switches
         rodstomp_match = rodstomp_regex.match(alias)
@@ -316,15 +318,24 @@ class middleware(service.baseclass):
         temp_avg = float(sum(temps))/float(len(temps))
         self.led_gauge("well_%d_%d_temp" % (x,y), temp_avg, self.config['temp_gauge']['max_temp'])
 
+    def relay_220v(self, key, state):
+        r_config = self.config['relay_220v_map'][key]
+        r_idx = r_config['idx']
+        board_busname = 'fi.hacklab.ardubus.' + r_config['board']
+        board_path = '/fi/hacklab/ardubus/' + r_config['board']
+        self.call_cached(board_busname, board_path, 'set_pca9535_bit', dbus.Byte(r_idx), dbus.Boolean(state))
+
     def red_alert(self, *args):
         if self.red_alert_active:
             return
         self.red_alert_active = True
+        self.relay_220v(red_blinkenlight, True)
         self.nm('start_sequence', 'red_alert', 'red_alert0') # The latter is the loop instance identifier
 
     def red_alert_reset(self, *args):
         self.red_alert_active = False
         self.nm('stop_sequence', 'red_alert0')
+        self.relay_220v(red_blinkenlight, False)
 
     def blowout(self, *args):
         # TODO: make these configurable

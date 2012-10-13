@@ -90,6 +90,10 @@ rod_aircore_map:
     rod_5_2:
         motor: 2
         board: 0
+relay_220v_map: # These are connected to the high port of the PCA9535, indices to the pins array in devices.yml
+    red_blinkenlight: 
+        board: rod_control_panel
+        idx: 3
 rod_servo_map: # Keyed first by board_name, then by servo index, value is rod coords (this way to make it slightly less painfull to write these, we'll reverse the mapping in software to something usable with the signals)
     arduino0:
         1: [0,2] # Should probably have started from zero...
