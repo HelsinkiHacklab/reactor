@@ -43,7 +43,7 @@ uint16_t acs714_mv2ma(float mv)
 }
 
 // Formatter for the voltages an amperages, returns a char-pointer so can be called directly from lcd.print
-char format_mx2x_buffer[6]; // space for "x.xx" and null)
+char format_mx2x_buffer[6]; // space for "xx.xx" and null)
 char* format_mx2x(uint16_t mv)
 {
     uint8_t x = mv / 1000;
