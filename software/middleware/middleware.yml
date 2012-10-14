@@ -78,18 +78,102 @@ led_gauge_map: #keys are well coordinates, values define the led locations
         leds: [ 23, 22, 21, 20 ]
 rod_aircore_maxpwm: 170
 rod_aircore_map:
-    rod_1_4:
+    rod_4_2:
+        board: 0
         motor: 0
+    rod_4_3:
         board: 0
-    rod_2_1:
-        motor: 1
-        board: 0
-    rod_4_5:
         motor: 3
+    rod_5_1:
         board: 0
-    rod_5_2:
+        motor: 4
+    rod_6_2:
+        board: 0
+        motor: 5
+    rod_3_2:
+        board: 0
+        motor: 6
+    rod_6_3:
+        board: 0
+        motor: 7
+    rod_1_3:
+        board: 1
+        motor: 0
+    rod_2_3:
+        board: 1
+        motor: 1
+    rod_3_3:
+        board: 1
+        motor: 3
+    rod_0_4:
+        board: 1
+        motor: 4
+    rod_5_3:
+        board: 1
+        motor: 5
+    rod_0_3:
+        board: 1
+        motor: 7
+    rod_3_0:
+        board: 2
+        motor: 0
+    rod_4_0:
+        board: 2
+        motor: 1
+    rod_3_0:
+        board: 2
         motor: 2
-        board: 0
+    rod_2_2:
+        board: 2
+        motor: 3
+    rod_0_2:
+        board: 2
+        motor: 4
+    rod_3_1:
+        board: 2
+        motor: 5
+    rod_1_1:
+        board: 2
+        motor: 6
+    rod_2_1:
+        board: 2
+        motor: 7
+    rod_4_6:
+        board: 3
+        motor: 0
+    rod_6_4:
+        board: 3
+        motor: 1
+    rod_4_4:
+        board: 3
+        motor: 3
+    rod_4_5:
+        board: 3
+        motor: 4
+    rod_5_5:
+        board: 3
+        motor: 5
+    rod_3_6:
+        board: 3
+        motor: 6
+    rod_1_5:
+        board: 4
+        motor: 0
+    rod_3_4:
+        board: 4
+        motor: 1
+    rod_3_5:
+        board: 4
+        motor: 2
+    rod_2_4:
+        board: 4
+        motor: 3
+    rod_2_6:
+        board: 4
+        motor: 5
+    rod_1_4:
+        board: 4
+        motor: 7
 relay_220v_map: # These are connected to the high port of the PCA9535, indices to the pins array in devices.yml
     red_blinkenlight: 
         board: rod_control_panel
