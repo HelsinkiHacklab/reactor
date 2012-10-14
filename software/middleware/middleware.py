@@ -89,10 +89,14 @@ class middleware(service.baseclass):
         time.sleep(0.5)
         self.reset_led_gauges()
         self.reset_topleds()
+        self.reset_relays()
 
         # Reset all simulation related state variables
         self.active_melt_warnings = {}
         self.red_alert_active = False
+        
+        # Set the simulation running
+        self.call_cached('fi.hacklab.reactorsimulator.engine', '/fi/hacklab/reactorsimulator/engine', 'run')
 
     def cell_melt_warning_reset(self, x, y, z, sender):
         if not self.active_melt_warnings.has_key(sender):
@@ -329,13 +333,13 @@ class middleware(service.baseclass):
         if self.red_alert_active:
             return
         self.red_alert_active = True
-        self.relay_220v(red_blinkenlight, True)
+        self.relay_220v("red_blinkenlight", True)
         self.nm('start_sequence', 'red_alert', 'red_alert0') # The latter is the loop instance identifier
 
     def red_alert_reset(self, *args):
         self.red_alert_active = False
         self.nm('stop_sequence', 'red_alert0')
-        self.relay_220v(red_blinkenlight, False)
+        self.relay_220v("red_blinkenlight", False)
 
     def blowout(self, *args):
         # TODO: make these configurable
@@ -351,7 +355,11 @@ class middleware(service.baseclass):
         # turn off the leds
         self.reset_led_gauges()
         self.reset_topleds()
+        self.reset_leds()
 
+    def reset_relays(self):
+        for k in self.config['relay_220v_map'].keys():
+            self.relay_220v(k, False)
 
     def play_sample(self, sample_name):
         """Simple sample player via noisemaker"""
