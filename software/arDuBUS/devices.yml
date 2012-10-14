@@ -202,7 +202,7 @@ reactor_lid:
           alias: pin_A4
     digital_pwmout_pins: [ 13, 12, 11, 10, 9 ] # Controls for smoke machine and 4 fans
 rod_control_panel: # The board identifier
-    aircore_boards: [ 4 ]
+    aircore_boards: [ 4, 5, 6, 7, 8 ]
     aircore_correction_values:
         0: #index of the board list
             0: 0
@@ -287,15 +287,21 @@ rod_control_panel: # The board identifier
         - pin: 0
           alias: SCRAM
         - pin: 1
-          alias: TURBO
+          alias: RESET
         - pin: 2
           alias: rod_6_2_up
         - pin: 3
           alias: rod_6_2_down
         - pin: 4
           alias: rodcontrol_pushbutton_toprelease
+        - pin: 5
+          alias: rodcontrol_unused_input_p5
+        - pin: 6
+          alias: rodcontrol_unused_input_p6
+        - pin: 7
+          alias: rodcontrol_unused_input_p7
     # Make sure that there are *no* floating inputs, easy way is to define them as outputs
-    pca9535_outputs: [  5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 ] # pins passed to ARDUBUS_PCA9535_OUTPUTS
+    pca9535_outputs: [ 8, 9, 10, 11, 12, 13, 14, 15 ] # pins passed to ARDUBUS_PCA9535_OUTPUTS
     digital_in_pins: # pins passed to ARDUBUS_DIGITAL_INPUTS
         - pin: 2
           alias: rod_4_4_down

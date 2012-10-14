@@ -5,14 +5,14 @@
 #define ARDUBUS_PCA9535_BOARDS { 0 }
 #define PCA9535_ENABLE_BOUNCE
 #define PCA9535_BOUNCE_OPTIMIZEDREADS
-#define ARDUBUS_PCA9535_INPUTS { 0, 1, 2, 3, 4 }
-#define ARDUBUS_PCA9535_OUTPUTS { 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 }
+#define ARDUBUS_PCA9535_INPUTS { 0, 1, 2, 3, 4, 5, 6, 7 }
+#define ARDUBUS_PCA9535_OUTPUTS { 8, 9, 10, 11, 12, 13, 14, 15 }
 #include <pca9535.h> // For some weird reason including this in the relevant .h file does not work
 #include <pca9635.h> // For some weird reason including this in the relevant .h file does not work
 #include <pca9635RGB.h> // For some weird reason including this in the relevant .h file does not work
 #include <pca9635RGBJBOL.h> // For some weird reason including this in the relevant .h file does not work
 #define ARDUBUS_PCA9635RGBJBOL_BOARDS { 0, 1 }
-#define ARDUBUS_AIRCORE_BOARDS { 4 }
+#define ARDUBUS_AIRCORE_BOARDS { 4, 5, 6, 7, 8 }
 
 #include <ardubus.h>
 void setup()
