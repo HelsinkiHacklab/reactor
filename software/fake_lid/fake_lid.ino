@@ -75,7 +75,9 @@ void scan_matrix_column(byte col)
     byte rowdata = expander.data[1] >> 1;
     for (byte row=0; row < 7; row++)
     {
-        byte idx = (row*7)+col;
+        //byte idx = (row*7)+col; // This gave us mirrored output
+        //byte idx = (col*7)+row; // Also mirrored but only vertically
+        byte idx = ((6-col)*7)+row; 
         if (_BV(row) & rowdata)
         {
             dummybouncers[idx].dummystate = HIGH;
