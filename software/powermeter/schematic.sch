@@ -10931,6 +10931,7 @@ type RDH, grid 15 mm</description>
 <part name="R3" library="resistor" deviceset="R-EU_" device="0204/7" value="1M"/>
 <part name="GND8" library="supply1" deviceset="GND" device=""/>
 <part name="JP5" library="pinhead" deviceset="PINHD-1X2" device=""/>
+<part name="R6" library="resistor" deviceset="R-EU_" device="0204/7" value="37R"/>
 </parts>
 <sheets>
 <sheet>
@@ -10989,6 +10990,7 @@ you should probably use adjustable regulator</text>
 <instance part="R3" gate="G$1" x="175.26" y="73.66" rot="R90"/>
 <instance part="GND8" gate="1" x="231.14" y="114.3"/>
 <instance part="JP5" gate="G$1" x="228.6" y="96.52" rot="R270"/>
+<instance part="R6" gate="G$1" x="228.6" y="104.14" rot="R90"/>
 </instances>
 <busses>
 </busses>
@@ -11373,11 +11375,17 @@ you should probably use adjustable regulator</text>
 <wire x1="198.12" y1="116.84" x2="198.12" y2="104.14" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="LCD_BL_A" class="0">
+<net name="N$1" class="0">
 <segment>
-<pinref part="U1" gate="G$1" pin="A"/>
 <pinref part="JP5" gate="G$1" pin="2"/>
-<wire x1="228.6" y1="116.84" x2="228.6" y2="99.06" width="0.1524" layer="91"/>
+<pinref part="R6" gate="G$1" pin="1"/>
+</segment>
+</net>
+<net name="N$3" class="0">
+<segment>
+<pinref part="R6" gate="G$1" pin="2"/>
+<pinref part="U1" gate="G$1" pin="A"/>
+<wire x1="228.6" y1="109.22" x2="228.6" y2="116.84" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
