@@ -17,3 +17,7 @@ sequences:
         loop: 'general_alarm_single.wav'
     red_alert:
         loop: 'klaxon_single.wav'
+    rod_movement:
+        start: 'start_movement.wav'
+        loop: 'loop_movement.wav'
+        end: 'stop_movement.wav'
