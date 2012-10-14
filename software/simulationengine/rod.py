@@ -103,11 +103,13 @@ class rod(dbus.service.Object):
         return map(lambda x: x.temp, self.cells)
 
     @dbus.service.signal('fi.hacklab.reactorsimulator.engine')
-    def emit_movement_stop(self, sender):
+    def emit_movement_stop(self, x, y, sender):
+        #print "movement stop emitted %d_%d" % (y,x)
         pass
 
     @dbus.service.signal('fi.hacklab.reactorsimulator.engine')
-    def emit_movement_start(self, sender):
+    def emit_movement_start(self, x, y, sender):
+        #print "movement start emitted %d_%d" % (y,x)
         pass
 
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')
@@ -117,25 +119,28 @@ class rod(dbus.service.Object):
         if (   bool(direction) #True is up
             and not (self.depth <= reactor_module.rod_min_depth)):
             self.current_velocity = self.current_max_speed * -1
-            self.emit_movement_start(self.object_path)
+            self.emit_movement_start(self.x, self.y, self.object_path)
             return
         # We return above so here we can just check if we can move
         if (not (self.depth >= reactor_module.rod_max_depth)):
             self.current_velocity = self.current_max_speed * 1
-            self.emit_movement_start(self.object_path)
+            self.emit_movement_start(self.x, self.y, self.object_path)
 
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def stop_move(self):
         if self.scram_active:
             return
         self.current_velocity = 0.0
-        self.emit_movement_stop(self.object_path)
+        #print "stop_move received, emitting"
+        self.emit_movement_stop(self.x, self.y, self.object_path)
 
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def scram(self):
         if self.current_max_speed < 0.1: # Allow at least this much when SCRAMming
             self.current_max_speed = 0.1
         self.current_velocity = self.current_max_speed * self.config['scram_factor']
+        self.emit_movement_start(self.x, self.y, self.object_path)
+
 
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')
     def set_depth(self, depth):
@@ -144,12 +149,12 @@ class rod(dbus.service.Object):
         if depth < reactor_module.rod_min_depth:
             depth = reactor_module.rod_min_depth
             self.current_velocity = 0.0
-            self.emit_movement_stop(self.object_path)
+            self.emit_movement_stop(self.x, self.y, self.object_path)
             
         if depth > reactor_module.rod_max_depth:
             depth = reactor_module.rod_max_depth
             self.current_velocity = 0.0
-            self.emit_movement_stop(self.object_path)
+            self.emit_movement_stop(self.x, self.y, self.object_path)
             self.scram_active = False
 
         # Update depth values

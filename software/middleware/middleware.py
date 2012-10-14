@@ -43,7 +43,9 @@ class middleware(service.baseclass):
 
         # Rod depts, will be passed to the gauges
         self.bus.add_signal_receiver(self.depth_report, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_depth")
-
+        # rod movements for playing samples
+        self.bus.add_signal_receiver(self.rod_move_start, dbus_interface = "fi.hacklab.reactorsimulator.engine", signal_name = "emit_movement_start")
+        self.bus.add_signal_receiver(self.rod_move_end, dbus_interface = "fi.hacklab.reactorsimulator.engine", signal_name = "emit_movement_stop")
 
         # Cell warning signals
         self.bus.add_signal_receiver(self.cell_melt_warning, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_cell_melt_warning")
@@ -219,7 +221,6 @@ class middleware(service.baseclass):
         return dbus_utilities.call_cached(buspath, method, *args, busname=busname)
 
     def depth_report(self, x, y, depth, *args):
-
         rod_key = "rod_%d_%d" % (x,y)
         if not self.config['rod_aircore_map'].has_key(rod_key):
             return
@@ -314,6 +315,19 @@ class middleware(service.baseclass):
 #            print "neutron_report: self.max_neutron_avg updated to %f" % self.max_neutron_avg 
         self.led_gauge("well_%d_%d_neutrons" % (x,y), neutron_avg, self.config['neutron_gauge']['max_avgflux'])
 
+    def rod_move_start(self, x, y, *args):
+        x = int(x)
+        y = int(y)
+        #print "nm: starting loop for rod_move_%d_%d" % (y,x)
+        return self.nm('start_sequence', 'rod_movement', "rod_move_%d_%d" % (y,x)) # The latter is the loop instance identifier
+
+    def rod_move_end(self, x, y, *args):
+        x = int(x)
+        y = int(y)
+        #print "nm: stopping loop for rod_move_%d_%d" % (y,x)
+        return self.nm('stop_sequence', "rod_move_%d_%d" % (y,x)) # The latter is the loop instance identifier
+
+
     def temp_report(self, x, y, temps, *args):
         """Calculates the average temp of the well and passes that to the corresponding led-gauge, max level comes from config"""
         x = int(x)
@@ -367,4 +381,5 @@ class middleware(service.baseclass):
 
     def nm(self, method, *args):
         """Passthrough to noisemaker via call_cached"""
+        #print "Calling noisemaker method '%s' with args %s" % (method, repr(args))
         return self.call_cached('fi.hacklab.noisemaker', '/fi/hacklab/noisemaker', method, *args)
