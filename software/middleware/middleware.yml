@@ -81,6 +81,9 @@ rod_aircore_map:
     rod_4_2:
         board: 0
         motor: 0
+    rod_5_2:
+        board: 0
+        motor: 1
     rod_4_3:
         board: 0
         motor: 3
@@ -114,7 +117,7 @@ rod_aircore_map:
     rod_0_3:
         board: 1
         motor: 7
-    rod_3_0:
+    rod_2_0:
         board: 2
         motor: 0
     rod_4_0:

@@ -40,6 +40,7 @@ class simulation(service.baseclass):
             self.last_tick_time = now
 
             # Tick all subsystems
+            #print "DEBUG: tick #%d, %f seconds since last one" % (self.tick_count, duration_seconds)
             return self.reactor.tick(duration_seconds)
 
     @dbus.service.method('fi.hacklab.reactorsimulator.engine')

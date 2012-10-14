@@ -98,7 +98,7 @@ class ardubus(service.baseclass):
     @dbus.service.method('fi.hacklab.ardubus', in_signature='yyy') # "y" is the signature for a byte
     def set_aircore_position(self, board_index, motorno, cycle):
         correction = 0
-        print "correction=%d"%self.config['aircore_correction_values'][board_index][motorno]
+        #print "correction=%d"%self.config['aircore_correction_values'][board_index][motorno]
 
         if (    self.config.has_key('aircore_correction_values')
             and self.config['aircore_correction_values'].has_key(board_index)

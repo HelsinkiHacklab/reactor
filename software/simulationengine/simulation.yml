@@ -1,5 +1,5 @@
 simulation:
-    tick_interval: 200
+    tick_interval: 250
     autosave_interval: 50
     temperature_blend_weight: 0.1
     blend_grid_size: 3 # 3 cells (always in 3 axes)
