@@ -181,6 +181,14 @@ relay_220v_map: # These are connected to the high port of the PCA9535, indices t
     red_blinkenlight: 
         board: rod_control_panel
         idx: 3
+    strobes: 
+        board: rod_control_panel
+        idx: 2
+smokemachine:
+    min_pwm: 100
+    max_pwm: 255
+    board: reactor_lid
+    idx: 4
 rod_servo_map: # Keyed first by board_name, then by servo index, value is rod coords (this way to make it slightly less painfull to write these, we'll reverse the mapping in software to something usable with the signals)
     arduino0:
         1: [0,2] # Should probably have started from zero...

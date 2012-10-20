@@ -319,13 +319,13 @@ class middleware(service.baseclass):
         x = int(x)
         y = int(y)
         #print "nm: starting loop for rod_move_%d_%d" % (y,x)
-        return self.nm('start_sequence', 'rod_movement', "rod_move_%d_%d" % (y,x)) # The latter is the loop instance identifier
+        #return self.nm('start_sequence', 'rod_movement', "rod_move_%d_%d" % (y,x)) # The latter is the loop instance identifier
 
     def rod_move_end(self, x, y, *args):
         x = int(x)
         y = int(y)
         #print "nm: stopping loop for rod_move_%d_%d" % (y,x)
-        return self.nm('stop_sequence', "rod_move_%d_%d" % (y,x)) # The latter is the loop instance identifier
+        #return self.nm('stop_sequence', "rod_move_%d_%d" % (y,x)) # The latter is the loop instance identifier
 
 
     def temp_report(self, x, y, temps, *args):
@@ -336,6 +336,7 @@ class middleware(service.baseclass):
         temp_avg = float(sum(temps))/float(len(temps))
         self.led_gauge("well_%d_%d_temp" % (x,y), temp_avg, self.config['temp_gauge']['max_temp'])
 
+    @dbus.service.method('fi.hacklab.reactorsimulator.middleware')
     def relay_220v(self, key, state):
         r_config = self.config['relay_220v_map'][key]
         r_idx = r_config['idx']
@@ -348,12 +349,14 @@ class middleware(service.baseclass):
             return
         self.red_alert_active = True
         self.relay_220v("red_blinkenlight", True)
+        self.relay_220v("strobes", True)
         self.nm('start_sequence', 'red_alert', 'red_alert0') # The latter is the loop instance identifier
 
     def red_alert_reset(self, *args):
         self.red_alert_active = False
         self.nm('stop_sequence', 'red_alert0')
         self.relay_220v("red_blinkenlight", False)
+        self.relay_220v("strobes", False)
 
     def blowout(self, *args):
         # TODO: make these configurable
@@ -369,7 +372,20 @@ class middleware(service.baseclass):
         # turn off the leds
         self.reset_led_gauges()
         self.reset_topleds()
-        self.reset_leds()
+        self.reset_relays()
+
+    @dbus.service.method('fi.hacklab.reactorsimulator.middleware')
+    def set_smoke(self, amount, *args):
+        s_config = self.config['smokemachine']
+        s_idx = s_config['idx']
+        mapped_value = 0
+        if amount > 0:
+            mapped_value = int(np.interp(value, [1,100],[s_config['min_pwm'],s_config['max_pwm']]))
+        
+        board_busname = 'fi.hacklab.ardubus.' + s_config['board']
+        board_path = '/fi/hacklab/ardubus/' + s_config['board']
+        self.call_cached(board_busname, board_path, 'set_pwm', dbus.Byte(s_idx), dbus.Byet(mapped))
+        pass
 
     def reset_relays(self):
         for k in self.config['relay_220v_map'].keys():

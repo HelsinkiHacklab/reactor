@@ -29,7 +29,7 @@ class ardubus(service.baseclass):
             self.serial_port.write(c)
         self.serial_port.flush()
         # TODO Check for the ACK from board somehow (not exactly trivial when another thread is constantly reading the port for reports [though now the sketch acknowledges the command it parses in full so we could look into the history])
-        print 'DEBUG: sent command %s' % repr(command)
+        #print 'DEBUG: sent command %s' % repr(command)
         return True
         
     def p2b(self, pin):
