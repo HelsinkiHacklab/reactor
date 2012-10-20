@@ -73,16 +73,19 @@ class middleware(service.baseclass):
         # Transpose the rod servo map to something more usable
         self.dial_position_cache = {}
 
-
-    def simulation_reset(self, sender):
-        """Simulation has been reset, reset our state too"""
-        print "Simulation reset!"
-        # Remove all active loops
+    def reset_nm(self, *args):
         loops = self.nm('list_loops')
         if loops:
             for loop_instance_data in loops:
                 loop_instance_name = loop_instance_data[0]
                 self.nm('stop_sequence', loop_instance_name)
+        
+
+    def simulation_reset(self, sender):
+        """Simulation has been reset, reset our state too"""
+        print "Simulation reset!"
+        # Remove all active loops
+        self.reset_nm()
 
         # TODO reset warning leds
         for ledid in self.blink_states.keys():
@@ -92,6 +95,7 @@ class middleware(service.baseclass):
         self.reset_led_gauges()
         self.reset_topleds()
         self.reset_relays()
+        self.set_smoke(0)
 
         # Reset all simulation related state variables
         self.active_melt_warnings = {}
@@ -101,12 +105,12 @@ class middleware(service.baseclass):
         self.call_cached('fi.hacklab.reactorsimulator.engine', '/fi/hacklab/reactorsimulator/engine', 'run')
 
     def cell_melt_warning_reset(self, x, y, z, sender):
-        if not self.active_melt_warnings.has_key(sender):
-            return
-        del(self.active_melt_warnings[sender])
+        if self.active_melt_warnings.has_key(sender):
+            del(self.active_melt_warnings[sender])
         if len(self.active_melt_warnings) == 0:
             # No alarms left, remove the loop
             self.nm('stop_sequence', 'cell_melt_alarm0')
+            self.set_smoke(0)
 
         ledid = "rod_%d_%d" % (x,y)
         self.stop_blink(ledid)
@@ -157,11 +161,13 @@ class middleware(service.baseclass):
 
 
     def cell_melt_warning(self, x, y, z, sender):
+        cmw_conf = self.config['cell_melt_warnings']
         if len(self.active_melt_warnings) == 0:
             # First cell melt warning, activate the loop
             self.nm('start_sequence', 'cell_melt_alarm', 'cell_melt_alarm0') # The latter is the loop instance identifier
              
         self.active_melt_warnings[sender] = True
+        self.set_smoke(len(self.active_melt_warnings) * cmw_conf['smoke_multiplier'])
         ledid = "rod_%d_%d" % (x,y)
         self.start_blink(ledid)
         pass
@@ -361,6 +367,7 @@ class middleware(service.baseclass):
     def blowout(self, *args):
         # TODO: make these configurable
         self.play_sample('steam_release.wav')
+        self.set_smoke(100)
 
         # Give pending signals some time to arrive
         time.sleep(0.5)
@@ -372,7 +379,10 @@ class middleware(service.baseclass):
         # turn off the leds
         self.reset_led_gauges()
         self.reset_topleds()
+        time.sleep(5.0)
+        self.set_smoke(0)
         self.reset_relays()
+        self.reset_nm()
 
     @dbus.service.method('fi.hacklab.reactorsimulator.middleware')
     def set_smoke(self, amount, *args):
@@ -380,11 +390,11 @@ class middleware(service.baseclass):
         s_idx = s_config['idx']
         mapped_value = 0
         if amount > 0:
-            mapped_value = int(np.interp(value, [1,100],[s_config['min_pwm'],s_config['max_pwm']]))
+            mapped_value = int(np.interp(amount, [1,100],[s_config['min_pwm'],s_config['max_pwm']]))
         
         board_busname = 'fi.hacklab.ardubus.' + s_config['board']
         board_path = '/fi/hacklab/ardubus/' + s_config['board']
-        self.call_cached(board_busname, board_path, 'set_pwm', dbus.Byte(s_idx), dbus.Byet(mapped))
+        self.call_cached(board_busname, board_path, 'set_pwm', dbus.Byte(s_idx), dbus.Byte(mapped_value))
         pass
 
     def reset_relays(self):

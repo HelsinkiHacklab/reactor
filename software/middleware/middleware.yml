@@ -189,6 +189,8 @@ smokemachine:
     max_pwm: 255
     board: reactor_lid
     idx: 4
+cell_melt_warnings:
+    smoke_multiplier: 0.75
 rod_servo_map: # Keyed first by board_name, then by servo index, value is rod coords (this way to make it slightly less painfull to write these, we'll reverse the mapping in software to something usable with the signals)
     arduino0:
         1: [0,2] # Should probably have started from zero...

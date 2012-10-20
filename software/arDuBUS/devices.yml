@@ -326,7 +326,7 @@ rod_control_panel: # The board identifier
         - pin: 3
           alias: rod_6_2_down
         - pin: 4
-          alias: rodcontrol_pushbutton_toprelease
+          alias: TURBO
         - pin: 5
           alias: rodcontrol_unused_input_p5
         - pin: 6
