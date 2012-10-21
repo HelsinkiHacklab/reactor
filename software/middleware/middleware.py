@@ -36,6 +36,7 @@ class middleware(service.baseclass):
         # Red-Alert state handling
         self.bus.add_signal_receiver(self.red_alert, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_redalert")
         self.bus.add_signal_receiver(self.red_alert_reset, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_redalert_reset")
+        self.bus.add_signal_receiver(self.power_report, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_power")
         self.red_alert_active = False
 
         # Blowout signal
@@ -430,5 +431,15 @@ class middleware(service.baseclass):
         #print "Calling noisemaker method '%s' with args %s" % (method, repr(args))
         return self.call_cached('fi.hacklab.noisemaker', '/fi/hacklab/noisemaker', method, *args)
 
+    def power_report(self, power, *args):
+        import serial
+        #print "DEBUG: got power %d" % power
+        p_config = self.config['power_gauge']
+        port = serial.Serial(p_config['device'], p_config['speed'], xonxoff=False, timeout=0.01)
+        power_str = "%d\r" % power
+        port.write(power_str)
+        #print "DEBUG: set power %s" % power_str
+        
+        pass
 
 

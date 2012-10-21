@@ -101,8 +101,8 @@ class cell(dbus.service.Object):
         self.neutrons_seen += 1 # keep track of the flow
 
         # If the moderator is past this point it will always absorb the hits, nothing will happen
-        if (self.rod.moderator_depth >= self.depth):
-            return
+#        if (self.rod.moderator_depth >= self.depth):
+#            return
         
         self.temp += self.config['neutron_hit_temp_increase']
 
@@ -121,6 +121,8 @@ class cell(dbus.service.Object):
                     # The graphite tip is at our place, accelerate reaction
                     if (self.rod.tip_depth == z):
                         hit_p += self.config['tip_neutron_hit_p_increase']
+                    if (self.rod.moderator_depth >= self.depth):
+                        hit_p = self.config['rod_inplace_neutron_hit_p']
                     if random.random() > hit_p:
                         # No hit
                         continue

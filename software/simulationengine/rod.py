@@ -17,12 +17,12 @@ class rod(dbus.service.Object):
         self.x = x
         self.y = y
         self.well_depth = depth
-        self.set_depth(float(depth)*random.uniform(0, 1)) # This is float so we can keep track of progress in smaller steps, for simulation purposes it will be rounded to int
+        self.set_depth(7.0)
         #self.set_depth(-2) # all-out
         self.current_max_speed = self.config['default_max_speed']
         self.current_max_flow = self.config['default_max_flow']
         self.current_water_flow = self.config['default_water_flow']
-        self.current_velocity = random.uniform(-1, 1) # Rod movement.  Expressed in layers per second. Initialize to random speed
+        self.current_velocity = 0.0 # initialize to at rest
 
         self.water_level = 1.0 # This is basically percentage of the full depth 1.0 means full of water
         self.steam_pressure = 0.0 # In whatever unit we feel is most convinient
