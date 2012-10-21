@@ -20,5 +20,5 @@ sequences:
         loop: 'klaxon_single.wav'
     rod_movement:
         start: 'start_movement.wav'
-        loop: 'loop_movement.wav'
+        loop: 'loop_movement_short.wav'
         end: 'stop_movement.wav'
