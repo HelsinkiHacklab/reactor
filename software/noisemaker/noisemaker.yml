@@ -1,5 +1,6 @@
 general:
     sample_dir: '../../sounds/'
+    gst_sink: pulsesink
 sequences:
     features_test:
         start: 'extrapora.wav'

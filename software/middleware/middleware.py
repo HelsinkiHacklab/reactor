@@ -46,6 +46,7 @@ class middleware(service.baseclass):
         # rod movements for playing samples
         self.bus.add_signal_receiver(self.rod_move_start, dbus_interface = "fi.hacklab.reactorsimulator.engine", signal_name = "emit_movement_start")
         self.bus.add_signal_receiver(self.rod_move_end, dbus_interface = "fi.hacklab.reactorsimulator.engine", signal_name = "emit_movement_stop")
+        self.active_rod_movements = {}
 
         # Cell warning signals
         self.bus.add_signal_receiver(self.cell_melt_warning, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_cell_melt_warning")
@@ -78,7 +79,7 @@ class middleware(service.baseclass):
         if loops:
             for loop_instance_data in loops:
                 loop_instance_name = loop_instance_data[0]
-                self.nm('stop_sequence', loop_instance_name)
+                self.nm('kill_sequence', loop_instance_name)
         
 
     def simulation_reset(self, sender):
@@ -100,6 +101,7 @@ class middleware(service.baseclass):
         # Reset all simulation related state variables
         self.active_melt_warnings = {}
         self.red_alert_active = False
+        self.active_rod_movements = {}
         
         # Set the simulation running
         self.call_cached('fi.hacklab.reactorsimulator.engine', '/fi/hacklab/reactorsimulator/engine', 'run')
@@ -324,15 +326,26 @@ class middleware(service.baseclass):
     def rod_move_start(self, x, y, *args):
         x = int(x)
         y = int(y)
-        # TODO: limit the number of active loops to X
-        #print "nm: starting loop for rod_move_%d_%d" % (y,x)
-        return self.nm('start_sequence', 'rod_movement', "rod_move_%d_%d" % (y,x)) # The latter is the loop instance identifier
+        a_config = self.config['rod_audio']
+        k = "rod_move_%d_%d" % (y,x)
+        self.active_rod_movements[k] = True
+        if (len(self.active_rod_movements) <= a_config['max_loops']):        
+            return self.nm('start_sequence', a_config['loop_name'], "rod_loop%d" % len(self.active_rod_movements))
+        else:
+            return self.nm('play_sample', a_config['start_sample'])
 
     def rod_move_end(self, x, y, *args):
         x = int(x)
         y = int(y)
         #print "nm: stopping loop for rod_move_%d_%d" % (y,x)
-        return self.nm('stop_sequence', "rod_move_%d_%d" % (y,x)) # The latter is the loop instance identifier
+        a_config = self.config['rod_audio']
+        k = "rod_move_%d_%d" % (y,x)
+        if (len(self.active_rod_movements) <= a_config['max_loops']):        
+            self.nm('stop_sequence_fast',  "rod_loop%d" % len(self.active_rod_movements))
+        else:
+            self.nm('play_sample', a_config['end_sample'])
+        if (self.active_rod_movements.has_key(k)):
+            del(self.active_rod_movements[k])
 
 
     def temp_report(self, x, y, temps, *args):
@@ -367,7 +380,7 @@ class middleware(service.baseclass):
 
     def blowout(self, *args):
         # TODO: make these configurable
-        self.play_sample('sboom+crackle.wav')
+        self.play_sample('boom+crackle.wav')
         self.set_smoke(100)
 
         # Give pending signals some time to arrive
@@ -380,7 +393,7 @@ class middleware(service.baseclass):
         # turn off the leds
         self.reset_led_gauges()
         self.reset_topleds()
-        time.sleep(5.0)
+        time.sleep(3.0)
         self.set_smoke(0)
         self.reset_relays()
         self.reset_nm()

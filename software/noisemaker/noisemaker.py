@@ -49,8 +49,8 @@ class noisemaker(service.baseclass):
     @dbus.service.method('fi.hacklab.noisemaker', in_signature='s')
     def play_sample(self, sample_name):
         sample_path = os.path.join(self.samples_path, sample_name)
-        print "noisemaker: Playing %s via GST Alsa" % sample_path
-        player = gst.parse_launch("filesrc location=\"%s\" ! decodebin !  audioconvert ! audioresample ! alsasink" % sample_path)
+        print "noisemaker: Playing %s via GST" % sample_path
+        player = gst.parse_launch("filesrc location=\"%s\" ! decodebin !  audioconvert ! audioresample ! %s" % (sample_path, self.config['general']['gst_sink']))
         player.set_state(gst.STATE_PLAYING)
 
     @dbus.service.method('fi.hacklab.noisemaker', in_signature='ss')
@@ -70,6 +70,24 @@ class noisemaker(service.baseclass):
             # loop no longer active
             return True
         self.active_loops[loop_id].stop_at_next()
+        # Note that the sequence object will handle unloading from active_loops since it can finish the loop by itself as well
+
+    @dbus.service.method('fi.hacklab.noisemaker', in_signature='s')
+    def stop_sequence_fast(self, loop_id):
+        """Will stop playing the loop identified with loop_id and then play the end sample of the corresponding sequence"""
+        if not self.active_loops.has_key(loop_id):
+            # loop no longer active
+            return True
+        self.active_loops[loop_id].stop_via_end()
+        # Note that the sequence object will handle unloading from active_loops since it can finish the loop by itself as well
+
+    @dbus.service.method('fi.hacklab.noisemaker', in_signature='s')
+    def kill_sequence(self, loop_id):
+        """Will stop playing the loop identified with loop_id and then play the end sample of the corresponding sequence"""
+        if not self.active_loops.has_key(loop_id):
+            # loop no longer active
+            return True
+        self.active_loops[loop_id].stop()
         # Note that the sequence object will handle unloading from active_loops since it can finish the loop by itself as well
 
     @dbus.service.method('fi.hacklab.noisemaker')
@@ -115,7 +133,7 @@ class noisemaker_sequence:
 
     def init_player(self, sample_name):
         self.sample_path = os.path.join(self.nm.samples_path, sample_name)
-        self.player = gst.parse_launch("filesrc location=\"%s\" ! decodebin !  audioconvert ! audioresample ! alsasink" % self.sample_path)
+        self.player = gst.parse_launch("filesrc location=\"%s\" ! decodebin !  audioconvert ! audioresample ! %s" % (self.sample_path, self.nm.config['general']['gst_sink']))
         self.bus = self.player.get_bus()
         self.bus.add_signal_watch()
         self.bus.connect('message::eos', self.on_eos)

@@ -177,6 +177,11 @@ rod_aircore_map:
     rod_1_4:
         board: 4
         motor: 7
+rod_audio:
+    max_loops: 4
+    loop_name: rod_movement
+    start_sample: start_movement.wav
+    end_sample: stop_movement.wav
 relay_220v_map: # These are connected to the high port of the PCA9535, indices to the pins array in devices.yml
     red_blinkenlight: 
         board: rod_control_panel
