@@ -1,5 +1,5 @@
 power_gauge:
-    device: /dev/ttyUSB0
+    device: /dev/ttyUSB1
     speed: 9600
 temp_gauge:
     max_temp: 1050

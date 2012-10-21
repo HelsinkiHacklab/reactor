@@ -17,12 +17,13 @@ class rod(dbus.service.Object):
         self.x = x
         self.y = y
         self.well_depth = depth
-        self.set_depth(7.0)
+        self.set_depth(self.config['initial_position'])
+        #self.set_depth(7.0) # all-in
         #self.set_depth(-2) # all-out
         self.current_max_speed = self.config['default_max_speed']
         self.current_max_flow = self.config['default_max_flow']
         self.current_water_flow = self.config['default_water_flow']
-        self.current_velocity = 0.0 # initialize to at rest
+        self.current_velocity = self.config['initial_speed'] # initialize to at rest
 
         self.water_level = 1.0 # This is basically percentage of the full depth 1.0 means full of water
         self.steam_pressure = 0.0 # In whatever unit we feel is most convinient

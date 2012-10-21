@@ -9,6 +9,8 @@ reactor:
     blowout_pressure: 150
     blowout_safety_factor: 0.85
 rod:
+    initial_speed: 0.0
+    initial_position: 6.5
     default_max_speed: 1.0 # under normal moving rods cannot move faster than this (layers per second)
     scram_factor: 3.0 # if SCRAMmed then this speed times max speed is how fast rods will start moving down
     default_water_flow: 0.5 # 1.0 being max
