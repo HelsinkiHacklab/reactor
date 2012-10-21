@@ -330,9 +330,12 @@ class middleware(service.baseclass):
         k = "rod_move_%d_%d" % (y,x)
         self.active_rod_movements[k] = True
         if (len(self.active_rod_movements) <= a_config['max_loops']):        
-            return self.nm('start_sequence', a_config['loop_name'], "rod_loop%d" % len(self.active_rod_movements))
+            #return self.nm('start_sequence', a_config['loop_name'], "rod_loop%d" % len(self.active_rod_movements))
+            pass
         else:
-            return self.nm('play_sample', a_config['start_sample'])
+            #return self.nm('play_sample', a_config['start_sample'])
+            pass
+        return True
 
     def rod_move_end(self, x, y, *args):
         x = int(x)
@@ -341,9 +344,11 @@ class middleware(service.baseclass):
         a_config = self.config['rod_audio']
         k = "rod_move_%d_%d" % (y,x)
         if (len(self.active_rod_movements) <= a_config['max_loops']):        
-            self.nm('stop_sequence_fast',  "rod_loop%d" % len(self.active_rod_movements))
+            pass
+            #self.nm('stop_sequence_fast',  "rod_loop%d" % len(self.active_rod_movements))
         else:
-            self.nm('play_sample', a_config['end_sample'])
+            pass
+            #self.nm('play_sample', a_config['end_sample'])
         if (self.active_rod_movements.has_key(k)):
             del(self.active_rod_movements[k])
 
