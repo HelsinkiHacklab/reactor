@@ -324,14 +324,15 @@ class middleware(service.baseclass):
     def rod_move_start(self, x, y, *args):
         x = int(x)
         y = int(y)
+        # TODO: limit the number of active loops to X
         #print "nm: starting loop for rod_move_%d_%d" % (y,x)
-        #return self.nm('start_sequence', 'rod_movement', "rod_move_%d_%d" % (y,x)) # The latter is the loop instance identifier
+        return self.nm('start_sequence', 'rod_movement', "rod_move_%d_%d" % (y,x)) # The latter is the loop instance identifier
 
     def rod_move_end(self, x, y, *args):
         x = int(x)
         y = int(y)
         #print "nm: stopping loop for rod_move_%d_%d" % (y,x)
-        #return self.nm('stop_sequence', "rod_move_%d_%d" % (y,x)) # The latter is the loop instance identifier
+        return self.nm('stop_sequence', "rod_move_%d_%d" % (y,x)) # The latter is the loop instance identifier
 
 
     def temp_report(self, x, y, temps, *args):
@@ -366,7 +367,7 @@ class middleware(service.baseclass):
 
     def blowout(self, *args):
         # TODO: make these configurable
-        self.play_sample('steam_release.wav')
+        self.play_sample('sboom+crackle.wav')
         self.set_smoke(100)
 
         # Give pending signals some time to arrive
@@ -386,11 +387,12 @@ class middleware(service.baseclass):
 
     @dbus.service.method('fi.hacklab.reactorsimulator.middleware')
     def set_smoke(self, amount, *args):
+        """Set the smoke machine power in percentage"""
         s_config = self.config['smokemachine']
         s_idx = s_config['idx']
         mapped_value = 0
         if amount > 0:
-            mapped_value = int(np.interp(amount, [1,100],[s_config['min_pwm'],s_config['max_pwm']]))
+            mapped_value = int(np.interp(float(amount), [1,100],[s_config['min_pwm'],s_config['max_pwm']]))
         
         board_busname = 'fi.hacklab.ardubus.' + s_config['board']
         board_path = '/fi/hacklab/ardubus/' + s_config['board']
@@ -409,3 +411,6 @@ class middleware(service.baseclass):
         """Passthrough to noisemaker via call_cached"""
         #print "Calling noisemaker method '%s' with args %s" % (method, repr(args))
         return self.call_cached('fi.hacklab.noisemaker', '/fi/hacklab/noisemaker', method, *args)
+
+
+
