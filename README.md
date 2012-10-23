@@ -4,7 +4,7 @@ Uses physical consoles with buttons and gauges for input and output and a linux 
 
 Design and plans in etherpad here: http://kirjoitusalusta.fi/hacklab-reactor 
 
-A phone-cam video of the first console in action: http://www.youtube.com/watch?v=mdirVpwifV0
+A phone-cam video of the first console & reactor lid in action: http://www.youtube.com/watch?v=7-S2qzXuEK0
 
 NOTE: now uses submodules, remember "git submodule init" "git submodule update"
 
@@ -25,6 +25,22 @@ Some photos from the event and late nights preceding it can be seen in this [art
 [2]: http://www.mbnet.fi/artikkeli/blogit/mblabra/hacklabin_reaktoripeli_kotitekoinen_t_ernobyl
 [3]: http://translate.google.com/translate?hl=en&sl=fi&tl=en&u=http%3A%2F%2Fwww.mbnet.fi%2Fartikkeli%2Fblogit%2Fmblabra%2Fhacklabin_reaktoripeli_kotitekoinen_t_ernobyl
 
-## Next: WÄRK
+## [WÄRK:fest][wark] 2012
 
-http://www.warkfest.org/en/ we hope to get rest of the dials done by then and adding a simple scoring logic.
+We managed to get the control console to a mostly working state, also the reactor lid worked fine (apart from some minor glitches), even the smoke-machine controls worked (the smoke machine itself has to be
+ repaired too, the pump-control triac had given up it's magic-smoke and had to be replaced).
+ 
+"Pics or it didn't happen":
+
+  * Rambo shot a very quick video with his cellphone: http://www.youtube.com/watch?v=7-S2qzXuEK0
+  * Hamy shot a few pics: [lid](http://oh4kpn.1g.fi/kuvat/Demopartyt/WarkFest/2012/20121021-DSC_3592.jpg) & [console](http://oh4kpn.1g.fi/kuvat/Demopartyt/WarkFest/2012/20121021-DSC_3596.jpg)
+  * YLE has a pic of [Rambo showing an air-core](http://yle.fi/uutiset/itse_tehtyja_robotteja_3d-printtereita_ja_neulegraffiteja/6344361#gallery) with the console on the background.
+
+[wark]: http://www.warkfest.org/en/ 
+
+## Next: ??
+
+Don't know yet, but improvements will continue, at some point we will get around to making the [coms-console][coms_jeri] functional too ([Turku hacklab][tku] has shown some interest in working on the plant-control console, seen as the rightmost console on the coms-picture)
+
+[coms_jeri]: http://helsinki.hacklab.fi/wp-content/uploads/2011/10/CIMG7885.jpg
+[tku]: http://hacklabturku.org/
