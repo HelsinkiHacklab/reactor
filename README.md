@@ -34,7 +34,7 @@ We managed to get the control console to a mostly working state, also the reacto
 
   * Rambo shot a very quick video with his cellphone: http://www.youtube.com/watch?v=7-S2qzXuEK0
   * Hamy shot a few pics: [lid](http://oh4kpn.1g.fi/kuvat/Demopartyt/WarkFest/2012/20121021-DSC_3592.jpg) & [console](http://oh4kpn.1g.fi/kuvat/Demopartyt/WarkFest/2012/20121021-DSC_3596.jpg)
-  * YLE has a pic of [Rambo showing an air-core](http://yle.fi/uutiset/itse_tehtyja_robotteja_3d-printtereita_ja_neulegraffiteja/6344361#gallery) with the console on the background.
+  * YLE has a pic of [Rambo showing an air-core](http://img.yle.fi/uutiset/tekniikka/article6344340.ece/ALTERNATES/w960/warkfest_ydinreaktori_simulaattori.jpg) with the console on the background.
   * [Two reactor technicians at work](http://www.flickr.com/photos/ermuggo/8118672641/in/pool-2089172@N20) and [only slightly smoking reactor](http://www.flickr.com/photos/ermuggo/8118734690/in/pool-2089172@N20)
 
 [wark]: http://www.warkfest.org/en/ 
