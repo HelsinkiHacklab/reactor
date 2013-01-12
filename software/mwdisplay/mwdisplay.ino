@@ -118,10 +118,22 @@ inline void shift_registers()
         shiftOut(DATAPIN, CLOCKPIN, MSBFIRST, i2c_regs[i]);
     }
     */
+    byte skipped = 0;
     // For normal output output in reverse order
     for (byte d=sizeof(i2c_regs); d > 0; d--)
     {
+        // Skip null values (and increment counter used to clear the remaining digits)
+        if (i2c_regs[d-1] == 0x0)
+        {
+            skipped++;
+            continue;
+        }
         shiftOut(DATAPIN, CLOCKPIN, MSBFIRST, ascii_to_7seg(i2c_regs[d-1]));
+    }
+    // Pad with empty
+    while(skipped--)
+    {
+        shiftOut(DATAPIN, CLOCKPIN, MSBFIRST, 0xff);
     }
     digitalWrite(LATCHPIN, HIGH);
 }
