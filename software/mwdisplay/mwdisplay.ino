@@ -83,6 +83,11 @@ void receiveEvent(uint8_t howMany)
         i2c_regs[reg_position%sizeof(i2c_regs)] = TinyWireS.receive();
         reg_position++;
     }
+    // Clear rest of the registers
+    for (byte clearer = reg_position; clearer < sizeof(i2c_regs); clearer++)
+    {
+        i2c_regs[clearer] = 0x0;
+    }
     start_shift = true;
 }
 
@@ -106,10 +111,17 @@ void setup()
 inline void shift_registers()
 {
     digitalWrite(LATCHPIN, LOW);
+    /**
+     * For checking bit-patterns
     for (byte i=0; i < sizeof(i2c_regs); i++)
     {
         shiftOut(DATAPIN, CLOCKPIN, MSBFIRST, i2c_regs[i]);
-        //shiftOut(DATAPIN, CLOCKPIN, MSBFIRST, ascii_to_7seg(i2c_regs[i]));
+    }
+    */
+    // For normal output output in reverse order
+    for (byte d=sizeof(i2c_regs); d > 0; d--)
+    {
+        shiftOut(DATAPIN, CLOCKPIN, MSBFIRST, ascii_to_7seg(i2c_regs[d-1]));
     }
     digitalWrite(LATCHPIN, HIGH);
 }
