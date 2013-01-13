@@ -31,6 +31,10 @@
 
 // HELLO
 [ 8 0 48 45 4c 4c 4f ]
+
+// Read the registers
+[ 8 0 ] [ 9 r r r r r ]
+
 */
 
 
@@ -59,6 +63,8 @@ arduino pin 4 =     OC1B  = PORTB <- _BV(4) = SOIC pin 3 (Analog 2)
 #endif
 // We need to include pgmspace here too
 #include "asciitable.h"
+#define __PROG_TYPES_COMPAT__ 
+#include <avr/pgmspace.h>
 
 #define NUMBERS_COUNT 5
 #define DATAPIN 1
@@ -70,6 +76,10 @@ volatile uint8_t i2c_regs[NUMBERS_COUNT];
 volatile byte reg_position;
 // See if we need to shift out data
 volatile boolean start_shift;
+
+// Store a hello-message in progrem
+const char hello_str[] PROGMEM =  { 0x48, 0x45, 0x4c, 0x4c, 0x4f };
+
 
 /**
  * This is called for each read request we receive, never put more than one byte of data (with TinyWireS.send) to the 
@@ -122,23 +132,50 @@ void receiveEvent(uint8_t howMany)
     start_shift = true;
 }
 
+
 void setup()
 {
     pinMode(DATAPIN, OUTPUT);
     pinMode(CLOCKPIN, OUTPUT);
     pinMode(LATCHPIN, OUTPUT);
     digitalWrite(LATCHPIN, HIGH);
-    
+    delay(100);
+
+    // Copy a string from program memory and display for a second
+    for (byte i=0; i < sizeof(hello_str); i++)
+    {
+        i2c_regs[i] = pgm_read_byte_near(hello_str+i);
+    }
+    shift_registers();
+    delay(1000);
+    blank();
+
     /**
      * Reminder: taking care of pull-ups is the masters job
      */
     TinyWireS.begin(I2C_SLAVE_ADDRESS);
     TinyWireS.onReceive(receiveEvent);
     TinyWireS.onRequest(requestEvent);
-    
-    shift_registers();
+
 }
 
+/**
+ * Blanks the screen but does not touch ic2_registers
+ */
+inline void blank()
+{
+    digitalWrite(LATCHPIN, LOW);
+    for (byte i=0; i < NUMBERS_COUNT; i++)
+    {
+        shiftOut(DATAPIN, CLOCKPIN, MSBFIRST, 0xff);
+    }
+    digitalWrite(LATCHPIN, HIGH);
+}
+
+/**
+ * Shifts out the data in i2c_registers, translating the ASCII codes to bit patterns
+ * according the font in asciitable.h
+ */
 inline void shift_registers()
 {
     digitalWrite(LATCHPIN, LOW);
