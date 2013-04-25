@@ -5,7 +5,7 @@
 #define ARDUBUS_REPORT_INTERVAL 5000 // Milliseconds
 #endif
 #ifndef ARDUBUS_COMMAND_STRING_SIZE
-#define ARDUBUS_COMMAND_STRING_SIZE 8 //Remember to allocate for the null termination
+#define ARDUBUS_COMMAND_STRING_SIZE 10 //Remember to allocate for the null termination
 #endif
 #ifndef ARDUBUS_INDEX_OFFSET
 #define ARDUBUS_INDEX_OFFSET 32 // We need to offset the pin/index numbers to above CR and LF which are control characters to us
