@@ -10,7 +10,7 @@
  */
 
 const byte ardubus_i2cascii_boards[] = ARDUBUS_I2CASCII_BOARDS;
-byte ardubus_i2cascii_buffer[ARDUBUS_I2CASCII_BUFFER_SIZE];
+char ardubus_i2cascii_buffer[ARDUBUS_I2CASCII_BUFFER_SIZE];
 
 inline void ardubus_i2cascii_setup()
 {
@@ -32,11 +32,12 @@ inline void ardubus_i2cascii_process_command(char *incoming_command)
     switch(incoming_command[0])
     {
         case 0x77: // ASCII "w" (w<index><ascii>...<ascii>) //The index of ardubus_i2cascii_boards
-            byte addr = ardubus_i2cascii_boards[incoming_command[1]-ARDUBUS_INDEX_OFFSET];
+            uint8_t addr = ardubus_i2cascii_boards[incoming_command[1]-ARDUBUS_INDEX_OFFSET];
+            // This gives compiler error for some reason error:   initializing argument 2 of 'char* strncpy(char*, const char*, size_t)' [-fpermissive]
             strncpy(ardubus_i2cascii_buffer, incoming_command[2], ARDUBUS_I2CASCII_BUFFER_SIZE);
             
             // Write the buffer
-            I2c.write(addr, 0x0, ardubus_i2cascii_buffer, strlen(ardubus_i2cascii_buffer));
+            I2c.write(addr, 0x0, (uint8_t*)ardubus_i2cascii_buffer, (uint8_t)strlen(ardubus_i2cascii_buffer));
 
             Serial.print(F("w"));
             Serial.print(incoming_command[1]);
