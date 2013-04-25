@@ -13,6 +13,8 @@
 #include <pca9635RGBJBOL.h> // For some weird reason including this in the relevant .h file does not work
 #define ARDUBUS_PCA9635RGBJBOL_BOARDS { 0, 1 }
 #define ARDUBUS_AIRCORE_BOARDS { 4, 5, 6, 7, 8 }
+#define ARDUBUS_I2CASCII_BOARDS { 9 }
+#define ARDUBUS_I2CASCII_BUFFER_SIZE 6
 
 #include <ardubus.h>
 void setup()
