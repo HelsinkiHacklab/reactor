@@ -54,7 +54,7 @@ arduino pin 1 =     OC1A  = PORTB <- _BV(1) = SOIC pin 6 (PWM)
 arduino pin 3 = not(OC1B) = PORTB <- _BV(3) = SOIC pin 2 (Analog 3)
 arduino pin 4 =     OC1B  = PORTB <- _BV(4) = SOIC pin 3 (Analog 2)
  */
-#define I2C_SLAVE_ADDRESS 0x4 // the 7-bit address (remember to change this when adapting this example)
+#define I2C_SLAVE_ADDRESS 0x9 // the 7-bit address (remember to change this when adapting this example)
 // Get this from https://github.com/rambo/TinyWire
 #include <TinyWireS.h>
 // The default buffer size, Can't recall the scope of defines right now

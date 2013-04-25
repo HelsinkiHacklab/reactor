@@ -107,7 +107,9 @@ inline void ardubus_print_int_as_4hex(int input)
 #ifdef ARDUBUS_AIRCORE_BOARDS
 #include "ardubus_aircore.h"
 #endif
-
+#ifdef ARDUBUS_I2CASCII_BOARDS
+#include "ardubus_i2cascii.h"
+#endif
 
 /**
  * Setups up all enabled submodules
@@ -147,6 +149,9 @@ void ardubus_setup()
 #ifdef ARDUBUS_AIRCORE_BOARDS
     ardubus_aircore_setup();
 #endif
+#ifdef ARDUBUS_I2CASCII_BOARDS
+    ardubus_i2cascii_setup();
+#endif
 }
 
 
@@ -183,6 +188,9 @@ void ardubus_report()
 #endif
 #ifdef ARDUBUS_AIRCORE_BOARDS
     ardubus_aircore_report();
+#endif
+#ifdef ARDUBUS_I2CASCII_BOARDS
+    ardubus_i2cascii_report();
 #endif
     ardubus_last_report_time = millis();
 }
@@ -231,6 +239,9 @@ void ardubus_process_command()
 #endif
 #ifdef ARDUBUS_AIRCORE_BOARDS
     ardubus_aircore_process_command(ardubus_incoming_command);
+#endif
+#ifdef ARDUBUS_I2CASCII_BOARDS
+    ardubus_i2cascii_process_command();
 #endif
 }
 
@@ -309,6 +320,9 @@ void ardubus_update()
 #endif
 #ifdef ARDUBUS_AIRCORE_BOARDS
     ardubus_aircore_update();
+#endif
+#ifdef ARDUBUS_I2CASCII_BOARDS
+    ardubus_i2cascii_update();
 #endif
     ardubus_check_report();
 }

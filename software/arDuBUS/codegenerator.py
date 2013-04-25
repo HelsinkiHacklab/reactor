@@ -104,6 +104,13 @@ class codegen:
             ret = self.add_i2c_device_include(ret)
             ret += """#define ARDUBUS_AIRCORE_BOARDS { %s }\n""" % ", ".join(map(str, self.config['aircore_boards']))
 
+        if self.config.has_key('i2cascii_boards'):
+            self.setup_i2c_init = True
+            ret = self.add_i2c_include(ret)
+            ret += """#define ARDUBUS_I2CASCII_BOARDS { %s }\n""" % ", ".join([ x['address'] for x in self.config['i2cascii_boards'] ])
+            ret += """#define ARDUBUS_I2CASCII_BUFFER_SIZE %d\n""" % (max([ int(x['chars']) for x in self.config['i2cascii_boards'] ])+1)
+
+
         ret += """\n#include <ardubus.h>
 void setup()
 {

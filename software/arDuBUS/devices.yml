@@ -202,6 +202,9 @@ reactor_lid:
           alias: pin_A4
     digital_pwmout_pins: [ 13, 12, 11, 10, 9 ] # Controls for smoke machine and 4 fans
 rod_control_panel: # The board identifier
+    i2cascii_boards:
+        - address: 9 # mwdisplay.ino
+          chars: 5
     aircore_boards: [ 4, 5, 6, 7, 8 ]
     aircore_correction_values:
         0: #index of the board list
