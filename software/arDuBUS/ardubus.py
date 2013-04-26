@@ -168,6 +168,10 @@ class ardubus(service.baseclass):
         # example from 595
         #self.send_serial_command("W%s%s" % (self.p2b(reg_index), binascii.hexlify(str(state)).upper()))
 
+    @dbus.service.method('fi.hacklab.ardubus', in_signature='ys') # "y" is the signature for a byte ("s" for string)
+    def set_i2cascii_data(self, reg_index, bytes):
+        self.send_serial_command("w%s%s" % (self.p2b(digital_index), bytes))
+
     @dbus.service.signal('fi.hacklab.ardubus')
     def alias_change(self, alias, state, sender):
         """Aliased pin has changed state"""
