@@ -1,6 +1,3 @@
-power_gauge:
-    device: /dev/ttyUSB1
-    speed: 9600
 temp_gauge:
     max_temp: 1050
 neutron_gauge:
@@ -199,4 +196,8 @@ smokemachine:
     idx: 4
 cell_melt_warnings:
     smoke_multiplier: 0.75
+mwdisplay:
+    board: rod_control_panel
+    idx: 0
+    digits: 5
 

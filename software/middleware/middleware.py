@@ -54,7 +54,6 @@ class middleware(service.baseclass):
         self.bus.add_signal_receiver(self.cell_melt_warning_reset, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_cell_melt_warning_reset")
         self.bus.add_signal_receiver(self.cell_melted, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_cell_melted")
         self.active_melt_warnings = {} # keyed by sender (rod)
-        
 
         # Used to keep track of the cached dbus proxy-objects
         self.dbus_cache = {}
@@ -432,14 +431,19 @@ class middleware(service.baseclass):
         return self.call_cached('fi.hacklab.noisemaker', '/fi/hacklab/noisemaker', method, *args)
 
     def power_report(self, power, *args):
-        import serial
-        #print "DEBUG: got power %d" % power
-        p_config = self.config['power_gauge']
-        port = serial.Serial(p_config['device'], p_config['speed'], xonxoff=False, timeout=0.01)
-        power_str = "%d\r" % power
-        port.write(power_str)
-        #print "DEBUG: set power %s" % power_str
-        
+        p_config = self.config['mwdisplay']
+        power_str = "%d" % power
+        # Make sure output fits the display
+        if len(power_str) > p_config['digits']:
+            power_str = power_str[:p_config['digits']]
+        # Left pad with spaces
+        while len(power_str) < p_config['digits']:
+            power_str = " " + power_str
+
+        board_busname = 'fi.hacklab.ardubus.' + p_config['board']
+        board_path = '/fi/hacklab/ardubus/' + p_config['board']
+
+        self.call_cached(board_busname, board_path, 'set_i2cascii_data', dbus.Byte(p_config['idx']), dbus.String(power_str))
         pass
 
 
