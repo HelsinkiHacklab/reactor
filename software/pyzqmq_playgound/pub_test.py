@@ -13,14 +13,14 @@ service_name="test_pubsub"
 service_port=5555
 
 def bonjour_register_callback(sdRef,errorCode,name,regtype,domain):
-	if errorCode == pybonjour.kDNSServiceErr_NoError:
-		if name!=service_name or regtype != service_type:
-			print "Something went wrong. service name or type don't match:",name,regtype
-	else:
-		print "Error",errorCode
+    if errorCode == pybonjour.kDNSServiceErr_NoError:
+        if name!=service_name or regtype != service_type:
+            print "Something went wrong. service name or type don't match:",name,regtype
+    else:
+        print "Error",errorCode
 
 def bonjour_process_callback(fd,events):
-	pybonjour.DNSServiceProcessResult(fd)
+    pybonjour.DNSServiceProcessResult(fd)
 
 context = zmq.Context()
 socket = context.socket(zmq.PUB)
