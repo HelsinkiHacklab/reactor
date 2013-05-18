@@ -68,7 +68,7 @@ class bonjour_resolver(object):
         finally:
             resolve_sdRef.close()
 
+# Shorthand for the resolver
 resolver = bonjour_resolver()
-
 def resolve(service_type, service_name=None):
     return resolver.resolve(service_type, service_name)
