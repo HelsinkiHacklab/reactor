@@ -6,8 +6,6 @@ Design and plans in etherpad here: http://kirjoitusalusta.fi/hacklab-reactor
 
 A phone-cam video of the first console & reactor lid in action: http://www.youtube.com/watch?v=7-S2qzXuEK0
 
-NOTE: now uses submodules, remember "git submodule init" "git submodule update"
-
 # Exhibitions
 
 ## ALT Party 2011
@@ -38,6 +36,10 @@ We managed to get the control console to a mostly working state, also the reacto
   * [Two reactor technicians at work](http://www.flickr.com/photos/ermuggo/8118672641/in/pool-2089172@N20) and [only slightly smoking reactor](http://www.flickr.com/photos/ermuggo/8118734690/in/pool-2089172@N20)
 
 [wark]: http://www.warkfest.org/en/ 
+
+## Model Expo 2013
+
+Only the reactor control console was there.
 
 ## Next: ??
 
