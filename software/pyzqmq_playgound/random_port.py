@@ -8,10 +8,9 @@ import pybonjour,socket
 service_type="_zmqpubsub._tcp"
 service_name="test_pubsub"
 
-def bonjour_register_callback(sdRef,errorCode,name,regtype,domain):
+def bonjour_register_callback(sdRef,flags,errorCode,name,regtype,domain):
     if errorCode == pybonjour.kDNSServiceErr_NoError:
-        if name!=service_name or regtype != service_type:
-            print "Something went wrong. service name or type don't match:",name,regtype
+    	print "Registered service"name,regtype,domain
     else:
         print "Error",errorCode
 
