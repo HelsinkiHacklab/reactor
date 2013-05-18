@@ -10,13 +10,13 @@ import random
 import pybonjour,socket
 from functools import partial
 
-service_type="_zmqpubsub._tcp"
+service_type="_zmqpubsub._tcp."
 service_name="test_pubsub"
 
 def bonjour_register_callback(sdRef, flags, errorCode, name, regtype, domain):
     if errorCode == pybonjour.kDNSServiceErr_NoError:
         print "Registered service", name,regtype,domain
-        if name!=service_name or regtype != service_type+".":
+        if name!=service_name or regtype != service_type:
             print "Something went wrong. service name or type don't match: '%s' =! '%s' or '%s' != '%s'" % (name, service_name , regtype, service_type)
     else:
         print "Error",errorCode
