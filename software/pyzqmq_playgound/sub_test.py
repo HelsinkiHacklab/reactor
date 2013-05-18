@@ -24,5 +24,6 @@ def rec_callback(msg):
 
 stream.on_recv(rec_callback)
 
+print "starting ioloop"
 ioloop.IOLoop.instance().start()
 
