@@ -10,4 +10,4 @@ socket.bind("tcp://*:5555")
 topic = itertools.cycle(('test','foo','bar'))
 while True:
     data = "%s" % random.randint(0,100000)
-    socket.send("%s %s" % (topic.next(), data))
+    socket.send_multipart((topic.next(), data))
