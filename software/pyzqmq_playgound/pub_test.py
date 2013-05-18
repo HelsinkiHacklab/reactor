@@ -15,6 +15,7 @@ service_port=5555
 
 def bonjour_register_callback(sdRef, flags, errorCode, name, regtype, domain):
     if errorCode == pybonjour.kDNSServiceErr_NoError:
+        print "Registered service", name,regtype,domain
         if name!=service_name or regtype != service_type:
             print "Something went wrong. service name or type don't match: '%s' =! '%s' or '%s' != '%s'" % (name, service_name , regtype, service_type)
     else:
