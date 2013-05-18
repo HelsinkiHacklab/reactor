@@ -12,8 +12,8 @@ overscan_right=10
 overscan_top=0
 overscan_bottom=0
 
-width=640-overscan_left-overscan_right
-height=420-overscan_top-overscan_bottom
+width=560+overscan_left+overscan_right
+height=420+overscan_top+overscan_bottom
 
 
 class GTK_Main():
