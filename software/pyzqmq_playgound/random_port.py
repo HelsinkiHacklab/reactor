@@ -20,7 +20,7 @@ socket = context.socket(zmq.PUB)
 port_selected = socket.bind_to_random_port('tcp://*', min_port=49152, max_port=65535, max_tries=100)
 print "Bound to %s" % repr(port_selected)
 
-sdRef=pybonjour.DNSServiceRegister(service_name,service_type,port_selected,bonjour_register_callback)
+sdRef=pybonjour.DNSServiceRegister(name=service_name,regtype=service_type,port=port_selected,callBack=bonjour_register_callback)
 
 
 topic = itertools.cycle(('test','foo','bar'))

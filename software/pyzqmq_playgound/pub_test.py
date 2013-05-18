@@ -26,7 +26,7 @@ context = zmq.Context()
 socket = context.socket(zmq.PUB)
 socket.bind("tcp://*:%d"%service_port)
 
-sdRef=pybonjour.DNSServiceRegister(service_name,service_type,service_port,bonjour_register_callback)
+sdRef=pybonjour.DNSServiceRegister(name=service_name,regtype=service_type,port=service_port,callBack=bonjour_register_callback)
 
 
 topic = itertools.cycle(('test','foo','bar'))
