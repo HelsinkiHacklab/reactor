@@ -19,7 +19,8 @@ height=420-overscan_top-overscan_bottom
 class GTK_Main():
 
     def __init__(self):
-        launch_str = 'videotestsrc name=source ! video/x-raw-yuv,format=(fourcc)AYUV,width=%d,height=%d ! videomixer name=mix ! ffmpegcolorspace !  fbdevsink name=videosink' % (width, height)
+#        launch_str = 'videotestsrc name=source ! video/x-raw-yuv,format=(fourcc)AYUV,width=%d,height=%d ! videomixer name=mix ! ffmpegcolorspace !  fbdevsink name=videosink' % (width, height)
+        launch_str = 'videotestsrc name=source ! video/x-raw-rgb,width=%d,height=%d ! ffmpegcolorspace !  fbdevsink name=videosink' % (width, height)
         print "Calling gst.parse_launch('%s')" % launch_str
         self.player = gst.parse_launch(launch_str)
         self.player.set_state(gst.STATE_PLAYING)
