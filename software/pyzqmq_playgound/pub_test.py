@@ -19,6 +19,9 @@ def bonjour_register_callback(sdRef,errorCode,name,regtype,domain):
 	else:
 		print "Error",errorCode
 
+def bonjour_process_callback(fd,events):
+	pybonjour.DNSServiceProcessResult(fd)
+
 context = zmq.Context()
 socket = context.socket(zmq.PUB)
 socket.bind("tcp://*:%d"%service_port)
@@ -38,4 +41,7 @@ def send_random_data():
 pcb = ioloop.PeriodicCallback(send_random_data, 100)
 pcb.start()
 
-ioloop.IOLoop.instance().start()
+io_loop=ioloop.IOLoop.instance()
+
+io_loop.add_handler(sdRef,bonjour_process_callback,io_loop.READ)
+io_loop.start()
