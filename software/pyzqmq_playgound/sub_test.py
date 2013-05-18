@@ -79,7 +79,7 @@ class bonjour_resolver(object):
             resolve_sdRef.close()
 
 r = bonjour_resolver()
-rr = r.resolve("_zmqpubsub._tcp.")
+rr = r.resolve("_zmqpubsub._tcp.", "test_pubsub")
 if not rr:
     print "Could not find service"
     sys.exit(1)
