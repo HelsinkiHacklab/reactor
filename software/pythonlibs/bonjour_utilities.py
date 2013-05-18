@@ -1,5 +1,6 @@
 """utilities built on pybonjour"""
 import pybonjour, select
+from functools import partial
 
 class bonjour_resolver(object):
     resolved = None
@@ -72,3 +73,32 @@ class bonjour_resolver(object):
 resolver = bonjour_resolver()
 def resolve(service_type, service_name=None):
     return resolver.resolve(service_type, service_name)
+
+class bonjour_registrar(object):
+    registered = None
+    register_error = False
+    timeout = 5
+
+    def _register_callback(self, sdRef, flags, errorCode, name, regtype, domain):
+        if errorCode == pybonjour.kDNSServiceErr_NoError:
+            print "Registered service", name,regtype,domain
+            self.registered = (name, regtype, domain)
+        else:
+            print "Error",errorCode
+            self.register_error = True
+
+    def _process_callback(self, fd, events, sdRef=None):
+        pybonjour.DNSServiceProcessResult(sdRef)
+
+    def register_ioloop(self, io_loop, service_type, service_name, service_port):
+        sdRef=pybonjour.DNSServiceRegister(name=service_name, regtype=service_type, port=service_port, callBack=self._register_callback)
+        process_callback_sdref = partial(self._process_callback, sdRef = sdRef)
+        io_loop.add_handler(sdRef.fileno(), process_callback_sdref, io_loop.READ)
+        
+        return self.registered
+
+
+# Shorthand for the registrar
+registrar = bonjour_registrar()
+def register_ioloop(io_loop, service_type, service_name, service_port):
+    return registrar.register_ioloop(io_loop, service_type, service_name, service_port)
