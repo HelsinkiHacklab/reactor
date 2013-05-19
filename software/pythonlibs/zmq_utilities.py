@@ -59,13 +59,16 @@ class decorator_tracker(object):
             return self.by_names[key]
         return None
 
+    def create(self, service_name, socket_type):
+        service_type = service_type = socket_type_to_service(socket_type)
+        key = "%s%s" % (service_name, service_type)
+        self.by_names[key] = zmq_bonjour_wrapper(socket_type, service_name)
+        return self.by_names[key]
+
     def get_by_name_or_create(self, service_name, socket_type):
         r = self.get_by_name(service_name, socket_type)
         if not r:
-            service_type = service_type = socket_type_to_service(socket_type)
-            key = "%s%s" % (service_name, service_type)
-            self.by_names[key] = zmq_bonjour_wrapper(socket_type, service_name)
-            r = self.by_names[key]
+            r = self.create(service_name, socket_type)
         return r
 
 dt = decorator_tracker()
@@ -81,6 +84,8 @@ class publish(object):
     def __call__(self, f):
         def wrapped_f(*args):
             topic = f.__name__
-            self.stream.send_multipart(topic, *args)
+            self.stream.send_multipart([topic, ] + list(args))
             f(*args)
         return wrapped_f
+
+
