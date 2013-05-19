@@ -22,6 +22,7 @@ print "Connecting to %s" % connection_str
 context = zmq.Context()
 socket = context.socket(zmq.SUB)
 socket.connect(connection_str)
+socket.setsockopt(zmq.SUBSCRIBE, "HEARTBEAT") # subscribe to topic
 socket.setsockopt(zmq.SUBSCRIBE, "test") # subscribe to topic
 socket.setsockopt(zmq.SUBSCRIBE, "bar") # subscribe to another topic
 

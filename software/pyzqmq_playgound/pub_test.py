@@ -18,23 +18,26 @@ service_type="_zmqpubsub._tcp."
 service_name="test_pubsub"
 service_port=5555
 
+
 context = zmq.Context()
 socket = context.socket(zmq.PUB)
 socket.bind("tcp://*:%d"%service_port)
+
+io_loop=ioloop.IOLoop.instance()
+bonjour_utilities.register_ioloop(io_loop, service_type, service_name, service_port)
 
 topic = itertools.cycle(('test','foo','bar'))
 stream = ZMQStream(socket)
 
 def send_random_data():
     data = "%s bottles of beer on the wall" % random.randint(0,100000)
+    #socket.send_multipart((topic.next(), data))
     stream.send_multipart((topic.next(), data))
 
 pcb = ioloop.PeriodicCallback(send_random_data, 100)
 pcb.start()
 
-io_loop=ioloop.IOLoop.instance()
 
 
-bonjour_utilities.register_ioloop(io_loop, service_type, service_name, service_port)
 
 io_loop.start()
