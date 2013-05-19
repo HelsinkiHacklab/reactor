@@ -249,7 +249,10 @@ class client_tracker(object):
 ct = client_tracker()
 def call(service_name, method, *args):
     """Async method calling wrapper, does not return anything you will need to catch any responses the server might send some other way"""
-    wrapper = ct.get_by_name_or_create(service_name, zmq.DEALER)
+    if isinstance(service_name, zmq_bonjour_connect_wrapper):
+        wrapper = service_name
+    else:
+        wrapper = ct.get_by_name_or_create(service_name, zmq.DEALER)
     wrapper.stream.send_multipart([method, ] + list(args))
     
 def call_sync(service_name, method, *args):
