@@ -30,8 +30,8 @@ videos_dir = '/home/pi/test_videos'
 path = os.path.join(videos_dir, "rammstein-ich_will.mp4")
 
 # kts http://www.raspberrypi.org/phpBB3/viewtopic.php?f=38&t=19606
-videosink = "autovideosink"
-#videosink = "fbdevsink"
+#videosink = "autovideosink"
+videosink = "fbdevsink"
 #audiosink = "autoaudiosink"
 audiosink = "alsasink"
 #audiosink = "alsasink device=hw:0,0 sync=false"
@@ -46,13 +46,13 @@ class GTK_Main():
 #        launch_str = 'videotestsrc name=source ! video/x-raw-rgb,width=%d,height=%d ! ffmpegcolorspace !  fbdevsink name=videosink' % (width, height)
 #        launch_str = 'videotestsrc name=source ! video/x-raw-rgb,width=%d,height=%d ! ffmpegcolorspace !  %s name=videosink' % (width, height, videosink)
         # This works
-#        launch_str = 'audiotestsrc name=audiosource ! audioconvert ! %s name=audiosink' % (audiosink)
+        launch_str = 'audiotestsrc name=audiosource ! audioconvert ! %s name=audiosink' % (audiosink)
 
         # Fail ?
 #        launch_str = "filesrc name=filesource ! decodebin name=decode decode. ! videoscale ! video/x-raw-rgb,width=%d,height=%d ! ffmpegcolorspace ! %s name=videosink decode. ! audioconvert ! %s " % (width, height, videosink, audiosink)
 #        launch_str = "filesrc name=filesource ! decodebin name=decode decode. ! videoscale ! ffmpegcolorspace ! %s name=videosink decode. ! audioconvert ! %s " % (videosink, audiosink)
         # This works with X11 on my linux VM but not on the raspberry...
-        launch_str = "filesrc location=%s ! decodebin name=decode decode. ! videoscale ! ffmpegcolorspace ! %s name=videosink decode. ! audioconvert ! %s " % (path, videosink, audiosink)
+#        launch_str = "filesrc location=%s ! decodebin name=decode decode. ! videoscale ! ffmpegcolorspace ! %s name=videosink decode. ! audioconvert ! %s " % (path, videosink, audiosink)
         print "Calling gst.parse_launch('%s')" % launch_str
 
         self.player = gst.parse_launch(launch_str)
