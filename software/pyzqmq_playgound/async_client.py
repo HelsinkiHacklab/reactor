@@ -27,9 +27,9 @@ stream.on_recv(client_recv_callback)
 
 def send_random_data():
     data = "%d" % random.randint(0,100000)
-    stream.send_multipart(("gimme", data))
+    stream.send_multipart(("beer", data))
     if random.randint(0,1):
-        stream.send_multipart(("nom", data))
+        stream.send_multipart(("food", data))
         
 
 pcb = ioloop.PeriodicCallback(send_random_data, 100)

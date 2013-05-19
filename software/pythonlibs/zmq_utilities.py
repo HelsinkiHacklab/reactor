@@ -71,6 +71,7 @@ class zmq_bonjour_bind_wrapper(object):
         bonjour_utilities.register_ioloop(ioloop.IOLoop.instance(), service_type, service_name, service_port)
 
     def _method_callback_wrapper(self, datalist):
+        #print "_method_callback_wrapper called: %s" % repr(datalist)
         if len(datalist) < 2:
             return
         client_id = datalist[0]
@@ -78,10 +79,13 @@ class zmq_bonjour_bind_wrapper(object):
         args = datalist[2:]
         #print "DEBUG: _method_callback_wrapper(%s, %s)" % (method, repr(args))
         if not self.method_callbacks.has_key(method):
+            print "No such method: %s" % method
+            print "Methods: %s" % self.method_callbacks.keys()
             return
         for f in self.method_callbacks[method]:
             resp = zmq_client_response(client_id, self.stream)
             # TODO: make a wrapper object for sending responses and pass that instead of the client_id
+            print "Calling f(resp, %s)" % repr(args)
             f(resp, *args)
 
     def register_method(self, name, callback):
@@ -203,13 +207,17 @@ class method(object):
     stream = None
 
     def __init__(self, service_name):
+        print "Gettign wrapper"
         self.wrapper = dt.get_by_name_or_create(service_name, zmq.ROUTER)
         self.stream = self.wrapper.stream
 
     def __call__(self, f):
-        def wrapped_f(*args):
-            method = f.__name__
-            f(*args)
+        method = f.__name__
+        def wrapped_f(resp, *args):
+            print "calling f(%s)" % repr(args)
+            resp.send(f(*args))
+        print "registering method %s" % method
+        self.wrapper.register_method(method, wrapped_f)
         return wrapped_f
 
 

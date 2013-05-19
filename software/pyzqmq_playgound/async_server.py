@@ -13,20 +13,19 @@ import zmq_utilities
 
 service_name="test_asyncrpc"
 
-wrapper = zmq_utilities.zmq_bonjour_bind_wrapper(zmq.ROUTER, service_name)
-stream = wrapper.stream
-
-def beer(resp, bottles):
+@zmq_utilities.method(service_name)
+def beer(bottles):
     bottles = int(bottles)
     print "Sending bottles as reply"
-    resp.send("Here's %d bottles of beer" % bottles)
+    return "Here's %d bottles of beer" % bottles
 
-def food(resp, arg):
+@zmq_utilities.method(service_name)
+def food(arg):
     print "Sending noms as reply"
-    resp.send("Here's %s for the noms" % arg)
+    return "Here's %s for the noms" % arg
 
-wrapper.register_method("gimme", beer)
-wrapper.register_method("nom", food)
+#wrapper.register_method("gimme", beer)
+#wrapper.register_method("nom", food)
 
 
 print "starting ioloop"
