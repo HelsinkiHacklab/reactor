@@ -9,14 +9,25 @@ import random
 import sys
 myname = sys.argv[1]
 
+import sys, os
+libs_dir = os.path.join(os.path.dirname( os.path.realpath( __file__ ) ),  '..', 'pythonlibs')
+if os.path.isdir(libs_dir):                                       
+    sys.path.append(libs_dir)
+import bonjour_utilities
+
+
 service_type="_zmqdealerrouter._tcp."
 service_name="test_asyncrpc"
-service_port=5556
 
 
 context = zmq.Context()
 socket = context.socket(zmq.DEALER)
-socket.connect("tcp://*:%d"%service_port)
+
+rr = bonjour_utilities.resolve(service_type, service_name)
+connection_str =  "tcp://%s:%s" % (rr[1], rr[2])
+print "connecting to %s" % connection_str
+socket.connect(connection_str)
+
 stream = ZMQStream(socket)
 
 

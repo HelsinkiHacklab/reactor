@@ -4,15 +4,25 @@ from zmq.eventloop import ioloop
 from zmq.eventloop.zmqstream import ZMQStream
 ioloop.install()
 
+import sys, os
+libs_dir = os.path.join(os.path.dirname( os.path.realpath( __file__ ) ),  '..', 'pythonlibs')
+if os.path.isdir(libs_dir):                                       
+    sys.path.append(libs_dir)
+import bonjour_utilities
+
+
 service_type="_zmqdealerrouter._tcp."
 service_name="test_asyncrpc"
-service_port=5556
-
 
 context = zmq.Context()
 socket = context.socket(zmq.ROUTER)
-socket.bind("tcp://*:%d"%service_port)
+service_port = socket.bind_to_random_port('tcp://*', min_port=49152, max_port=65535, max_tries=100)
+
 stream = ZMQStream(socket)
+
+io_loop=ioloop.IOLoop.instance()
+bonjour_utilities.register_ioloop(io_loop, service_type, service_name, service_port)
+
 
 def server_recv_callback(frames):
     print "server_recv_callback got %s" % repr(frames)
