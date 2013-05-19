@@ -13,16 +13,19 @@ import zmq_utilities
 
 wrapper = zmq_utilities.zmq_bonjour_connect_wrapper(zmq.SUB, "test_pubsub")
 
-wrapper.socket.setsockopt(zmq.SUBSCRIBE, "HEARTBEAT") # subscribe to topic
-wrapper.socket.setsockopt(zmq.SUBSCRIBE, "test") # subscribe to topic
-wrapper.socket.setsockopt(zmq.SUBSCRIBE, "bar") # subscribe to another topic
+def test_callback(data):
+    print "in test_callback got %s" % repr(data)
+
+def test_callback2(data):
+    print "in test_callback2 got %s" % repr(data)
 
 
-def rec_callback(msg):
-    topic, data = msg
-    print "received %s: %s" % (topic, data)
+def bar_callback(data):
+    print "in bar_callback got %s" % repr(data)
 
-wrapper.stream.on_recv(rec_callback)
+wrapper.add_topic_callback("test", test_callback)
+wrapper.add_topic_callback("bar", bar_callback)
+wrapper.add_topic_callback("test", test_callback2)
 
 print "starting ioloop"
 ioloop.IOLoop.instance().start()

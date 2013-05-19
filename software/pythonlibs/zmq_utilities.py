@@ -3,7 +3,7 @@ import zmq
 from zmq.eventloop import ioloop
 ioloop.install()
 from zmq.eventloop.zmqstream import ZMQStream
-
+import time
 import bonjour_utilities
 
 def socket_type_to_service(socket_type):
@@ -51,14 +51,25 @@ class zmq_bonjour_connect_wrapper(object):
     stream = None
     heartbeat_received = None
     heartbeat_timeout = 5000
+    topic_callbacks = {}
 
     def __init__(self, socket_type, service_name, service_port=None, service_type=None):
-        self.context = zmq.Context()
-        self.socket = self.context.socket(socket_type)
-        self.stream = ZMQStream(self.socket)
-
         self.reconnect(socket_type, service_name, service_port=None, service_type=None)
-        # TODO: add a watcher for the hearbeats (and call reconnect if heartbeat goes away
+        self.add_topic_callback("HEARTBEAT", self._heartbeat_callback)
+        # TODO: add heartbeat watcher callback
+
+    def _heartbeat_callback(self, *args):
+        self.heartbeat_received = time.time()
+        #print "Heartbeat time %d" % self.heartbeat_received
+
+    def _topic_callback_wrapper(self, datalist):
+        topic = datalist[0]
+        args = datalist[1:]
+        #print "DEBUG: _topic_callback_wrapper(%s, %s)" % (topic, repr(args))
+        if not self.topic_callbacks.has_key(topic):
+            return
+        for f in self.topic_callbacks[topic]:
+            f(*args)
 
     def reconnect(self, socket_type, service_name, service_port=None, service_type=None):
         if not service_type:
@@ -68,8 +79,30 @@ class zmq_bonjour_connect_wrapper(object):
             # TODO raise error or wait ??
             return
 
+        self.context = zmq.Context()
+        self.socket = self.context.socket(socket_type)
+        self.stream = ZMQStream(self.socket)
         connection_str =  "tcp://%s:%s" % (rr[1], rr[2])
         self.socket.connect(connection_str)
+
+        # re-register the subscriptions
+        for topic in self.topic_callbacks.keys():
+            self._subscribe_topic(topic)
+
+        # And set the callback
+        self.stream.on_recv(self._topic_callback_wrapper)
+
+    def _subscribe_topic(self, topic):
+        self.socket.setsockopt(zmq.SUBSCRIBE, topic)
+
+    def add_topic_callback(self, topic, callback):
+        if not self.topic_callbacks.has_key(topic):
+            self.topic_callbacks[topic] = []
+            self._subscribe_topic(topic)
+        self.topic_callbacks[topic].append(callback)
+
+    
+
 
 
 class decorator_tracker(object):
