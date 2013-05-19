@@ -18,20 +18,13 @@ socket.connect("tcp://*:%d"%service_port)
 stream = ZMQStream(socket)
 
 
-def recv_callback(client_id, command, *args):
-    print "recv_callback got %s" % repr(args)
-    if command == "gimme":
-        bottles = args[0]
-        stream.send_multipart((client_id, "Here's %d bottles of beer" % bottles))
-    else:
-        stream.send_multipart([client_id, ] + list(args))
-    
+def client_recv_callback(*args):
+    print "client_recv_callback got %s" % repr(args)
 
-
-stream.on_recv(recv_callback)
+stream.on_recv(client_recv_callback)
 
 def send_random_data():
-    data = "%s" % random.randint(0,100000)
+    data = "%d" % random.randint(0,100000)
     stream.send_multipart(("gimme", data))
 
 pcb = ioloop.PeriodicCallback(send_random_data, 100)
