@@ -14,15 +14,15 @@ import zmq_utilities
 
 service_name="test_pubsub"
 
-@zmq_utilities.publish(service_name)
+@zmq_utilities.signal(service_name)
 def test(arg1):
     pass
 
-@zmq_utilities.publish(service_name)
+@zmq_utilities.signal(service_name)
 def foo(arg1):
     pass
 
-@zmq_utilities.publish(service_name)
+@zmq_utilities.signal(service_name)
 def bar(arg1):
     pass
 

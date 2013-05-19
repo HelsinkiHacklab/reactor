@@ -27,6 +27,7 @@ class zmq_bonjour_bind_wrapper(object):
     stream = None
     heartbeat_timer = None
 
+
     def _hearbeat(self):
         #print "Sending heartbeat"
         self.stream.send_multipart(("HEARTBEAT", "1"))
@@ -145,7 +146,7 @@ class decorator_tracker(object):
 
 dt = decorator_tracker()
 
-class publish(object):
+class signal(object):
     wrapper = None
     stream = None
 
@@ -157,6 +158,19 @@ class publish(object):
         def wrapped_f(*args):
             topic = f.__name__
             self.stream.send_multipart([topic, ] + list(args))
+            f(*args)
+        return wrapped_f
+
+class method(object):
+    wrapper = None
+    stream = None
+
+    def __init__(self, service_name):
+        self.wrapper = dt.get_by_name_or_create(service_name, zmq.ROUTER)
+        self.stream = self.wrapper.stream
+
+    def __call__(self, f):
+        def wrapped_f(*args):
             f(*args)
         return wrapped_f
 
