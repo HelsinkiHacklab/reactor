@@ -16,7 +16,7 @@ def socket_type_to_service(socket_type):
     # TODO: Raise error for unknown types
 
 
-class zmq_bonjour_wrapper(object):
+class zmq_bonjour_bind_wrapper(object):
     context = None
     socket = None
     stream = None
@@ -62,7 +62,7 @@ class decorator_tracker(object):
     def create(self, service_name, socket_type):
         service_type = service_type = socket_type_to_service(socket_type)
         key = "%s%s" % (service_name, service_type)
-        self.by_names[key] = zmq_bonjour_wrapper(socket_type, service_name)
+        self.by_names[key] = zmq_bonjour_bind_wrapper(socket_type, service_name)
         return self.by_names[key]
 
     def get_by_name_or_create(self, service_name, socket_type):
