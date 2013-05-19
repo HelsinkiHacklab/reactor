@@ -51,6 +51,7 @@ class GTK_Main():
         # Fail ?
 #        launch_str = "filesrc name=filesource ! decodebin name=decode decode. ! videoscale ! video/x-raw-rgb,width=%d,height=%d ! ffmpegcolorspace ! %s name=videosink decode. ! audioconvert ! %s " % (width, height, videosink, audiosink)
 #        launch_str = "filesrc name=filesource ! decodebin name=decode decode. ! videoscale ! ffmpegcolorspace ! %s name=videosink decode. ! audioconvert ! %s " % (videosink, audiosink)
+        # This works with X11 on my linux VM but not on the raspberry...
         launch_str = "filesrc location=%s ! decodebin name=decode decode. ! videoscale ! ffmpegcolorspace ! %s name=videosink decode. ! audioconvert ! %s " % (path, videosink, audiosink)
         print "Calling gst.parse_launch('%s')" % launch_str
 
