@@ -1,4 +1,4 @@
-"""Utilities and decorators for PyZMQ"""
+"""Utilities and decorators for PyZMQ, emulating the way python-dbus decorators work (which make things super-easy for the developer)"""
 import zmq
 from zmq.eventloop import ioloop
 ioloop.install()
@@ -160,7 +160,7 @@ class zmq_bonjour_connect_wrapper(object):
 
 
 
-class decorator_tracker(object):
+class server_tracker(object):
     by_names = {}
 
     def __init__(self):
@@ -185,9 +185,10 @@ class decorator_tracker(object):
             r = self.create(service_name, socket_type)
         return r
 
-dt = decorator_tracker()
+dt = server_tracker()
 
 class signal(object):
+    """This exposes the decorated function as a PUB/SUB published signal, topic is the method name and any arguments for the method are passed on as data"""
     wrapper = None
     stream = None
 
@@ -203,6 +204,7 @@ class signal(object):
         return wrapped_f
 
 class method(object):
+    """This exposes the decorated function as async RPC method, return value is sent back to client but unless that data (and the request params) contain some transaction id client cannot be sure which call a response corresponds to"""
     wrapper = None
     stream = None
 
@@ -218,4 +220,39 @@ class method(object):
         self.wrapper.register_method(method, wrapped_f)
         return wrapped_f
 
+
+class client_tracker(object):
+    by_names = {}
+
+    def __init__(self):
+        pass
+
+    def get_by_name(self, service_name, socket_type):
+        service_type = socket_type_to_service(socket_type)
+        key = "%s%s" % (service_name, service_type)
+        if self.by_names.has_key(key):
+            return self.by_names[key]
+        return None
+
+    def create(self, service_name, socket_type):
+        service_type = service_type = socket_type_to_service(socket_type)
+        key = "%s%s" % (service_name, service_type)
+        self.by_names[key] = zmq_bonjour_connect_wrapper(socket_type, service_name)
+        return self.by_names[key]
+
+    def get_by_name_or_create(self, service_name, socket_type):
+        r = self.get_by_name(service_name, socket_type)
+        if not r:
+            r = self.create(service_name, socket_type)
+        return r
+
+ct = client_tracker()
+def call(service_name, method, *args):
+    """Async method calling wrapper, does not return anything you will need to catch any responses the server might send some other way"""
+    wrapper = ct.get_by_name_or_create(service_name, zmq.DEALER)
+    wrapper.stream.send_multipart([method, ] + list(args))
+    
+def call_sync(service_name, method, *args):
+    """Sync method calling, will block untill a response matching this request is received"""
+    raise NotImplementedError
 

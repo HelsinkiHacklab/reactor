@@ -17,7 +17,7 @@ import zmq_utilities
 
 service_name="test_asyncrpc"
 
-wrapper = zmq_utilities.zmq_bonjour_connect_wrapper(zmq.DEALER, service_name)
+wrapper = zmq_utilities.ct.get_by_name_or_create(service_name, zmq.DEALER)
 stream = wrapper.stream
 
 def client_recv_callback(*args):
@@ -27,9 +27,9 @@ stream.on_recv(client_recv_callback)
 
 def send_random_data():
     data = "%d" % random.randint(0,100000)
-    stream.send_multipart(("beer", data))
+    zmq_utilities.call(service_name, "beer", data)
     if random.randint(0,1):
-        stream.send_multipart(("food", data))
+        zmq_utilities.call(service_name, "food", data)
         
 
 pcb = ioloop.PeriodicCallback(send_random_data, 100)
