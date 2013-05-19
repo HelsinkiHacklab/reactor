@@ -34,8 +34,19 @@ def server_recv_callback(frames):
             print "Echoing data back to client"
             stream.send_multipart([client_id, command ] + list(data))
 
+def beer(client_id, bottles):
+    bottles = int(bottles)
+    print "Sending bottles as reply"
+    stream.send_multipart((client_id, "Here's %d bottles of beer" % bottles))
+    
 
-stream.on_recv(server_recv_callback)
+def food(client_id, arg):
+    print "Sending noms as reply"
+    stream.send_multipart((client_id, "Here's %s for the noms" % arg))
+
+wrapper.register_method("gimme", beer)
+wrapper.register_method("nom", food)
+#stream.on_recv(server_recv_callback)
 
 
 print "starting ioloop"

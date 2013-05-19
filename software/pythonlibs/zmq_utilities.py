@@ -26,6 +26,7 @@ class zmq_bonjour_bind_wrapper(object):
     socket = None
     stream = None
     heartbeat_timer = None
+    method_callbacks = {}
 
 
     def _hearbeat(self):
@@ -50,7 +51,29 @@ class zmq_bonjour_bind_wrapper(object):
             self.heartbeat_timer = ioloop.PeriodicCallback(self._hearbeat, 1000)
             self.heartbeat_timer.start()
 
+        if socket_type == zmq.ROUTER:
+            self.stream.on_recv(self._method_callback_wrapper)
+
+
         bonjour_utilities.register_ioloop(ioloop.IOLoop.instance(), service_type, service_name, service_port)
+
+    def _method_callback_wrapper(self, datalist):
+        if len(datalist) < 2:
+            return
+        client_id = datalist[0]
+        method = datalist[1]
+        args = datalist[2:]
+        #print "DEBUG: _method_callback_wrapper(%s, %s)" % (method, repr(args))
+        if not self.method_callbacks.has_key(method):
+            return
+        for f in self.method_callbacks[method]:
+            # TODO: make a wrapper object for sending responses and pass that instead of the client_id
+            f(client_id, *args)
+
+    def register_method(self, name, callback):
+        if not self.method_callbacks.has_key(name):
+            self.method_callbacks[name] = []
+        self.method_callbacks[name].append(callback)
 
 class zmq_bonjour_connect_wrapper(object):
     context = None
@@ -171,6 +194,7 @@ class method(object):
 
     def __call__(self, f):
         def wrapped_f(*args):
+            method = f.__name__
             f(*args)
         return wrapped_f
 
