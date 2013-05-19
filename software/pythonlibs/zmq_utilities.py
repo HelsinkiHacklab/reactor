@@ -45,6 +45,32 @@ class zmq_bonjour_bind_wrapper(object):
 
         bonjour_utilities.register_ioloop(ioloop.IOLoop.instance(), service_type, service_name, service_port)
 
+class zmq_bonjour_connect_wrapper(object):
+    context = None
+    socket = None
+    stream = None
+    heartbeat_received = None
+    heartbeat_timeout = 5000
+
+    def __init__(self, socket_type, service_name, service_port=None, service_type=None):
+        self.context = zmq.Context()
+        self.socket = self.context.socket(socket_type)
+        self.stream = ZMQStream(self.socket)
+
+        self.reconnect(socket_type, service_name, service_port=None, service_type=None)
+        # TODO: add a watcher for the hearbeats (and call reconnect if heartbeat goes away
+
+    def reconnect(self, socket_type, service_name, service_port=None, service_type=None):
+        if not service_type:
+            service_type = socket_type_to_service(socket_type)
+        rr = bonjour_utilities.resolve(service_type, service_name)
+        if not rr:
+            # TODO raise error or wait ??
+            return
+
+        connection_str =  "tcp://%s:%s" % (rr[1], rr[2])
+        self.socket.connect(connection_str)
+
 
 class decorator_tracker(object):
     by_names = {}
