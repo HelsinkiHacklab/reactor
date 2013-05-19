@@ -61,8 +61,10 @@ class zmq_bonjour_connect_wrapper(object):
 
     def __init__(self, socket_type, service_name, service_port=None, service_type=None):
         self.reconnect(socket_type, service_name, service_port=None, service_type=None)
-        self.add_topic_callback("HEARTBEAT", self._heartbeat_callback)
-        # TODO: add heartbeat watcher callback
+        if socket_type == zmq.SUB:
+            # TODO: how to handle this with ROUTER/DEALER combinations...
+            self.add_topic_callback("HEARTBEAT", self._heartbeat_callback)
+            # TODO: add heartbeat watcher callback
 
     def _heartbeat_callback(self, *args):
         self.heartbeat_received = time.time()
