@@ -6,6 +6,8 @@ ioloop.install()
 import itertools
 import random
 
+import sys
+myname = sys.argv[1]
 
 service_type="_zmqdealerrouter._tcp."
 service_name="test_asyncrpc"
@@ -19,7 +21,7 @@ stream = ZMQStream(socket)
 
 
 def client_recv_callback(*args):
-    print "client_recv_callback got %s" % repr(args)
+    print "%s: client_recv_callback got %s" % (myname, repr(args))
 
 stream.on_recv(client_recv_callback)
 
