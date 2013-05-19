@@ -12,6 +12,11 @@ def socket_type_to_service(socket_type):
     if socket_type == zmq.SUB:
         return "_zmqpubsub._tcp."
 
+    if socket_type == zmq.ROUTER:
+        return "_zmqdealerrouter._tcp."
+    if socket_type == zmq.DEALER:
+        return "_zmqdealerrouter._tcp."
+
     # TODO: Implement more types
     # TODO: Raise error for unknown types
 
@@ -39,9 +44,10 @@ class zmq_bonjour_bind_wrapper(object):
         if not service_type:
             service_type = socket_type_to_service(socket_type)
 
-        
-        self.heartbeat_timer = ioloop.PeriodicCallback(self._hearbeat, 1000)
-        self.heartbeat_timer.start()
+        if socket_type == zmq.PUB:
+            # TODO: how to handle this with ROUTER/DEALER combinations...
+            self.heartbeat_timer = ioloop.PeriodicCallback(self._hearbeat, 1000)
+            self.heartbeat_timer.start()
 
         bonjour_utilities.register_ioloop(ioloop.IOLoop.instance(), service_type, service_name, service_port)
 

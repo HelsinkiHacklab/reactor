@@ -8,21 +8,13 @@ import sys, os
 libs_dir = os.path.join(os.path.dirname( os.path.realpath( __file__ ) ),  '..', 'pythonlibs')
 if os.path.isdir(libs_dir):                                       
     sys.path.append(libs_dir)
-import bonjour_utilities
+import zmq_utilities
 
 
-service_type="_zmqdealerrouter._tcp."
 service_name="test_asyncrpc"
 
-context = zmq.Context()
-socket = context.socket(zmq.ROUTER)
-service_port = socket.bind_to_random_port('tcp://*', min_port=49152, max_port=65535, max_tries=100)
-
-stream = ZMQStream(socket)
-
-io_loop=ioloop.IOLoop.instance()
-bonjour_utilities.register_ioloop(io_loop, service_type, service_name, service_port)
-
+wrapper = zmq_utilities.zmq_bonjour_bind_wrapper(zmq.ROUTER, service_name)
+stream = wrapper.stream
 
 def server_recv_callback(frames):
     print "server_recv_callback got %s" % repr(frames)
