@@ -72,6 +72,11 @@ class zmq_bonjour_connect_wrapper(object):
             f(*args)
 
     def reconnect(self, socket_type, service_name, service_port=None, service_type=None):
+        self.context = None
+        self.socket = None
+        self.stream = None
+        self.heartbeat_received = None
+
         if not service_type:
             service_type = socket_type_to_service(socket_type)
         rr = bonjour_utilities.resolve(service_type, service_name)
