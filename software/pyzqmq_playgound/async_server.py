@@ -24,9 +24,6 @@ def food(arg):
     print "Sending noms as reply"
     return "Here's %s for the noms" % arg
 
-#wrapper.register_method("gimme", beer)
-#wrapper.register_method("nom", food)
-
 
 print "starting ioloop"
 ioloop.IOLoop.instance().start()
