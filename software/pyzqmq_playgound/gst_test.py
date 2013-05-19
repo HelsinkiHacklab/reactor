@@ -6,15 +6,13 @@ import pygst
 pygst.require("0.10")
 import gst
 
-# These are from /boot/config.txt
-overscan_left=30
-overscan_right=10
-overscan_top=0
-overscan_bottom=0
+import sys, os
+libs_dir = os.path.join(os.path.dirname( os.path.realpath( __file__ ) ),  '..', 'pythonlibs')
+if os.path.isdir(libs_dir):
+    sys.path.append(libs_dir)
+import framebuffer_info
 
-width=560+overscan_left+overscan_right
-height=420+overscan_top+overscan_bottom
-
+width, height = framebuffer_info.resolution()
 
 class GTK_Main():
 
