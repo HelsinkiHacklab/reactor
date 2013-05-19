@@ -17,7 +17,7 @@ import zmq_utilities
 
 service_name="test_asyncrpc"
 
-#wrapper = ct.get_by_name_or_create(service_name, zmq.DEALER)
+#wrapper = zmq_utilities.ct.get_by_name_or_create(service_name, zmq.DEALER)
 wrapper = zmq_utilities.zmq_bonjour_connect_wrapper(zmq.DEALER, service_name)
 
 stream = wrapper.stream
