@@ -5,6 +5,8 @@ ioloop.install()
 from zmq.eventloop.zmqstream import ZMQStream
 import time
 import bonjour_utilities
+from functools import partial
+
 
 def socket_type_to_service(socket_type):
     if socket_type == zmq.PUB:
@@ -20,6 +22,17 @@ def socket_type_to_service(socket_type):
     # TODO: Implement more types
     # TODO: Raise error for unknown types
 
+
+class zmq_client_response(object):
+    client_id = None
+    stream = None
+    
+    def __init__(self, client_id, stream):
+        self.stream = stream
+        self.client_id = client_id
+    
+    def send(self, *args):
+        self.stream.send_multipart([self.client_id, ] + list(args))
 
 class zmq_bonjour_bind_wrapper(object):
     context = None
@@ -67,8 +80,9 @@ class zmq_bonjour_bind_wrapper(object):
         if not self.method_callbacks.has_key(method):
             return
         for f in self.method_callbacks[method]:
+            resp = zmq_client_response(client_id, self.stream)
             # TODO: make a wrapper object for sending responses and pass that instead of the client_id
-            f(client_id, *args)
+            f(resp, *args)
 
     def register_method(self, name, callback):
         if not self.method_callbacks.has_key(name):
