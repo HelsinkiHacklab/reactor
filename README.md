@@ -41,6 +41,13 @@ We managed to get the control console to a mostly working state, also the reacto
 
 Only the reactor control console was there.
 
+## [FinnCon 2013][fc13]
+
+The whole setup was there.
+
+[fc13]: http://2013.finncon.org/
+
+
 ## Next: ??
 
 Don't know yet, but improvements will continue, at some point we will get around to making the [coms-console][coms_jeri] functional too ([Turku hacklab][tku] has shown some interest in working on the plant-control console, seen as the rightmost console on the coms-picture)
