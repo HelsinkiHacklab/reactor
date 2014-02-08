@@ -209,7 +209,7 @@ rod_control_panel: # The board identifier
     aircore_correction_values:
         0: #index of the board list
             0: 164 # number of channel on driver
-            1: 225
+            1: 247
             3: 30
             4: 180
             5: 120
@@ -218,7 +218,7 @@ rod_control_panel: # The board identifier
         1:
             0: 100
             1: 240
-            3: 140
+            3: 217
             4: 230
             5: 180
             7: 10
