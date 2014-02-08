@@ -192,7 +192,7 @@ relay_220v_map: # These are connected to the high port of the PCA9535, indices t
 smokemachine:
     min_pwm: 100
     max_pwm: 255
-    board: reactor_lid
+    board: fake_reactor_lid
     idx: 4
 cell_melt_warnings:
     smoke_multiplier: 0.75
