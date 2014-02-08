@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # Boilerplate to add ../pythonlibs (via full path resolution) to import paths
-import os,sys
+import os,sys,glob
 libs_dir = os.path.join(os.path.dirname( os.path.realpath( __file__ ) ),  '..', 'pythonlibs')
 if os.path.isdir(libs_dir):                                       
     sys.path.append(libs_dir)
@@ -120,8 +120,9 @@ class my_launcher(launcher.baseclass):
     @dbus.service.method(my_signature + '.launcher')
     def scan(self):
         """Scans the configured serial devices for boards"""
-        for comport in self.config['search_ports']:
-            self.test_port(comport)
+        for filespec in self.config['search_ports']:
+            for comport in glob.glob(comport):
+                self.test_port(comport)
 
     @dbus.service.method(my_signature + '.launcher')
     def rescan(self):

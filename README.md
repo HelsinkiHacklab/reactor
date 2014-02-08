@@ -1,12 +1,10 @@
-# A nuclear reactor simulator / game project, by Helsinki Hacklab.
+# A nuclear reactor simulator / game project, by [Helsinki Hacklab][hlab].
 
 Uses physical consoles with buttons and gauges for input and output and a linux computer running various pieces of interfacing and simulation software.
 
 Design and plans in etherpad here: http://kirjoitusalusta.fi/hacklab-reactor 
 
 A phone-cam video of the first console & reactor lid in action: http://www.youtube.com/watch?v=7-S2qzXuEK0
-
-NOTE: now uses submodules, remember "git submodule init" "git submodule update"
 
 # Exhibitions
 
@@ -39,7 +37,23 @@ We managed to get the control console to a mostly working state, also the reacto
 
 [wark]: http://www.warkfest.org/en/ 
 
-## Next: ??
+## Model Expo 2013
+
+Only the reactor control console was there.
+
+## [FinnCon 2013][fc13]
+
+The whole setup was there.
+
+[fc13]: http://2013.finncon.org/
+
+## Next: Happy Hacking Day 2014
+
+<http://happyhackingday.org/> as part of [Helsinki Hacklab][hlab]s stand.
+
+[hlab]: http://helsinki.hacklab.fi
+
+## Next^2: ??
 
 Don't know yet, but improvements will continue, at some point we will get around to making the [coms-console][coms_jeri] functional too ([Turku hacklab][tku] has shown some interest in working on the plant-control console, seen as the rightmost console on the coms-picture)
 

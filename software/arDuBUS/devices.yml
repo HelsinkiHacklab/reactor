@@ -208,42 +208,42 @@ rod_control_panel: # The board identifier
     aircore_boards: [ 4, 5, 6, 7, 8 ]
     aircore_correction_values:
         0: #index of the board list
-            0: 164 # number of channel on driver
-            1: 225
+            0: 162 # number of channel on driver
+            1: 249
             3: 30
             4: 180
-            5: 120
-            6: 27
-            7: 70
+            5: 121
+            6: 30
+            7: 66
         1:
             0: 100
             1: 240
-            3: 140
+            3: 220
             4: 230
-            5: 180
-            7: 10
+            5: 182
+            7: 6
         2:
             0: 110
-            1: 140
+            1: 137
             2: 120
-            3: 130
+            3: 131
             4: 200
-            5: 220
-            6: 220
-            7: 130
+            5: 223
+            6: 214
+            7: 133
         3:
-            0: 10
+            0: 17
             1: 150
-            3: 70
-            4: 80
-            5: 220
-            6: 0
+            3: 66
+            4: 73
+            5: 224
+            6: 6
         4:
-            0: 70
-            1: 200
-            2: 80
-            3: 150
-            5: 0
+            0: 67
+            1: 196
+            2: 77
+            3: 145
+            5: 4
             7: 170
     pca9635RGBJBOL_boards: [ 0, 1 ] # Board addresses (aka ARDUBUS_PCA9635RGBJBOL_BOARDS)
     pca9635RGBJBOL_maps:
