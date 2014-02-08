@@ -170,7 +170,7 @@ class ardubus(service.baseclass):
 
     @dbus.service.method('fi.hacklab.ardubus', in_signature='ys') # "y" is the signature for a byte ("s" for string)
     def set_i2cascii_data(self, reg_index, bytes):
-        self.send_serial_command("w%s%s" % (self.p2b(digital_index), bytes))
+        self.send_serial_command("w%s%s" % (self.p2b(reg_index), bytes))
 
     @dbus.service.signal('fi.hacklab.ardubus')
     def alias_change(self, alias, state, sender):
