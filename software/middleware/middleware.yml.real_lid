@@ -1,0 +1,203 @@
+temp_gauge:
+    max_temp: 1050
+neutron_gauge:
+    max_avgflux: 3.5
+top_led_map:
+    board: rod_control_panel
+    jbol_idx: 0
+    led_ids: # keys strings, values led indices
+        rod_0_2: 0
+        rod_0_3: 1
+        rod_0_4: 2
+        rod_1_1: 3
+        well_1_2: 4
+        rod_1_3: 5
+        rod_1_4: 6
+        rod_1_5: 7
+        rod_2_0: 8
+        rod_2_1: 9
+        rod_2_2: 10
+        rod_2_3: 11
+        rod_2_4: 12
+        well_2_5: 13
+        rod_2_6: 14
+        rod_3_0: 15
+        rod_3_1: 16
+        rod_3_2: 17
+        rod_3_3: 18
+        rod_3_4: 19
+        rod_3_5: 20
+        rod_3_6: 21
+        rod_4_0: 22
+        rod_4_1: 23
+        well_4_1: 24
+        rod_4_3: 25
+        rod_4_4: 26
+        rod_4_5: 27
+        rod_4_6: 28
+        rod_5_1: 29
+        rod_5_2: 30
+        rod_5_3: 31
+        well_5_4: 32
+        rod_5_5: 33
+        rod_6_2: 34
+        rod_6_3: 35
+        rod_6_4: 36
+led_gauge_map: #keys are well coordinates, values define the led locations
+    well_1_2_neutrons:
+        board: rod_control_panel
+        jbol_idx: 1
+        leds: [ 11, 10, 9, 8 ]
+    well_1_2_temp:
+        board: rod_control_panel
+        jbol_idx: 1
+        leds: [ 15, 14, 13, 12 ]
+    well_2_5_neutrons:
+        board: rod_control_panel
+        jbol_idx: 1
+        leds: [ 27, 26, 25, 24 ]
+    well_2_5_temp:
+        board: rod_control_panel
+        jbol_idx: 1
+        leds: [ 31, 30, 29, 28 ]
+    well_4_1_neutrons:
+        board: rod_control_panel
+        jbol_idx: 1
+        leds: [ 3, 2, 1, 0 ]
+    well_4_1_temp:
+        board: rod_control_panel
+        jbol_idx: 1
+        leds: [ 7, 6, 5, 4 ]
+    well_5_4_neutrons:
+        board: rod_control_panel
+        jbol_idx: 1
+        leds: [ 19, 18, 17, 16 ]
+    well_5_4_temp:
+        board: rod_control_panel
+        jbol_idx: 1
+        leds: [ 23, 22, 21, 20 ]
+rod_aircore_maxpwm: 170 # This should probably be tuned on per-motor basis
+rod_aircore_map:
+    rod_4_2:
+        board: 0
+        motor: 0
+    rod_5_2:
+        board: 0
+        motor: 1
+    rod_4_3:
+        board: 0
+        motor: 3
+    rod_5_1:
+        board: 0
+        motor: 4
+    rod_6_2:
+        board: 0
+        motor: 5
+    rod_3_2:
+        board: 0
+        motor: 6
+    rod_6_3:
+        board: 0
+        motor: 7
+    rod_1_3:
+        board: 1
+        motor: 0
+    rod_2_3:
+        board: 1
+        motor: 1
+    rod_3_3:
+        board: 1
+        motor: 3
+    rod_0_4:
+        board: 1
+        motor: 4
+    rod_5_3:
+        board: 1
+        motor: 5
+    rod_0_3:
+        board: 1
+        motor: 7
+    rod_2_0:
+        board: 2
+        motor: 0
+    rod_4_0:
+        board: 2
+        motor: 1
+    rod_3_0:
+        board: 2
+        motor: 2
+    rod_2_2:
+        board: 2
+        motor: 3
+    rod_0_2:
+        board: 2
+        motor: 4
+    rod_3_1:
+        board: 2
+        motor: 5
+    rod_1_1:
+        board: 2
+        motor: 6
+    rod_2_1:
+        board: 2
+        motor: 7
+    rod_4_6:
+        board: 3
+        motor: 0
+    rod_6_4:
+        board: 3
+        motor: 1
+    rod_4_4:
+        board: 3
+        motor: 3
+    rod_4_5:
+        board: 3
+        motor: 4
+    rod_5_5:
+        board: 3
+        motor: 5
+    rod_3_6:
+        board: 3
+        motor: 6
+    rod_1_5:
+        board: 4
+        motor: 0
+    rod_3_4:
+        board: 4
+        motor: 1
+    rod_3_5:
+        board: 4
+        motor: 2
+    rod_2_4:
+        board: 4
+        motor: 3
+    rod_2_6:
+        board: 4
+        motor: 5
+    rod_1_4:
+        board: 4
+        motor: 7
+rod_audio:
+    max_loops: 4
+    loop_name: rod_movement
+    start_sample: start_movement.wav
+    end_sample: stop_movement.wav
+relay_220v_map: # These are connected to the high port of the PCA9535, indices to the pins array in devices.yml
+    red_blinkenlight: 
+        board: rod_control_panel
+        idx: 3
+    strobes: 
+        board: rod_control_panel
+        idx: 2
+smokemachine:
+    min_pwm: 100
+    max_pwm: 255
+    board: reactor_lid
+    idx: 4
+cell_melt_warnings:
+    smoke_multiplier: 0.75
+mwdisplay:
+    board: rod_control_panel
+    idx: 0
+    digits: 5
+
