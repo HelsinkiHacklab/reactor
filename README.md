@@ -47,13 +47,13 @@ The whole setup was there.
 
 [fc13]: http://2013.finncon.org/
 
-## Next: Happy Hacking Day 2014
+## Happy Hacking Day 2014
 
-<http://happyhackingday.org/> as part of [Helsinki Hacklab][hlab]s stand.
+<http://happyhackingday.org/> as part of [Helsinki Hacklab][hlab]s stand. Full setup presented.
 
 [hlab]: http://helsinki.hacklab.fi
 
-## Next^2: ??
+## Next: ??
 
 Don't know yet, but improvements will continue, at some point we will get around to making the [coms-console][coms_jeri] functional too ([Turku hacklab][tku] has shown some interest in working on the plant-control console, seen as the rightmost console on the coms-picture)
 
