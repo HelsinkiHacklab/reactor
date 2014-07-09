@@ -53,6 +53,10 @@ The whole setup was there.
 
 [hlab]: http://helsinki.hacklab.fi
 
+## Model Expo 2014
+
+Only the console was there, it still was a major attraction.
+
 ## Next: ??
 
 Don't know yet, but improvements will continue, at some point we will get around to making the [coms-console][coms_jeri] functional too ([Turku hacklab][tku] has shown some interest in working on the plant-control console, seen as the rightmost console on the coms-picture)
