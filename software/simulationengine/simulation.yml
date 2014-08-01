@@ -1,13 +1,13 @@
 simulation:
     tick_interval: 250
     autosave_interval: 50
-    temperature_blend_weight: 0.1
+    temperature_blend_weight: 0.2
     blend_grid_size: 3 # 3 cells (always in 3 axes)
 reactor:
     max_temp: 1200.0
     power_output_factor: 95
-    blowout_pressure: 150
-    blowout_safety_factor: 0.85
+    blowout_pressure: 120
+    blowout_safety_factor: 0.75
 rod:
     initial_speed: 0.0
     initial_position: 6.5
@@ -21,7 +21,7 @@ rod:
     stomp_speed_recovery: 0.1 # recover 10% of max speed on stomp if below optimal
     stomp_flow_recovery: 0.1 # recover 10% of max speed on stomp if below optimal
 cell:
-    neutron_hit_p: 0.045 # Making this too high will break everything as all CPU time is spent firing neutrons around
+    neutron_hit_p: 0.047 # Making this too high will break everything as all CPU time is spent firing neutrons around
     neutron_grid_size: 3 # 3 cells (always in 3 axes), changing this is ill-adviced
     tip_neutron_hit_p_increase: 0.01 # increasing this too much will break everything as all CPU time is spent firing neutrons around
     rod_inplace_neutron_hit_p: 0.0
@@ -30,7 +30,7 @@ cell:
     ambient_temp: 22.0 # Temperature will never go below this
     decay_p: 0.55 # P of causing neutron_hit when decay is called
     cell_melt_temp: 1100
-    cell_melt_warning: 950 # If cell temp is higher than this emit a warning signal.
-    cell_melt_warning_reset: 900 # reset the cell temp warning below this temp
+    cell_melt_warning: 1070 # If cell temp is higher than this emit a warning signal.
+    cell_melt_warning_reset: 1050 # reset the cell temp warning below this temp
     
 

@@ -1,7 +1,7 @@
 temp_gauge:
-    max_temp: 1050
+    max_temp: 1100
 neutron_gauge:
-    max_avgflux: 3.5
+    max_avgflux: 3.2
 top_led_map:
     board: rod_control_panel
     jbol_idx: 0

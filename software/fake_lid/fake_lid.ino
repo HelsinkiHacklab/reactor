@@ -22,7 +22,7 @@ void setup()
 {
     Serial.begin(115200);
     Serial.println(F(""));
-    Serial.println(F("Board: fake_reactor_lid initializing"));
+    Serial.println(F("Board: reactor_lid initializing"));
 
     // Initialize the bouncers
     for (byte i=0; i < DUMMY_BNC_COUNT; i++)
@@ -49,7 +49,7 @@ void setup()
     expander.data[1] = 0x0; 
     expander.write_data();
 
-    Serial.println(F("Board: fake_reactor_lid ready"));
+    Serial.println(F("Board: reactor_lid ready"));
 }
 
 inline void scan_matrix()
