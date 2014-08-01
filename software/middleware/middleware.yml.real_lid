@@ -52,6 +52,7 @@ led_gauge_map: #keys are well coordinates, values define the led locations
         board: rod_control_panel
         jbol_idx: 1
         leds: [ 15, 14, 13, 12 ]
+        max_pwm: 170
     well_2_5_neutrons:
         board: rod_control_panel
         jbol_idx: 1
@@ -60,6 +61,7 @@ led_gauge_map: #keys are well coordinates, values define the led locations
         board: rod_control_panel
         jbol_idx: 1
         leds: [ 31, 30, 29, 28 ]
+        max_pwm: 170
     well_4_1_neutrons:
         board: rod_control_panel
         jbol_idx: 1
@@ -68,6 +70,7 @@ led_gauge_map: #keys are well coordinates, values define the led locations
         board: rod_control_panel
         jbol_idx: 1
         leds: [ 7, 6, 5, 4 ]
+        max_pwm: 170
     well_5_4_neutrons:
         board: rod_control_panel
         jbol_idx: 1
@@ -76,6 +79,7 @@ led_gauge_map: #keys are well coordinates, values define the led locations
         board: rod_control_panel
         jbol_idx: 1
         leds: [ 23, 22, 21, 20 ]
+        max_pwm: 170
 rod_aircore_maxpwm: 170 # This should probably be tuned on per-motor basis
 rod_aircore_map:
     rod_4_2:

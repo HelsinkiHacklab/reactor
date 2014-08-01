@@ -294,23 +294,25 @@ class middleware(service.baseclass):
     def led_gauge(self, gauge_id, value, map_max):
         """Renders a value mapped from 0 to map_max into led gauge of N leds (see config)"""
         gauge_config = self.config['led_gauge_map'][gauge_id]
+        if not gauge_config.has_key('max_pwm'):
+            gauge_config['max_pwm'] = 255
         num_leds = len(gauge_config['leds'])
         board_busname = 'fi.hacklab.ardubus.' + gauge_config['board']
         board_path = '/fi/hacklab/ardubus/' + gauge_config['board']
         jbol_idx = gauge_config['jbol_idx']
         # Interpolate with numpy
-        mapped_value = int(np.interp(value, [0,map_max],[0,num_leds*255]))
+        mapped_value = int(np.interp(value, [0,map_max],[0,num_leds*gauge_config['max_pwm']]))
         # And bin to the leds
         for ledno in gauge_config['leds']:
-            if mapped_value > 255:
-                self.call_cached(board_busname, board_path, 'set_jbol_pwm', dbus.Byte(jbol_idx), dbus.Byte(ledno), dbus.Byte(255))
-                mapped_value -= 255
+            if mapped_value > gauge_config['max_pwm']:
+                self.call_cached(board_busname, board_path, 'set_jbol_pwm', dbus.Byte(jbol_idx), dbus.Byte(ledno), dbus.Byte(gauge_config['max_pwm']))
+                mapped_value -= gauge_config['max_pwm']
                 continue
             if mapped_value < 0:
                 self.call_cached(board_busname, board_path, 'set_jbol_pwm', dbus.Byte(jbol_idx), dbus.Byte(ledno), dbus.Byte(0))
                 continue
             self.call_cached(board_busname, board_path, 'set_jbol_pwm', dbus.Byte(jbol_idx), dbus.Byte(ledno), dbus.Byte(mapped_value))
-            mapped_value -= 255
+            mapped_value -= gauge_config['max_pwm']
 
     def neutron_report(self, x, y, neutrons, *args):
         """Maintains the highest seen (average across the well) neutron flux and passes that and the current (average across the well) level to the led gauges"""
