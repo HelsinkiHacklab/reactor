@@ -57,6 +57,16 @@ The whole setup was there.
 
 Only the console was there, it still was a major attraction.
 
+## Assembly (Summer) 2014
+
+<http://hacklab.fi> was part of <http://puuhanurkka.fi> and the whole reactor setup was there, partycoded tweaks FTW. Pics:
+
+  - <http://assembly.galleria.fi/kuvat/Assembly+Summer+2014/Tero+Heino/20140801_141203_THE_1616.jpg>
+  - <http://assembly.galleria.fi/kuvat/Assembly+Summer+2014/Tuula+Ylikorpi/1A1C3810.jpg>
+  - <http://assembly.galleria.fi/kuvat/Assembly+Summer+2014/Tuula+Ylikorpi/1A1C3808.jpg>
+  - <http://assembly.galleria.fi/kuvat/Assembly+Summer+2014/Tuula+Ylikorpi/1A1C3514.jpg>
+  - <http://assembly.galleria.fi/kuvat/Assembly+Summer+2014/Tuula+Ylikorpi/1A1C3389.jpg>
+
 ## Next: ??
 
 Don't know yet, but improvements will continue, at some point we will get around to making the [coms-console][coms_jeri] functional too ([Turku hacklab][tku] has shown some interest in working on the plant-control console, seen as the rightmost console on the coms-picture)
