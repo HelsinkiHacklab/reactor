@@ -66,6 +66,7 @@ Only the console was there, it still was a major attraction.
   - <http://assembly.galleria.fi/kuvat/Assembly+Summer+2014/Tuula+Ylikorpi/1A1C3808.jpg>
   - <http://assembly.galleria.fi/kuvat/Assembly+Summer+2014/Tuula+Ylikorpi/1A1C3514.jpg>
   - <http://assembly.galleria.fi/kuvat/Assembly+Summer+2014/Tuula+Ylikorpi/1A1C3389.jpg>
+  - <http://assembly.galleria.fi/kuvat/Assembly+Summer+2014/Aleksi+Kinnunen/_V7Q6549.jpg>
 
 ## Next: ??
 
