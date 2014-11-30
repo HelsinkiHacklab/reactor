@@ -68,6 +68,10 @@ Only the console was there, it still was a major attraction.
   - <http://assembly.galleria.fi/kuvat/Assembly+Summer+2014/Tuula+Ylikorpi/1A1C3389.jpg>
   - <http://assembly.galleria.fi/kuvat/Assembly+Summer+2014/Aleksi+Kinnunen/_V7Q6549.jpg>
 
+There is also a [game review][pr14] (in Finnish), from the installation we had at ASM. The review-site aims to provide reviews for helping parents decide if a game is suitable for their children to play)
+
+[pr14]: http://www.peliraati.fi/pelien-arvioinnit-mainmenu-27/pelit-7-mainmenu-44/669-reactor-simulator
+
 ## Next: ??
 
 Don't know yet, but improvements will continue, at some point we will get around to making the [coms-console][coms_jeri] functional too ([Turku hacklab][tku] has shown some interest in working on the plant-control console, seen as the rightmost console on the coms-picture)
