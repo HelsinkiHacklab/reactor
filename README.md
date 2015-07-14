@@ -72,7 +72,11 @@ There is also a [game review][pr14] (in Finnish), from the installation we had a
 
 [pr14]: http://www.peliraati.fi/pelien-arvioinnit-mainmenu-27/pelit-7-mainmenu-44/669-reactor-simulator
 
-## Next: ??
+## Next: ASM2015 (maybe) and CCCamp 2015 (definitely)
+
+See you there!
+
+## After that: ???
 
 Don't know yet, but improvements will continue, at some point we will get around to making the [coms-console][coms_jeri] functional too ([Turku hacklab][tku] has shown some interest in working on the plant-control console, seen as the rightmost console on the coms-picture)
 
