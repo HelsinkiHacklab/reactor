@@ -36,7 +36,7 @@ class middleware(service.baseclass):
         # Red-Alert state handling
         self.bus.add_signal_receiver(self.red_alert, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_redalert")
         self.bus.add_signal_receiver(self.red_alert_reset, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_redalert_reset")
-        self.bus.add_signal_receiver(self.power_report, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_power")
+        #self.bus.add_signal_receiver(self.power_report, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_power")
         self.red_alert_active = False
 
         # Blowout signal
@@ -433,6 +433,7 @@ class middleware(service.baseclass):
         return self.call_cached('fi.hacklab.noisemaker', '/fi/hacklab/noisemaker', method, *args)
 
     def power_report(self, power, *args):
+        return
         p_config = self.config['mwdisplay']
         power_str = "%d" % power
         # Make sure output fits the display
