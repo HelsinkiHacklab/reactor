@@ -6,9 +6,16 @@ Rectangle
     width: 600; height: 300
     Text
     {
+        function setText(value)
+        {
+            mwtext.text = value
+        }
+        id: mwtext
+        objectName: "mwtext"
         width: parent.width
         anchors.centerIn: parent
         wrapMode: Text.Wrap
-        text: "TODO: Add the remaining switches (currently unwired in real HW)"
+        text: "Waiting for data"
+        font.pointSize: 48; font.bold: true
     }
 }

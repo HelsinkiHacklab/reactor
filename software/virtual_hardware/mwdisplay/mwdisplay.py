@@ -13,9 +13,17 @@ from PySide import QtDeclarative
 
 
 class MWDisplay(QtCore.QObject):
-    def __init__(self, bus):
+    def __init__(self, view, bus):
         QtCore.QObject.__init__(self)
+        self.view = view
         self.bus = bus
+
+        self.bus.add_signal_receiver(self.power_report, dbus_interface = 'fi.hacklab.reactorsimulator.engine', signal_name = "emit_power")
+
+
+    def power_report(self, power, *args):
+        self.view.rootObject().findChild(QtDeclarative.QDeclarativeItem, 'mwtext').setText("%d MW" % int(power))
+
 
 if __name__ == '__main__':
     # Yes we are using threads, in ardubus_qml.py....
@@ -31,11 +39,10 @@ if __name__ == '__main__':
     view.setResizeMode(QtDeclarative.QDeclarativeView.SizeRootObjectToView)
     
     rc = view.rootContext()
-    mwdisplay = MWDisplay(bus)
+    mwdisplay = MWDisplay(view, bus)
     rc.setContextProperty('MW', mwdisplay)
     
     view.setSource(__file__.replace('.py', '.qml'))
-    proxy = QMLProxy(view.rootObject())
     view.show()
     
     sys.exit(app.exec_())
