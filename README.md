@@ -72,9 +72,20 @@ There is also a [game review][pr14] (in Finnish), from the installation we had a
 
 [pr14]: http://www.peliraati.fi/pelien-arvioinnit-mainmenu-27/pelit-7-mainmenu-44/669-reactor-simulator
 
-## Next: ASM2015 (maybe) and CCCamp 2015 (definitely)
+## CCCamp 2015
 
-See you there!
+Barely any photos of the reactor itself, [this one](https://www.flickr.com/photos/helsinkihacklab/20517571046/in/album-72157656773699850/) shows part of the control console and [this](https://www.flickr.com/photos/helsinkihacklab/20706549795/in/album-72157656974072878/) some moody smoke. But check out the following galleries from the camp in general:
+
+  - <https://www.flickr.com/photos/helsinkihacklab/sets/72157657182416991>
+  - <https://www.flickr.com/photos/helsinkihacklab/sets/72157656773699850>
+  - <https://www.flickr.com/photos/helsinkihacklab/sets/72157656803571519>
+  - <https://www.flickr.com/photos/helsinkihacklab/sets/72157656974072878>
+  - <https://www.flickr.com/photos/helsinkihacklab/sets/72157657451044962>
+  - <https://www.flickr.com/photos/helsinkihacklab/sets/72157657064568938>
+
+## Next up
+
+??? Maybe CCCamp2019, depends on logistics etc.
 
 ## After that: ???
 
