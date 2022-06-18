@@ -2,7 +2,7 @@
 
 Uses physical consoles with buttons and gauges for input and output and a linux computer running various pieces of interfacing and simulation software.
 
-Design and plans in etherpad here: http://kirjoitusalusta.fi/hacklab-reactor 
+Design and plans backups from etherpad here: http://helsinkihacklab.github.io/kirjoitusalusta_backups/hacklab-reactor.html
 
 A phone-cam video of the first console & reactor lid in action: http://www.youtube.com/watch?v=7-S2qzXuEK0
 
@@ -27,7 +27,7 @@ Some photos from the event and late nights preceding it can be seen in this [art
 
 We managed to get the control console to a mostly working state, also the reactor lid worked fine (apart from some minor glitches), even the smoke-machine controls worked (the smoke machine itself has to be
  repaired too, the pump-control triac had given up it's magic-smoke and had to be replaced).
- 
+
 "Pics or it didn't happen":
 
   * Rambo shot a very quick video with his cellphone: http://www.youtube.com/watch?v=7-S2qzXuEK0
@@ -35,7 +35,7 @@ We managed to get the control console to a mostly working state, also the reacto
   * YLE has a pic of [Rambo showing an air-core](http://img.yle.fi/uutiset/tekniikka/article6344340.ece/ALTERNATES/w960/warkfest_ydinreaktori_simulaattori.jpg) with the console on the background.
   * [Two reactor technicians at work](http://www.flickr.com/photos/ermuggo/8118672641/in/pool-2089172@N20) and [only slightly smoking reactor](http://www.flickr.com/photos/ermuggo/8118734690/in/pool-2089172@N20)
 
-[wark]: http://www.warkfest.org/en/ 
+[wark]: http://www.warkfest.org/en/
 
 ## Model Expo 2013
 
@@ -83,13 +83,25 @@ Barely any photos of the reactor itself, [this one](https://www.flickr.com/photo
   - <https://www.flickr.com/photos/helsinkihacklab/sets/72157657451044962>
   - <https://www.flickr.com/photos/helsinkihacklab/sets/72157657064568938>
 
+## Vectorama 2022
+
+Full set, the reactor-lid has some issues registering stomps and [overhaul][todofix]
+is needed.
+
+  - <https://kuvat.vectorama.info/kuvat/Vectorama+2022/9.6.2022+Torstai/mikaelpeltomaa_09-06-22_DSC04147.jpg> (scroll forward for a few more)
+  - <https://kuvat.vectorama.info/kuvat/Vectorama+2022/9.6.2022+Torstai/EmmiHalmela-vectorama22-6192.jpg>
+  - <https://kuvat.vectorama.info/kuvat/Vectorama+2022/10.6.2022+Perjantai/mikaelpeltomaa_10-06-22_DSC04667.jpg>
+  - <https://kuvat.vectorama.info/kuvat/Vectorama+2022/11.6.2022+Lauantai/EmmiHalmela-vectorama22-7755.jpg>
+  - <https://kuvat.vectorama.info/kuvat/Vectorama+2022/12.6.2022+Sunnuntai/mikaelpeltomaa_12-06-22_DSC06002.jpg> most of this load is directly related to the reactor.
+
+[todofix]: https://github.com/HelsinkiHacklab/reactor/wiki/TODO#necessary-fixes
+
 ## Next up
 
-??? Maybe CCCamp2019, depends on logistics etc.
+ASM Summer 2022, lets see how many things we get fixed for that.
 
 ## After that: ???
 
-Don't know yet, but improvements will continue, at some point we will get around to making the [coms-console][coms_jeri] functional too ([Turku hacklab][tku] has shown some interest in working on the plant-control console, seen as the rightmost console on the coms-picture)
+Don't know yet, lets see if at some point we will get around to making the [coms-console][coms_jeri] functional too and/or the plant-control console, seen as the rightmost console on the coms-picture)
 
 [coms_jeri]: http://helsinki.hacklab.fi/wp-content/uploads/2011/10/CIMG7885.jpg
-[tku]: http://hacklabturku.org/
